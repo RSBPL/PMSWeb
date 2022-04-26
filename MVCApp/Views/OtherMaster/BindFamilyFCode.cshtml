@@ -1,0 +1,7 @@
+﻿@model MVCApp.Models.OtherSuffix
+@{
+    <div>
+        @Html.DropDownListFor(model => model.FamilyFcode, (IEnumerable<SelectListItem>)ViewBag.Family, new { @class = "form-control input-sm" })
+    </div>
+}
+

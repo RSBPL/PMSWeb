@@ -1,0 +1,149 @@
+﻿@model MVCApp.Models.Weekly_Off_Model
+@*--------Form------------*@
+<div class="container" style="width:100%!important">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form_WO" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal form-group">
+            <fieldset class="the-fieldset bg-info">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                        @Html.DropDownListFor(model => model.Plant_WO, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                        <strong>@Html.ValidationMessageFor(model => model.Plant_WO, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    @*<div class="col-md-3">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                        @Html.DropDownListFor(model => model.Family_WO, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                        <strong>@Html.ValidationMessageFor(model => model.Family_WO, "", new { @class = "text-danger" })</strong>
+                    </div>*@
+                    <div class="col-md-4">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>OFF Days</strong></label>
+                        @Html.DropDownListFor(model => model.ParamInfo_WO, (IEnumerable<SelectListItem>)ViewBag.WOType, "----Select----", new { @class = "form-control  input-sm" })
+                        <strong>@Html.ValidationMessageFor(model => model.ParamInfo_WO, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="fname" class="text-right control-label col-form-label"><strong class="text-hide">Role Description</strong></label>
+                            </div>
+                            <div class="col-md-12 align-right">
+                                <button class="btn btn-success btn-sm" type="button" id="Add_WO"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>SAVE</strong></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    }
+    <div id="Grid_WO"></div>
+</div>
+
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+
+@*Script for First Tab*@
+<script>
+    $(document).ready(function () {
+        DDLPlant();
+        BindGrid_WO();
+    });
+
+    //$("#Plant_WO").on("change", function () {
+    //    DDLFamilyByPlant_WO();
+    //});
+
+    //Function to bind Plant
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "AddDailyPlan")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Plant_WO").html(result);
+                //DDLFamilyByPlant_WO();
+        },
+            error: function (errormessage) {
+            
+            }
+        });
+    };
+
+    @*//Function to bind Family by Plant
+    function DDLFamilyByPlant_WO() {
+        var selectedValue = $("#Plant_WO").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "AddDailyPlan")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#Family_WO").html(result);               
+        },
+            error: function (errormessage) {
+            
+            }
+        });
+    };*@
+
+    //Save Setting
+    $("#Add_WO").on("click", function () {        
+        $("#divLoader").show();
+        $.ajax({
+            url: '@Url.Action("Save_WO", "Setting_Master")',
+            data: JSON.stringify({
+                Plant_WO: $('#Plant_WO').val(),       
+                Family_WO: $('#Family_WO').val(),       
+                Description_WO: $("#ParamInfo_WO option:selected").text(),
+                ParamInfo_WO: $('#ParamInfo_WO').val(),               
+                Status_WO: 'W_OFF'                                    
+            }),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+                if (data.Msg != "" || data.Msg != null) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+                $('#ParamValue_PD').val("");
+                BindGrid_WO();
+            },
+            error: function (errormessage) {
+
+            }
+        });       
+    });
+
+    //Function to bind Grid
+    function BindGrid_WO() {
+       $("#divLoader").show();       
+        $.ajax({
+            url: '@Url.Action("WO_Grid", "Setting_Master")',           
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Grid_WO").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    };
+
+    $("#Plant_WO").select2({
+        allowClear: true,
+        width: '100%',
+    });
+     $("#Family_WO").select2({
+        allowClear: true,
+        width: '100%',
+    });
+     $("#ParamInfo_WO").select2({
+        allowClear: true,
+        width: '100%',
+    });
+</script>

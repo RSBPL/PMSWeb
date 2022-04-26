@@ -1,0 +1,6 @@
+﻿@model MVCApp.Models.CraneMapping
+    @{ 
+        <div>
+            @Html.DropDownListFor(model => model.FamilyCode, (IEnumerable<SelectListItem>)ViewBag.Family, new { @class = "form-control  input-sm" })
+        </div>
+    }

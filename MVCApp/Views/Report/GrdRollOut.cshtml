@@ -1,0 +1,65 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bg-primary" style="padding-top:5px; padding-left:5px;">
+                <center>
+                    <label style="color:white;">@ViewBag.heading</label>
+                    <label style="color: white;padding-right: 10px;" class="pull-right"><strong>TOTAL RECORD : @ViewBag.Total </strong></label>
+                </center>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        @(Html.EJS().Grid("GrdRollOut").DataSource((System.Data.DataTable)ViewBag.DataSource).
+            //Height("400").
+            AllowPaging(true).
+            PageSettings(Page => Page.PageSize(15)).
+            AllowSelection(false).
+            AllowResizing().
+            AllowExcelExport().
+            ToolbarClick("toolbarClick").
+            AllowFiltering().
+            AllowGrouping().
+            AllowSorting().
+            Columns(col =>
+            {
+                col.Field("SERIAL_NO").HeaderText("SERIAL_NO").Add();
+                col.Field("FCODE_SRLNO").HeaderText("FCODE_SRLNO").Add();
+                col.Field("TRACTORCODE").HeaderText("TRACTORCODE").Add();
+                col.Field("JOBID").HeaderText("JOBID").Add();
+                col.Field("BUCKLEUP").HeaderText("BUCKLEUP").Add();
+                col.Field("ROLLOUT").HeaderText("ROLLOUT").Add();
+                col.Field("STAGE10").HeaderText("STAGE10").Add();
+                col.Field("STAGE20").HeaderText("STAGE20").Add();
+                col.Field("STAGE30").HeaderText("STAGE30").Add();
+                col.Field("STAGE40").HeaderText("STAGE40").Add();
+                col.Field("SCAN40DATE").HeaderText("SCAN40DATE").Add();
+                col.Field("SCAN30DATE").HeaderText("SCAN30DATE").Add();
+                col.Field("PDICLEARENECE").HeaderText("PDICLEARENECE").Add();
+
+            }).
+            Toolbar(new List<string>() { "ExcelExport" }).
+            Render())
+        <script>
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("GrdRollOut").ej2_instances[0];
+                gridObj.excelExport();
+            }
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+

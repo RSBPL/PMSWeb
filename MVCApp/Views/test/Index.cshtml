@@ -1,0 +1,46 @@
+﻿
+
+
+
+
+
+<input type="button" value="Print" id="Add" />
+
+
+
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script>
+
+    $("#Add").on("click", function () {
+        
+
+        $.ajax({
+            url: '@Url.Action("ReadFile", "test")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                PrintPartOfPage(result);
+               
+                
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    });
+
+
+
+    
+
+    function PrintPartOfPage(dvprintid) {
+        var WinPrint = window.open('', '', 'letf=100,top=100,width=600,height=600');
+        WinPrint.document.write(dvprintid);
+        WinPrint.document.close();
+        WinPrint.focus();
+        WinPrint.print();
+
+    }
+</script>
+

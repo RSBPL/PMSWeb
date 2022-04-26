@@ -1,0 +1,515 @@
+﻿
+
+@model MVCApp.Models.CraneMapping
+
+<style>
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .ui-autocomplete {
+        max-height: 400px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+
+     .ui-autocomplete {
+        height: 400px;
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Crane Master</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    @*--------Form------------*@
+    <div class="container" style="width:100%!important">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal form-group">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="PlantCode" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            @Html.DropDownListFor(model => model.PlantCode, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.PlantCode, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="FamilyCode" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                            @Html.DropDownListFor(model => model.FamilyCode, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.FamilyCode, "", new { @class = "text-danger" })</strong>
+                        </div>
+
+
+                        @*<div class="col-md-3">
+            <label for="EngineDcode" class="text-right control-label col-form-label"><strong>Engine</strong></label>
+            @Html.TextBoxFor(Model => Model.EngineDcode, null, new { @class = "form-control input-sm" })
+            <strong>@Html.ValidationMessageFor(model => model.EngineDcode, "", new { @class = "text-danger" })</strong>
+        </div>*@
+                        <div class="col-md-3">
+                            <label for="EngineDcode" class="text-right control-label col-form-label"><strong>Engine</strong></label>
+                            @Html.DropDownListFor(model => model.EngineDcode, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.EngineDcode, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="ModelType" class="text-right control-label col-form-label"><strong>Model Type</strong></label>
+                            @Html.DropDownList("ModelType", new List<SelectListItem>
+
+                                   {
+                                       new SelectListItem{ Text = "DOMESTIC",Value="DOMESTIC" },
+                                       new SelectListItem{ Text = "EXPORT",Value="EXPORT"}
+                                   })
+                        </div>
+                        <div class="col-md-3">
+                            <label for="ItemCode" class="text-right control-label col-form-label"><strong>Crane</strong></label>
+                            @Html.TextBoxFor(Model => Model.ItemCode, null, new { @class = "form-control input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.ItemCode, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="ShortName" class="text-right control-label col-form-label"><strong>ShortDsc</strong></label>
+                            @Html.TextBoxFor(Model => Model.ShortName, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.ShortName, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="Model" class="text-right control-label col-form-label"><strong>Model</strong></label>
+                            @Html.TextBoxFor(Model => Model.Model, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.Model, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="Prefix1" class="text-right control-label col-form-label"><strong>Prefix1</strong></label>
+                            @Html.TextBoxFor(Model => Model.Prefix1, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.Prefix1, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="Prefix2" class="text-right control-label col-form-label"><strong>Prefix2</strong></label>
+                            @Html.TextBoxFor(Model => Model.Prefix2, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.Prefix2, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="Suffix1" class="text-right control-label col-form-label"><strong>Suffix1</strong></label>
+                            @Html.TextBoxFor(Model => Model.Suffix1, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.Suffix1, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="Suffix2" class="text-right control-label col-form-label"><strong>Suffix2</strong></label>
+                            @Html.TextBoxFor(Model => Model.Suffix2, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.Suffix2, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="Remarks1" class="text-right control-label col-form-label"><strong>Remarks</strong></label>
+                            @Html.TextBoxFor(Model => Model.Remarks1, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.Remarks1, "", new { @class = "text-danger" })</strong>
+                        </div>
+
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                            <button class="btn btn-success btn-sm" type="button" id="Update"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+
+
+                        </div>
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </div>
+
+        }
+        <div id="Grid"></div>
+    </div>
+</div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<script src="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.js")"></script>
+<link href="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.css")" rel="stylesheet" />
+
+<script>
+
+
+    $(document).ready(function () {
+        $("#Update").hide();
+        DDLPlant();
+
+        AutoComplete();
+
+
+    });
+    $("#PlantCode").on("change", function () {
+        DDLFamilyByPlant();
+
+    });
+    $("#FamilyCode").on("change", function () {
+        BindGrid();
+    });
+    $("#Clear").on("click", function () {
+        location.reload(true);
+    });
+
+       //Function to bind Plant
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "CraneMaster")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#PlantCode").append(optionhtml);
+                });
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+      //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        var selectedValue = $("#PlantCode").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "CraneMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ PlantCode: selectedValue }),
+            success: function (result) {
+                $("#FamilyCode").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#FamilyCode").append(optionhtml);
+                });
+                BindEngine();
+                BindGrid();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    //Function To Bind Engine by Family
+    function BindEngine() {
+        var Data = {
+            PlantCode: $("#PlantCode").val(),
+            FamilyCode: $("#FamilyCode").val()
+        };
+        $.ajax({
+            url: '@Url.Action("BindEngine", "CraneMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify(Data),
+            success: function (result) {
+                $("#EngineDcode").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#EngineDcode").append(optionhtml);
+                });
+
+
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+     //Function to bind Grid
+    function BindGrid() {
+        $("#divLoader").show();
+        var Data = {
+            PlantCode: $('#PlantCode').val(),
+            FamilyCode: $('#FamilyCode').val()
+
+                };
+        $.ajax({
+            url: '@Url.Action("Grid", "CraneMaster")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+
+                $("#Grid").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    function AutoComplete() {
+        $.noConflict();
+
+        $("#ItemCode").autocomplete({
+            source: function (request, response) {
+
+            var Data = {
+                PlantCode: $('#PlantCode').val(),
+                FamilyCode: $('#FamilyCode').val()
+                //ItemCode: $('#ItemCode').val()
+            };
+                $.ajax({
+                    url: "@Url.Action("BindCrane", "CraneMaster")",
+                    type: "POST",
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify({ data: Data }),
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            /*console.log(item.Text);*/
+                            return { label: item.Text, value: item.Text };
+                        }))
+
+                    },
+                    error: function (err) {
+                        alert(err);
+                    }
+                });
+            },
+
+            minLength: 4
+
+          });
+    }
+
+    //Insert function
+  $("#Add").on("click", function () {
+
+            $("#divLoader").show();
+            var data = {
+                PlantCode: $('#PlantCode').val(),
+                FamilyCode: $('#FamilyCode').val(),
+                ItemCode: $('#ItemCode').val(),
+                ModelType: $("#ModelType").val(),
+                EngineDcode: $("#EngineDcode").val(),
+                ShortName: $("#ShortName").val(),
+                Model: $("#Model").val(),
+                Prefix1: $("#Prefix1").val(),
+                Prefix2: $("#Prefix2").val(),
+                Suffix1: $("#Suffix1").val(),
+                Suffix2: $("#Suffix2").val(),
+                Remarks1: $("#Remarks1").val()
+            };
+            $.ajax({
+                url: '@Url.Action("Save", "CraneMaster")',
+                data: JSON.stringify(data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#ItemCode').val("");
+                        $('#ShortName').val("");
+                        $('#Model').val("");
+                        $('#Prefix1').val("");
+                        $('#Prefix2').val("");
+                        $('#Suffix1').val("");
+                        $('#Suffix2').val("");
+                        $('#Remarks1').val("");
+                        BindGrid();
+                    }
+
+                },
+                error: function (errormessage) {
+
+                }
+            });
+
+    });
+
+    //Update Data
+      $("#Update").on("click", function () {
+         $("#divLoader").show();
+          var data = {
+              PlantCode: $("#PlantCode").val(),
+              FamilyCode: $("#FamilyCode").val(),
+              ItemCode: $("#ItemCode").val(),            
+              Model: $("#Model").val(),
+              ModelType: $("#ModelType").val(),
+              ShortName: $("#ShortName").val(),
+              EngineDcode: $("#EngineDcode").val(),           
+              Prefix1: $("#Prefix1").val(),
+              Prefix2: $("#Prefix2").val(),
+              Suffix1: $("#Suffix1").val(),
+              Suffix2: $("#Suffix2").val(),
+              Remarks1: $("#Remarks1").val(),  
+              PlantCode: PlantCode,
+              FamilyCode: FamilyCode,
+              ItemCode: ItemCode
+            };
+        $.ajax({
+            url: '@Url.Action("Update", "CraneMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    $('#PlantCode').prop('disabled', false);
+                    $('#FamilyCode').prop('disabled', false);
+                    //$('#ItemCode').prop('disabled', false).val("");
+                    $("#ItemCode").val(""),                    
+                    $("#Model").val(""),                   
+                    $("#ShortName").val(""),                                
+                    $("#Prefix1").val(""),
+                    $("#Prefix2").val(""),
+                    $("#Suffix1").val(""),
+                    $("#Suffix2").val(""),
+                    $("#Remarks1").val(""), 
+
+                    $('#Add').show();
+                    $('#Update').hide();
+                    BindGrid();
+                }
+
+            },
+            error: function (errormessage)
+            {
+            }
+        });
+    });
+
+    function closeAlert(alert) {
+
+      $(alert).hide();
+    };
+
+
+
+    function Delete() {
+        var data = {
+
+            PlantCode: PlantCode,
+            FamilyCode: FamilyCode,
+            ItemCode: ItemCode
+            };
+        $.ajax({
+            url: '@Url.Action("Delete", "CraneMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                }
+
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    $('#PlantCode').prop('disabled', false);
+                    $('#FamilyCode').prop('disabled', false);
+                    $('#ItemCode').prop('disabled', false);
+                    //$('#ItemCode').val("");
+                    $('#ShortName').val("");
+                    $('#Model').val("");
+                    $('#Prefix1').val("");
+                    $('#Prefix2').val("");
+                    $('#Suffix1').val("");
+                    $('#Suffix2').val("");
+                    $('#Remarks1').val("");
+                    $('#Add').show();
+                    $('#Update').hide();
+                    BindGrid();
+
+                }
+
+            },
+            error: function (errormessage)
+            {
+            }
+        });
+
+    }
+
+
+
+
+
+    $("#PlantCode").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#FamilyCode").select2({
+        allowClear: true,
+        width: '100%',
+    });
+
+
+</script>
+

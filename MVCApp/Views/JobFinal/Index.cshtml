@@ -1,0 +1,1117 @@
+﻿@model MVCApp.Models.TRACTOR
+<style>
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+
+
+    .ui-autocomplete {
+        position: relative;
+        display: inline-block;
+        height: 250px;
+    }
+
+    .ui-autocomplete {
+        max-height: 250px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+
+    .ui-autocomplete {
+        height: 250px;
+    }
+    ol, ul {
+        margin: 5px 0px 1px 1px;
+    }
+
+    .tab-content {
+        padding: 6px 0px 0px 0px;
+    }
+    .ui-dialog-titlebar-close {
+        visibility: hidden;
+    }
+
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Job Final</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    <ul class="nav nav-pills">
+        <li class="bg-light active"><a data-toggle="tab" href="#Menu1">Update Job</a></li>
+        <li class="bg-light"><a data-toggle="tab" href="#Menu2">Change Model</a></li>
+        <li class="bg-light"><a data-toggle="tab" href="#Menu2">Change Job</a></li>
+    </ul>
+    <div class="tab-content">
+        @*--------Form------------*@
+        <div id="Menu1" class="tab-pane fade in active">
+            <div class="container" style="width:100%!important">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-horizontal form-group">
+                        <fieldset class="the-fieldset bg-info">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="PLANT_CODE" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                                    @Html.DropDownListFor(model => model.PLANT_CODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.PLANT_CODE, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3 ">
+                                    <label for="FAMILY_CODE" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                                    @Html.DropDownListFor(model => model.FAMILY_CODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.FAMILY_CODE, "", new { @class = "text-danger" })</strong>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="JOBID_TRACTORSRNO" class="text-right control-label col-form-label"><strong>Search by Job or Tractor Sr. no.</strong></label>
+                                    @Html.TextBoxFor(Model => Model.JOBID_TRACTORSRNO, null, new { @class = "form-control input-sm" })
+                                    <input type="hidden" value="" id="hdnJob" />
+                                </div>
+
+                            </div>
+                        </fieldset>
+                        <fieldset class="the-fieldset bg-danger">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="TRANSMISSION_SRLNO" class="text-right control-label col-form-label"><strong>Transmission</strong></label>
+                                    @Html.TextBoxFor(Model => Model.TRANSMISSION_SRLNO, null, new { @class = "form-control input-sm" })
+                                </div>
+                                <div class="col-md-3 ">
+                                    <label for="REARAXEL_SRLNO" class="text-right control-label col-form-label"><strong>RearAxel</strong></label>
+                                    @Html.TextBoxFor(Model => Model.REARAXEL_SRLNO, null, new { @class = "form-control input-sm" })
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="FIPSRNO" class="text-right control-label col-form-label"><strong>FIP</strong></label>
+                                    @Html.TextBoxFor(Model => Model.FIPSRNO, null, new { @class = "form-control input-sm" })
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="HOOKUP_NO" class="text-right control-label col-form-label"><strong>HookUp No</strong></label>
+                                    @Html.TextBoxFor(Model => Model.HOOKUP_NO, null, new { @class = "form-control input-sm" })
+                                </div>
+
+                            </div>
+                        </fieldset>
+                        <fieldset class="the-fieldset bg-danger">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="HYDRALUIC_SRLNO" class="text-right control-label col-form-label"><strong>Hydraulic</strong></label>
+                                    @Html.TextBoxFor(Model => Model.HYDRALUIC_SRLNO, null, new { @class = "form-control input-sm" })
+                                </div>
+                                <div class="col-md-3 ">
+                                    <label for="ENGINE_SRLNO" class="text-right control-label col-form-label"><strong>Engine</strong></label>
+                                    @Html.TextBoxFor(Model => Model.ENGINE_SRLNO, null, new { @class = "form-control input-sm" })
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="BACKEND_SRLNO" class="text-right control-label col-form-label"><strong class="lblDynamic">Skid</strong></label>
+                                    @Html.TextBoxFor(Model => Model.BACKEND_SRLNO, null, new { @class = "form-control input-sm" })
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="the-fieldset bg-danger">
+                            <legend>Rear Tyre</legend>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="REARTYRE_SRLNO1" class="text-right control-label col-form-label"><strong>SrNo1</strong></label>
+                                    @Html.TextBoxFor(Model => Model.REARTYRE_SRLNO1, null, new { @class = "form-control input-sm" })
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="RTRIM1" class="text-right control-label col-form-label"><strong>RIM1</strong></label>
+                                    @Html.TextBoxFor(Model => Model.RTRIM1, null, new { @class = "form-control input-sm" })
+                                </div>
+                                <div class="col-md-3 ">
+                                    <label for="RTTYRE1" class="text-right control-label col-form-label"><strong>Tyre1</strong></label>
+                                    @Html.TextBoxFor(Model => Model.RTTYRE1, null, new { @class = "form-control input-sm" })
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="REARTYRE_SRLNO2" class="text-right control-label col-form-label"><strong>SrNo2</strong></label>
+                                    @Html.TextBoxFor(Model => Model.REARTYRE_SRLNO2, null, new { @class = "form-control input-sm" })
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="RTRIM2" class="text-right control-label col-form-label"><strong>RIM2</strong></label>
+                                    @Html.TextBoxFor(Model => Model.RTRIM2, null, new { @class = "form-control input-sm" })
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="RTTYRE2" class="text-right control-label col-form-label"><strong>Tyre2</strong></label>
+                                    @Html.TextBoxFor(Model => Model.RTTYRE2, null, new { @class = "form-control input-sm" })
+                                </div>
+
+                            </div>
+                        </fieldset>
+                        <fieldset class="the-fieldset bg-danger">
+                            <legend>Front Tyre</legend>
+                            <div class="row">
+
+                                <div class="col-md-3 ">
+                                    <label for="FRONTTYRE_SRLNO1" class="text-right control-label col-form-label"><strong>SrNo1</strong></label>
+                                    @Html.TextBoxFor(Model => Model.FRONTTYRE_SRLNO1, null, new { @class = "form-control input-sm" })
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="FTRIM1" class="text-right control-label col-form-label"><strong>RIM1</strong></label>
+                                    @Html.TextBoxFor(Model => Model.FTRIM1, null, new { @class = "form-control input-sm" })
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="FTTYRE1" class="text-right control-label col-form-label"><strong>Tyre1</strong></label>
+                                    @Html.TextBoxFor(Model => Model.FTTYRE1, null, new { @class = "form-control input-sm" })
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="FRONTTYRE_SRLNO2" class="text-right control-label col-form-label"><strong>SrNo2</strong></label>
+                                    @Html.TextBoxFor(Model => Model.FRONTTYRE_SRLNO2, null, new { @class = "form-control input-sm" })
+                                </div>
+                                <div class="col-md-3 ">
+                                    <label for="FTRIM2" class="text-right control-label col-form-label"><strong>RIM2</strong></label>
+                                    @Html.TextBoxFor(Model => Model.FTRIM2, null, new { @class = "form-control input-sm" })
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="FTTYRE2" class="text-right control-label col-form-label"><strong>Tyre2</strong></label>
+                                    @Html.TextBoxFor(Model => Model.FTTYRE2, null, new { @class = "form-control input-sm" })
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="the-fieldset bg-danger">
+                            <div class="row">
+
+                                <div class="col-md-3">
+                                    <label for="BATTERY_SRLNO" class="text-right control-label col-form-label"><strong>Battery</strong></label>
+                                    @Html.TextBoxFor(Model => Model.BATTERY_SRLNO, null, new { @class = "form-control input-sm" })
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="BATTERY_MAKE" class="text-right control-label col-form-label"><strong>Battery Type</strong></label>
+                                    @Html.DropDownListFor(model => model.BATTERY_MAKE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="the-fieldset bg-danger">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="HYD_PUMP_SRLNO" class="text-right control-label col-form-label"><strong>Hydraulic Pump</strong></label>
+                                    @Html.TextBoxFor(Model => Model.HYD_PUMP_SRLNO, null, new { @class = "form-control input-sm" })
+                                </div>
+                                <div class="col-md-3 ">
+                                    <label for="RADIATOR_SRLNO" class="text-right control-label col-form-label"><strong>Radiator Assembly</strong></label>
+                                    @Html.TextBoxFor(Model => Model.RADIATOR_SRLNO, null, new { @class = "form-control input-sm" })
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="STERING_CYLINDER_SRLNO" class="text-right control-label col-form-label"><strong>Power Steering Cylinder</strong></label>
+                                    @Html.TextBoxFor(Model => Model.STERING_CYLINDER_SRLNO, null, new { @class = "form-control input-sm" })
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="STEERING_MOTOR_SRLNO" class="text-right control-label col-form-label"><strong>Steering Motor</strong></label>
+                                    @Html.TextBoxFor(Model => Model.STEERING_MOTOR_SRLNO, null, new { @class = "form-control input-sm" })
+                                </div>
+
+                            </div>
+                        </fieldset>
+                        <fieldset class="the-fieldset bg-danger">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="STEERING_ASSEMBLY_SRLNO" class="text-right control-label col-form-label"><strong>Steering Assembly</strong></label>
+                                    @Html.TextBoxFor(Model => Model.STEERING_ASSEMBLY_SRLNO, null, new { @class = "form-control input-sm" })
+                                </div>
+                                <div class="col-md-3 ">
+                                    <label for="ALTERNATOR_SRLNO" class="text-right control-label col-form-label"><strong>Alternator</strong></label>
+                                    @Html.TextBoxFor(Model => Model.ALTERNATOR_SRLNO, null, new { @class = "form-control input-sm" })
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="CLUSSTER_SRLNO" class="text-right control-label col-form-label"><strong>Cluster Assembly</strong></label>
+                                    @Html.TextBoxFor(Model => Model.CLUSSTER_SRLNO, null, new { @class = "form-control input-sm" })
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="STARTER_MOTOR_SRLNO" class="text-right control-label col-form-label"><strong>Starter Motor</strong></label>
+                                    @Html.TextBoxFor(Model => Model.STARTER_MOTOR_SRLNO, null, new { @class = "form-control input-sm" })
+                                </div>
+
+                            </div>
+                        </fieldset>
+                        <fieldset class="the-fieldset bg-danger">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="QUANTITY" class="text-right control-label col-form-label"><strong>Quantity</strong></label>
+                                    @Html.TextBoxFor(Model => Model.QUANTITY, null, new { @class = "form-control input-sm" })
+                                </div>
+                                <div class="col-md-3 ">
+                                    <label for="ROPS_SRNO" class="text-right control-label col-form-label"><strong>Rops SrNo</strong></label>
+                                    @Html.TextBoxFor(Model => Model.ROPS_SRNO, null, new { @class = "form-control input-sm" })
+                                    @Html.HiddenFor(Model => Model.RopsUserConfirmation)
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="OIL" class="text-right control-label col-form-label"><strong>Oil Qty</strong></label>
+                                    @Html.TextBoxFor(Model => Model.OIL, null, new { @class = "form-control input-sm" })
+                                </div>
+
+
+                            </div>
+                        </fieldset>
+                        <fieldset class="the-fieldset bg-danger">
+                            <legend>Care Button Data</legend>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="SIM_SERIAL_NO" class="text-right control-label col-form-label"><strong>SrNo.</strong></label>
+                                    @Html.TextBoxFor(Model => Model.SIM_SERIAL_NO, null, new { @class = "form-control input-sm" })
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="IMEI_NO" class="text-right control-label col-form-label"><strong>IMEI</strong></label>
+                                    @Html.TextBoxFor(Model => Model.IMEI_NO, null, new { @class = "form-control input-sm" })
+                                </div>
+                                <div class="col-md-3 ">
+                                    <label for="MOBILE" class="text-right control-label col-form-label"><strong>MOBILE</strong></label>
+                                    @Html.TextBoxFor(Model => Model.MOBILE, null, new { @class = "form-control input-sm" })
+                                </div>
+
+                            </div>
+                        </fieldset>
+                        <fieldset class="the-fieldset bg-danger">
+                            <legend>Printing</legend>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="PRINTING_OPTION" class="text-right control-label col-form-label"><strong>Select Printing Option</strong></label>
+                                    @Html.DropDownListFor(model => model.PRINTING_OPTION, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-success btn-sm" type="button" id="PrintJob"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Print</strong></button>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <div class="row" style="margin-top:10px;">
+                            <div class="col-md-12 align-right">
+                                <button class="btn btn-success btn-sm" type="button" id="UpdateJobData"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                                <button class="btn btn-primary btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+        <div id="Menu2" class="tab-pane fade in active">
+            <div class="container" style="width:100%!important">
+
+                <div class="form-horizontal form-group">
+
+                </div>
+
+
+            </div>
+        </div>
+        <div id="Menu3" class="tab-pane fade in active">
+            <div class="container" style="width:100%!important">
+
+                <div class="form-horizontal form-group">
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+@*<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>*@
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<script src="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.js")"></script>
+<link href="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.css")" rel="stylesheet" />
+
+<script>
+
+
+    $(document).ready(function () {
+        DDLPlant();
+        AutoComplete();
+        GetBattery();
+
+    });
+    $("#Clear").on("click", function () {
+        location.reload(true);
+    });
+    function GetBattery() {
+        $.ajax({
+            url: '@Url.Action("GetBattery", "JobFinal")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#BATTERY_MAKE").append(optionhtml);
+                });
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    }
+     //Function to bind Plant
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "JobFinal")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#PLANT_CODE").append(optionhtml);
+                });
+
+
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    }
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        var selectedValue = $("#PLANT_CODE").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "JobFinal")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#FAMILY_CODE").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#FAMILY_CODE").append(optionhtml);
+                });
+
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    function AutoComplete() {
+        $.noConflict();
+
+        $("#JOBID_TRACTORSRNO").autocomplete({
+            source: function (request, response) {
+                var itemnamecodes = new Array();
+            var Data = {
+                PLANT_CODE: $('#PLANT_CODE').val(),
+                FAMILY_CODE: $('#FAMILY_CODE').val(),
+                JOBID_TRACTORSRNO: $('#JOBID_TRACTORSRNO').val()
+            };
+                $.ajax({
+                    async: false, cache: false,
+                    type: "POST",
+                    url: "@(Url.Action("BindJobFields", "JobFinal"))",
+                    data: { data: Data },
+                    success: function (data) {
+                        for (var i = 0; i < data.length; i++) {
+                            itemnamecodes[i] = { label: data[i].Text, Id: data[i].Value };
+                        }
+                    }
+                });
+                response(itemnamecodes);
+            },
+
+            minLength: 4,
+            select: function (event, ui) {
+
+
+                 GetJobData(ui.item.Id);
+                $("#hdnJob").val(ui.item.Id);
+
+            }
+
+          });
+    }
+
+    function GetJobData(Job) {
+        var Data = {
+                    PLANT_CODE: $('#PLANT_CODE').val(),
+                    FAMILY_CODE: $('#FAMILY_CODE').val(),
+                    JOBID: Job
+                };
+                $.ajax({
+                    cache: false, async: false, type: "POST",
+                    url: "@(Url.Action("GetJobData", "JobFinal"))",
+                    data: { data: Data },
+                    success: function (data) {
+
+                        if (data.validation == "error") {
+                            $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            setTimeout(function () {
+                                $.each($('.alert'), function () {
+                                    closeAlert(this);
+                                });
+                            }, 5000);
+                            return false;
+                        }
+                        else {
+
+                            setFields(data.Items[0]);
+                        }
+
+
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve Item.');
+                    }
+                });
+    }
+
+    function setFields(item) {
+
+
+        $('#TRANSMISSION_SRLNO').val(item.TRANSMISSION_SRLNO);
+        $('#REARAXEL_SRLNO').val(item.REARAXEL_SRLNO);
+        $('#FIPSRNO').val(item.FIPSRNO);
+        $('#HOOKUP_NO').val(item.HOOKUP_NO);
+        $('#HYDRALUIC_SRLNO').val(item.HYDRALUIC_SRLNO);
+        $('#ENGINE_SRLNO').val(item.ENGINE_SRLNO);
+        $('#BACKEND_SRLNO').val(item.BACKEND_SRLNO);
+        $('#REARTYRE_SRLNO1').val(item.REARTYRE_SRLNO1);
+        $('#RTRIM1').val(item.RTRIM1);
+        $('#RTTYRE1').val(item.RTTYRE1);
+        $('#REARTYRE_SRLNO2').val(item.REARTYRE_SRLNO2);
+        $('#RTRIM2').val(item.RTRIM2);
+        $('#RTTYRE2').val(item.RTTYRE2);
+        $('#FRONTTYRE_SRLNO1').val(item.FRONTTYRE_SRLNO1);
+        $('#FTRIM1').val(item.FTRIM1);
+        $('#FTTYRE1').val(item.FTTYRE1);
+        $('#FRONTTYRE_SRLNO2').val(item.FRONTTYRE_SRLNO2);
+        $('#FTRIM2').val(item.FTRIM2);
+        $('#FTTYRE2').val(item.FTTYRE2);
+        $('#BATTERY_SRLNO').val(item.BATTERY_SRLNO);
+        $('#BATTERY_MAKE').val(item.BATTERY_MAKE);
+        $('#HYD_PUMP_SRLNO').val(item.HYD_PUMP_SRLNO);
+        $('#RADIATOR_SRLNO').val(item.RADIATOR_SRLNO);
+        $('#STERING_CYLINDER_SRLNO').val(item.STERING_CYLINDER_SRLNO);
+        $('#STEERING_MOTOR_SRLNO').val(item.STEERING_MOTOR_SRLNO);
+        $('#STEERING_ASSEMBLY_SRLNO').val(item.STEERING_ASSEMBLY_SRLNO);
+        $('#ALTERNATOR_SRLNO').val(item.ALTERNATOR_SRLNO);
+        $('#CLUSSTER_SRLNO').val(item.CLUSSTER_SRLNO);
+        $('#STARTER_MOTOR_SRLNO').val(item.STARTER_MOTOR_SRLNO);
+        $('#QUANTITY').val(item.QUANTITY);
+        $('#SIM_SERIAL_NO').val(item.SIM_SERIAL_NO);
+        $('#IMEI_NO').val(item.IMEI_NO);
+        $('#MOBILE').val(item.MOBILE);
+        $('#ROPS_SRNO').val(item.ROPS_SRNO);
+        $('#OIL').val(item.OIL);
+
+    }
+
+    $("#PLANT_CODE").on("change", function () {
+        ChangeLable();
+        DDLFamilyByPlant();
+
+    });
+    function ChangeLable() {
+
+        if ($('#PLANT_CODE').val() == "T04") {
+            $('.lblDynamic').html("Skid");
+        }
+        else {
+            $('.lblDynamic').html("Backend");
+        }
+    }
+
+    $("#UpdateJobData").on("click", function () {
+
+        UpdateJob();
+
+    });
+
+    function UpdateJob() {
+        $("#divLoader").show();
+        var Data = {
+            PLANT_CODE: $('#PLANT_CODE').val(),
+            FAMILY_CODE: $('#FAMILY_CODE').val(),
+            JOBID: $('#hdnJob').val(),
+            TRANSMISSION_SRLNO: $('#TRANSMISSION_SRLNO').val(),
+            REARAXEL_SRLNO: $('#REARAXEL_SRLNO').val(),
+            BACKEND_SRLNO: $('#BACKEND_SRLNO').val(),
+            ENGINE_SRLNO: $('#ENGINE_SRLNO').val(),
+            HYDRALUIC_SRLNO: $('#HYDRALUIC_SRLNO').val(),
+            REARTYRE_SRLNO1: $('#REARTYRE_SRLNO1').val(),
+            REARTYRE_SRLNO2: $('#REARTYRE_SRLNO2').val(),
+            FRONTTYRE_SRLNO1: $('#FRONTTYRE_SRLNO1').val(),
+            FRONTTYRE_SRLNO2: $('#FRONTTYRE_SRLNO2').val(),
+            BATTERY_SRLNO: $('#BATTERY_SRLNO').val(),
+            BATTERY_MAKE: $('#BATTERY_MAKE').val(),
+            HYD_PUMP_SRLNO: $('#HYD_PUMP_SRLNO').val(),
+            STEERING_MOTOR_SRLNO: $('#STEERING_MOTOR_SRLNO').val(),
+            STEERING_ASSEMBLY_SRLNO: $('#STEERING_ASSEMBLY_SRLNO').val(),
+            STERING_CYLINDER_SRLNO: $('#STERING_CYLINDER_SRLNO').val(),
+            RADIATOR_SRLNO: $('#RADIATOR_SRLNO').val(),
+            CLUSSTER_SRLNO: $('#CLUSSTER_SRLNO').val(),
+            ALTERNATOR_SRLNO: $('#ALTERNATOR_SRLNO').val(),
+            STARTER_MOTOR_SRLNO: $('#STARTER_MOTOR_SRLNO').val(),
+            STEERING_MOTOR_SRLNO: $('#STEERING_MOTOR_SRLNO').val(),
+            ROPS_SRNO: $('#ROPS_SRNO').val(),
+            RopsUserConfirmation: $('#RopsUserConfirmation').val()
+                };
+        $.ajax({
+                //cache: false, async: false,
+                url: '@Url.Action("UpdateJob", "JobFinal")',
+                data: JSON.stringify({ data: Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+                    data.ErrorNo = parseInt(data.ErrorNo);
+
+
+                    if ((data.ErrorNo != undefined) && (data.ErrorNo == 0 || data.ErrorNo == 20)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 1)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#TRANSMISSION_SRLNO').prop("disabled", false);
+                        $("#TRANSMISSION_SRLNO").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 2)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#REARAXEL_SRLNO').prop("disabled", false);
+                        $("#REARAXEL_SRLNO").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 3)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#BACKEND_SRLNO').prop("disabled", false);
+                        $("#BACKEND_SRLNO").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 4)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#ENGINE_SRLNO').prop("disabled", false);
+                        $("#ENGINE_SRLNO").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 5)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#HYDRALUIC_SRLNO').prop("disabled", false);
+                        $("#HYDRALUIC_SRLNO").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 6)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#REARTYRE_SRLNO1').prop("disabled", false);
+                        $("#REARTYRE_SRLNO1").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 7)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        $('#REARTYRE_SRLNO2').prop("disabled", false);
+                        $("#REARTYRE_SRLNO2").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 8)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#FRONTTYRE_SRLNO1').prop("disabled", false);
+                        $("#FRONTTYRE_SRLNO1").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 9)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#FRONTTYRE_SRLNO2').prop("disabled", false);
+                        $("#FRONTTYRE_SRLNO2").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 10)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#BATTERY_SRLNO').prop("disabled", false);
+                        $("#BATTERY_SRLNO").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 11)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#BATTERY_MAKE').prop("disabled", false);
+                        $("#BATTERY_MAKE").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 12)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#HYD_PUMP_SRLNO').prop("disabled", false);
+                        $("#HYD_PUMP_SRLNO").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 13)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#STEERING_MOTOR_SRLNO').prop("disabled", false);
+                        $("#STEERING_MOTOR_SRLNO").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 14)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#STEERING_ASSEMBLY_SRLNO').prop("disabled", false);
+                        $("#STEERING_ASSEMBLY_SRLNO").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 15)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#STERING_CYLINDER_SRLNO').prop("disabled", false);
+                        $("#STERING_CYLINDER_SRLNO").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 16)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#RADIATOR_SRLNO').prop("disabled", false);
+                        $("#RADIATOR_SRLNO").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 17)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#CLUSSTER_SRLNO').prop("disabled", false);
+                        $("#CLUSSTER_SRLNO").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 18)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#ALTERNATOR_SRLNO').prop("disabled", false);
+                        $("#ALTERNATOR_SRLNO").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 19)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#STARTER_MOTOR_SRLNO').prop("disabled", false);
+                        $("#STARTER_MOTOR_SRLNO").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 20)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#ROPS_SRNO').prop("disabled", false);
+                        $("#ROPS_SRNO").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 21)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#REARTYRE_SRLNO1').val("");
+                        $('#REARTYRE_SRLNO2').val("");
+                        $('#REARTYRE_SRLNO1').prop("disabled", false);
+                        $("#REARTYRE_SRLNO1").focus();
+                        $('#REARTYRE_SRLNO2').prop("disabled", false);
+                        
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 22)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#FRONTTYRE_SRLNO1').val("");
+                        $('#FRONTTYRE_SRLNO2').val("");
+                        $('#FRONTTYRE_SRLNO1').prop("disabled", false);
+                        $("#FRONTTYRE_SRLNO1").focus();
+                        $('#FRONTTYRE_SRLNO2').prop("disabled", false);
+
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == -100)) {
+                        RopsPopUp();
+                        //$('#ROPS_SRNO').prop("disabled", false);
+                        //$("#ROPS_SRNO").focus();
+                        //return;
+                    }
+
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == -99)) {
+
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+
+
+                        $('#EngineSrNo').val("");
+                        $("#hdnEngineSrNo").val("");
+                        ClearControls();
+                        //return;
+                    }
+            },
+
+                error: function (errormessage) {
+
+                }
+            });
+    }
+
+    //Insert function
+    $("#Add").on("click", function () {
+
+            $("#divLoader").show();
+            var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                PackingStandard: $('#PackingStandard').val(),
+                ItemCode: $('#ItemCode').val()
+            };
+            $.ajax({
+                url: '@Url.Action("Add", "RawMaterialMaster")',
+                data: JSON.stringify({ data: Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+
+                    $("#divLoader").hide();
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#ItemCode').val("");
+                        $('#PackingStandard').val("");
+                        BindGrid();
+                    }
+                },
+                error: function (errormessage) {
+                    $("#divLoader").hide();
+                    $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+
+                }
+            });
+    });
+
+    function closeAlert(alert) {
+
+      $(alert).hide();
+    };
+
+
+
+
+
+
+    function Delete() {
+        var data = {
+
+            AutoId: AutoId
+            };
+        $.ajax({
+            url: '@Url.Action("Delete", "RawMaterialMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                }
+
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    $('#Plant').prop('disabled', false);
+                    $('#Family').prop('disabled', false);
+                    $('#ItemCode').val("");
+                    $('#PackingStandard').val("");
+                    $('#Add').show();
+                    $('#Update').hide();
+                    BindGrid();
+
+                }
+
+            },
+            error: function (errormessage)
+            {
+            }
+        });
+
+    }
+
+
+    //Update Data
+    $("#Update").on("click", function () {
+          $("#divLoader").show();
+
+        var data = {
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val(),
+              PackingStandard: $('#PackingStandard').val(),
+              ItemCode: $('#ItemCode').val(),
+              AutoId: AutoId
+            };
+        $.ajax({
+            url: '@Url.Action("Update", "RawMaterialMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+
+                $("#divLoader").hide();
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                }
+
+
+                else {
+
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    $('#Plant').prop('disabled', false);
+                    $('#Family').prop('disabled', false);
+                    $('#ItemCode').val("");
+                    $('#PackingStandard').val("");
+                    $('#Add').show();
+                    $('#Update').hide();
+                    BindGrid();
+                }
+
+            },
+            error: function (errormessage)
+            {
+            }
+        });
+    });
+
+    $("#FAMILY_CODE").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#PLANT_CODE").select2({
+        allowClear: true,
+        width: '100%',
+    });
+
+
+</script>
+<div id="dialog-confirm">
+    Generate ROPS Serial No ?
+</div>
+
+
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+    <script src="http://code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $("#dialog-confirm").hide();
+        function RopsPopUp() {
+            $("#dialog-confirm").dialog({
+                closeOnEscape: false,
+                resizable: false,
+                height: 220,
+                width: 475,
+                modal: true,
+                buttons: {
+                    "OK": function () {
+
+                        $(this).dialog("close");
+                        
+                        $('#RopsUserConfirmation').val('YES');
+                        UpdateJob();
+
+                    },
+                    Cancel: function () {
+                        $(this).dialog("close");
+                        $('#RopsUserConfirmation').val('NO');
+                        UpdateJob();
+                    }
+                }
+            });
+        }
+
+    </script>

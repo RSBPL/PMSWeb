@@ -1,0 +1,6 @@
+﻿@model MVCApp.Models.MappingFamilyToPlant
+@{
+    <div>
+      @Html.DropDownListFor(model => model.PlantCode, (IEnumerable<SelectListItem>)ViewBag.PlantFamily, new { @class = "form-control  input-sm" })
+    </div>
+}

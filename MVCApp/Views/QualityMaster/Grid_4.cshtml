@@ -1,0 +1,90 @@
+﻿@using Syncfusion.EJ2
+
+<div class="control-section">
+    @Html.EJS().Grid("Grid_4").DataSource((IEnumerable<object>)ViewBag.DataSource_4).AllowPaging(true).PageSettings(Page => Page.PageSize(12)).Columns(col =>
+{
+    col.HeaderText("INSPECTION").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Template("#template").Width("150").Add();
+    col.Field("AUTOID").HeaderText("AUTOID").IsPrimaryKey(true).Width("100").Add();
+    col.Field("MRN_NO").HeaderText("MRN").Width("195").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Add();
+    col.Field("ITEMCODE").HeaderText("ITEM CODE").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Add();
+    col.Field("ITEM_DESCRIPTION").HeaderText("DESCRIPTION").Width("130").Add();
+
+    col.Field("VENDOR_CODE").HeaderText("V.CODE").Width("195").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Add();
+
+    col.Field("CREATEDDATE").HeaderText("CREATED DATE").Width("130").Add();
+    col.Field("CREATEDTIME").HeaderText("CREATED TIME").Width("195").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Add();
+    col.Field("ITEM_REVISION").HeaderText("REV").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Add();
+    col.Field("BOM_REVISION").HeaderText("BOM").Width("130").Add();
+    col.Field("QUANTITY").HeaderText("QTY.").Width("195").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Add();
+    col.Field("PUNAME").HeaderText("PU NAME").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Add();
+    col.Field("COUNTING").HeaderText("COUNT DATE").Width("130").Add();
+    col.Field("MT_TEST").HeaderText("MT").Width("195").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Add();
+    col.Field("CNT").HeaderText("COUNT").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Add();
+    col.Field("CNT").HeaderText("COUNT").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Add();
+    //col.HeaderText("STATUS").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Template("#STATUS").Width("150").Add();
+    col.Field("DAYS_DIFFERENCE").HeaderText("DAYS DIF").Width("195").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Add();
+    col.Field("QUALITY_OK").HeaderText("QUALITY_OK").Visible(true).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Add();
+
+}).RowDataBound("rowBound").AllowSelection(true).Render()
+</div>
+
+
+<script id="template" type="text/x-template">
+    <div>
+
+        @*<select id="DDL_Inspection">
+            <option value="0">-- Select --</option>
+            <option value="OK" selected="selected">DONE</option>
+        </select>*@
+
+
+        <input type="checkbox" checked>
+
+    </div>
+</script>
+
+<script id="STATUS" type="text/x-template">
+    <div>
+
+
+
+    </div>
+</script>
+
+
+<script>
+    function rowBound(args) {
+        if ((args.data['QUALITY_OK'] == 'OK') && (args.data['ITEM_REVISION'] == args.data['BOM_REVISION'])) {
+            args.row.classList.add('below-10');
+        }
+        else if ((args.data['QUALITY_OK'] != 'OK') && (args.data['ITEM_REVISION'] != args.data['BOM_REVISION'])) {
+            args.row.classList.add('below-20');
+        }
+        else if ((args.data['QUALITY_OK'] == 'OK') && (args.data['ITEM_REVISION'] != args.data['BOM_REVISION'])) {
+            args.row.classList.add('below-30');
+        }
+        else {
+
+        }
+    }
+</script>
+<style>
+    .below-10 {
+        background-color: #98ff68;
+    }
+
+    .below-20 {
+        background-color: #ffb8b8;
+    }
+
+    .below-30 {
+        background-color: #ff9d9d;
+    }
+</style>
+
+
+
+
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()

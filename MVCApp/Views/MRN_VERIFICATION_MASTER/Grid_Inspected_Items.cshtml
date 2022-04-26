@@ -1,0 +1,89 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+
+        #dropdown {
+            position: relative;
+            height: 22px;
+            width: 10em;
+            text-align: left;
+            background-color: white;
+        }
+
+        .highcontrast .e-grid #dropdown {
+            background-color: black;
+        }
+    </style>
+
+    <div class="table-responsive">
+        @(Html.EJS().Grid("Grid_Inspected_Items").DataSource((System.Data.DataTable)ViewBag.DataSourceH).
+                        AllowPaging(true).
+                        PageSettings(Page => Page.PageSize(15)).
+                        AllowFiltering().
+                        RowDataBound("rowDataBound").
+                        AllowExcelExport().
+                        ToolbarClick("toolbarClick").
+                        //AllowGrouping().
+                        AllowSorting().
+                        AllowSelection().
+                        AllowTextWrap().
+                        AllowResizing().
+                        EnableAutoFill(true).
+                        AllowReordering().
+                Columns(col =>
+                {
+                    col.Field("MRN_NO").HeaderText("MRN NO").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(140).Add();
+                    col.Field("ITEMCODE").HeaderText("ITEM CODE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(140).Add();
+                    col.Field("ITEM_DESCRIPTION").HeaderText("DESCRIPTION").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(350).Add();
+                    col.Field("VENDOR_CODE").HeaderText("V.CODE").IsPrimaryKey(true).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(100).Add();
+                    col.Field("VENDOR_NAME").HeaderText("V.NAME").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(280).Add();
+                    col.Field("CREATEDDATE").HeaderText("CREATED DATE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(170).Add();
+                    col.Field("QUANTITY").HeaderText("QTY.").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(90).Add();
+                    col.Field("PUNAME").HeaderText("PUNAME").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(110).Add();
+                    col.Field("STATUS").HeaderText("STATUS").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(110).Add();
+                    col.Field("STORE_VERIFIED").HeaderText("VERIFIED").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(130).Add();
+                    col.Field("STORE_VERIFIEDBY").HeaderText("VERIFIED BY").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(130).Add();
+                    col.Field("STORE_VERIFIEDDATE").HeaderText("VERIFIED DATE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(180).Add();
+                    col.Field("QUALITY_OK").HeaderText("QUALITY OK").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(130).Add();
+                    col.Field("QUALITY_OK_BY").HeaderText("QUALITY BY").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(130).Add();
+                    col.Field("QUALITY_OK_DATE").HeaderText("QUALITY DATE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(180).Add();
+
+                }).Toolbar(new List<string>() { "ExcelExport" }).Render())
+
+        <script>
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("GridHistort").ej2_instances[0];
+                gridObj.excelExport();
+            }
+
+            function rowDataBound(args) {
+                if (args.data['QUALITY_OK'] === 'OK') {
+                    args.row.classList.add('green');
+                }
+                else if (args.data['STORE_VERIFIED'] === 'VERIFIED') {
+                    args.row.classList.add('yellow');
+                }
+                else {
+                    //args.row.classList.add('red');
+                }
+            }
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+
+
+
+
+
+

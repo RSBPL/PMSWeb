@@ -1,0 +1,13 @@
+﻿@using Syncfusion.EJ2
+@using Syncfusion.EJ2.Lists
+<h4 style="color:brown">Family Master :</h4>
+@Html.EJS().ListView("element").DataSource((IEnumerable<object>)ViewBag.dataSource).Fields(new ListViewFieldSettings { Text = "Text", Id = "Id" }).ShowCheckBox(true).Render()
+@*<div id="text">
+    @Html.EJS().Button("btn").Content("Insert").Render()
+    <table id="val"></table>
+</div>*@
+
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+
+@Html.EJS().ScriptManager()

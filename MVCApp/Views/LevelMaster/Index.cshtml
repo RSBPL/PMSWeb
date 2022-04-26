@@ -1,0 +1,162 @@
+﻿@model MVCApp.Models.PrivilegeModel
+@using Syncfusion.EJ2
+
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Maintenance</a>
+        </li>
+
+        <li class="active">
+            Level
+        </li>
+    </ul>
+</div>
+
+<div class="page-content">
+    <div class="container" id="alert">
+        @if (TempData["msg"] != null && TempData["msgType"] != null)
+        {
+            <div class="alert @TempData["msgType"]" role="alert">
+                <strong>@TempData["msg"]</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+        <div style="margin-top:5px; margin-bottom:5px;">
+            @*<a href="@Url.Action("Create", "MenuMaster")" class="btn btn-primary btn-sm"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add New</a>*@
+        </div>
+    </div>
+</div>
+<div class="page-content">
+    <!-- Form -->
+    <div class="container" style="width:100%!important">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="card-body">
+                <div class="form-group">
+                    <fieldset class="the-fieldset">
+                        <legend class="the-legend"><b>Existing Role</b></legend>
+
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label for="fname" class="control-label col-form-label"><strong>Role</strong></label>
+                                @Html.DropDownListFor(model => model.RoleId, new SelectList(ViewBag.Role, "Value", "Text"), "----Select----", new { @class = "form-control input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.RoleId, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="fname" class="text-right control-label col-form-label"><strong class="text-hide">Role Description</strong></label>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <button class="btn btn-success btn-sm" type="button" id="submit">
+                                            <i class="ace-icon fa fa-check bigger-110"></i>
+                                            <strong>Submit</strong>
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" type="reset" id="btnReset">
+                                            <i class="ace-icon fa fa-undo bigger-110"></i>
+                                            <strong>Reset</strong>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        }
+        <div id="Tree">
+
+        </div>
+    </div>
+</div>
+
+@Styles.Render("~/Content/ej2")
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<script>
+    $(document).ready(function () {
+        TreeView("");
+    });
+
+    $("#RoleId").change(function () {
+        var selectedValue = $("#RoleId").val();
+        //if ($("select option:selected").index() > 0) {
+            TreeView(selectedValue);
+        //}
+        //else {
+        //    TreeView(0);
+        //}
+    });
+
+    function TreeView(Role) {
+        if (Role != null) {
+            var UR = { Id: Role };
+            $.ajax({
+                  url: "@Url.Action("TreeView", "LevelMaster")",
+                  type: "POST",
+                  data: UR,
+                  success: function (result) {
+                      $('#Tree').html(result);
+                  },
+                  error: function (result) {
+                      alert(errormessage.responseText);
+                  }
+            });
+        };
+    };
+
+    var checkedNodes;
+    function nodeChecked(args) {
+        checkedNodes = this.checkedNodes;
+    };
+
+    $('#btnReset').on('click', function () {
+        TreeView(0);
+        $('#RoleId').val(1).trigger('change');
+    });
+
+    $('#submit').on('click', function () {
+        var LevelObj = $('#RoleId').val();
+
+        var Menus = checkedNodes;
+         $.ajax({
+              url: '@Url.Action("Create", "LevelMaster")',
+              data: JSON.stringify({ Role: LevelObj, MenuCode: Menus}),
+              type: "POST",
+              traditional : true,
+              contentType: "application/json;charset=utf-8",
+              dataType: "json",
+             success: function (result) {
+                 if (result == "RECORD SAVED SUCCESSFULLY") {
+                     $('#alert').append('<div class="alert alert-success role = "alert"><strong>' + result + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                     setTimeout(function() {$(".alert").alert('close');}, 3000);
+                     $("#btnReset" ).click();
+                 }
+                 else {
+                     $("#alert").show();
+                     $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + result + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                     setTimeout(function() {$(".alert").alert('close');}, 3000);
+                 }
+             },
+             error: function (errormessage) {
+                  $("#alert").show();
+                  $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + errormessage + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                  setTimeout(function() {$(".alert").alert('close');}, 3000);
+             }
+         });
+    });
+</script>
+<script>
+    $("#RoleId").select2({});
+
+</script>

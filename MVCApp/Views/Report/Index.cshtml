@@ -1,0 +1,593 @@
+﻿@model MVCApp.Models.ReportModel
+<style>
+
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .c-adj {
+        width: 140px;
+    }
+    .ui-autocomplete {
+        max-height: 400px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+
+    .ui-autocomplete {
+        height: 400px;
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Report</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    @*--------Form------------*@
+    <div class="container" style="width:100%!important">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal form-group">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            @Html.DropDownListFor(model => model.Plant, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.Plant, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                            @Html.DropDownListFor(model => model.Family, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.Family, "", new { @class = "text-danger" })</strong>
+                        </div>
+
+                        <div id="hideshowdate">
+                            <div class="col-md-2 c-adj">
+                                <label for="fname" class="control-label col-form-label"><strong>From Date</strong></label>
+                                @*@Html.EJS().DatePickerFor(Model => Model.FromDate).Format("dd-MMM-yyyy").Value(ViewBag.DefaultDate).Render()*@
+                                @Html.EJS().DatePickerFor(Model => Model.FromDate).Format("dd-MMM-yyyy").Value(ViewBag.DefaultDate).Render()
+                                <strong>@Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-2 c-adj">
+                                <label for="fname" class="control-label col-form-label"><strong>To Date</strong></label>
+                                @Html.EJS().DatePickerFor(Model => Model.ToDate).Format("dd-MMM-yyyy").Value(ViewBag.DefaultDate).Render()
+                                <strong>@Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Report Type</strong></label><div class="pull-right"> @Html.CheckBoxFor(model => model.chkGateReports, null) Gate Reports</div>
+                            @Html.DropDownListFor(model => model.ReportType, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.ReportType, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3" id="PNLShiftDetail">
+                            <div class="pull-left" style="padding: 10px"> @Html.CheckBoxFor(model => model.ShiftA, null) Shift A </div>
+                            <div class="pull-left" style="padding: 10px"> @Html.CheckBoxFor(model => model.ShiftB, null) Shift B </div>
+                            <div class="pull-left" style="padding: 10px"> @Html.CheckBoxFor(model => model.ShiftC, null) Shift C </div>
+
+                        </div>
+                        <div class="col-md-3" id="PNLTotalTractorsManufactured">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Filter By</strong></label><div class="pull-right"> @Html.CheckBoxFor(model => model.LessFields, null) Less Fields</div>
+                            @Html.DropDownListFor(model => model.FilterBy, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.FilterBy, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3" id="PNLJobHistory">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Job History</strong></label>
+                            @Html.TextBoxFor(Model => Model.gleJobs, null, new { @class = "form-control input-sm" })
+                            @*@Html.DropDownListFor(model => model.gleJobs, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+            <strong>@Html.ValidationMessageFor(model => model.gleJobs, "", new { @class = "text-danger" })</strong>*@
+                        </div>
+                        <div class="col-md-3" id="PNLJobExistance">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Job No</strong></label>
+                            @Html.TextBoxFor(model => model.Job, new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.Job, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3" id="PNLProductionReport">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Shift</strong></label>
+                            @Html.DropDownListFor(model => model.Shift, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.Shift, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3" id="PNLQCOKPRINTON">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Filter By</strong></label>
+                            @Html.DropDownListFor(model => model.QCPRINT, new List<SelectListItem> {
+                               new SelectListItem { Value = "QCOK" , Text = "QC OK" },
+                               new SelectListItem { Value = "PRINTEDON" , Text = "PRINTED ON" },
+                               new SelectListItem { Value = "SCANDATE" , Text = "SCAN DATE" }
+                            }, new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.QCPRINT, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3" id="PNLSTFILTERBY">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Filter By</strong></label>
+                            @Html.DropDownListFor(model => model.STFilterBy, new List<SelectListItem> {
+                               new SelectListItem { Value = "PRINTDATE" , Text = "PRINT DATE" },
+                               new SelectListItem { Value = "SCANDATE" , Text = "SCAN DATE" }
+                            }, new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.STFilterBy, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-2" id="PNLReportType">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Tracktor NOS.</strong></label>
+                            @Html.TextBoxFor(model => model.SHORT_BULK, new { @Value = "100", @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.SHORT_BULK, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong class="text-hide">button abc</strong></label>
+                                </div>
+                                <div class="col-md-12 align-right">
+                                    <button class="btn btn-success btn-sm" type="button" id="ClickMe"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Submit</strong></button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                   
+                    
+                </fieldset>
+                
+            </div>
+        }
+    </div>
+    <div id="Grid"></div>
+</div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<script src="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.js")"></script>
+<link href="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.css")" rel="stylesheet" />
+
+
+<script>
+
+    $(document).ready(function () {
+        $('#PNLTotalTractorsManufactured').hide();
+        $('#PNLJobHistory').hide();
+        $('#PNLJobExistance').hide();
+        $('#PNLProductionReport').hide();
+        $('#PNLQCOKPRINTON').hide();
+        $('#PNLShiftDetail').hide();
+        $('#PNLSTFILTERBY').hide();
+        $('#PNLReportType').hide();
+        
+
+        DDLPlant();
+        DDLShift();
+        DDLFilterBy();
+
+        AutoCompleteJobHistory();
+
+
+    });
+
+    function AutoCompleteJobHistory() {
+
+        $.noConflict();
+
+        $("#gleJobs").autocomplete({
+
+            source: function (request, response) {
+
+            var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                gleJobs: $('#gleJobs').val()
+
+            };
+                $.ajax({
+                    url: "@Url.Action("DDLFilJobs", "Report")",
+                    type: "POST",
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify({ data: Data }),
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            /*console.log(item.Text);*/
+                            return { label: item.Text, value: item.Text };
+                        }))
+
+                    },
+                    error: function (err) {
+                        alert(err);
+                    }
+                });
+            },
+
+            minLength: 4
+
+          });
+    }
+
+    $("#ClickMe").on("click", function () {
+        BindGrid();
+    });
+
+
+    $("#Plant").on("change", function () {
+        DDLFamilyByPlant();
+    });
+
+    $("#Family").on("change", function () {
+        DDLReportType();
+        /*DDLgleJobs();*/
+    });
+
+    $("#ReportType").on("change", function () {
+        ShowHide();
+    });
+
+    $("#chkGateReports").on("change", function () {
+        DDLReportType();
+    });
+
+    //Show Hide
+    function ShowHide() {
+        if ($('#ReportType').val() == 'TOT' || $('#ReportType').val() == 'ROLL') {
+            $('#PNLTotalTractorsManufactured').show();
+            $('#PNLJobHistory').hide();
+            $('#PNLJobExistance').hide();
+            $('#PNLProductionReport').hide();
+            $('#hideshowdate').show();
+            $('#PNLQCOKPRINTON').hide();
+            $('#PNLShiftDetail').show();
+            $('#PNLSTFILTERBY').hide();
+        }
+        else if ($('#ReportType').val() == 'JOB') {
+            $('#PNLTotalTractorsManufactured').hide();
+            $('#PNLJobHistory').show();
+            $('#PNLJobExistance').hide();
+            $('#PNLProductionReport').hide();
+            $('#hideshowdate').hide();
+            $('#PNLQCOKPRINTON').hide();
+            $('#PNLShiftDetail').hide();
+            $('#PNLSTFILTERBY').hide();
+
+        }
+        else if ($('#ReportType').val() == 'CHECK_JOB') {
+            $('#PNLTotalTractorsManufactured').hide();
+            $('#PNLJobHistory').hide();
+            $('#PNLJobExistance').show();
+            $('#PNLProductionReport').hide();
+            $('#hideshowdate').show();
+            $('#PNLQCOKPRINTON').hide();
+            $('#PNLShiftDetail').hide();
+            $('#PNLSTFILTERBY').hide();
+        }
+        else if ($('#ReportType').val() == 'PRD') {
+            $('#PNLTotalTractorsManufactured').hide();
+            $('#PNLJobHistory').hide();
+            $('#PNLJobExistance').hide();
+            $('#PNLProductionReport').show();
+            $('#hideshowdate').show();
+            $('#PNLQCOKPRINTON').hide();
+            $('#PNLShiftDetail').hide();
+            $('#PNLSTFILTERBY').hide();
+        }
+        else if ($('#ReportType').val() == 'PRDENGINES' || $('#ReportType').val() == 'PRDHYDRAULIC' || $('#ReportType').val() == 'PRDREARAXEL' || $('#ReportType').val() == 'PRDTRANSMISSION' || ($('#ReportType').val() == 'PRDBACKEND' && $('#Plant').val() == 'T05' )) {
+            $('#PNLTotalTractorsManufactured').hide();
+            $('#PNLJobHistory').hide();
+            $('#PNLJobExistance').hide();
+            $('#PNLProductionReport').hide();
+            $('#hideshowdate').show();
+            $('#PNLQCOKPRINTON').show();
+            $('#PNLShiftDetail').show();
+            $('#PNLSTFILTERBY').hide();
+        }
+        else if (($('#ReportType').val() == 'PRDBACKEND' && $('#Plant').val() == 'T04')) {
+            $('#PNLTotalTractorsManufactured').hide();
+            $('#PNLJobHistory').hide();
+            $('#PNLJobExistance').hide();
+            $('#PNLProductionReport').hide();
+            $('#hideshowdate').show();
+            $('#PNLQCOKPRINTON').hide();
+            $('#PNLShiftDetail').show();
+            $('#PNLSTFILTERBY').hide();
+        }
+        else if ($('#ReportType').val() == 'STORE_REPORT') {
+            $('#PNLTotalTractorsManufactured').hide();
+            $('#PNLJobHistory').hide();
+            $('#PNLJobExistance').hide();
+            $('#PNLProductionReport').hide();
+            $('#hideshowdate').show();
+            $('#PNLQCOKPRINTON').hide();
+            $('#PNLShiftDetail').hide();
+            $('#PNLSTFILTERBY').show();
+        }
+        else if ($('#ReportType').val() == 'MATERIAL_SHORT_BULK') {
+            $('#PNLTotalTractorsManufactured').hide();
+            $('#PNLJobHistory').hide();
+            $('#PNLJobExistance').hide();
+            $('#PNLProductionReport').hide();
+            $('#hideshowdate').show();
+            $('#PNLQCOKPRINTON').hide();
+            $('#PNLShiftDetail').hide();
+            $('#PNLReportType').show();
+        }
+        else {
+            $('#PNLTotalTractorsManufactured').hide();
+            $('#PNLJobHistory').hide();
+            $('#PNLJobExistance').hide();
+            $('#PNLProductionReport').hide();
+            $('#PNLQCOKPRINTON').hide();
+            $('#hideshowdate').show();
+            $('#PNLShiftDetail').hide();
+            $('#PNLSTFILTERBY').hide();
+            
+        }
+        
+    }
+
+    //Function to bind Plant
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "AddDailyPlan")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Plant").html(result);
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        var selectedValue = $("#Plant").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "Report")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#Family").html(null);
+                $("#Family").html(result);
+               /* DDLgleJobs();*/
+                DDLReportType();
+
+        },
+            error: function (errormessage) {
+
+            }
+        });
+    };
+
+    //Function to bind ModelType
+    function DDLReportType() {
+        var chkGetR = null;
+        if ($('#chkGateReports').is(":checked")) {
+            chkGetR = true;
+        }
+        else {
+            chkGetR = false;
+        }
+
+
+        var Data = {
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val(),
+            chkGateReports: chkGetR
+        };
+        $.ajax({
+            url: '@Url.Action("ReportType", "Report")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#ReportType").html(null);
+                $("#ReportType").html(result);
+                ShowHide();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Grid
+    function BindGrid() {
+        var LessF = null;
+        if ($('#LessFields').is(":checked")) {
+            LessF = true;
+        }
+        else {
+            LessF = false;
+        }
+        var ShiftAD = null;
+        if ($('#ShiftA').is(":checked")) {
+            ShiftAD = true;
+        }
+        else {
+            ShiftAD = false;
+        }
+        var ShiftBD = null;
+        if ($('#ShiftB').is(":checked")) {
+            ShiftBD = true;
+        }
+        else {
+            ShiftBD = false;
+        }
+        var ShiftCD = null;
+        if ($('#ShiftC').is(":checked")) {
+            ShiftCD = true;
+        }
+        else {
+            ShiftCD = false;
+        }
+        $("#divLoader").show();
+        var Data = {
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val(),
+            FromDate: $('#FromDate').val(),
+            ToDate: $('#ToDate').val(),
+            ReportType: $('#ReportType').val(),
+            FilterBy: $('#FilterBy').val(),
+            gleJobs: $('#gleJobs').val(),
+            Job: $('#Job').val(),
+            Shift: $('#Shift').val(),
+            ShiftText: $('#Shift').text(),
+            chkShowLess: LessF,
+            QCPRINT: $('#QCPRINT').val(),
+            ShiftA: ShiftAD,
+            ShiftB: ShiftBD,
+            ShiftC: ShiftCD,
+            STFilterBy: $('#STFilterBy').val(),
+            SHORT_BULK: $('#SHORT_BULK').val(),
+        };
+        
+            $.ajax({
+                url: '@Url.Action("Grid", "Report")',
+                data: JSON.stringify(Data),
+                type: "POST",
+                contentType: "application/json;charset=UTF-8",
+                success: function (result) {
+                    $("#Grid").html(result);
+                    $("#divLoader").hide();
+                },
+                error: function (errormessage) {
+                    //alert(errormessage.responseText);
+                }
+            });
+        
+    };
+
+    //Function to Visible Tyer Modal
+    function VisibleTyerModal() {
+        //$("#divLoader").show();
+        var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val()
+                };
+        $.ajax({
+            url: '@Url.Action("VisibleTyerModal", "AddDailyPlan")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                if (result == 'Y') {
+                    $('#panel').show();
+                }
+                if (result == 'N') {
+                    $('#panel').hide();
+                }
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind family by Shift
+    function DDLShift() {
+        $.ajax({
+            url: '@Url.Action("BindShift", "Report")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Shift").html(result);
+                GetCurrentShift();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind FilterBy
+    function DDLFilterBy() {
+        $.ajax({
+            url: '@Url.Action("BindFilterBy", "Report")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#FilterBy").html(result);
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to Get Current Shift
+    function GetCurrentShift() {
+        $.ajax({
+            url: '@Url.Action("CurrentShift", "Report")',
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $("#Shift").val(result);
+            },
+            error: function (result) {
+
+            }
+        });
+    };
+
+    //Function to bind gleJobs by Plant, Family
+    function DDLgleJobs() {
+        var Data = {
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val()
+            };
+        $.ajax({
+            url: '@Url.Action("DDLFilJobs", "Report")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            success: function (result) {
+                $("#gleJobs").html(null);
+                $("#gleJobs").html(result);
+            },
+            error: function (errormessage) {
+                //alert(errormessage.responseText);
+            }
+        });
+    };
+
+
+    $("#Plant").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#Family").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#ReportType").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    //$("#gleJobs").select2({
+    //    allowClear: true,
+    //    width: '100%',
+    //});
+
+</script>

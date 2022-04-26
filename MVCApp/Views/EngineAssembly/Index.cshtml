@@ -1,0 +1,1358 @@
+﻿@model MVCApp.Models.EngineAssembly
+@Model.
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+
+<style>
+    /*.modal-dialog {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 1%;
+    }
+
+    .modal-content {
+        height: auto;
+        min-height: 100%;
+        border-radius: 0;
+    }*/
+
+    /*.modal-header{
+        background-color: darkcyan;
+    }*/
+    /*the container must be positioned relative:*/
+    .ui-autocomplete {
+        position: relative;
+        display: inline-block;
+        height: 250px;
+    }
+    .ui-autocomplete {
+        max-height: 250px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+
+    .ui-autocomplete {
+        height: 250px;
+    }
+    .well {
+        background-color: #EBF3F9;
+    }
+    .row-static {
+        margin: 20px 155px 20px 155px;
+    }
+    .inj {
+        width: 42%;
+        margin-top: 7px;
+    }
+    .inj1 {
+        width: 64%;
+        margin: 6px -20px 0 25px;
+    }
+    .col-md-9 {
+        padding:10PX;
+    }
+    .col-md-3 {
+        padding: 10PX;
+    }
+    .m-20 {
+        margin: -20px 0 0 -55px;
+    }
+    .hr1 {
+        margin-top: 2px;
+        margin-bottom: 6px;
+        border-top: 1px solid #0a5180;
+        width: 370px;
+    }
+    .W-100 {
+        width: 883px;
+        left: -106px;
+    }
+    .f-left {
+        float: LEFT;
+    }
+    .frm {
+        padding: 20px;
+    }
+    .C-1 {
+        WIDTH: 155PX;
+    }
+   .C-2 {
+        WIDTH: 62%;
+    }
+
+    .le {
+        font-size: 15px;
+        text-align: -webkit-center;
+        font-weight: 700;
+        background: #d1e9ff;
+        border-radius: 5px;
+        border: 1px solid #00b0ff;
+        width: 1216px;
+        text-align: center;
+        margin-left: -11px;
+    }
+    .w-adj1 {
+        WIDTH: 161px;
+        margin: -3px 0 -12px 23px;
+    }
+    .w-adj2 {
+        WIDTH: auto;
+        margin-left: 150px;
+    }
+    .fp {
+        width: 0px;
+        margin: -17px 14px 0 -25px;
+    }
+    input.largerCheckbox {
+        width: 20px;
+        height: 20px;
+    }
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .the-legend{
+        box-shadow: 0px 1px 5px #7f8b8f;
+    }
+    .col1 {
+    margin-right:10px;
+    }
+    .bg-info {
+        background: aliceblue;
+    }
+    .the-fieldset {
+        MARGIN-TOP: 5PX;
+    }
+    .Ex-btn {
+        margin-left: 82px;
+        WIDTH: 100PX;
+    }
+</style>
+
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Engine Assembly</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    <div class="container" style="width:100%!important">
+
+        @*Model for Check Password*@
+        <div class="modal" id="CheckPasswordModel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-info">
+                        <strong class="modal-title" id="exampleModalLabel" style="font-size:25px;"><i class="fa fa-exclamation-circle" style="font-size:35px;" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<strong>Authenticatoin..!</strong></strong>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label">Password</label>
+                                <input type="text" class="form-control" id="txtPassword" required="Required" autocomplete="off">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        @*<a href="@Url.Action("", "")" class="btn btn-success btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Go Back</a>*@
+                        <button type="button" data-dismiss="modal" class="btn btn-warning btn-sm"><i class="ace-icon fa fa-arrow-left"></i> Go Back</button>
+                        <button type="button" id="btnCheckPassword" class="btn btn-primary btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Click</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*--------Form------------*@
+    <div class="container" style="width:100%!important">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal form-group">
+
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+
+                        <div class="col-md-2">
+                            <label for="FrmDate" class="control-label col-form-label"><strong>From Date</strong></label>
+                            @Html.EJS().DatePickerFor(Model => Model.FrmDate).Format("dd-MMM-yyyy").Value(ViewBag.FromDate).Enabled(false).Render()
+                            <strong>@Html.ValidationMessageFor(model => model.FrmDate, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="ToDate" class="control-label col-form-label"><strong>To Date</strong></label>
+                            @Html.EJS().DatePickerFor(Model => Model.ToDate).Format("dd-MMM-yyyy").Value(ViewBag.DefaultDate).Render()
+                            <strong>@Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger" })</strong>
+                        </div>
+
+                        <div class="col-md-1"></div>
+                        <div class="col-md-2">
+                            <label>
+                                All Engines
+                                @Html.RadioButtonFor(model => model.cbEngineCategory, "All", new { @class = "form-control  input-sm", @checked = "true" })
+                            </label>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label>
+                                CRDI Engines
+                                @Html.RadioButtonFor(model => model.cbEngineCategory, "CRDI", new { @class = "form-control  input-sm" })
+                            </label>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label>
+                                Without CRDI Engines
+                                @Html.RadioButtonFor(model => model.cbEngineCategory, "WithoutCRDI", new { @class = "form-control  input-sm" })
+                            </label>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8"></div>
+                        <div class="col-md-2 Ex-btn">
+                            <button class="btn btn-success btn-sm " type="button" id="Export"><i class="fa fa-file-excel-o"></i><strong>Export</strong></button>
+                        </div>
+                        <div class="col-md-2 ">
+                            <button class="btn btn-info btn-sm " type="button" id="ExportBosch"><i class="fa fa-file-excel-o"></i><strong>Export BOSCH</strong></button>
+
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <div class="col-md-4 w-adj1">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            </div>
+
+                            <div class="input-group m-50">
+                                <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-industry"></i></span>
+                                @Html.DropDownListFor(model => model.Plant, Enumerable.Empty<SelectListItem>(), new { @class = "form-control input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.Plant, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div class="col-md-4 w-adj1">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                            </div>
+
+                            <div class="input-group m-50">
+                                <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-users"></i></span>
+                                @Html.DropDownListFor(model => model.Family, Enumerable.Empty<SelectListItem>(), new { @class = "form-control input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.Family, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <div class="col-md-4 w-adj1">
+                                <label for="EngineSrNo" class="text-right control-label col-form-label"><strong>Select Engine Sr No.</strong></label>
+                            </div>
+
+                            <div class="col-md-4 input-group C-2 ">
+                                <span class="input-group-addon"><i class="fas fa-tractor"></i></span>
+                                @Html.TextBoxFor(Model => Model.EngineSrNo, null, new { @class = "form-control input-sm" })
+                                <input type="hidden" value="" id="hdnEngineSrNo" />
+                                <strong>@Html.ValidationMessageFor(model => model.EngineSrNo, "", new { @class = "text-danger" })</strong>
+
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div class="col-md-4  w-adj1">
+                                <label for="FIP" class="control-label col-form-label"><strong>Fuel Injection Pump</strong></label>
+                            </div>
+                            <div class="col-md-4 input-group C-2 ">
+                                <span class="input-group-addon"><i class="fas fa-gas-pump"></i></span>
+                                @Html.TextBoxFor(Model => Model.FIP, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.FIP, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <div class="col-md-4 w-adj1">
+                                <label for="cylinderHead" class="control-label col-form-label"><strong>Cylinder Head</strong></label>
+                            </div>
+
+                            <div class="col-md-4 input-group C-2">
+                                <span class="input-group-addon"><i class="fab fa-product-hunt"></i></span>
+                                @Html.TextBoxFor(Model => Model.cylinderHead, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.cylinderHead, "", new { @class = "text-danger" })</strong>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <div class="col-md-4  w-adj1">
+                                <label for="cylinderBlock" class="control-label col-form-label"><strong>Cylinder Block</strong></label>
+                            </div>
+                            <div class="col-md-4 input-group C-2 ">
+                                <span class="input-group-addon"><i class="fas fa-hand-paper"></i></span>
+                                @Html.TextBoxFor(Model => Model.cylinderBlock, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.cylinderBlock, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <div class="col-md-4 w-adj1">
+                                <label for="crankShaft" class="control-label col-form-label"><strong>Crank Shaft</strong></label>
+                            </div>
+
+                            <div class="col-md-4 input-group C-2 ">
+                                <span class="input-group-addon"><i class="fas fa-gas-pump"></i></span>
+                                @Html.TextBoxFor(Model => Model.crankShaft, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.crankShaft, "", new { @class = "text-danger" })</strong>
+
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div class="col-md-4  w-adj1">
+                                <label for="camShaft" class="control-label col-form-label"><strong>Cam Shaft</strong></label>
+                            </div>
+                            <div class="col-md-4 input-group C-2 ">
+                                <span class="input-group-addon"><i class="fas fa-link"></i></span>
+                                @Html.TextBoxFor(Model => Model.camShaft, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.camShaft, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </fieldset>
+
+                <fieldset class="the-fieldset bg-info">
+                    <legend class="le">Connecting Rod(s)</legend>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <div class="col-md-4 w-adj2 ">
+                                <label for="CR1" class="control-label col-form-label"><strong>1.</strong></label>
+                            </div>
+                            <div class="col-md-4 input-group C-2 ">
+                                <span class="input-group-addon"><i class="fas fa-network-wired"></i></span>
+                                @Html.TextBoxFor(Model => Model.CR1, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.CR1, "", new { @class = "text-danger" })</strong>
+
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div class="col-md-4  w-adj2">
+                                <label for="CR2" class="control-label col-form-label"><strong>2.</strong></label>
+                            </div>
+                            <div class="col-md-4 input-group C-2 ">
+                                <span class="input-group-addon"><i class="fas fa-network-wired"></i></span>
+                                @Html.TextBoxFor(Model => Model.CR2, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.CR2, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div class="col-md-4  w-adj2">
+                                <label for="CR3" class="control-label col-form-label"><strong>3.</strong></label>
+                            </div>
+                            <div class="col-md-4 input-group C-2 ">
+                                <span class="input-group-addon"><i class="fas fa-network-wired"></i></span>
+
+                                @Html.TextBoxFor(Model => Model.CR3, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.CR3, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div class="col-md-4  w-adj2">
+                                <label for="CR4" class="control-label col-form-label"><strong>4.</strong></label>
+                            </div>
+                            <div class="col-md-4 input-group C-2 ">
+                                <span class="input-group-addon"><i class="fas fa-network-wired"></i></span>
+
+
+                                @Html.TextBoxFor(Model => Model.CR4, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.CR4, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </fieldset>
+
+                <fieldset class="the-fieldset bg-info " id="pnlInjector">
+                    <legend class="le">Injector(s)</legend>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <div class="col-md-4 w-adj2">
+                                <label for="INJ1" class="control-label col-form-label"><strong>1.</strong></label>
+                            </div>
+
+                            <div class="col-md-4 input-group C-2 ">
+                                <span class="input-group-addon"><i class="fas fa-crutch"></i></span>
+
+                                @Html.TextBoxFor(Model => Model.INJ1, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.INJ1, "", new { @class = "text-danger" })</strong>
+
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div class="col-md-4  w-adj2">
+                                <label for="INJ2" class="control-label col-form-label"><strong>2.</strong></label>
+                            </div>
+                            <div class="col-md-4 input-group C-2 ">
+                                <span class="input-group-addon"><i class="fas fa-crutch"></i></span>
+
+                                @Html.TextBoxFor(Model => Model.INJ2, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.INJ2, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div class="col-md-4  w-adj2">
+                                <label for="INJ3" class="control-label col-form-label"><strong>3.</strong></label>
+                            </div>
+                            <div class="col-md-4 input-group C-2 ">
+                                <span class="input-group-addon"><i class="fas fa-crutch"></i></span>
+
+
+                                @Html.TextBoxFor(Model => Model.INJ3, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.INJ3, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div class="col-md-4  w-adj2">
+                                <label for="INJ4" class="control-label col-form-label"><strong>4.</strong></label>
+                            </div>
+                            <div class="col-md-4 input-group C-2 ">
+                                <span class="input-group-addon"><i class="fas fa-crutch"></i></span>
+
+                                @Html.TextBoxFor(Model => Model.INJ4, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.INJ4, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </fieldset>
+
+
+                <div class="row" style="margin-top:10px;">
+                    <div class="col-md-12 align-right">
+                        <button class="btn btn-success btn-sm" type="button" id="SavePrint"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save And Print</strong></button>
+                        <button class="btn btn-primary btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+
+
+                        <button class="btn btn-info btn-sm" type="button" id="Admin"><i class="fas fa-user-shield"></i>&nbsp;<strong>Admin</strong></button>
+
+                    </div>
+                </div>
+
+            </div>
+
+        }
+
+        <div id="Grid"></div>
+
+    </div>
+</div>
+
+
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<script src="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.js")"></script>
+<link href="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.css")" rel="stylesheet" />
+
+@*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">*@
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+
+        DDLPlant();
+        AC_EngineSr();
+    });
+    $("#Plant").on("change", function () {
+        DDLFamilyByPlant();
+    });
+    //Function to bind Plant
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "EngineAssembly")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#Plant").append(optionhtml);
+                });
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    $("#Plant").on("change", function () {
+        $('#EngineSrNo').val("");
+
+        ClearControls();
+    });
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        var selectedValue = $("#Plant").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "EngineAssembly")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#Family").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#Family").append(optionhtml);
+                });
+                //BindEngine();
+                //BindGrid();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    function AC_EngineSr() {
+         $.noConflict();
+        $("#EngineSrNo").autocomplete({
+            source: function (request, response) {
+                var itemnamecodes = new Array();
+                var Data = {
+                    Plant: $('#Plant').val(),
+                    Family: $('#Family').val(),
+                    EngineSrNo: $('#EngineSrNo').val()
+                };
+                $.ajax({
+                    async: false, cache: false,
+                    type: "POST",
+                    url: "@(Url.Action("searchEngine", "EngineAssembly"))",
+                    data: { data: Data },
+                    success: function (data) {
+                        for (var i = 0; i < data.length; i++) {
+                            itemnamecodes[i] = { label: data[i].Text, Id: data[i].Value };
+                        }
+                    }
+                });
+                response(itemnamecodes);
+            },
+            minLength: 4,
+            select: function (event, ui) {
+
+                ClearControls();
+
+                var itemCode = SearchItemCode(ui.item.Id);
+                itemCode = JSON.parse(itemCode);
+
+                if (itemCode == "" || itemCode == undefined || itemCode == null) {
+                    alert("Engine itemcode not found");
+                    return;
+                }
+                else {
+
+                    InjectorPiston(itemCode);
+                    getBarcode(ui.item.Id);
+                    EnableBoxes(itemCode);
+                    $("#hdnEngineSrNo").val(ui.item.Id);
+                }
+
+            }
+        });
+    }
+    function ClearControls() {
+        $('#FIP').val("");
+        $('#cylinderHead').val("");
+        $('#cylinderBlock').val("");
+        $('#crankShaft').val("");
+        $('#camShaft').val("");
+        $('#CR1').val("");
+        $('#CR2').val("");
+        $('#CR3').val("");
+        $('#CR4').val("");
+        $('#INJ1').val("");
+        $('#INJ2').val("");
+        $('#INJ3').val("");
+        $('#INJ4').val("");
+        $("#pnlInjector").show();
+        $("#CR1").prop("disabled", false);
+        $('#CR2').prop("disabled", false);
+        $('#CR3').prop("disabled", false);
+        $('#CR4').prop("disabled", false);
+        $("#INJ1").prop("disabled", false);
+        $('#INJ2').prop("disabled", false);
+        $('#INJ3').prop("disabled", false);
+        $('#INJ4').prop("disabled", false);
+        $("#cylinderHead").prop("disabled", false);
+        $('#cylinderBlock').prop("disabled", false);
+        $('#crankShaft').prop("disabled", false);
+        $('#camShaft').prop("disabled", false);
+        $('#FIP').prop("disabled", false);
+
+    }
+    //make syncronize request
+    function SearchItemCode(engineSrNo) {
+
+        var Data = {
+                    Plant: $('#Plant').val(),
+                    Family: $('#Family').val(),
+                    EngineSrNo: engineSrNo
+        };
+        return $.ajax({
+            async: false,
+
+                    type: "POST",
+                    url: "@(Url.Action("SearchEngineItemCode", "EngineAssembly"))",
+                    data: { data: Data }
+
+        }).responseText
+    }
+    function InjectorPiston(ItemCode) {
+
+                $.ajax({
+                    cache: false, async: false, type: "POST",
+                    url: "@(Url.Action("GetInjectorPiston", "EngineAssembly"))",
+                    data: { "ItemCode": ItemCode },
+                    success: function (data) {
+                        var item = data[0];
+                        EnableDisableConnectingRod(item.noPistons);
+                        HideShowInjector(item.injector);
+
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve Item.');
+                    }
+                });
+
+    }
+    function EnableDisableConnectingRod(noPistons) {
+        if (noPistons == "0") {
+            $("#CR1").prop("disabled", true);
+            $('#CR2').prop("disabled", true);
+            $('#CR3').prop("disabled", true);
+            $('#CR4').prop("disabled", true);
+
+        }
+        else if (noPistons == "1") {
+            $("#CR1").prop("disabled", false);
+            $('#CR2').prop("disabled", true);
+            $('#CR3').prop("disabled", true);
+            $('#CR4').prop("disabled", true);
+
+        }
+        else if (noPistons == "2") {
+            $("#CR1").prop("disabled", false);
+            $('#CR2').prop("disabled", false);
+            $('#CR3').prop("disabled", true);
+            $('#CR4').prop("disabled", true);
+        }
+        else if (noPistons == "3") {
+            $("#CR1").prop("disabled", false);
+            $('#CR2').prop("disabled", false);
+            $('#CR3').prop("disabled", false);
+            $('#CR4').prop("disabled", true);
+
+        }
+        else if (noPistons == "4") {
+            $("#CR1").prop("disabled", false);
+            $('#CR2').prop("disabled", false);
+            $('#CR3').prop("disabled", false);
+            $('#CR4').prop("disabled", false);
+        }
+    }
+    function HideShowInjector(item) {
+
+        if (item == "Y") {
+            $("#pnlInjector").show();
+        }
+        else {
+            $("#pnlInjector").hide();
+        }
+    }
+    function getBarcode(engineSrNo) {
+        var Data = {
+                    Plant: $('#Plant').val(),
+                    Family: $('#Family').val(),
+                    EngineSrNo: engineSrNo
+                };
+                $.ajax({
+                    cache: false, async: false, type: "POST",
+                    url: "@(Url.Action("GetBarcode", "EngineAssembly"))",
+                    data: { data: Data },
+                    success: function (data) {
+                        var item = data[0];
+                        setFIPValue(item);
+
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve Item.');
+                    }
+                });
+    }
+    function setFIPValue(item) {
+        if (item.remarks1 == "FuelInjection") {
+            $('#FIP').val(item.barcode);
+        }
+        if (item.remarks1 == "CylinderHead") {
+            $('#cylinderHead').val(item.barcode);
+        }
+        if (item.remarks1 == "CylinderBlock") {
+            $('#cylinderBlock').val(item.barcode);
+        }
+        if (item.remarks1 == "Crankshaft") {
+            $('#crankShaft').val(item.barcode);
+        }
+        if (item.remarks1 == "Camshaft") {
+            $('#camShaft').val(item.barcode);
+        }
+        if (item.remarks1 == "ConnectingRod1") {
+            $('#CR1').val(item.barcode);
+
+        }
+        if (item.remarks1 == "ConnectingRod2") {
+            $('#CR2').val(item.barcode);
+
+        }
+        if (item.remarks1 == "ConnectingRod3") {
+            $('#CR3').val(item.barcode);
+
+        }
+        if (item.remarks1 == "ConnectingRod4") {
+            $('#CR4').val(item.barcode);
+        }
+        $('#INJ1').val(item.INJ1);
+        $('#INJ2').val(item.INJ2);
+        $('#INJ3').val(item.INJ3);
+        $('#INJ4').val(item.INJ4);
+    }
+    function EnableBoxes(itemCode) {
+
+                $.ajax({
+                    cache: false, async: false, type: "POST",
+                    url: "@(Url.Action("SetBoxes", "EngineAssembly"))",
+                    data: { "ItemCode": itemCode },
+                    success: function (data) {
+                        var item = data[0];
+                        enabledisableBoxes(item);
+
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve Item.');
+                    }
+                });
+    }
+    function enabledisableBoxes(item) {
+        var cb = $('#cylinderBlock').val();
+        var ch = $('#cylinderHead').val();
+        var cs = $('#crankShaft').val();
+        var cr1 = $('#CR1').val();
+        var cr2 = $('#CR2').val();
+        var cr3 = $('#CR3').val();
+        var cr4 = $('#CR4').val();
+        var fip = $('#FIP').val();
+        var cms = $('#camShaft').val();
+        var inj1 = $('#INJ1').val();
+        var inj2 = $('#INJ2').val();
+        var inj3 = $('#INJ3').val();
+        var inj4 = $('#INJ4').val();
+        if (item.RqrCyBK == "Y" && cb == "") {
+            $("#cylinderBlock").prop("disabled", false);
+        }
+        else {
+            $("#cylinderBlock").prop("disabled", true);
+        }
+
+        if (item.RqrCyHd == "Y" && ch == "") {
+            $("#cylinderHead").prop("disabled", false);
+        }
+        else {
+            $("#cylinderHead").prop("disabled", true);
+        }
+
+        if (item.RqrCrnkSft == "Y" && cs == "") {
+            $("#crankShaft").prop("disabled", false);
+        }
+        else {
+            $("#crankShaft").prop("disabled", true);
+        }
+
+
+        item.noPistons = parseInt(item.noPistons);
+
+        if ((item.RqrConRod == "Y") && (item.noPistons <= 1) && cr1 == "") {
+            $("#CR1").prop("disabled", false);
+            $('#CR2').prop("disabled", true);
+            $('#CR3').prop("disabled", true);
+            $('#CR4').prop("disabled", true);
+
+        }
+        else if ((item.RqrConRod == "Y") && item.noPistons <= 2) {
+            if (cr1 == "")
+            {
+                $("#CR1").prop("disabled", false);
+            }
+            else
+            {
+                $("#CR1").prop("disabled", true);
+            }
+            if (cr2 == "")
+            {
+                $("#CR2").prop("disabled", false);
+            }
+            else
+            {
+                $("#CR2").prop("disabled", true);
+            }
+            $('#CR3').prop("disabled", true);
+            $('#CR4').prop("disabled", true);
+
+        }
+        else if ((item.RqrConRod == "Y") && item.noPistons <= 3) {
+            if (cr1 == "") {
+                $("#CR1").prop("disabled", false);
+            }
+            else {
+                $("#CR1").prop("disabled", true);
+            }
+            if (cr2 == "") {
+                $("#CR2").prop("disabled", false);
+            }
+            else {
+                $("#CR2").prop("disabled", true);
+            }
+            if (cr3 == "") {
+                $("#CR3").prop("disabled", false);
+            }
+            else {
+                $("#CR3").prop("disabled", true);
+            }
+            $('#CR4').prop("disabled", true);
+
+        }
+        else if ((item.RqrConRod == "Y") && item.noPistons <= 4) {
+            if (cr1 == "") {
+                $("#CR1").prop("disabled", false);
+            }
+            else {
+                $("#CR1").prop("disabled", true);
+            }
+            if (cr2 == "") {
+                $("#CR2").prop("disabled", false);
+            }
+            else {
+                $("#CR2").prop("disabled", true);
+            }
+            if (cr3 == "") {
+                $("#CR3").prop("disabled", false);
+            }
+            else {
+                $("#CR3").prop("disabled", true);
+            }
+            if (cr4 == "") {
+                $("#CR4").prop("disabled", false);
+            }
+            else {
+                $("#CR4").prop("disabled", true);
+            }
+
+        }
+        else {
+            $("#CR1").prop("disabled", true);
+            $('#CR2').prop("disabled", true);
+            $('#CR3').prop("disabled", true);
+            $('#CR4').prop("disabled", true);
+        }
+
+        if (item.RqrFip == "Y" && fip == "") {
+            $("#FIP").prop("disabled", false);
+        }
+        else {
+            $("#FIP").prop("disabled", true);
+        }
+        if (item.RqrCamSft == "Y" && cms == "") {
+            $("#camShaft").prop("disabled", false);
+        }
+        else {
+            $("#camShaft").prop("disabled", true);
+        }
+
+        if (item.injector == "Y" && inj1 == "") {
+            $("#INJ1").prop("disabled", false);
+        }
+        else {
+            $("#INJ1").prop("disabled", true);
+        }
+        if (item.injector == "Y" && inj2 == "") {
+            $("#INJ2").prop("disabled", false);
+        }
+        else {
+            $("#INJ2").prop("disabled", true);
+        }
+        if (item.injector == "Y" && inj3 == "") {
+            $("#INJ3").prop("disabled", false);
+        }
+        else {
+            $("#INJ3").prop("disabled", true);
+        }
+        if (item.injector == "Y" && inj4 == "") {
+            $("#INJ4").prop("disabled", false);
+        }
+        else {
+            $("#INJ4").prop("disabled", true);
+        }
+
+
+    }
+
+    $("#SavePrint").on("click", function () {
+
+        SaveAndUpdate();
+
+    });
+
+    function SaveAndUpdate() {
+        $("#divLoader").show();
+            var Data = {
+                EngineSrNo: $('#hdnEngineSrNo').val(),
+                FIP: $('#FIP').val(),
+                cylinderHead: $('#cylinderHead').val(),
+                cylinderBlock: $('#cylinderBlock').val(),
+                crankShaft: $('#crankShaft').val(),
+                camShaft: $('#camShaft').val(),
+                CR1: $('#CR1').val(),
+                CR2: $('#CR2').val(),
+                CR3: $('#CR3').val(),
+                CR4: $('#CR4').val(),
+                pnlInjector: $("#pnlInjector").is(":visible"),
+                INJ1: $('#INJ1').val(),
+                INJ2: $('#INJ2').val(),
+                INJ3: $('#INJ3').val(),
+                INJ4: $('#INJ4').val(),
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val()
+                };
+        $.ajax({
+                //cache: false, async: false,
+                url: '@Url.Action("SaveAndUpdate", "EngineAssembly")',
+                data: JSON.stringify({ data: Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+                    data.ErrorNo = parseInt(data.ErrorNo);
+                    
+                    
+                    if ((data.ErrorNo != undefined) && (data.ErrorNo == 1 || data.ErrorNo == 2)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 3 || data.ErrorNo == 4 || data.ErrorNo == 29 || data.ErrorNo == 38)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#FIP').prop("disabled", false);
+                        $("#FIP").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 5 || data.ErrorNo == 6 || data.ErrorNo == 31 || data.ErrorNo == 39)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#cylinderHead').prop("disabled", false);
+                        $("#cylinderHead").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 7 || data.ErrorNo == 8 || data.ErrorNo == 30 || data.ErrorNo == 40)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#cylinderBlock').prop("disabled", false);
+                        $("#cylinderBlock").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 9 || data.ErrorNo == 10 || data.ErrorNo == 32 || data.ErrorNo == 41)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#crankShaft').prop("disabled", false);
+                        $("#crankShaft").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 11 || data.ErrorNo == 12 || data.ErrorNo == 33 || data.ErrorNo == 42)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#camShaft').prop("disabled", false);
+                        $("#camShaft").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 13 || data.ErrorNo == 14 || data.ErrorNo == 34 || data.ErrorNo == 43)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#CR1').prop("disabled", false);
+                        $("#CR1").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 15 || data.ErrorNo == 16 || data.ErrorNo == 35 || data.ErrorNo == 44)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        $('#CR2').prop("disabled", false);
+                        $("#CR2").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 17 || data.ErrorNo == 18 || data.ErrorNo == 36 || data.ErrorNo == 45)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#CR3').prop("disabled", false);
+                        $("#CR3").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 19 || data.ErrorNo == 20 || data.ErrorNo == 37 || data.ErrorNo == 46)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#CR4').prop("disabled", false);
+                        $("#CR4").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 21 || data.ErrorNo == 22)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#INJ1').prop("disabled", false);
+                        $("#INJ1").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 23 || data.ErrorNo == 24)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#INJ2').prop("disabled", false);
+                        $("#INJ2").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 25 || data.ErrorNo == 26)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#INJ3').prop("disabled", false);
+                        $("#INJ3").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 27 || data.ErrorNo == 28)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#INJ4').prop("disabled", false);
+                        $("#INJ4").focus();
+                        return;
+                    }
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == 0)) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        return;
+                    }
+
+                    else if ((data.ErrorNo != undefined) && (data.ErrorNo == -99)) {
+
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        
+                        
+                        $('#EngineSrNo').val("");
+                        $("#hdnEngineSrNo").val("");
+                        ClearControls();
+                        //return;
+                    }
+            },
+            
+                error: function (errormessage) {
+
+                }
+            });
+    }
+
+    function closeAlert(alert) {
+        $(alert).hide();
+    };
+    $("#Clear").on("click", function () {
+        location.reload(true);
+    });
+
+
+    //Admin Show Password Popup
+    $("#Admin").on("click", function () {
+        $('#txtPassword').val("");
+        $('#CheckPasswordModel').modal('show');
+    });
+
+    //Check Password for enable disable controlls
+    $("#btnCheckPassword").on("click", function () {
+        $('#CheckPasswordModel').modal('hide');
+        var Data = {
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val(),
+            Password: $('#txtPassword').val(),
+        };
+
+        $.ajax({
+            url: '@Url.Action("CheckPassword", "EngineAssembly")',
+            data: JSON.stringify({ data: Data }),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.ErrorNo == "1") {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+
+                }
+                else if (data.ErrorNo == "0") {
+                    enableDisablePasswordAuthenticate();
+                }
+
+            },
+            error: function (errormessage) {
+
+                $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                setTimeout(function () {
+                    $.each($('.alert'), function () {
+                        closeAlert(this);
+                    });
+                }, 5000);
+            }
+        });
+    });
+
+    function enableDisablePasswordAuthenticate() {
+        $("#FIP").prop("disabled", false);
+        $('#cylinderHead').prop("disabled", false);
+        $('#cylinderBlock').prop("disabled", false);
+        $('#crankShaft').prop("disabled", false);
+        $('#camShaft').prop("disabled", false);
+        $('#CR1').prop("disabled", false);
+        $('#CR2').prop("disabled", false);
+        $('#CR3').prop("disabled", false);
+        $('#CR4').prop("disabled", false);
+        $('#INJ1').prop("disabled", false);
+        $('#INJ2').prop("disabled", false);
+        $('#INJ3').prop("disabled", false);
+        $('#INJ4').prop("disabled", false);
+    }
+    $("#Export").on("click", function () {
+        DownloadExcel();
+    });
+
+    function DownloadExcel() {
+        var Data = {
+             cbEngineCategory: $("input[name='cbEngineCategory']:checked").val(),
+             Plant: $('#Plant').val(),
+             Family: $('#Family').val(),
+             FrmDate: $('#FrmDate').val(),
+             ToDate: $('#ToDate').val()
+        };
+        $("#divLoader").show();
+            $.ajax({
+                url: '@Url.Action("ExportEngineCategory", "EngineAssembly")',
+                data: JSON.stringify(Data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                //dataType: "json",
+                success: function (data) {
+                    if (data.ErrorNo == "1") {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        var file = data.ExcelName + ".xlsx";
+                    window.location.href = "@Url.RouteUrl(new{ Controller = "EngineAssembly", Action = "Download"})/?file=" + file;
+
+                    }
+
+                },
+                complete: function () {
+                    $("#divLoader").hide();
+                },
+                error: function (errormessage) {
+
+                }
+            });
+    }
+
+    $("#ExportBosch").on("click", function () {
+        DownloadBoshExcel();
+    });
+    function DownloadBoshExcel() {
+        var Data = {
+             cbEngineCategory: $("input[name='cbEngineCategory']:checked").val(),
+             Plant: $('#Plant').val(),
+             Family: $('#Family').val(),
+             FrmDate: $('#FrmDate').val(),
+             ToDate: $('#ToDate').val()
+        };
+        $("#divLoader").show();
+            $.ajax({
+                url: '@Url.Action("DownloadBosh", "EngineAssembly")',
+                data: JSON.stringify(Data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                //dataType: "json",
+                success: function (data) {
+                    if (data.ErrorNo != undefined && data.ErrorNo == "1") {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        var file = data.ExcelName + ".xlsx";
+                    window.location.href = "@Url.RouteUrl(new{ Controller = "EngineAssembly", Action = "Download"})/?file=" + file;
+
+                    }
+
+                },
+                complete: function () {
+                    $("#divLoader").hide();
+                },
+                error: function (errormessage) {
+
+                }
+            });
+    }
+
+    $("#Plant,#Family").select2({
+        allowClear: true,
+        width: '320px',
+    });
+
+</script>
+

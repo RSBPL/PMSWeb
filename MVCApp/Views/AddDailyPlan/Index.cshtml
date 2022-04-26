@@ -1,0 +1,987 @@
+﻿@model MVCApp.Models.AddDailyPlanModel
+<style>
+    /*.modal-dialog {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 1%;
+    }
+
+    .modal-content {
+        height: auto;
+        min-height: 100%;
+        border-radius: 0;
+    }*/
+
+    /*.modal-header{
+        background-color: darkcyan;
+    }*/
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            @if (ViewBag.ShowApprovalBtn != null)
+            {
+                if (ViewBag.ShowApprovalBtn == "ROLLING")
+                {
+                    <a href="#">Rolling Planning</a>
+                }
+                if (ViewBag.ShowApprovalBtn == "FIXED")
+                {
+                    <a href="#">Fixed Planning</a>
+                }
+            }
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    <div class="container" style="width:100%!important">
+        @*Model for Approve*@
+        <div class="modal" id="ApproveConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-info">
+                        <strong class="modal-title" id="exampleModalLabel" style="font-size:25px;"><i class="fa fa-exclamation-circle" style="font-size:35px;" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<strong>Confirmation..!</strong></strong>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h4><strong>Are you sure, to Approve planning of this date..?</strong></h4>
+                    </div>
+                    <div class="modal-footer">
+                        @*<a href="@Url.Action("", "")" class="btn btn-success btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Go Back</a>*@
+                        <button type="button" data-dismiss="modal" class="btn btn-warning btn-sm"><i class="ace-icon fa fa-arrow-left"></i> Go Back</button>
+                        <button type="button" id="btnApproval" class="btn btn-primary btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Approve</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*Model for Check Password*@
+        <div class="modal" id="CheckPasswordModel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-info">
+                        <strong class="modal-title" id="exampleModalLabel" style="font-size:25px;"><i class="fa fa-exclamation-circle" style="font-size:35px;" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<strong>Authenticatoin..!</strong></strong>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label">Password</label>
+                                <input type="text" class="form-control" id="txtPassword" required="Required">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        @*<a href="@Url.Action("", "")" class="btn btn-success btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Go Back</a>*@
+                        <button type="button" data-dismiss="modal" class="btn btn-warning btn-sm"><i class="ace-icon fa fa-arrow-left"></i> Go Back</button>
+                        <button type="button" id="btnCheckPassword" class="btn btn-primary btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Click</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*--------Form------------*@
+    <div class="container" style="width:100%!important">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal form-group">
+
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            @Html.DropDownListFor(model => model.Plant, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.Plant, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                            @Html.DropDownListFor(model => model.Family, Enumerable.Empty<SelectListItem>(), new { onchange = "UpdateProduct(this);" })
+                            @*@Html.DropDownListFor(model => model.Family, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })*@
+                            <strong>@Html.ValidationMessageFor(model => model.Family, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="fname" class="control-label col-form-label"><strong>Date</strong></label>
+                            @Html.EJS().DatePickerFor(Model => Model.Date).Format("dd-MMM-yyyy").Value(ViewBag.DefaultDate).Change("datepickerChange").Render()
+                            <strong>@Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Shift</strong></label>
+                            @Html.DropDownListFor(model => model.Shift, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.Shift, "", new { @class = "text-danger" })</strong>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Total Qty</strong></label>
+                            @Html.TextBoxFor(Model => Model.TotalQty, null, new { type = "number", min = "1", @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.TotalQty, "", new { @class = "text-danger" })</strong>
+                        </div>
+                    </div>
+
+                    <fieldset class="the-fieldset" style="margin-top:8px;padding-top: 0px;">
+                        <div class="row">
+                            <panel id="panelBK">
+                                <div class="col-md-6">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>FCode</strong></label>
+                                    @Html.DropDownListFor(model => model.BackendItemFcodes, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.BackendItemFcodes, "", new { @class = "text-danger" })</strong>
+                                </div>
+                            </panel>
+                            <div class="col-md-6">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Item Code</strong></label>
+                                @Html.DropDownListFor(model => model.ItemCode, Enumerable.Empty<SelectListItem>(), new { @class = "form-control input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.ItemCode, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Qty</strong></label>
+                                @Html.TextBoxFor(Model => Model.Qty, null, new { type = "number", min = "1", @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.Qty, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <panel id="panel">
+                                <div class="col-md-3">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>Tyre Make</strong></label>
+                                    @Html.DropDownListFor(model => model.Tyres, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.Tyres, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>Model Type</strong></label>
+                                    @Html.DropDownListFor(model => model.ModelType, new List<SelectListItem>
+                                                {
+                                                new SelectListItem{ Text="DOMESTIC", Value = "DOMESTIC" },
+                                                new SelectListItem{ Text="EXPORT", Value = "EXPORT" },
+
+                                             }, "----Select----", new { @class = "form-control  input-sm" })
+                                    @*@Html.DropDownListFor(model => model.ModelType, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })*@
+                                    <strong>@Html.ValidationMessageFor(model => model.ModelType, "", new { @class = "text-danger" })</strong>
+                                </div>
+                            </panel>
+                            <div class="col-md-2 pull-left">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="fname" class="text-right control-label col-form-label"><strong class="text-hide">Role Description</strong></label>
+                                    </div>
+                                    <div class="col-md-12 align-right">
+                                        <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Add To Daily Plan</strong></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-md-12 align-right">
+                            <div id="divhidelbl">
+                                <div class="col-md-3 checkbox" style=" padding-top: 0px;">
+                                    <input type="file" class="form-control" id="ExcelFile" style="background-color:#6fb3e0; color:white; width:100%">
+
+                                    <div class="pull-left" style="margin-left: 35px;">
+                                        @Html.CheckBoxFor(model => model.IsOverride, new { @class = "form-check-input pull-left" })
+                                        @Html.Label("Is Override", new { @class = "form-check-label" })
+                                    </div>
+
+                                </div>
+                                <div class="col-md-1 pull-left">
+                                    <button class="btn btn-success btn-sm" type="button" id="AddExcel" onclick="ImportExcelFunction()"><i class="fa fa-file-excel-o"></i><strong>&nbsp;Import</strong></button>
+                                </div>
+                                <div class="col-md-1">
+                                    <button class="btn btn-success btn-sm" type="button" id="DownloadExcel"><i class="ace-icon fa fa-file-excel-o bigger-110"></i><strong>Downlod Format</strong></button>
+                                </div>
+                            </div>
+                            @if (ViewBag.ShowApprovalBtn != null)
+                            {
+                                if (ViewBag.ShowApprovalBtn == "ROLLING")
+                                {
+                                    <button class="btn btn-primary btn-sm" type="button" id="SyncPlanToSubAssembly"><i class="ace-icon fa fa-refresh bigger-110"></i><strong>Sync Plan To Sub-Assembly</strong></button>
+                                }
+                                if (ViewBag.ShowApprovalBtn == "FIXED")
+                                {
+                                    <button class="btn btn-warning btn-sm" type="button" id="SyncJobs"><i class="ace-icon fa fa-refresh bigger-110"></i><strong>Sync Jobs</strong></button>
+                                    <button class="btn btn-primary btn-sm" type="button" id="ApprovePlan"><i class="ace-icon fa fa-thumbs-up bigger-110"></i><strong>Plan Approve</strong></button>
+                                }
+                            }
+                            <button class="btn btn-secondary btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                            <button class="btn btn-danger btn-sm" type="button" id="DeletePlan"><i class="ace-icon fa fa-trash bigger-110"></i><strong>Delete Daily Plan</strong></button>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        }
+
+        <div id="Grid"></div>
+    </div>
+</div>
+
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+<script type="text/javascript">
+    //$("#divhidelbl").hide();
+    //var Holidays;
+    //GetHolidays();
+
+    function datepickerChange(args) {
+        //console.log(args.value);
+        //alert(args.value);
+        BindGrid();
+        DDLItems();
+        GetPlanQty();
+
+    }
+
+
+
+    $(document).ready(function () {
+        //$("#alert").delay(5000).slideUp(1000);
+
+        DDLPlant();
+        DDLShift();
+        
+        /*DDLModelType();*/
+        $("#SyncJobs").hide();
+        
+    });
+    $("#ItemCode").on("change", function () {
+        DDLTyres();
+    });
+    $("#Shift").on("change", function () {
+        DDLItems();
+        BindGrid();
+        GetPlanQty();
+        HideUnhideSyncJobButton();
+    });
+
+    $("#Plant").on("change", function () {
+        DDLFamilyByPlant();
+    });
+    var fam;
+    $("#Family").on("change", function () {
+        DDLItems();
+        BindGrid();
+
+        //GetPlanQty();
+        HideUnhideSyncJobButton();
+        VisibleTyerModal();
+        fam = $("#Family").val();
+        HIDESHOWDIV(fam);
+
+    });
+
+    $("#ItemCode").on("change", function () {
+        DDLModelType();
+    });
+
+    $("#BackendItemFcodes").on("change", function () {
+        var selectedValue = $("#BackendItemFcodes").val();
+        $.ajax({
+            url: '@Url.Action("BackendFCodeByItemCode", "AddDailyPlan")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ BackendItemFcodes: selectedValue }),
+            success: function (result) {
+                $("#ItemCode").val(result);
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    });
+    //Sync Plan To Sub-Assembly
+    $("#SyncPlanToSubAssembly").on("click", function () {
+            $("#divLoader").show();
+            var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                Shift: $('#Shift').val(),
+                Date: $('#Date').val(),
+                };
+            $.ajax({
+                url: '@Url.Action("SyncPlanToSubAssembly", "AddDailyPlan")',
+                data: JSON.stringify({ plan: Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+                    if (data.Msg != "" || data.Msg != null ) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function() {$(".alert").alert('close');}, 5000);
+                    }
+                },
+                error: function (errormessage) {
+
+                }
+            });
+    });
+
+    //Approval Execution
+    $("#btnApproval").on("click", function () {
+            $("#divLoader").show();
+            var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                Shift: $('#Shift').val(),
+                Date: $('#Date').val(),
+                };
+            $.ajax({
+                url: '@Url.Action("ApprovePlan", "AddDailyPlan")',
+                data: JSON.stringify({ plan: Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $('#ApproveConfirm').modal('hide');
+                    $("#divLoader").hide();
+                    if (data.Msg != "" || data.Msg != null ) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function() {$(".alert").alert('close');}, 5000);
+                    }
+                },
+                error: function (errormessage) {
+
+                }
+            });
+    });
+
+    //Sync Jobs
+    $("#SyncJobs").on("click", function () {
+            $("#divLoader").show();
+            var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                Shift: $('#Shift').val(),
+                Date: $('#Date').val(),
+                };
+            $.ajax({
+                url: '@Url.Action("SyncJobsExplicitly", "AddDailyPlan")',
+                data: JSON.stringify({ plan: Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+                    if (data.Msg != "" || data.Msg != null ) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function() {$(".alert").alert('close');}, 5000);
+                    }
+                },
+                error: function (errormessage) {
+
+                }
+            });
+    });
+
+    //Approval Popup Show
+    $("#ApprovePlan").on("click", function () {
+        $('#ApproveConfirm').modal('show');
+    });
+
+    //Delete Plan Show Password Popup
+    $("#DeletePlan").on("click", function () {
+        $('#CheckPasswordModel').modal('show');
+    });
+
+    //Check Password for Delete Plan on btnCheckPassword Click
+    $("#btnCheckPassword").on("click", function () {
+        $('#CheckPasswordModel').modal('hide');
+        $.ajax({
+            url: '@Url.Action("CheckPassword", "AddDailyPlan")',
+            data: JSON.stringify({ Password: $('#txtPassword').val(), }),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.Msg == "Invalid Password") {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function() {$(".alert").alert('close');}, 5000);
+                }
+                else {
+                    $('#DeletePlanConfirm').modal('show');
+                }
+            },
+            error: function (errormessage) {
+                $("#divLoader").hide();
+                $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                setTimeout(function() {$(".alert").alert('close');}, 5000);
+            }
+        });
+    });
+
+    //clear
+    $("#Clear").on("click", function () {
+        //$("#Plant").val('1');
+        //$("#Family").val('');
+        //$("#ModelType").val('1');
+        //$("#Tyres").val('1');
+        //$("#ItemCode").trigger('change');
+        //$("#Shift").val('1');
+        location.reload(true);
+    });
+
+    //Add planning
+    $("#Add").on("click", function () {
+        AddPlanning();
+    });
+    $("#DownloadExcel").on("click", function () {
+        DownloadExcel();
+    });
+    //Function to Add DailyPlanning
+    function AddPlanning() {
+        if (!$("#Form").valid()) {
+            return false;
+        }
+        else {
+            $("#divLoader").show();
+            var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                Shift: $('#Shift').val(),
+                Date: $('#Date').val(),
+                TotalQty: $('#TotalQty').val(),
+                ItemCode: $('#ItemCode').val(),
+                BackendItemFcodes: $('#BackendItemFcodes').val(),
+                Qty: $('#Qty').val(),
+                Tyres: $('#Tyres').val(),
+                ModelType: $('#ModelType').val()
+                };
+            $.ajax({
+                url: '@Url.Action("AddPlan", "AddDailyPlan")',
+                data: JSON.stringify({ plan: Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+                    BindGrid();
+                    $('#Qty').val("");
+                    if (data.Msg != "" || data.Msg != null ) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function() {$(".alert").alert('close');}, 5000);
+                    }
+                },
+                error: function (errormessage) {
+                    $("#divLoader").hide();
+                    $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function() {$(".alert").alert('close');}, 5000);
+                    //$.each(errormessage, function(i, item)
+                    //{
+
+                    //});
+                }
+            });
+        }
+    };
+
+    //Function to bind Plant
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "AddDailyPlan")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Plant").html(result);
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        var selectedValue = $("#Plant").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "AddDailyPlan")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#Family").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#Family").append(optionhtml);
+
+                });
+
+                //UpdateProduct();
+                //$("#Family").html(result);
+                VisibleTyerModal();
+                BindGrid();
+                DDLItems();
+                HideUnhideSyncJobButton();
+                fam = $("#Family").val();
+                HIDESHOWDIV(fam);
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Item by Plant, Family
+    function DDLItems() {
+        if ($('#Plant').val() == null) {
+           alert("Please select plant");
+            return false;
+        }
+        if ($('#Family').val() == null) {
+           // alert("Please select family");
+            return false;
+        }
+        if ($('#Date').val() == null) {
+            alert("Please select date");
+            return false;
+        }
+
+            var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                Date: $('#Date').val()
+                };
+            $.ajax({
+                url: '@Url.Action("BindItems", "AddDailyPlan")',
+                data: JSON.stringify(Data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                success: function (result) {
+                    //$("#ItemCode").html(null);
+                    $("#ItemCode").html(result);
+                    DDLModelType();
+                },
+                error: function (errormessage) {
+                    //alert(errormessage.responseText);
+                }
+            });
+        //}
+    };
+
+    //Function to bind family by Shift
+    function DDLShift() {
+        $.ajax({
+            url: '@Url.Action("BindShift", "AddDailyPlan")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Shift").html(result);
+                GetCurrentShift();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Tyres
+    function DDLTyres() {
+        var Data = {
+            ItemCode: $('#ItemCode').val()
+        };
+        $.ajax({
+            url: '@Url.Action("BindTyres", "AddDailyPlan")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+            $("#Tyres").html(result);
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind ModelType
+    function DDLModelType() {
+        var Data = {
+            ItemCode: $('#ItemCode').val()
+        };
+        $.ajax({
+            url: '@Url.Action("BindModelType", "AddDailyPlan")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+
+                $.each(result, function (i) {
+
+                    $("#ModelType").val(result[i].Value);
+                    //var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    //$("#ZONE").append(optionhtml);
+                });
+
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Grid
+    function BindGrid() {
+        $("#divLoader").show();
+        var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                Shift: $('#Shift').val(),
+                Date: $('#Date').val()
+                };
+        $.ajax({
+            url: '@Url.Action("Grid", "AddDailyPlan")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Grid").html(result);
+                GetPlanQty();
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to Visible Sync Job Button
+    function HideUnhideSyncJobButton() {
+        //$("#divLoader").show();
+        var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                Shift: $('#Shift').val(),
+                Date: $('#Date').val()
+                };
+        $.ajax({
+            url: '@Url.Action("VisibleSyncJobBtn", "AddDailyPlan")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                if (result == 'Y') {
+                    $("#SyncJobs").show();
+                }
+                if (result == 'N'){
+                     $("#SyncJobs").hide();
+                }
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to Visible Tyer Modal
+    function VisibleTyerModal() {
+        //$("#divLoader").show();
+        var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val()
+                };
+        $.ajax({
+            url: '@Url.Action("VisibleTyerModal", "AddDailyPlan")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                if (result == 'Y') {
+                    $('#panel').show();
+                    $('#panelBK').hide();
+                }
+                if (result == 'N') {
+                    $('#panel').hide();
+                    $('#panelBK').show();
+                    DDLBackendItemsCode();
+                }
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Backend Item on Family Backend Selection
+    function DDLBackendItemsCode() {
+        $.ajax({
+            url: '@Url.Action("BindBackendFcodes", "AddDailyPlan")',
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            success: function (result) {
+                $("#BackendItemFcodes").html(result);
+            },
+            error: function (errormessage) {
+                //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to Get Plan Qty
+    function GetPlanQty() {
+        $("#divLoader").show();
+        var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                Shift: $('#Shift').val(),
+                Date: $('#Date').val()
+                };
+        $.ajax({
+             url: '@Url.Action("TotalPlanningQty", "AddDailyPlan")',
+            data: JSON.stringify({ data: Data }),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $("#TotalQty").val(result);
+                $("#divLoader").hide();
+            },
+            error: function (result) {
+
+            }
+        });
+    };
+
+    //Function to Get Current Shift
+    function GetCurrentShift() {
+        $.ajax({
+            url: '@Url.Action("CurrentShift", "AddDailyPlan")',
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $("#Shift").val(result);
+            },
+            error: function (result) {
+
+            }
+        });
+    };
+
+    //Function to Download Excel File
+    function DownloadExcel() {
+         var Data = {
+             Plant: $('#Plant').val(),
+             Family: $('#Family').val(),
+             Date: $('#Date').val(),
+             Shift: $('#Shift').val()
+        };
+        $("#divLoader").show();
+            $.ajax({
+                url: '@Url.Action("ExportToExcel", "AddDailyPlan")',
+                data: JSON.stringify(Data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                //dataType: "json",
+                success: function (data) {
+                    if (data.Msg.length != 0) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    }
+
+                    // $("#Date").datepicker({ dateFormat: "ddMMyyy" });
+                    debugger;
+                    var file = data.ExcelName + ".xlsx";
+                    //$('#Date').val() + ".xlsx";
+                    window.location.href = "@Url.RouteUrl(new{ Controller = "AddDailyPlan", Action = "Download"})/?file=" + file;
+                    $("#divLoader").hide();
+                    BindGrid();
+                },
+                error: function (errormessage) {
+
+                }
+            });
+    }
+    //funtion to
+    function ImportExcel() {
+        if (!$("#ExcelFile").valid()) {
+            return false;
+        }
+        var formData = new FormData();
+        var file = document.getElementById("ExcelFile").files[0];
+        formData.append("File", file);
+        $.ajax({
+            url: '@Url.Action("ImportExcelDailyPlan", "AddDailyPlan")',
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (result) {
+                alert(result);
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+
+     $('input[type="file"]').change(function () {
+        $("#divLoader").show();
+        var formData = new FormData();
+        var file = document.getElementById("ExcelFile").files[0];
+        formData.append("inputFile", file);
+
+        $.ajax({
+            url: '@Url.Action("ValidateFileExtention", "AddDailyPlan")',
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#divLoader").hide();
+
+                if (data.ID.length != 0) {
+                    if (data.ID == "alert-danger") {
+                        $("#ExcelFile").val(null);
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function() {$(".alert").alert('close');}, 5000);
+                    }
+                    else {
+                        //ValidateExcelFileShowGridFunction();
+                    }
+
+                }
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    });
+    //Function to Import Daily Planning
+    function ImportExcelFunction() {
+        if (!$("#ExcelFile").valid()) {
+            return false;
+        }
+        else {
+            $("#divLoader").show();
+
+            var formData = new FormData();
+            var file = document.getElementById("ExcelFile").files[0];
+            var plant = $("#Plant").val();
+            var family = $("#Family").val();
+            var date = $("#Date").val();
+            var shift = $("#Shift").val();
+            var totalQty = $("#TotalQty").val();
+            var ItemCode = $("#ItemCode").text();
+            formData.append("Plant", plant );
+            formData.append("Family", family);
+            formData.append("Date", date);
+            formData.append("Shift", shift);
+            formData.append("TotalQty", totalQty);
+            formData.append("ItemCode", ItemCode);
+
+            if($('#IsOverride').prop("checked") == true){
+                formData.append("IsOverride", true);
+            }
+            else if ($('#IsOverride').prop("checked") == false) {
+                formData.append("IsOverride", false);
+            }
+
+            formData.append("inputFile", file);
+
+            $.ajax({
+                url: '@Url.Action("ImportExcelDailyPlan", "AddDailyPlan")',
+                type: "POST",
+                data: formData,
+                //dataType: 'json',
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    $("#divLoader").hide();
+
+                    if (data.Msg.length != 0) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function() {$(".alert").alert('close');}, 5000);
+                    }
+                    BindGrid();
+                },
+                error: function (errormessage) {
+
+                }
+            });
+        }
+    };
+
+
+    //Function to hide Export Import button
+    function HIDESHOWDIV(item) {
+         if (item == 'TRACTOR FTD') {
+            $("#divhidelbl").show();
+        }
+        else if (item == 'TRACTOR EKI') {
+            $("#divhidelbl").show();
+        }
+        else if (item == 'TRACTOR TD') {
+            $("#divhidelbl").show();
+        }
+        else {
+            $("#divhidelbl").hide();
+        }
+    }
+    $("#Shift").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#Plant").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#Family").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#ItemCode").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#BackendItemFcodes").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#Tyres").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    //$("#ModelType").select2({
+    //    allowClear: true,
+    //    width: '100%',
+    //});
+    //$('#Plant').change(function () {
+    //    //UpdateProduct();
+    //});
+    //function UpdateProduct(as) {
+    //    var family = $("#Family").val();
+    //    alert(family);
+    //}
+</script>

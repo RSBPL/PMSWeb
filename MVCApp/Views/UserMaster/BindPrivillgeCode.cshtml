@@ -1,0 +1,7 @@
+﻿@model MVCApp.Models.UserMaster
+
+@{
+    <div>
+        @Html.DropDownListFor(model => model.Level_Name, (IEnumerable<SelectListItem>)ViewBag.Previllege, new { @class = "form-control input-sm" })
+    </div>
+}

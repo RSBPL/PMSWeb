@@ -1,0 +1,137 @@
+<xpml><page quantity='0' pitch='50.0 mm'></xpml>'Seagull:2.1:DP
+INPUT OFF
+VERBOFF
+INPUT ON
+SYSVAR(48) = 0
+ERROR 15,"FONT NOT FOUND"
+ERROR 18,"DISK FULL"
+ERROR 26,"PARAMETER TOO LARGE"
+ERROR 27,"PARAMETER TOO SMALL"
+ERROR 37,"CUTTER DEVICE NOT FOUND"
+ERROR 1003,"FIELD OUT OF LABEL"
+SYSVAR(35)=0
+OPEN "tmp:setup.sys" FOR OUTPUT AS #1
+PRINT#1,"Printing,Media,Print Area,Media Margin (X),0"
+PRINT#1,"Printing,Media,Clip Default,On"
+CLOSE #1
+SETUP "tmp:setup.sys"
+KILL "tmp:setup.sys"
+CLIP ON
+CLIP BARCODE ON
+LBLCOND 3,2
+<xpml></page></xpml><xpml><page quantity='1' pitch='50.0 mm'></xpml>CLL
+OPTIMIZE "BATCH" ON
+PP30,385:AN7
+NASC 8
+FT "Univers Bold",7,0,101
+PT "Issue Date -"
+PP150,385:FT "Univers Bold",7,0,99
+PT "TRANSACTION_DATE"
+PP302,385:FT "Univers Bold",7,0,99
+PT "Part Identification Tag -"
+PP525,385:FT "Univers Bold",7,0,99
+PT "FT STORE PLANT-1"
+PP22,348:AN1
+PL751,2
+PP30,345:AN7
+FT "Univers Bold",6,0,99
+PT "Ship-to"
+PP102,345:FT "Univers Bold",6,0,99
+PT "PLANT-1"
+PP342,345:FT "Univers Bold",6,0,99
+PT "Supplier"
+PP422,345:FT "Univers Bold",6,0,99
+PT "SUPP_NAME"
+PP22,311:AN1
+PL751,2
+PP332,347:DIR2
+PL37,2
+PP78,307:AN7
+DIR1
+FT "Univers Bold",6,0,99
+PT "Plant Code"
+PP238,297:FT "Univers Bold",8,0,99
+PT "Location (Bulk)"
+PP22,279:AN1
+PL200,2
+PP102,275:AN7
+FT "Univers Bold",6,0,99
+PT "PLANT_CODE"
+PP478,297:FT "Univers Bold",8,0,99
+PT "BULK_LOC"
+PP22,248:AN1
+PL751,2
+PP38,246:AN7
+FT "Univers Bold",6,0,99
+PT "Quality"
+PP158,246:FT "Univers Bold",6,0,99
+PT "Part Code"
+PP334,246:FT "Univers Bold",6,0,99
+PT "Delivery Date"
+PP653,246:FT "Univers Bold",6,0,99
+PT "Qty Delivered"
+PP526,246:FT "Univers Bold",6,0,99
+PT "Qty Ordered"
+PP22,216:AN1
+PL751,2
+PP134,213:AN7
+FT "Univers Bold",6,0,99
+PT "ITEM_CODE"
+PP334,215:FT "Univers Bold",6,0,99
+PT "CURRENT_DATE"
+PP566,213:FT "Univers Bold",6,0,99
+PT "QTY_ORD"
+PP701,215:FT "Univers Bold",6,0,99
+PT "QTY_DLV"
+PP22,184:AN1
+PL751,2
+PP46,181:AN7
+FT "Univers Bold",6,0,99
+PT "Buyer"
+PP246,181:FT "Univers Bold",6,0,99
+PT "Part Description"
+PP539,181:FT "Univers Bold",6,0,99
+PT "PO/Line"
+PP669,179:FT "Univers Bold",6,0,99
+PT "BOX NO."
+PP134,148:FT "Univers Bold",6,0,89
+PT "ITEM_DESC"
+PP693,147:FT "Univers Bold",6,0,89
+PT "BOX_NO"
+PP54,111:FT "Univers Bold",7,0,84
+PT "STP"
+PP198,111:FT "Univers Bold",7,0,93
+PT "SNP"
+PP350,113:FT "Univers Bold",7,0,84
+PT "Unpack"
+PP54,57:FT "Univers Bold",7,0,84
+PT "BPACKAGING"
+PP206,57:FT "Univers Bold",7,0,84
+PT "BULK_SNP"
+PP22,152:AN1
+PL751,2
+PP20,15:PX379,755,3
+PP22,120:PL751,2
+PP22,69:PL424,2
+PP125,248:DIR2
+PL232,2
+PP221,313:PL64,2
+PP269,249:PL64,2
+PP636,248:PL128,2
+PP513,248:PL128,2
+PP316,121:PL105,2
+PP444,120:PL104,2
+PP581,112:AN7
+DIR1
+BARSET "QRCODE",1,1,3,2,1
+PB "QR_CODE"
+PP38,213:FT "Univers Bold",6,0,148
+PT "QLTY"
+PP38,151:FT "Univers Bold",6,0,99
+PT "BUYER_NAME"
+PP326,57:FT "Univers Bold",7,0,84
+PT "UNPACKING"
+LAYOUT RUN ""
+PF
+PRINT KEY OFF
+<xpml></page></xpml><xpml><end/></xpml>

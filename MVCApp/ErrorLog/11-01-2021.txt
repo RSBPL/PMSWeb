@@ -1,0 +1,20 @@
+01-Nov-2021 2:36:34 PM
+Object reference not set to an instance of an object.
+   at MVCApp.Controllers.MAHController.UpdateBulkLocation(BULKSTORGAE bULKSTORGAE) in D:\Sarthak\MVCApp\MVCApp\Controllers\MAHController.cs:line 240
+____________________________________________________________________________________________
+
+01-Nov-2021 2:40:18 PM
+Object reference not set to an instance of an object.
+   at MVCApp.Controllers.MAHController.UpdateBulkLocation(BULKSTORGAE bULKSTORGAE) in D:\Sarthak\MVCApp\MVCApp\Controllers\MAHController.cs:line 240
+____________________________________________________________________________________________
+
+01-Nov-2021 2:49:05 PM
+Object reference not set to an instance of an object.
+   at MVCApp.Controllers.MAHController.UpdateBulkLocation(BULKSTORGAE bULKSTORGAE) in D:\Sarthak\MVCApp\MVCApp\Controllers\MAHController.cs:line 240
+____________________________________________________________________________________________
+
+01-Nov-2021 3:02:01 PM
+Object reference not set to an instance of an object.
+   at MVCApp.Controllers.MAHController.UpdateBulkLocation(BULKSTORGAE bULKSTORGAE) in D:\Sarthak\MVCApp\MVCApp\Controllers\MAHController.cs:line 240
+____________________________________________________________________________________________
+

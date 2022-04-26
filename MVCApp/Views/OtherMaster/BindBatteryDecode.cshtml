@@ -1,0 +1,6 @@
+﻿@model MVCApp.Models.OtherSuffix
+    @{ 
+        <div>
+            @Html.DropDownListFor(model => model.BatteryDecode, (IEnumerable<SelectListItem>)ViewBag.BatteryDecode, new { @class = "form-control  input-sm" })
+        </div>
+    }

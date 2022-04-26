@@ -1,0 +1,352 @@
+﻿@using System.Data;
+@model System.Data.DataSet
+@{ Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/LCD/CSS/StyleSheet.css" rel="stylesheet" />
+    <link rel="icon" href="~/Image/favicon-32x32.png" type="image/x-icon">
+
+    <title>SUPER MARKET</title>
+    <style>
+
+        html, body {
+            background-color: white;
+            height: 100%;
+            margin: 0;
+        }
+
+        h2 {
+            margin: 0 130px 0 130px;
+        }
+
+
+        div.table-title {
+            display: block;
+            margin: auto;
+            max-width: 600px;
+            padding: 5px;
+            width: 100%;
+        }
+
+        .table-title h3 {
+            color: #fafafa;
+            font-size: 30px;
+            font-weight: 400;
+            font-style: normal;
+            font-family: "Roboto", helvetica, arial, sans-serif;
+            text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+            text-transform: uppercase;
+        }
+
+
+        /** Table Styles */
+
+        .table-fill {
+            background: white;
+            border-radius: 3px;
+            border-collapse: collapse;
+            height: 150PX;
+            margin: 0;
+            /*max-width: 600px;*/
+            padding: 5px;
+            width: 50%;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            animation: float 5s infinite;
+        }
+
+        .th1 {
+            color: #ffffff;
+            background: #065499;
+            border: 2px solid #a3a085;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 5px;
+            text-align: left;
+            text-shadow: 0 1px 1px rgb(0 0 0 / 10%);
+            vertical-align: middle;
+        }
+
+
+            .th1:first-child {
+                border-top-left-radius: 3px;
+            }
+
+            .th1:last-child {
+                border-top-right-radius: 3px;
+            }
+
+        .tr1:hover td {
+            background: #4E5066;
+            color: #FFFFFF;
+        }
+
+        .tr1:first-child {
+        }
+
+        /*.tr1:last-child {
+                border-bottom: none;
+            }*/
+
+        /*.tr1:nth-child(odd) td {
+                background: #EBEBEB;
+            }
+
+            .tr1:nth-child(odd):hover td {
+                background: #4E5066;
+            }*/
+
+        /* .tr1:last-child td:first-child {
+                border-bottom-left-radius: 3px;
+            }
+
+            .tr1:last-child td:last-child {
+                border-bottom-right-radius: 3px;
+            }*/
+
+        .td1 {
+            background: #FFFFFF;
+            text-align: center;
+            font-weight: bold;
+            font-size: INITIAL;
+            color: black;
+            padding: 5PX;
+            font-size: 13PX;
+        }
+
+
+        .th1.text-left {
+            text-align: center;
+        }
+
+        .th1.text-center {
+            text-align: center;
+        }
+
+        .th1.text-right {
+            text-align: center;
+        }
+
+        .td1.text-left {
+            text-align: center;
+        }
+
+        .td1.text-center {
+            text-align: center;
+        }
+
+        .td1.text-right {
+            text-align: center;
+        }
+
+        table tbody tr td {
+            border: 1px solid black;
+        }
+
+        /* tr:nth-child(odd) {
+            background-color: rgb(157 228 255);
+        }
+
+        .tr1:nth-child(odd) {
+            background-color: rgb(157 228 255);
+        }*/
+
+
+        /*/ Automatic Serial Number Row /
+        .css-serial {
+            counter-reset: serial-number;
+            / Set the serial number counter to 0 /
+        }
+
+        .css-serial td:first-child:before {
+            counter-increment: serial-number;
+            / Increment the serial number counter / content: counter(serial-number);
+            / Display the counter /
+        }*/
+        .leftgrid {
+            float: left;
+            text-align: center;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .tdhide {
+            display: none;
+        }
+
+        .head-header {
+            font-size: 25px;
+            color: #ffffff;
+            margin-top: -35px;
+            float: right;
+            WIDTH: 60%;
+            FONT-FAMILY: fangsong;
+            margin-top: -54px;
+        }
+
+
+        .hr1 {
+            border-top: 3px solid #01f5c7;
+            width: 50%;
+            margin-top: -33px;
+            BACKGROUND-COLOR: brown;
+        }
+
+        .tr2 {
+            color: #ffffff;
+            background: #0c7096;
+            border: 2px solid black;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 5px;
+            text-align: left;
+            text-shadow: 0 1px 1px rgb(0 0 0 / 10%);
+            vertical-align: middle;
+        }
+
+        tr#special {
+            background-color: #04d0fd;
+        }
+
+        tr:nth-child(even) {
+            background-color: #C4E5FD;
+            /*color: white;*/
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="row">
+            <div class="col-md-12 " style="BACKGROUND: #065499; HEIGHT: 60PX;">
+                <div class="col-md-2">
+                    <img src="~/Image/logo.gif" Height="50" Width="80" style="margin: 5px;" />
+                </div>
+                <div class="col-md-10">
+                    <strong class="head-header" style="margin-top: -45px;">SUPER MARKET</strong>
+                </div>
+            </div>
+        </div>
+        <div style="width: 100%">
+            <input type="hidden" id="PlantCode" value="@ViewBag.PlantCode" />
+            <div style="width: 100%; color: #fff; background-color: #065499; border-color: #428bca; height: 35px; padding: 0; text-align: center; vertical-align: central;">
+                <table style="width: 100%">
+                    <tr id="special" style="font-size:20px;" class="tr2">
+                        <td align="center" style="width:50%">
+                            <label ID="lblDate" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                        </td>
+                        <td align="center" style="width:50%">
+                            <label ID="lblTime" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            @*<div id="lblError" style="padding-left: 40px; width: 96%" visible="false" class="alert-box error">
+                </div>*@
+
+            <div class="row col-md-12">
+                <div class="col-md-8" style="float: left; text-align: center; font-size: 10px; font-weight: bold; width: 100%;">
+                    <table class="table-fill css-serial table-hover" style="width: 100%; height: 25px;" id="tbldetail">
+                        <thead>
+                            <tr style="height: 30px; ">
+                                <th class="text-left th1" style="WIDTH: 7%;">SR. NO</th>
+                                <th class="text-left th1" style="WIDTH: 10%;" id="ITEM_CODE">ITEM CODE</th>
+                                <th class="text-left th1" style="WIDTH: 20%;" id="ITEM_DESCRIPTION">ITEM DECRIPTION</th>
+                                <th class="text-left th1" style="WIDTH: 10%;" id="SUMKTLOC">SUPER MARKET LOCATION</th>
+                                <th class="text-left th1" style="WIDTH: 10%;" id="SAFTY_STOCK">SAFETY STOCK QUANTITY</th>
+                                <th class="text-left th1" style="WIDTH: 10%;" id="EXISTING_QTY">SUPER MARKET STOCK</th>
+                                <th class="text-left th1" style="WIDTH: 10%;" id="LOCATION">BULK LOCATION</th>
+                                <th class="text-left th1" style="WIDTH: 10%;" id="BULK_QTY">BULK QUANTITY</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </header>
+</body>
+</html>
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        checkinfo();
+    });
+    var refresh = '@System.Configuration.ConfigurationManager.AppSettings["pagerefresh"].ToString()';
+    window.onload = function () {
+        setInterval(function () {
+            checkinfo();
+        }, refresh*1000);
+    };
+
+    function checkinfo() {
+        var Data = $('#PlantCode').val();
+        if (Data != null && Data != undefined && Data != "") {
+            $.ajax({
+                url: '@Url.Action("getPlanVertical", "SuperMarketLocation")',
+                data: { PLANTCODE: Data },
+                type: "GET",
+                contentType: "application/json;charset=UTF-8",
+                success: function (result) {
+                    Setlblvalue(result);
+                },
+                error: function (errormessage) {
+                    //alert(errormessage.responseText);
+                }
+            });
+        }
+    }
+    function Setlblvalue(data) {
+        if (data.tdError == true) {
+            $("#tdError").show();
+            $("#lblErrordb").text(data.lblErrordb);
+        } else {
+            $("#tdError").hide();
+        }
+
+        $("#lblDate").text(data.lblDate);
+        $("#lblTime").text(data.lblTime);
+        $('#tbldetail tbody').html('');
+        for (var i = 0; i < data.DataGrid.length; i++) {
+            var rawCode = i;
+            var tr;
+            if (data.DataGrid[i].PENDING == 0) {
+                tr = "<tr style='background-color:lawngreen;' id='" + data.DataGrid[i] + "'>";
+            }
+
+            else if (data.DataGrid[i].BackColor == "Yellow")
+            {
+                tr = "<tr style='background-color:Yellow;' id='" + data.DataGrid[i] + "'>";
+                           }
+            else {
+                tr = "<tr  id='" + data.DataGrid[i] + "'>";
+            }
+
+            var row = $(tr);
+
+
+            $("#tbldetail").append(row);
+            row.append("<td>" + data.DataGrid[i].SRNO + "</td>").addClass("td1");
+            row.append("<td><span id='ITEMCODE" + rawCode + "'>" + data.DataGrid[i].ITEMCODE + "</span></td>").addClass("td1");
+            row.append("<td><span id='ITEM_DESCRIPTION" + rawCode + "'>" + data.DataGrid[i].ITEM_DESCRIPTION + "</span></td>").addClass("td1");
+            row.append("<td><span id='SUMKTLOC" + rawCode + "'>" + data.DataGrid[i].SUMKTLOC + "</span></td>").addClass("td1");
+            row.append("<td><span id='SAFTY_STOCK" + rawCode + "'>" + data.DataGrid[i].SAFTY_STOCK + "</span></td>").addClass("td1");
+            row.append("<td><span id='EXISTING_QTY" + rawCode + "'>" + data.DataGrid[i].EXISTING_QTY + "</span></td>").addClass("td1");
+            row.append("<td><span id='LOCATION" + rawCode + "'>" + data.DataGrid[i].LOCATION + "</span></td>").addClass("td1");
+            row.append("<td><span id='BULK_QTY" + rawCode + "'>" + data.DataGrid[i].BULK_QTY + "</span></td>").addClass("td1");
+
+        }
+        //debugger;
+        //GetTaskComplete(result);
+    }
+
+
+
+</script>
+
+

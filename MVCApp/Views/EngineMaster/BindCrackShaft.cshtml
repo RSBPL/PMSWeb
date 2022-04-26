@@ -1,0 +1,8 @@
+﻿@model MVCApp.Models.EngineModel
+
+@{
+    <div>
+        @Html.DropDownListFor(model => model.CRANK_SHAFT, (IEnumerable<SelectListItem>)ViewBag.CRANK_SHAFT, new { @class = "form-control  input-sm" })
+    </div>
+}
+

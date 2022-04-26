@@ -1,0 +1,847 @@
+﻿@model MVCApp.Models.UserMaster
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+
+<style>
+
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .the-legend {
+        box-shadow: 0px 1px 5px #7f8b8f;
+    }
+    ol, ul {
+        margin: 5px 0px 1px 1px;
+    }
+    .tab-content {
+        padding: 6px 0px 0px 0px;
+    }
+    .hr1 {
+        margin-top: 2px;
+        margin-bottom: 6px;
+        border-top: 1px solid #e9e0e0;
+        width: 370px;
+    }
+
+    .inj {
+        width: 100px;
+    }
+
+    .m-50 {
+        width: 322px;
+    }
+    .m1-50 {
+        width: 322px;
+    }
+
+    .W-100 {
+        width: 968px;
+        left: -119px;
+    }
+
+    .f-left {
+        float: LEFT;
+    }
+
+    .frm {
+        padding: 20px;
+    }
+
+    .C-1 {
+        WIDTH: 160px;
+    }
+
+    .w-adj {
+        WIDTH: 100px;
+    }
+
+    .w-adj1 {
+        WIDTH: 155px;
+        margin: -3px 10px -12px 0;
+    }
+
+    .well {
+        background-color: #6fb3e038;
+    }
+    .well1 {
+        background-color: #b1d0e4;
+    }
+    input.largerCheckbox {
+        width: 20px;
+        height: 20px;
+    }
+    .chbox {
+        width: 19px;
+        margin-top: 3px;
+    }
+    .bt-mrg {
+        margin-right: 5px;
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">User Master</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    <div id="SearchItem" style="background-color: #6fb3e0;margin: 0px 5px 0px 5px;padding: 5px;">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <strong style="font-size: 19px;color:white;">USER MASTER</strong>
+                <hr class="hr1">
+            </div>
+        </div>
+    </div>
+
+    @*--------Form------------*@
+    <div class="container" style="width:100%;">
+        <div class="form-horizontal form-group">
+            <fieldset class="the-fieldset well">
+                <form class="form-horizontal frm">
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="fname" class="col-md-1 text-left control-label col-form-label C-1"><strong>USER NAME</strong></label>
+                            <div class="input-group m-50">
+                                <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-user"></i></span>
+                                @Html.TextBoxFor(Model => Model.USRNAME, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.USRNAME, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="fname" class="col-md-1 text-left control-label col-form-label C-1 "><strong>PASSWORD</strong></label>
+                            <div class="input-group m-50">
+                                <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-key"></i></span>
+                                @Html.PasswordFor(Model => Model.PSWORD)
+                                <strong>@Html.ValidationMessageFor(model => model.PSWORD, "", new { @class = "text-danger", placeholder = "Password", autocomplete = "off" })</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="fname" class="col-md-1 text-left control-label col-form-label C-1"><strong>PLANT CODE</strong></label>
+                            <div class="input-group m1-50">
+                                <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-industry"></i></span>
+                                @Html.DropDownListFor(model => model.U_CODE, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.U_CODE, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="fname" class="col-md-1 text-left control-label col-form-label C-1"><strong>FAMILY CODE</strong></label>
+                            <div class="input-group ">
+                                <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-users"></i></span>
+                                @Html.DropDownListFor(model => model.FAMILY_CODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.FAMILY_CODE, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="form-group col-md-6">
+                            <label for="fname" class="col-md-1 text-left control-label col-form-label C-1"><strong>PREVILEGE CODE</strong></label>
+                            <div class="input-group m-50">
+                                <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-users-cog"></i></span>
+                                @Html.DropDownListFor(model => model.Level_Name, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.Level_Name, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="fname" class="col-md-1 text-left control-label col-form-label C-1"><strong>STAGE</strong></label>
+                            <div class="input-group m-50">
+                                <span class="input-group-addon" style="max-width: 100%;"><i class="fab fa-steam-symbol"></i></span>
+                                @Html.DropDownListFor(model => model.STAGEID, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.STAGEID, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="fname" class="col-md-1 text-left control-label col-form-label C-1"><strong>PU NAME</strong></label>
+                            <div class="input-group m-50">
+                                <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-tractor"></i></span>
+                                @Html.DropDownListFor(model => model.PUNAME, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.PUNAME, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-2 text-left control-label col-form-label C-1" style="TEXT-ALIGN: LEFT;">
+                            <div class="form-check">
+                                <label for="ISACTIVE" class="text-right control-label col-form-label"><strong>IS ACTIVE</strong></label>
+                            </div>
+                        </div>
+                        <div class="col-md-1 control-label col-form-label C-1" style="text-align: left; width: 50px; margin-left: -50px;">
+                            <div class="form-check">
+                                @Html.CheckBoxFor(model => model.ISACTIVE, new { @class = "largerCheckbox", })
+                            </div>
+                        </div>
+                        <div class="col-md-2 text-left control-label col-form-label C-1">
+                            <div class="form-check">
+                                <label for="ISACTIVE" class="text-right control-label col-form-label"><strong>BY PASS STORE</strong></label>
+                            </div>
+                        </div>
+                        <div class="col-md-1 control-label col-form-label C-1" style="text-align: left; width: 50px; margin-left: -10px;">
+                            <div class="form-check">
+                                @Html.CheckBoxFor(model => model.STOREBYPASS, new { @class = "largerCheckbox", })
+                            </div>
+                        </div>
+                        <div class="col-md-2 text-left control-label col-form-label C-1" style="TEXT-ALIGN: LEFT;">
+                            <div class="form-check">
+                                <label for="ISACTIVE" class="text-right control-label col-form-label"><strong>PDI USER</strong></label>
+                            </div>
+                        </div>
+                        <div class="col-md-1 control-label col-form-label C-1" style="text-align: left; width: 50px; margin-left: -70px; ">
+                            <div class="form-check">
+                                @Html.CheckBoxFor(model => model.PDIUSER, new { @class = "largerCheckbox", })
+                            </div>
+                        </div>
+                    </div>
+                    <div id="form-row" style='width: 80%; margin: 0 0 15PX 160px;'>
+                        <fieldset class="the-fieldset well1">
+                            <div class="row">
+                                <div class="col-md-1 control-label col-form-label chbox">
+                                    <div class="form-check">
+                                        @Html.CheckBoxFor(model => model.ShowSave, new { @class = "largerCheckbox", })
+                                    </div>
+                                </div>
+                                <div class="col-md-3 control-label col-form-label" style="text-align: left;">
+                                    <div class="form-check">
+                                        <label for="ShowSave" class="text-right control-label col-form-label"><strong>Show Save (job Lable)</strong></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 control-label col-form-label chbox">
+                                    <div class="form-check">
+                                        @Html.CheckBoxFor(model => model.ShowDelete, new { @class = "largerCheckbox", })
+                                    </div>
+                                </div>
+                                <div class="col-md-3 control-label col-form-label" style="text-align: left;">
+                                    <div class="form-check">
+                                        <label for="ShowDelete" class="text-right control-label col-form-label"><strong>show delete (JOB Lable)</strong></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 control-label col-form-label chbox">
+                                    <div class="form-check">
+                                        @Html.CheckBoxFor(model => model.ShowPrint, new { @class = "largerCheckbox", })
+                                    </div>
+                                </div>
+                                <div class="col-md-3 control-label col-form-label" style="text-align: left;">
+                                    <div class="form-check">
+                                        <label for="ShowPrint" class="text-right control-label col-form-label"><strong>Show Print (JOB Lable)</strong></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1 control-label col-form-label chbox">
+                                    <div class="form-check">
+                                        @Html.CheckBoxFor(model => model.MannualMapping, new { @class = "largerCheckbox", })
+                                    </div>
+                                </div>
+                                <div class="col-md-3 control-label col-form-label" style="text-align: left;">
+                                    <div class="form-check">
+                                        <label for="MannualMapping" class="text-right control-label col-form-label"><strong>Mannual Mapping</strong></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 control-label col-form-label chbox">
+                                    <div class="form-check">
+                                        @Html.CheckBoxFor(model => model.SaveButton, new { @class = "largerCheckbox", })
+                                    </div>
+                                </div>
+                                <div class="col-md-8 text-left control-label col-form-label" style="text-align: left;">
+                                    <div class="form-check">
+                                        <label for="SaveButton" class="text-right control-label col-form-label"><strong>If Giving Save Button, if field require then need to check for empty fields</strong></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1 control-label col-form-label chbox">
+                                    <div class="form-check">
+                                        @Html.CheckBoxFor(model => model.AllowROPS, new { @class = "largerCheckbox", })
+                                    </div>
+                                </div>
+                                <div class="col-md-7 control-label col-form-label" style="text-align: left;">
+                                    <div class="form-check">
+                                        <label for="AllowROPS" class="text-right control-label col-form-label"><strong>Allow ROPS Current SrNo to be Change</strong></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 control-label col-form-label chbox">
+                                    <div class="form-check">
+                                        @Html.CheckBoxFor(model => model.MRNSAVE, new { @class = "largerCheckbox", })
+                                    </div>
+                                </div>
+                                <div class="col-md-3 control-label col-form-label" style="text-align: left;">
+                                    <div class="form-check">
+                                        <label for="MRNSAVE" class="text-right control-label col-form-label"><strong>Show MRN Verification Save Button</strong></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-1 bt-mrg">
+                            <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                            <button class="btn btn-success btn-sm" type="button" id="Update"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                        </div>
+                        <div class="col-md-2"></div>
+                    </div>
+                </form>
+            </fieldset>
+        </div>
+    </div>
+    <div id="Grid"></div>
+</div>
+<div id="Grid"></div>
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+<script>
+    var fam;
+    $(document).ready(function () {
+        
+        DDLPlant();
+        DDLPrevillege();
+        $('#Update').hide();
+        $("#form-row").hide();
+       
+
+    });
+    
+    $("#U_CODE").on("change", function () {
+        DDLFamilyByPlant();
+        BindGrid();
+    });
+    //$("#FAMILY_CODE").on("change", function () {
+    //    fam = $("#FAMILY_CODE").val();
+    //    HIDESHOWDIV(fam);
+    //    DDLSTAGEID();
+    //    DDLPUNAME();
+
+    //});
+    $("#FAMILY_CODE").on("change", function () {
+       
+        fam = $("#FAMILY_CODE").val();
+        HIDESHOWDIV(fam);
+        DDLSTAGEID();
+        DDLPUNAME();
+        BindGrid();
+    });
+
+    $("#DDLPUNAME").on("change", function () {
+        BindGrid();
+    });
+
+    function DDLPrevillege() {
+        $.ajax({
+            url: '@Url.Action("BindPrivillgeCode", "UserMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Level_Name").html(result);
+                //DDLPUNAME();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "UserMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#U_CODE").html(result);
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    function DDLFamilyByPlant() {
+        var selectedValue = $("#U_CODE").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "UserMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+               
+                //if (result != null && result != 'undefined') {
+                //    HIDESHOWDIV();
+                //    DDLSTAGEID();
+                //}
+                //$("#FAMILY_CODE").html('');
+                //var optionAll = $("<option />");
+                //optionAll.html("---select---");
+                //optionAll.val("0");
+                //$("#FAMILY_CODE").append(optionAll);
+                $("#FAMILY_CODE").html(null);
+                $("#FAMILY_CODE").html(result);
+
+                DDLSTAGEID();
+                BindGrid();
+                fam = $("#FAMILY_CODE").val();
+                HIDESHOWDIV(fam);
+
+
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    function HIDESHOWDIV(item) {
+        //alert(item);
+        if (item == 'TRACTOR FTD') {
+
+            $("#form-row").show();
+        }
+        else if (item == 'TRACTOR TD') {
+
+            $("#form-row").show();
+        }
+        else if (item == 'TRACTOR EKI') {
+
+            $("#form-row").show();
+        }
+
+        else {
+            $("#form-row").hide();
+        }
+    }
+
+    function DDLSTAGEID() {
+        var data = {
+            U_CODE: $("#U_CODE").val(),
+            FAMILY_CODE: $("#FAMILY_CODE").val()
+        }
+        //console.log($("#FAMILY_CODE").val());
+        $.ajax({
+            url: '@Url.Action("BindStageId", "UserMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify(data),
+            success: function (result) {
+                $("#STAGEID").html('');
+                $("#STAGEID").html(result);
+                DDLPUNAME();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    function DDLPUNAME() {
+        var obj = {
+            U_CODE: $("#U_CODE").val(),
+        }
+        $.ajax({
+
+            url: '@Url.Action("BindPUName", "UserMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify(obj),
+            success: function (result) {
+                $("#PUNAME").html(null);
+                $("#PUNAME").html(result);
+                BindGrid();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    function BindGrid() {
+        $("#divLoader").show();
+        var Data = {
+                    U_CODE: $('#U_CODE').val(),
+                    FAMILY_CODE: $('#FAMILY_CODE').val()
+                    };
+        $.ajax({
+            url: '@Url.Action("Grid", "UserMaster")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Grid").html(null);
+                $("#Grid").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+
+    var ISACTIVE1, STOREBYPASS1, PDIUSER1, ShowSave1, ShowDelete1, ShowPrint1, MannualMapping1, AllowROPS1, SaveButton1,MrnSave1;
+    $("#Add").on("click", function () {
+        $("#divLoader").show();
+
+        if ($("#ISACTIVE").prop('checked') == true) {
+            ISACTIVE1 = true;
+        }
+        else {
+            ISACTIVE1 = false;
+        }
+        if ($("#STOREBYPASS").prop('checked') == true) {
+            STOREBYPASS1 = true;
+        }
+        else {
+            STOREBYPASS1 = false;
+        }
+        if ($("#PDIUSER").prop('checked') == true) {
+            PDIUSER1 = true;
+        }
+        else {
+            PDIUSER1 = false;
+        }
+        if ($("#ShowSave").prop('checked') == true) {
+            ShowSave1 = true;
+        }
+        else {
+            ShowSave1 = false;
+        }
+        if ($("#ShowDelete").prop('checked') == true) {
+            ShowDelete1 = true;
+        }
+        else {
+            ShowDelete1 = false;
+        }
+        if ($("#ShowPrint").prop('checked') == true) {
+            ShowPrint1 = true;
+        }
+        else {
+            ShowPrint1 = false;
+        }
+        if ($("#MannualMapping").prop('checked') == true) {
+            MannualMapping1 = true;
+        }
+        else {
+            MannualMapping1 = false;
+        }
+        if ($("#AllowROPS").prop('checked') == true) {
+            AllowROPS1 = true;
+        }
+        else {
+            AllowROPS1 = false;
+        }
+        if ($("#SaveButton").prop('checked') == true) {
+            SaveButton1 = true;
+        }
+        else {
+            SaveButton1 = false;
+        }
+        if ($("#MRNSAVE").prop('checked') == true) {
+            MrnSave1 = true;
+        }
+        else {
+            MrnSave1 = false;
+        }
+
+        var data = {
+            USRNAME: $("#USRNAME").val(),
+
+            PSWORD: $("#PSWORD").val(),
+
+            U_CODE: $('#U_CODE').val(),
+
+            FAMILY_CODE: $('#FAMILY_CODE').val(),
+
+            Level_Name: $("#Level_Name").val(),
+
+            STAGEID: $('#STAGEID').val(),
+
+            PUNAME: $("#PUNAME").val(),
+
+            L_CODE: $("#L_CODE").val(),
+
+            ISACTIVE: ISACTIVE1,
+            STOREBYPASS: STOREBYPASS1,
+            PDIUSER: PDIUSER1,
+            ShowSave: ShowSave1,
+            ShowDelete: ShowDelete1,
+            ShowPrint: ShowPrint1,
+            MannualMapping: MannualMapping1,
+            AllowROPS: AllowROPS1,
+            SaveButton: SaveButton1,
+            MRNSAVE: MrnSave1
+         };
+        $.ajax({
+            url: '@Url.Action("SaveUserMasterNormal", "UserMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+                //alert(data.validation);
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    
+                    //$('#USRNAME').val("");
+                    //$('#PSWORD').val("");
+                    //$('#U_CODE').val("");
+                    //$('#FAMILY_CODE').val("");
+                    //$('#Level_Name').val("");
+                    //$('#STAGEID').val("");
+                    //$('#PUNAME').val("");
+                    //$('#L_CODE').val("");
+                    //$(ISACTIVE1 = false)
+                    //$(STOREBYPASS1 = false)
+
+                    BindGrid();
+                }
+                $(".reset").click(function () {
+                    $(this).closest('form').closest().val("");
+                });
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    });
+
+    //Update Data
+      $("#Update").on("click", function () {
+          $("#divLoader").show();
+          //alert($("#PSWORD").val());
+          //alert($("#Level_Name").val());
+          //alert($("#U_CODE").val());
+          if ($("#ISACTIVE").prop('checked') == true) {
+              ISACTIVE1 = true;
+          }
+          else {
+              ISACTIVE1 = false;
+          }
+          if ($("#STOREBYPASS").prop('checked') == true) {
+              STOREBYPASS1 = true;
+          }
+          else {
+              STOREBYPASS1 = false;
+          }
+          if ($("#PDIUSER").prop('checked') == true) {
+              PDIUSER1 = true;
+          }
+          else {
+              PDIUSER1 = false;
+          }
+          if ($("#ShowSave").prop('checked') == true) {
+              ShowSave1 = true;
+          }
+          else {
+              ShowSave1 = false;
+          }
+          if ($("#ShowDelete").prop('checked') == true) {
+              ShowDelete1 = true;
+          }
+          else {
+              ShowDelete1 = false;
+          }
+          if ($("#ShowPrint").prop('checked') == true) {
+              ShowPrint1 = true;
+          }
+          else {
+              ShowPrint1 = false;
+          }
+          if ($("#MannualMapping").prop('checked') == true) {
+              MannualMapping1 = true;
+          }
+          else {
+              MannualMapping1 = false;
+          }
+          if ($("#AllowROPS").prop('checked') == true) {
+              AllowROPS1 = true;
+          }
+          else {
+              AllowROPS1 = false;
+          }
+          if ($("#SaveButton").prop('checked') == true) {
+              SaveButton1 = true;
+          }
+          else {
+              SaveButton1 = false;
+          }
+          if ($("#MRNSAVE").prop('checked') == true) {
+              MrnSave1 = true;
+          }
+          else {
+              MrnSave1 = false;
+          }
+
+          var data = {
+              USRNAME: USRNAME,
+
+              PSWORD: $("#PSWORD").val(),
+
+              U_CODE: $('#U_CODE').val(),
+
+              FAMILY_CODE: $('#FAMILY_CODE').val(),
+
+              Level_Name: $("#Level_Name").val(),
+
+              STAGEID: $('#STAGEID').val(),
+
+              PUNAME: $("#PUNAME").val(),
+
+              L_CODE: $("#L_CODE").val(),
+
+              ISACTIVE: ISACTIVE1,
+              STOREBYPASS: STOREBYPASS1,
+              PDIUSER: PDIUSER1,
+              ShowSave: ShowSave1,
+              ShowDelete: ShowDelete1,
+              ShowPrint: ShowPrint1,
+              MannualMapping: MannualMapping1,
+              AllowROPS: AllowROPS1,
+              SaveButton: SaveButton1,
+              MRNSAVE: MrnSave1
+
+
+          };
+
+        $.ajax({
+            url: '@Url.Action("Update", "UserMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+
+                    $('#USRNAME').prop('disabled', false);
+                    $('#PSWORD').prop('disabled', false);
+                    $('#U_CODE').prop('disabled', false);
+                    $('#FAMILY_CODE').prop('disabled', false);
+                    $('#Level_Name').prop('disabled', false);
+                    $('#STAGEID').prop('disabled', false);
+                    $('#PUNAME').prop('disabled', false);
+                    $('#L_CODE').prop('disabled', false);
+
+
+
+                    if ($("#ISACTIVE").prop('checked') == true) {
+                        $("#ISACTIVE").prop('checked', false);
+                    }
+
+                    if ($("#STOREBYPASS").prop('checked') == true) {
+                        $("#STOREBYPASS").prop('checked', false);
+                    }
+                    if ($("#PDIUSER").prop('checked') == true) {
+                        $("#PDIUSER").prop('checked', false);
+                    }
+
+                    if ($("#ShowSave").prop('checked') == true) {
+                        $("#ShowSave").prop('checked', false);
+                    }
+
+                    if ($("#ShowDelete").prop('checked') == true) {
+                        $("#ShowDelete").prop('checked', false);
+                    }
+
+                    if ($("#ShowPrint").prop('checked') == true) {
+                        $("#ShowPrint").prop('checked', false);
+                    }
+
+
+                    if ($("#MannualMapping").prop('checked') == true) {
+                        $("#MannualMapping").prop('checked', false);
+                    }
+
+                    if ($("#AllowROPS").prop('checked') == true) {
+                        $("#AllowROPS").prop('checked', false);
+                    }
+
+                    if ($("#SaveButton").prop('checked') == true) {
+                        $("#SaveButton").prop('checked', false);
+                    }
+                    if ($("#MRNSAVE").prop('checked') == true) {
+                        $("#MRNSAVE").prop('checked', false);
+                    }
+
+
+                    $('#Add').show();
+                    $('#Update').hide();
+                    $('#USRNAME').prop('disabled', false);
+                    $('#PSWORD').prop('disabled', false);
+                    BindGrid();
+                }
+            },
+            error: function (errormessage)
+            {
+            }
+        });
+      });
+
+    $("#U_CODE").select2({
+        allowClear: true,
+        width: '280px',
+    });
+
+    //$("#Level_Name").select2({
+    //    allowClear: true,
+    //    width: '330px',
+    //});
+
+    //$("#PUNAME").select2({
+    //    allowClear: true,
+    //    width: '330px',
+    //});
+
+    //$("#STAGEID").select2({
+    //    allowClear: true,
+    //    width: '330px',
+    //});
+
+    $("#FAMILY_CODE").select2({
+        allowClear: true,
+        width: '280px',
+    });
+    $("#Clear").on("click", function () {
+        location.reload(true);
+    });
+
+</script>

@@ -1,0 +1,551 @@
+﻿@model  MVCApp.Models.JOBSTATUS
+
+<style>
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .ui-autocomplete {
+        max-height: 400px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+
+     .ui-autocomplete {
+        height: 400px;
+    }
+</style>
+
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Import Export</a>
+        </li>
+    </ul>
+</div>
+
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+
+    <ul class="nav nav-pills" id="myTab">
+        <li class="bg-light  active"><a data-toggle="tab" href="#IMPORTTABLE">IMPORT TABLE</a></li>
+        <li class="bg-light"><a data-toggle="tab" href="#IMPORTEXCEL">IMPORT EXCEL</a></li>
+
+    </ul>
+    
+    <div class="tab-content">
+        <div id="IMPORTTABLE" class="tab-pane active fade in">
+            @*--------Form------------*@
+            <div class="container" style="width:100%!important">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-horizontal form-group">
+                        <fieldset class="the-fieldset bg-info">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label for="Plant" class="text-right control-label col-form-label"><strong>PLANT</strong></label>
+                                    @Html.DropDownListFor(model => model.T2_PLANT_CODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.T2_PLANT_CODE, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="Family" class="text-right control-label col-form-label"><strong>FAMILY</strong></label>
+                                    @Html.DropDownListFor(model => model.T2_FAMILY_CODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.T2_FAMILY_CODE, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="Tractor" class="text-right control-label col-form-label"><strong>SELECT TRACTOR</strong></label>
+                                    @Html.DropDownListFor(model => model.TRACTOR, Enumerable.Empty<SelectListItem>(), "---SELECT---", new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.TRACTOR, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="Tractor" class="text-right control-label col-form-label"><strong>SELECT JOB</strong></label>
+                                    @Html.DropDownListFor(model => model.JOB, Enumerable.Empty<SelectListItem>(), "---SELECT ---", new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.JOB, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-1 pull-left" style=" padding-top: 24px;">
+                                    <button class="btn btn-success btn-sm" type="button" id="TblSave"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>&nbsp;SAVE</strong></button>
+                                    @*<button class="btn btn-success btn-sm" type="button" id="AddExcel" ><i class="fa fa-file-excel-o"></i><strong>&nbsp;Import</strong></button>*@
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                }
+                @*<div id="DuplicateErrorGrid"></div>*@
+                <div id="Grid"></div>
+            </div>
+        </div>
+        <div id="IMPORTEXCEL" class="tab-pane  fade in">
+            @*--------Form------------*@
+            <div class="container" style="width:100%!important">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-horizontal form-group">
+                        <fieldset class="the-fieldset bg-info">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="Plant" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                                    @Html.DropDownListFor(model => model.PLANT_CODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.PLANT_CODE, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="Family" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                                    @Html.DropDownListFor(model => model.FAMILY_CODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.FAMILY_CODE, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                @*<div id="divhidelbl">*@
+                                <div class="col-md-3 checkbox" style=" padding-top: 24px;">
+                                    <input type="file" class="form-control" id="ExcelFile" style="background-color:#6fb3e0; color:white; width:100%">
+
+                                    @*<div class="pull-left" style="margin-left: 35px;">
+                                        @Html.CheckBoxFor(model => model.IsOverride, new { @class = "form-check-input pull-left" })
+                                        @Html.Label("Is Override", new { @class = "form-check-label" })
+                                    </div>*@
+                                </div>
+                                @*</div>*@
+                                <div class="col-md-1 pull-left" style=" padding-top: 24px;">
+                                    <button class="btn btn-success btn-sm" type="button" id="AddExcel" onclick="ImportExcelFunction()"><i class="fa fa-file-excel-o"></i><strong>&nbsp;Import</strong></button>
+                                    @*<button class="btn btn-success btn-sm" type="button" id="AddExcel" ><i class="fa fa-file-excel-o"></i><strong>&nbsp;Import</strong></button>*@
+                                </div>
+                                <div class="col-md-1" style=" padding-top: 24px;">
+                                    <button class="btn btn-success btn-sm" type="button" id="DownloadExcel1"><i class="ace-icon fa fa-file-excel-o bigger-110"></i><strong>Downlod Format</strong></button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                }
+                @*<div id="DuplicateErrorGrid"></div>*@
+            </div>
+        </div>
+    </div>
+ </div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+        DDLPlant();
+        DDLPlanttab2();
+        //DDLTRACTOR();
+    });
+    $("#PLANT_CODE").on("change", function () {
+        DDLFamilyByPlant();
+    });
+    $("#T2_PLANT_CODE").on("change", function () {
+        DDLFamilyByPlanttab2();
+    });
+    $("#T2_FAMILY_CODE").on("change", function () {
+        DDLTRACTOR();
+    });
+    $("#TRACTOR").on("change", function () {
+        DDLJOB();
+    });
+
+    $("#DownloadExcel1").on("click", function () {
+        DownloadExcel();
+    });
+
+    //Function to bind Plant
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "ImportExport")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#PLANT_CODE").append(optionhtml);
+
+                });
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+        };
+
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        var selectedValue = $("#PLANT_CODE").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "ImportExport")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#FAMILY_CODE").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#FAMILY_CODE").append(optionhtml);
+                });
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+        };
+
+    //Function to bind Plant for tab 2
+    function DDLPlanttab2() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "ImportExport")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#T2_PLANT_CODE").append(optionhtml);
+                });
+                DDLFamilyByPlanttab2();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Family by Plant for tab 2
+    function DDLFamilyByPlanttab2() {
+        var selectedValue = $("#T2_PLANT_CODE").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "ImportExport")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#T2_FAMILY_CODE").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#T2_FAMILY_CODE").append(optionhtml);
+                });
+                DDLTRACTOR();
+                
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    function DDLTRACTOR() {
+        var PLANT1 = $("#T2_PLANT_CODE").val();
+        var FAMILY1 = $("#T2_FAMILY_CODE").val();
+        $.ajax({
+            url: '@Url.Action("BindTractor", "ImportExport")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ plnt: PLANT1, fam: FAMILY1 }),
+            success: function (result) {
+                //console.log(result.length);
+                $("#TRACTOR").html(null);
+                $("#Grid").html(null);
+                if (result.length > 0) {
+                    $.each(result, function (i) {
+                        var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                        $("#TRACTOR").append(optionhtml);
+                    });
+                    DDLJOB();
+                    BindGrid();
+                }
+                
+            }
+        });
+    }
+
+    function DDLJOB() {
+
+        PLANT1 = $("#T2_PLANT_CODE").val();
+        FAMILY1 = $("#T2_FAMILY_CODE").val();
+        trcr = $("#TRACTOR").val();
+        $.ajax({
+            url: '@Url.Action("BINDJOB", "ImportExport")',
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ plnt: PLANT1, tractor: trcr, fam: FAMILY1 }),
+            success: function (result) {
+                //console.log(result);
+                $("#JOB").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#JOB").append(optionhtml);
+                });
+            }
+        });
+    }
+
+    $("#TblSave").on("click", function () {
+        $("#divLoader").show();
+        var data = {
+            T2_PLANT_CODE: $('#T2_PLANT_CODE').val(),
+            T2_FAMILY_CODE: $('#T2_FAMILY_CODE').val(),
+            TRACTOR: $('#TRACTOR').val(),
+            JOB: $('#JOB').val()
+        }
+        $.ajax({
+            url: '@Url.Action("SaveTable", "ImportExport")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+                //alert(data.validation);
+                if (data.validation !== undefined && data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+
+                }
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    //BindGrid();
+                }
+            },
+            error: function (errormessage) {
+
+            }
+
+        });
+    });
+
+   function BindGrid() {
+       $("#divLoader").show();
+       var TCTR = $("#TRACTOR").val();
+        $.ajax({
+            url: '@Url.Action("Grid", "ImportExport")',
+            data: JSON.stringify({ TRACTOR: TCTR}),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Grid").html(null);
+                $("#Grid").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+
+    //Function to Download Excel File
+    function DownloadExcel() {
+        var Data = {
+            PLANT_CODE: $('#PLANT_CODE').val(),
+            FAMILY_CODE: $('#FAMILY_CODE').val()
+        };
+        $("#divLoader").show();
+        $.ajax({
+            url: '@Url.Action("ExportToExcel", "ImportExport")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            //dataType: "json",
+            success: function (data) {
+                if (data.Msg.length != 0) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+                // $("#Date").datepicker({ dateFormat: "ddMMyyy" });
+
+                var file = data.ExcelName + ".xlsx";
+                //$('#Date').val() + ".xlsx";
+                window.location.href = "@Url.RouteUrl(new{ Controller = "ImportExport", Action = "Download"})/?file=" + file;
+                $("#divLoader").hide();
+                /*  BindGrid();*/
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    }
+
+
+    //funtion to
+    function ImportExcel() {
+        if (!$("#ExcelFile").valid()) {
+            return false;
+        }
+        var formData = new FormData();
+        var file = document.getElementById("ExcelFile").files[0];
+        formData.append("File", file);
+        $.ajax({
+            url: '@Url.Action("ImportExcelJobStatus", "ImportExport")',
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (result) {
+                alert(result);
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+                $("#divLoader").hide();
+            }
+        });
+    };
+
+    $('input[type="file"]').change(function () {
+        $("#divLoader").show();
+        var formData = new FormData();
+        var file = document.getElementById("ExcelFile").files[0];
+        formData.append("inputFile", file);
+
+        $.ajax({
+            url: '@Url.Action("ValidateFileExtention", "ImportExport")',
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#divLoader").hide();
+
+                if (data.ID.length != 0) {
+                    if (data.ID == "alert-danger") {
+                        $("#ExcelFile").val(null);
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function() {$(".alert").alert('close');}, 5000);
+                    }
+                    else {
+                        //ValidateExcelFileShowGridFunction();
+
+                    }
+
+                }
+            },
+            error: function (errormessage) {
+                $("#divLoader").hide();
+            }
+        });
+    });
+
+    //Function to Import Daily Planning
+    function ImportExcelFunction() {
+
+        if (!$("#ExcelFile").valid()) {
+            return false;
+        }
+        else {
+            $("#divLoader").show();
+
+            var formData = new FormData();
+            var file = document.getElementById("ExcelFile").files[0];
+            var PLANT_CODE = $("#PLANT_CODE").val();
+            var FAMILY_CODE = $("#FAMILY_CODE").val();
+            var ITEM_CODE = $("#ITEM_CODE").text();
+            var FCODE_SRLNO = $("#FCODE_SRLNO").text();
+
+            formData.append("PLANT_CODE", PLANT_CODE );
+            formData.append("FAMILY_CODE", FAMILY_CODE);
+            formData.append("ITEM_CODE", ITEM_CODE);
+            formData.append("FCODE_SRLNO", FCODE_SRLNO);
+            formData.append("inputFile", file);
+
+            $.ajax({
+                url: '@Url.Action("ImportExcelJobStatus", "ImportExport")',
+                type: "POST",
+                data: formData,
+                //dataType: 'json',
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    $("#divLoader").hide();
+                        if (data.Msg.length != 0) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function() {$(".alert").alert('close');}, 5000);
+                        }
+                    //var file = data.ExcelName + ".xlsx";
+                    //$('#Date').val() + ".xlsx";
+                    @*window.location.href = "@Url.RouteUrl(new{ Controller = "ImportExport", Action = "Download"})/?file=" + file;*@
+                    $("#divLoader").hide();
+
+                    //if (dtStatus.Rows.Count > 0) {
+                    //    BindGrid(dtStatus);
+                    //}
+                    // BindGrid();
+
+                },
+                error: function (errormessage) {
+                    $("#divLoader").hide();
+                }
+
+            });
+
+        }
+
+    };
+
+    function closeAlert(alert) {
+
+        $(alert).hide();
+    };
+
+    $("#PLANT_CODE").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#T2_PLANT_CODE").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#FAMILY_CODE").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#T2_FAMILY_CODE").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#TRACTOR").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#JOB").select2({
+        allowClear: true,
+        width: '100%',
+    });
+
+</script>
+
+
+
+
+

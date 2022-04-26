@@ -1,0 +1,265 @@
+﻿@using System.Data;
+@model System.Data.DataSet
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/LCD/CSS/animate.css" rel="stylesheet" />
+    <link href="~/Content/LCD/CSS/StyleSheet.css" rel="stylesheet" />
+    <link href="~/Content/LCD/CSS/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/LCD/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <script src="~/Content/LCD/JS/jquery-1.9.1.min.js"></script>
+    <title>Index</title>
+    <style>
+        h2 {
+            margin: 0 130px 0 130px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container-fluid" style="background-color: #5ce6ff">
+            <div class="row">
+                <div class="col-md-1 padding-left-0 padding-right-0">
+                    <img src="~/Image/Logo.jpg" class="img-responsive" style="width: 100%; height: 80px;" />
+                </div>
+                <div class="col-md-11 headerEngin padding-left-0 padding-right-half">
+                    <span class="col-md-11 text-center">
+                        <strong class="text-center">
+                            &nbsp;CRDI ENGINES
+                            <br />
+                            &nbsp;&nbsp;
+                            IQA DATA MANAGEMENT
+                        </strong>
+                    </span>
+                    <span class="col-md-1 pull-right m-top5">
+                        <img ID="img" style="width: 100%; height: 60px;" />
+                    </span>
+                </div>
+            </div>
+
+            @*<div class="row m-top10" id="tdMsg" runat="server" visible="true">
+                    <div class="col-md-6 padding-right-0">
+                        <span class="col-md-12 btn-warning btn-lg" style="background-color: #f0ad4e; font-family: 'Arial Rounded MT'; font-size: 20px;">
+                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;
+                        </span>
+                    </div>
+                    <div class="col-md-12">
+                        <span class="col-md-12 btn-warning btn-lg" style="background-color: #f0ad4e; font-family: 'Arial Rounded MT'; font-size: 20px;">
+                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;
+                            <div ID="lblInfo" Text="Info" EncodeHtml="false" runat="server"></div>
+                            <div ID="lblInfodb" Text="InfoDB" EncodeHtml="false" runat="server"></div>
+                        </span>
+                    </div>
+                </div>*@
+            <div class="col-md-12 m-top10" id="tdError">
+                <div class="col-md-12 btn-danger btn-lg">
+                    <span style="width: 100%; font-family: 'Arial Rounded MT'; font-size: 20px;">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                        <label ID="lblError"></label>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <label ID="lblErrordb"></label>
+
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-12 m-top10">
+                <div class="col-md-12">
+                    <div class="col-md-12">
+                        <div class="col-md-6 padding-left-0 padding-right-half">
+                            <span class="">
+                                <label ID="lblDcode" Width="100%" class="text-center enginDispaly"></label>
+                            </span>
+                        </div>
+                        <div class="col-md-6 padding-left-0 padding-right-half">
+                            <span class="">
+                                <label ID="lblSrlno" Width="100%" class="text-center enginDispaly"></label>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 m-top10">
+                <div class="col-md-12">
+                    <div class="col-md-12">
+                        <div class="col-md-12">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-10">
+                                <div class="col-md-6 padding-left-0 padding-right-half">
+                                    <span class="col-md-12 btn-lg setbgH setbgINJ text-center">
+                                        <label ID="lblInj1" class="setHtext"></label>
+                                        <br /><font size=3>(TIMING SIDE)</font>
+                                    </span>
+                                </div>
+                                <div class="col-md-6 padding-left-0 padding-right-half">
+                                    <span class="col-md-12 btn-lg setbgText">
+                                        <label ID="lblInj1Srlno" Class="setbgT"></label>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 m-top10">
+                <div class="col-md-12">
+                    <div class="col-md-12">
+                        <div class="col-md-12">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-10">
+                                <div class="col-md-6 padding-left-0 padding-right-half">
+                                    <span class="col-md-12 btn-lg setbgH setbgINJ text-center">
+                                        <label ID="lblInj2" Text="INJECTOR 2 : " Class="setHtext"></label>
+                                    </span>
+                                </div>
+                                <div class="col-md-6 padding-left-0 padding-right-half">
+                                    <span class="col-md-12 btn-lg setbgText">
+                                        <label ID="lblInj2Srlno" Class="setbgT"></label>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 m-top10">
+                <div class="col-md-12">
+                    <div class="col-md-12">
+                        <div class="col-md-12">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-10">
+                                <div class="col-md-6 padding-left-0 padding-right-half">
+                                    <span class="col-md-12 btn-lg setbgH setbgINJ text-center">
+                                        <label ID="lblInj3" Text="INJECTOR 3 : " Class="setHtext"></label>
+                                    </span>
+                                </div>
+                                <div class="col-md-6 padding-left-0 padding-right-half">
+                                    <span class="col-md-12 btn-lg setbgText">
+                                        <label ID="lblInj3Srlno" runat="server" Class="setbgT"></label>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 m-top10">
+                <div class="col-md-12">
+                    <div class="col-md-12">
+                        <div class="col-md-12">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-10">
+                                <div class="col-md-6 padding-left-0 padding-right-half">
+                                    <span class="col-md-12 btn-lg setbgH setbgINJ text-center">
+                                        <label ID="lblInj4" class="setHtext">
+
+                                        </label>
+                                        <br /><font size=3> (FLYWHEEL SIDE)</font>
+                                    </span>
+                                </div>
+                                <div class="col-md-6 padding-left-0 padding-right-half">
+                                    <span class="col-md-12 btn-lg setbgText">
+                                        <label ID="lblInj4Srlno" runat="server" Class="setbgT"></label>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-1 pull-right">
+                                <span>&nbsp</span>
+                                <span class="col-md-12 btn-lg" style="vertical-align: bottom;">
+                                    @*<button Class="btn btn-danger  m-top20" type="button" id="reset"  onclick="@Html.Action("btnReset_Click", "Injectors")"><strong>RESET</strong></button>*@
+
+                                    <Button Class="btn btn-danger  m-top20" type="button" id="reset">RESET</Button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class=" padding-left-0 padding-right-0">
+                    <div class=" btn-lg  setbgINJ text-center"><h2>@Html.Action("_GetDailyPlanVertical", "Injectors")</h2></div>
+                    
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+
+</body>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<script type="text/javascript">
+    setTimeout(function () {
+        function checkinfo() {
+            
+            $.ajax({
+            url: '@Url.Action("CheckInfos", "Injectors")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+                success: function (result) {
+                    
+                    Setlblvalue(result);
+            },
+                error: function (errormessage) {
+                //alert(errormessage.responseText);
+                }
+            });
+
+        }
+        setInterval(checkinfo, 1 * 1000); // Run it every 5 seconds from here on out
+    }, 0.5 * 1000);
+
+    function Setlblvalue(data) {
+        if (data.tdError == true) {
+            $("#tdError").show();
+            $("#lblErrordb").text(data.lblErrordb);
+        } else {
+            $("#tdError").hide();
+        }
+        $("#lblDcode").text(data.lblDcode);
+        $("#lblSrlno").text(data.lblSrlno);
+        $("#lblInj1").text("INJECTOR 1 :");
+        $("#lblInj1").text("INJECTOR 1 :");
+        $("#lblInj2").text("INJECTOR 2 :");
+        $("#lblInj3").text("INJECTOR 3 :");
+        $("#lblInj4").text("INJECTOR 4 :");
+        $("#lblInj1Srlno").text(data.lblInj1Srlno);
+        $("#lblInj2Srlno").text(data.lblInj2Srlno);
+        $("#lblInj3Srlno").text(data.lblInj3Srlno);
+        $("#lblInj4Srlno").text(data.lblInj4Srlno);
+
+        if (data.ImageStatus == true) {
+            $("#img").attr("src", "" + data.ImageUrl + "");
+            $("#img").show();
+        } else {
+            $("#img").hide();
+        }
+        Partialview();
+    }
+
+    function Partialview() {
+         $.ajax({
+            url: '@Url.Action("_GetDailyPlanVertical", "Injectors")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+                success: function()  {
+            },
+                error: function (errormessage) {
+                //alert(errormessage.responseText);
+                }
+            });
+    }
+</script>
+</html>

@@ -1,0 +1,330 @@
+﻿@using System.Data;
+@model System.Data.DataSet
+@{ Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/LCD/CSS/StyleSheet.css" rel="stylesheet" />
+    <link rel="icon" href="~/Image/favicon-32x32.png" type="image/x-icon">
+
+    <title>BULK STORAGE</title>
+    <style>
+
+        html, body {
+            background-color: white;
+            height: 100%;
+            margin: 0;
+        }
+
+        h2 {
+            margin: 0 130px 0 130px;
+        }
+
+
+        div.table-title {
+            display: block;
+            margin: auto;
+            max-width: 600px;
+            padding: 5px;
+            width: 100%;
+        }
+
+        .table-title h3 {
+            color: #fafafa;
+            font-size: 30px;
+            font-weight: 400;
+            font-style: normal;
+            font-family: "Roboto", helvetica, arial, sans-serif;
+            text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+            text-transform: uppercase;
+        }
+
+
+        /** Table Styles */
+
+        .table-fill {
+            background: white;
+            border-radius: 3px;
+            border-collapse: collapse;
+            height: 150PX;
+            margin: 0;
+            /*max-width: 600px;*/
+            padding: 5px;
+            width: 50%;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            animation: float 5s infinite;
+        }
+
+        .th1 {
+            color: #ffffff;
+            background: #065499;
+            border: 2px solid #a3a085;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 5px;
+            text-align: left;
+            text-shadow: 0 1px 1px rgb(0 0 0 / 10%);
+            vertical-align: middle;
+        }
+
+
+            .th1:first-child {
+                border-top-left-radius: 3px;
+            }
+
+            .th1:last-child {
+                border-top-right-radius: 3px;
+            }
+
+        .tr1:hover td {
+            background: #4E5066;
+            color: #FFFFFF;
+        }
+
+        .tr1:first-child {
+        }
+
+
+        .td1 {
+            background: #FFFFFF;
+            text-align: center;
+            font-weight: bold;
+            font-size: INITIAL;
+            color: black;
+            padding: 5PX;
+            font-size: 13PX;
+        }
+
+
+        .th1.text-left {
+            text-align: center;
+        }
+
+        .th1.text-center {
+            text-align: center;
+        }
+
+        .th1.text-right {
+            text-align: center;
+        }
+
+        .td1.text-left {
+            text-align: center;
+        }
+
+        .td1.text-center {
+            text-align: center;
+        }
+
+        .td1.text-right {
+            text-align: center;
+        }
+
+        table tbody tr td {
+            border: 1px solid black;
+        }
+
+        .leftgrid {
+            float: left;
+            text-align: center;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .tdhide {
+            display: none;
+        }
+
+        .head-header {
+            font-size: 31px;
+            color: #ffffff;
+            margin-top: -35px;
+            float: right;
+            WIDTH: 60%;
+            FONT-FAMILY: fangsong;
+            margin-top: -60px;
+            height: 60px;
+        }
+
+
+        .hr1 {
+            border-top: 3px solid #01f5c7;
+            width: 50%;
+            margin-top: -33px;
+            BACKGROUND-COLOR: brown;
+        }
+
+        .tr2 {
+            color: #ffffff;
+            background: #0c7096;
+            border: 2px solid black;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 5px;
+            text-align: left;
+            text-shadow: 0 1px 1px rgb(0 0 0 / 10%);
+            vertical-align: middle;
+        }
+
+        tr#special {
+            background-color: #04d0fd;
+        }
+
+        tr:nth-child(even) {
+            background-color: #C4E5FD;
+            /*color: white;*/
+        }
+
+        tr#special {
+            background-color: #04d0fd;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="row">
+            <div class="col-md-12 " style="BACKGROUND: #065499; HEIGHT: 51PX;">
+                <div class="col-md-2">
+                    <img src="~/Image/logo.gif" Height="50" Width="80" style="margin: 5px;" />
+                </div>
+                <div class="col-md-10">
+                    <strong class="head-header">BULK STORAGE</strong>
+                </div>
+            </div>
+        </div>
+        <div style="width: 100%">
+            <input type="hidden" id="PlantCode" value="@ViewBag.PlantCode" />
+            <div style="width: 100%; color: #fff; background-color: #065499; border-color: #428bca; height: 40px; padding: 0; text-align: center; vertical-align: central;">
+                <table style="width: 100%">
+                    <tr id="special" style="font-size: 17px;" class="tr2">
+                        <td align="center" style="width:50%">
+                            <label ID="lblDate" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                        </td>
+                        <td align="center" style="width:50%">
+                            <label ID="lblTime" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row col-md-12">
+            <div class="col-md-8" style="float: left; text-align: center; font-size: 18px; font-weight: bold; width:100%;">
+                <table class="table-fill css-serial table-hover table-responsive" style="height: 25px; width: 100%;" id="tbldetail">
+                    <thead>
+                        <tr style="height: 30px; ">
+                            <th class="text-left th1" width="3%">SR. NO.</th>
+                            <th class="text-left th1" width="7%" id="ITEM_CODE">ITEM CODE</th>
+                            <th class="text-left th1" width="20%" id="ITEM_DESCRIPTION">ITEM DESCRIPTION</th>
+                            <th class="text-left th1" width="8%" id="LOCATION_CODE">LOCATION CODE</th>
+                            <th class="text-left th1" width="8%" id="SAFTY_STOCK_QUANTITY">SAFETY STOCK QUANTITY</th>
+                            <th class="text-left th1" width="8%" id="CAPACITY">CAPACITY</th>
+                            <th class="text-left th1" width="8%" id="QTY">QUANTITY AVAILABLE</th>
+                            <th class="text-left th1" width="8%" id="AVAILABLE">BALANCE CAPACITY AVAILABLE</th>
+                            <th class="text-left th1" width="8%" id="TEMP_LOC">TEMPORARY LOCATION</th>
+                            <th class="text-left th1" width="8%" id="TEMP_QTY">TEMPORARY QUANTITY</th>
+                            @*<th class="text-left th1" id="AVAILABLE_SPACE">AVAILABLE</th>*@
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </header>
+</body>
+</html>
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        checkinfo();
+    });
+    var refresh = '@System.Configuration.ConfigurationManager.AppSettings["pagerefresh"].ToString()';
+    window.onload = function () {
+        setInterval(function () {
+            checkinfo();
+        }, refresh*1000);
+    };
+
+    function checkinfo() {
+        var Data = $('#PlantCode').val();
+        if (Data != null && Data != undefined && Data != "") {
+            $.ajax({
+                url: '@Url.Action("getPlanVertical", "BulkstorageLocation")',
+                data: { PLANTCODE: Data },
+                type: "GET",
+                contentType: "application/json;charset=UTF-8",
+                success: function (result) {
+
+                    Setlblvalue(result);
+
+
+                },
+                error: function (errormessage) {
+                }
+            });
+
+        }
+    }
+
+    function Setlblvalue(data) {
+
+        if (data.tdError == true) {
+            $("#tdError").show();
+            $("#lblErrordb").text(data.lblErrordb);
+        } else {
+            $("#tdError").hide();
+        }
+
+        $("#lblDate").text(data.lblDate);
+        $("#lblTime").text(data.lblTime);
+        $("#lblShift").text(data.lblShift);
+        $("#lblProductionUnit").text(data.lblProductionUnit);
+        $("#lblPlanQty").text(data.lblPlanQty);
+        $("#lblPending").text(data.lblPending);
+        $("#lblBKTotDay").text(data.lblBKTotDay);
+        $("#lblPlanQty").text(data.lblPlanQty);
+        $("#lblBK").text(data.lblBK);
+        $("#lblPending").text(data.lblPending);
+        $("#lblBKTotDay").text(data.lblBKTotDay);
+        $('#tbldetail tbody').html('');
+        for (var i = 0; i < data.DataGrid.length; i++) {
+            var rawCode = i;
+            var tr;
+            if (data.DataGrid[i].PENDING == 0) {
+                tr = "<tr style='background-color:lawngreen;' id='" + data.DataGrid[i] + "'>";
+            }
+
+            else if (data.DataGrid[i].BackColor == "Yellow") {
+
+                tr = "<tr style='background-color:Yellow;' id='" + data.DataGrid[i] + "'>";
+
+            }
+            else {
+                tr = "<tr  id='" + data.DataGrid[i] + "'>";
+            }
+
+            var row = $(tr);
+            $("#tbldetail").append(row);
+            row.append("<td>" + data.DataGrid[i].SRNO + "</td>").addClass("td1");
+            row.append("<td><span id='ITEM_CODE" + rawCode + "'>" + data.DataGrid[i].ITEM_CODE + "</span></td>").addClass("td1");
+            row.append("<td><span id='ITEM_DESCRIPTION" + rawCode + "'>" + data.DataGrid[i].ITEM_DESCRIPTION + "</span></td>").addClass("td1");
+            row.append("<td><span id='LOCATION_CODE" + rawCode + "'>" + data.DataGrid[i].LOCATION_CODE + "</span></td>").addClass("td1");
+            row.append("<td><span id='SAFTY_STOCK_QUANTITY" + rawCode + "'>" + data.DataGrid[i].SAFTY_STOCK_QUANTITY + "</span></td>").addClass("td1");
+            row.append("<td><span id='CAPACITY" + rawCode + "'>" + data.DataGrid[i].CAPACITY + "</span></td>").addClass("td1");
+            row.append("<td><span id='QTY" + rawCode + "'>" + data.DataGrid[i].QTY + "</span></td>").addClass("td1");
+            row.append("<td><span id='AVAILABLE" + rawCode + "'>" + data.DataGrid[i].AVAILABLE + "</span></td>").addClass("td1");
+            row.append("<td><span id='TEMP_LOC" + rawCode + "'>" + data.DataGrid[i].TEMP_LOCATION + "</span></td>").addClass("td1");
+            row.append("<td><span id='TEMP_QTY" + rawCode + "'>" + data.DataGrid[i].TEMP_QTY + "</span></td>").addClass("td1");
+            //row.append("<td><span id='AVAILABLE" + rawCode + "'>" + data.DataGrid[i].AVAILABLE + "</span></td>").addClass("td1");
+
+        }
+        //debugger;
+        //GetTaskComplete(result);
+    }
+
+</script>
+
+
+

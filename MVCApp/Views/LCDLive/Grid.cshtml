@@ -1,0 +1,111 @@
+﻿<style>
+    .green {
+        background: #ABEBC6;
+    }
+
+    .red {
+        background: #F5B7B1;
+    }
+</style>
+
+<style>
+    .e-headercell {
+        background-color: #14567e !important;
+        color: white;
+    }
+
+    .e-summarycell {
+        background-color: #8fbfdc !important;
+    }
+
+    .bg-red {
+        background: red;
+    }
+</style>
+
+<div class="page-content">
+    <div class="container-fluid" style="width: 100% !important;padding-bottom: 3px;color: white;font-size: 20px;">
+        <div class="row" style="background-color: #005b77!important">
+            <div class="col-md-3">
+                <label class="text-right control-label col-form-label"><strong>DATE:</strong></label>
+                <label class="text-right control-label col-form-label">&nbsp;&nbsp;&nbsp;@ViewBag.Date</label>
+            </div>
+            <div class="col-md-3">
+                <label class="text-right control-label col-form-label"><strong>TIME:</strong></label>
+                <label class="text-right control-label col-form-label">&nbsp;&nbsp;&nbsp;@ViewBag.Time</label>
+            </div>
+            <div class="col-md-3">
+                <label class="text-right control-label col-form-label"><strong>SHIFT:</strong></label>
+                <label class="text-right control-label col-form-label">&nbsp;&nbsp;&nbsp;@ViewBag.Shift</label>
+            </div>
+            <div class="col-md-3">
+                <label class="text-right control-label col-form-label"><strong>PRODUCTION PLAN:</strong></label>
+                <label class="text-right control-label col-form-label">&nbsp;&nbsp;&nbsp;@ViewBag.Planned</label>
+            </div>
+            <div class="col-md-3">
+                <label class="text-right control-label col-form-label"><strong>PLANNED:</strong></label>
+                <label class="text-right control-label col-form-label">&nbsp;&nbsp;&nbsp;@ViewBag.Planned</label>
+            </div>
+            <div class="col-md-3">
+                <label class="text-right control-label col-form-label"><strong>COMPLETED:</strong></label>
+                <label class="text-right control-label col-form-label">&nbsp;&nbsp;&nbsp;@ViewBag.Completed</label>
+            </div>
+            <div class="col-md-3">
+                <label class="text-right control-label col-form-label"><strong>PENDING:</strong></label>
+                <label class="text-right control-label col-form-label">&nbsp;&nbsp;&nbsp;@ViewBag.Pending</label>
+            </div>
+            <div class="col-md-3">
+                <label class="text-right control-label col-form-label"><strong>DAY TOTAL:</strong></label>
+                <label class="text-right control-label col-form-label">&nbsp;&nbsp;&nbsp;@ViewBag.Completed</label>
+            </div>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty((string)ViewBag.Error))
+    {
+        <div class="container-fluid" style="width: 100% !important;padding-bottom: 3px;color: white;font-size: 20px;">
+            <div class="row" style="background-color: #005b77!important">
+                <div class="col-md-12 bg-red">
+                    <div class="text-center">
+                        <label class="control-label col-form-label"><strong>ALERT:</strong></label>
+                    </div>
+                    <div class="text-center">
+                        <label class="control-label col-form-label">&nbsp;&nbsp;&nbsp;@ViewBag.Error</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="table-responsive">
+
+        @(Html.EJS().Grid("Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+             RowDataBound("rowDataBound").
+             Columns(col =>
+             {
+                 col.Field("SEQ_NO").HeaderText("SQN. No").Width("120").EditType("numericedit").ValidationRules(new { required = true }).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                 col.Field("ITEMCODE").HeaderText("Item Code").Width("150").AllowEditing(false).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                 col.Field("DESCRIPTION").HeaderText("Description").AllowEditing(false).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                 col.Field("SHORTCODE").HeaderText("SHORT CODE").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                 col.Field("QTY").HeaderText("Qty").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                 col.Field("COMPLETED").HeaderText("COMPLETED").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                 col.Field("PENDING").HeaderText("PENDING").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                 col.Field("SUBASSEMBLY1").HeaderText("Sub-Assembly 1").Add();
+                 col.Field("SUBASSEMBLY2").HeaderText("Sub-Assembly 2").Add();
+             }).SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Single)).Render())
+        <script>
+            function rowDataBound(args) {
+                if (args.data['PENDING'] == 0) {
+                    args.row.classList.add('green');
+                } else {
+                    args.row.classList.add('red');
+                }
+            }
+        </script>
+    </div>
+
+
+    @Html.EJS().ScriptManager()
+
+
+</div>
+

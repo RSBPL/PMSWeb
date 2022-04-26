@@ -1,0 +1,160 @@
+﻿@model MVCApp.Models.Planning_Days_Model
+@*--------Form------------*@
+<div class="container" style="width:100%!important">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form_PD" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal form-group">
+            <fieldset class="the-fieldset bg-info">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                        @Html.DropDownListFor(model => model.Plant_PD, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                        <strong>@Html.ValidationMessageFor(model => model.Plant_PD, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                        @Html.DropDownListFor(model => model.Family_PD, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                        <strong>@Html.ValidationMessageFor(model => model.Plant_PD, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Description</strong></label>
+                        @Html.DropDownListFor(model => model.Description_PD, (IEnumerable<SelectListItem>)ViewBag.PD_Description, "----Select----", new { @class = "form-control  input-sm" })
+                        <strong>@Html.ValidationMessageFor(model => model.Description_PD, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-1">
+                        <label for="fname" class=""><strong class="text">Days</strong></label>
+                        @Html.TextBoxFor(model => model.ParamValue_PD, null, new { type = "number", min = "0", @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.ParamValue_PD, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="fname" class="text-right control-label col-form-label"><strong class="text-hide">Role Description</strong></label>
+                            </div>
+                            <div class="col-md-12 align-right">
+                                <button class="btn btn-success btn-sm" type="button" id="Add_PD"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>SAVE</strong></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    }
+    <div id="Grid_PD"></div>
+</div>
+
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+
+@*Script for First Tab*@
+<script>
+    $(document).ready(function () {
+        DDLPlant();
+        BindGrid_PD();
+    });
+
+    $("#Plant_PD").on("change", function () {
+        DDLFamilyByPlant_PD();
+    });
+
+    //Function to bind Plant
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "AddDailyPlan")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Plant_PD").html(result);
+                DDLFamilyByPlant_PD();
+        },
+            error: function (errormessage) {
+            alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant_PD() {
+        var selectedValue = $("#Plant_PD").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "Setting_Master")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#Family_PD").html(result);                
+        },
+            error: function (errormessage) {
+            
+            }
+        });
+    };
+
+    //Save Setting
+    $("#Add_PD").on("click", function () {        
+        $("#divLoader").show();
+        $.ajax({
+            url: '@Url.Action("Save_PD", "Setting_Master")',
+            data: JSON.stringify({
+                Plant_PD: $('#Plant_PD').val(),       
+                Family_PD: $('#Family_PD').val(),       
+                Description_PD: $("#Description_PD option:selected").text(),
+                ParamInfo_PD: $('#Description_PD').val(),
+                ParamValue_PD: $('#ParamValue_PD').val(),
+                Status_PD: 'PL_DAYS'                                    
+            }),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+                if (data.Msg != "" || data.Msg != null) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+                $('#ParamValue_PD').val("");
+                BindGrid_PD();
+            },
+            error: function (errormessage) {
+
+            }
+        });       
+    });
+
+    //Function to bind Grid
+    function BindGrid_PD() {
+       $("#divLoader").show();       
+        $.ajax({
+            url: '@Url.Action("PD_Grid", "Setting_Master")',  
+            data: JSON.stringify({
+                Plant_PD: $('#Plant_PD').val(),
+                Family_PD: $('#Family_PD').val(),               
+                Status_PD: 'PL_DAYS'
+            }),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Grid_PD").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    };
+
+    $("#Plant_PD").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#Family_PD").select2({
+        allowClear: true,
+        width: '100%',
+    });
+     $("#Description_PD").select2({
+        allowClear: true,
+        width: '100%',
+    });
+</script>

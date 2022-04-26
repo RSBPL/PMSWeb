@@ -1,0 +1,15 @@
+16-Oct-2021 11:22:15 AM
+Object reference not set to an instance of an object.
+   at MVCApp.Controllers.MAHController.UpdateItemBarcode(BOXBARCODE bOXBARCODE) in D:\Sarthak\MVCApp\MVCApp\Controllers\MAHController.cs:line 727
+____________________________________________________________________________________________
+
+16-Oct-2021 11:25:43 AM
+Object reference not set to an instance of an object.
+   at MVCApp.Controllers.MAHController.UpdateItemBarcode(BOXBARCODE bOXBARCODE) in D:\Sarthak\MVCApp\MVCApp\Controllers\MAHController.cs:line 683
+____________________________________________________________________________________________
+
+16-Oct-2021 11:29:05 AM
+Object reference not set to an instance of an object.
+   at MVCApp.Controllers.MAHController.UpdateItemBarcode(BOXBARCODE bOXBARCODE) in D:\Sarthak\MVCApp\MVCApp\Controllers\MAHController.cs:line 683
+____________________________________________________________________________________________
+

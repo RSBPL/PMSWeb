@@ -1,0 +1,8 @@
+﻿@model MVCApp.Models.TractorMster
+@{
+    <div>
+        @Html.DropDownListFor(model => model.gleSearch, (IEnumerable<SelectListItem>)ViewBag.gleSearch, new { @class = "form-control input-sm" })
+    </div>
+}
+
+

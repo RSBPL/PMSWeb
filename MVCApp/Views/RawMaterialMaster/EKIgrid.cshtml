@@ -1,0 +1,119 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="table-responsive">
+        @{
+            List<object> commands = new List<object>();
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-delete", cssClass = "delete" } });
+        }
+
+        @(Html.EJS().Grid("EKIgrid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                AllowPaging(true).
+                PageSettings(Page => Page.PageSize(15)).
+                
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+
+                Columns(col =>
+                {
+                    col.HeaderText("EDIT/DELETE").Width("80").Commands(commands).Add();
+                    col.Field("AUTOID").HeaderText("AUTOID").IsPrimaryKey(true).Visible(false).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("PLANT_CODE").HeaderText("PLANT").Visible(false).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("100").Add();
+                    col.Field("FAMILY_CODE").HeaderText("FAMILY").Visible(false).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("150").Add();
+                    col.Field("ITEM_CODE").HeaderText("ITEM CODE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("100").Add();
+                    col.Field("ITEM_DESCRIPTION").HeaderText("DESCRIPTION").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("350").Add();
+                    col.Field("PACKING_STANDARD").HeaderText("PACKING STANDARD").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("80").Add();
+                    col.Field("CREATEDBY").HeaderText("CREATED BY").Visible(false).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("150").Add();
+                    col.Field("CREATEDDATE").HeaderText("CREATED DATE").Visible(false).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("200").Add();
+                    col.Field("UPDATEDBY").HeaderText("UPDATED BY").Visible(false).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("150").Add();
+                    col.Field("UPDATEDDATE").HeaderText("UPDATED DATE").Visible(false).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("200").Add();
+
+                }).AllowExcelExport().
+                ToolbarClick("toolbarClick")
+                .Toolbar(new List<string>() { "ExcelExport" })
+                .SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick").//AllowRowDragAndDrop().
+                Render())
+
+        
+        <script>
+
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("EKIgrid").ej2_instances[0];
+                gridObj.excelExport();
+            }
+
+            var AutoId;
+            function commandClick(args) {
+                if (args.rowData != null) {
+                    if (args.target.classList.contains('edit')) {
+                        AutoId = args.rowData["AUTOID"];
+
+                        $("#End_Serial").val(args.rowData["END_SERIALNO"]);
+                        var itmcode = args.rowData["ITEM_CODE"];
+                        var itmdesc = args.rowData["ITEM_DESCRIPTION"];
+                        var codeDesc = itmcode + " # " + itmdesc;
+
+                        $("#ItemCode").val(codeDesc);
+                        $("#PackingStandard").val(args.rowData["PACKING_STANDARD"]);
+                        $('#Plant').prop('disabled', true);
+                        $('#Family').prop('disabled', true);
+
+
+                        $('#Add').hide();
+                        $('#Update').show();
+                    }
+                    if (args.target.classList.contains('delete')) {
+
+
+                        AutoId = args.rowData["AUTOID"];
+                        deleteItem();
+                        
+                    }
+                }
+            };
+            function deleteItem() {
+                if (confirm("Are you sure, to delete this Record ?")) {
+                    Delete();
+                }
+                return false;
+            }
+           
+
+
+        </script>
+    </div>
+</div>
+
+
+@Html.EJS().ScriptManager()
+
+
+
+
+<div class="modal" id="DeleteConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <h4><strong>Are you sure, to delete this Record ?</strong></h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnDeleteCancel" class="btn btn-success btn-sm"><i class="fa fa-arrow-left"></i> Cancel</button>
+
+                <button type="button" id="btnDelete" class="btn btn-danger btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,86 @@
+﻿@model MVCApp.Models.MenuModel
+@using Syncfusion.EJ2
+
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Maintenance</a>
+        </li>
+
+        <li class="active">
+            Role
+        </li>
+    </ul>
+</div>
+
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        @if (TempData["msg"] != null && TempData["msgType"] != null)
+        {
+            <div class="alert @TempData["msgType"]" role="alert">
+                <strong>@TempData["msg"]</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+        <div style="margin-top:5px; margin-bottom:5px;">
+            <a href="@Url.Action("Create", "RoleMaster")" class="btn btn-primary btn-sm"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add New</a>
+        </div>
+    </div>
+    <div class="container" style="width:100%!important">
+        <div class="table-responsive">
+            @*@{
+                    List<object> commands = new List<object>();
+                    //commands.Add(new { buttonOption = new { iconCss = "ace-icon fa fa-search-plus bigger-130", cssClass = "e-info" } });
+                    commands.Add(new { buttonOption = new { iconCss = "ace-icon fa fa-pencil bigger-130", cssClass = "e-success" } });
+                    commands.Add(new { buttonOption = new { iconCss = " ace-icon fa fa-trash-o bigger-130", cssClass = "e-danger" } });
+                }*@
+            @*@(Html.EJS().Grid("Grid").DataSource((IEnumerable<object>)ViewBag.DataSource).*@
+
+            @(Html.EJS().Grid("Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                AllowPaging(true).
+                PageSettings(Page => Page.PageSize(8)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                Columns(col =>
+                {
+                    col.Field("L_CODE").HeaderText("ROLE").IsPrimaryKey(true).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    //col.Field("REMARK").HeaderText("REMARK").Add();
+                    //col.Field("CREATEDBY").HeaderText("Created By").Add();
+                    //col.HeaderText("Action").Width("160").Commands(commands).Add();
+                    col.HeaderText("ACTION").Template("#customerTemplate").Width(120).Add();
+                }).
+
+                Render())
+        </div>
+    </div>
+</div>
+
+
+@Styles.Render("~/Content/ej2")
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+
+<script type="text/x-jsrender" id="customerTemplate">
+    @*<a rel='nofollow' href="../../ROLEMASTER/EDIT?Code=${L_CODE}"><i class="ace-icon fa fa-search-plus bigger-130"></i></a>*@&nbsp;&nbsp;&nbsp;
+    <a rel='nofollow' href="RoleMaster/Edit?Code=${L_CODE}"><i class="ace-icon fa fa-pencil bigger-130"></i></a>&nbsp;&nbsp;&nbsp;
+    <a rel='nofollow' href="RoleMaster/Delete?Code=${L_CODE}"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>
+</script>

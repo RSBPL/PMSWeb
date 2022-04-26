@@ -1,0 +1,6 @@
+﻿@model MVCApp.Models.BulkStorage
+    @{ 
+        <div>
+            @Html.DropDownListFor(model => model.Item,(IEnumerable<SelectListItem>)ViewBag.Item ,new { @class = "form-control input-sm"})
+        </div>
+    }

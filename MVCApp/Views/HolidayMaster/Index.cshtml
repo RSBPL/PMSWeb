@@ -1,0 +1,178 @@
+﻿@model MVCApp.Models.HolidaysModel
+<style>
+    /*.modal-dialog {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 1%;
+    }
+
+    .modal-content {
+        height: auto;
+        min-height: 100%;
+        border-radius: 0;
+    }*/
+
+    /*.modal-header{
+        background-color: darkcyan;
+    }*/
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .the-legend{
+        box-shadow: 0px 1px 5px #7f8b8f;
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Holiday</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    @*--------Form------------*@
+    <div class="container" style="width:100%!important">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal form-group">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            @Html.DropDownListFor(model => model.Plant_Code, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.Plant_Code, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Holi Date</strong></label>
+                            @Html.EJS().DatePickerFor(Model => Model.Holi_Date).Format("dd-MMM-yyyy").Value(ViewBag.DefaultDate).Max(ViewBag.maxDate).Render()
+                            <strong>@Html.ValidationMessageFor(model => model.Holi_Date, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="fname" class=""><strong class="text">Description</strong></label>
+                            @Html.TextBoxFor(model => model.Description, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong class="text-hide">Role Description</strong></label>
+                                </div>
+                                <div class="col-md-12 align-right">
+                                    <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>SAVE</strong></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        }
+    </div>
+    <div id="Grid"></div>
+</div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+@*Script for First Tab*@
+<script>
+    $(document).ready(function () {
+        DDLPlant();        
+    });
+
+    //Function to bind Plant
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "AddDailyPlan")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Plant_Code").html(result);
+                BindGrid();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Save Data
+    $("#Add").on("click", function () {
+        $("#divLoader").show();
+        var data = {
+                Plant_Code: $('#Plant_Code').val(),
+                Holi_Date: $('#Holi_Date').val(),                
+                Description: $('#Description').val()                    
+            };
+        $.ajax({
+            url: '@Url.Action("Save", "HolidayMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+                if (data.Msg != "" || data.Msg != null) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+                $('#Description').val("");
+                BindGrid();
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    });
+
+    //Function to bind Grid
+    function BindGrid() {
+        $("#divLoader").show();
+        var data = {
+            Plant_Code: $('#Plant_Code').val()
+                };
+        $.ajax({
+            url: '@Url.Action("Grid", "HolidayMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Grid").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    };
+
+    $("#Plant_Code").select2({
+        allowClear: true,
+        width: '100%'
+    });
+
+</script>

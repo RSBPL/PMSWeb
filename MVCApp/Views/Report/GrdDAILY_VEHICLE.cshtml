@@ -1,0 +1,81 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bg-primary" style="padding-top:5px; padding-left:5px;">
+                <center>
+                    <label style="color:white;">@ViewBag.heading</label>
+                    <label style="color: white;padding-right: 10px;" class="pull-right"><strong>TOTAL RECORD : @ViewBag.Total </strong></label>
+                </center>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        @(Html.EJS().Grid("GrdDAILY_VEHICLE").DataSource((System.Data.DataTable)ViewBag.DataSource).
+            AllowPaging(true).Height("400").
+            PageSettings(Page => Page.PageSize(20)).
+            AllowSelection(false).
+            AllowResizing().
+            AllowExcelExport().
+            ToolbarClick("toolbarClick").
+            AllowFiltering().
+            //AllowGrouping().
+            AllowSorting().
+            Columns(col =>
+            {
+                col.Field("MRN_NO").HeaderText("MRN_NO").Width(140).Add();
+                col.Field("MRN_DATE").HeaderText("MRN_DATE").Add();
+                col.Field("VENDOR_CODE").HeaderText("VENDOR_CODE").Add();
+                col.Field("VENDOR_NAME").HeaderText("VENDOR_NAME").Add();
+                col.Field("INVOICE_NO").HeaderText("INVOICE_NO").Add();
+                col.Field("ITEM_CODE").HeaderText("ITEM_CODE").Add();
+                col.Field("ITEM_DESCRIPTION").HeaderText("ITEM_DESCRIPTION").Add();
+                col.Field("TOTAL_ITEM").HeaderText("TOTAL_ITEM").Add();
+                col.Field("VEHICLE_NO").HeaderText("VEHICLE_NO").Add();
+                col.Field("PRINTED_ON").HeaderText("PRINTED_ON").Add();
+                col.Field("PRINTED_BY").HeaderText("PRINTED_BY").Add();
+                col.Field("TIMEIN").HeaderText("TIMEIN").Add();
+                col.Field("PERSON").HeaderText("PERSON").Add();
+                col.Field("REMARKS_IN").HeaderText("REMARKS_IN").Add();
+                col.Field("IN_BY").HeaderText("IN_BY").Add();
+                col.Field("TIMEOUT").HeaderText("TIMEOUT").Add();
+                col.Field("REMARKS_OUT").HeaderText("REMARKS_OUT").Add();
+                col.Field("OUT_BY").HeaderText("OUT_BY").Add();
+                col.Field("TOTAL_HOURS").HeaderText("TOTAL_HOURS").Add();
+                col.Field("STATUS").HeaderText("STATUS").Add();
+                col.Field("STORESCANBY").HeaderText("STORESCANBY").Add();
+                col.Field("STORESCANDATE").HeaderText("STORESCANDATE").Add();
+                col.Field("STORE_GATE_HOURS").HeaderText("STORE_GATE_HOURS").Add();
+                col.Field("QUANTITY").HeaderText("QUANTITY").Add();
+                col.Field("STORE_LOCATION").HeaderText("STORE_LOCATION").Add();
+
+
+
+            }).
+            Toolbar(new List<string>() { "ExcelExport" }).
+            Render())
+        <script>
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("GrdDAILY_VEHICLE").ej2_instances[0];
+                gridObj.excelExport();
+            }
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+
+
+
+

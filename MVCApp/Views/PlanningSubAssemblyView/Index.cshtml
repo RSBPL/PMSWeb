@@ -1,0 +1,463 @@
+﻿@model MVCApp.Models.AddDailyPlanModel
+<style>
+    /*.modal-dialog {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 1%;
+    }
+
+    .modal-content {
+        height: auto;
+        min-height: 100%;
+        border-radius: 0;
+    }*/
+
+    /*.modal-header{
+        background-color: darkcyan;
+    }*/
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Sub-Assembly Planning</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    <div class="container" style="width:100%!important">
+
+        @*Model for Approve*@
+        <div class="modal" id="ApproveConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-info">
+                        <strong class="modal-title" id="exampleModalLabel" style="font-size:25px;"><i class="fa fa-exclamation-circle" style="font-size:35px;" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<strong>Confirmation..!</strong></strong>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h3><strong>You will not be able to add new item and edit existing item after approv this plan ..</strong></h3>
+                    </div>
+                    <div class="modal-footer">
+
+                        <button type="button" data-dismiss="modal" class="btn btn-warning btn-sm"><i class="ace-icon fa fa-arrow-left"></i> Go Back</button>
+                        <button type="button" id="btnApproval" class="btn btn-info btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Approved</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*--------Form------------*@
+    <div class="container" style="width:100%!important">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal form-group">
+                @*<fieldset class="the-fieldset">
+                    <legend class="the-legend"><b>Add Daily Plan</b></legend>*@
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            @Html.DropDownListFor(model => model.Plant, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.Plant, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                            @Html.DropDownListFor(model => model.Family, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.Family, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="fname" class="control-label col-form-label"><strong>Date</strong></label>
+                            @Html.EJS().DatePickerFor(Model => Model.Date).Format("dd-MMM-yyyy").Value(ViewBag.TodayDate).Max(ViewBag.maxDate).Min(ViewBag.minDate).Change("datepickerChange").Render()
+                            <strong>@Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Shift</strong></label>
+                            @Html.DropDownListFor(model => model.Shift, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.Shift, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <div id="PlanDate">
+                                <label for="fname" class="text-right control-label col-form-label"><strong class="text-hide">Plan Date</strong></label>
+                                <input type="text" id="DisplayPlanDate" disabled="disabled" readonly="readonly" class="form-control input-sm text-center" />
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="the-fieldset bg-info" style="margin-top:8px;padding-top: 0px;">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Item Code</strong></label>
+                            @Html.DropDownListFor(model => model.ItemCode, Enumerable.Empty<SelectListItem>(), new { @class = "form-control input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.ItemCode, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Qty</strong></label>
+                            @Html.TextBoxFor(Model => Model.Qty, null, new { type = "number", min = "1", @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.Qty, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-1">
+                            <div id="SeqPNo">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Seq No.</strong></label>
+                                @Html.DropDownListFor(model => model.SeqForPerticularNo, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.SeqForPerticularNo, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong class="text-hide">Role Description</strong></label>
+                                </div>
+                                <div class="col-md-12">
+                                    <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Add To Daily Plan</strong></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1" id="pnlApprove">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong class="text-hide">Role Description</strong></label>
+                                </div>
+                                <div class="col-md-12">
+                                    <button class="btn btn-primary btn-sm" type="button" id="Approve" data-toggle="modal" data-target="#ApproveConfirm"><i class="ace-icon fa fa-thumbs-up bigger-110"></i><strong>Approve</strong></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        }
+        <div id="Grid"></div>
+    </div>
+</div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+<script>
+    $(document).ready(function () {
+        //$("#alert").delay(5000).slideUp(1000);
+        DDLShift();
+        DDLPlant();
+
+        //DDLTyres();
+        //DDLModelType();
+        //BindGrid();
+        $('#SeqPNo').hide();
+        $('#pnlApprove').hide();
+        $('#PlanDate').hide();
+    });
+
+    $("#Shift").on("change", function () {
+        BindGrid();
+    });
+
+    $("#Plant").on("change", function () {
+        DDLFamilyByPlant();
+    });
+
+    $("#Family").on("change", function () {
+        DDLItems();
+        BindGrid();
+    });
+
+    function datepickerChange(args) {
+        //console.log(args.value);
+        //alert(args.value);
+        BindGrid();
+    }
+
+    //Add planning
+    $("#Add").on("click", function () {
+        AddSubAssemblyPlanning();
+    });
+
+    //Aprove plan
+    $("#btnApproval").on("click", function () {
+        var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                Shift: $('#Shift').val(),
+                Date: $('#Date').val()
+        };
+        $('#ApproveConfirm').modal('hide');
+        $.ajax({
+            url: '@Url.Action("ApprovePlan", "PlanningSubAssemblyView")',
+            data: JSON.stringify({ data: Data }),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+                $('#Qty').val("");
+                if (data.Msg != "" || data.Msg != null ) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function() {$(".alert").alert('close');}, 5000);
+                }
+            }
+        });
+    });
+
+    //Function to Add DailyPlanning
+    function AddSubAssemblyPlanning() {
+        if (!$("#Form").valid()) {
+            return false;
+        }
+        else {
+            $("#divLoader").show();
+            var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                Shift: $('#Shift').val(),
+                Date: $('#Date').val(),
+                ItemCode: $('#ItemCode').val(),
+                Qty: $('#Qty').val(),
+                SeqForPerticularNo: $('#SeqForPerticularNo').val()
+                };
+            $.ajax({
+                url: '@Url.Action("AddSubAssemblyPlanning", "PlanningSubAssemblyView")',
+                data: JSON.stringify({ data: Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+                    BindGrid();
+                    $('#Qty').val("");
+                    if (data.Msg != "" || data.Msg != null ) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function() {$(".alert").alert('close');}, 5000);
+                    }
+                },
+                error: function (errormessage) {
+                    $("#divLoader").hide();
+                    $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function() {$(".alert").alert('close');}, 5000);
+                    //$.each(errormessage, function(i, item)
+                    //{
+
+                    //});
+                }
+            });
+        }
+    };
+
+    //Function to bind Max Sequence Of Existing Sub-Plan
+    function GetMaxSequenceOfExistingSubPlan() {
+        
+        var Data = {
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val(),
+            Shift: $('#Shift').val(),
+            Date: $('#Date').val(),
+            ItemCode: $('#ItemCode').val(),
+            Qty: $('#Qty').val()
+        };
+        $.ajax({
+            url: '@Url.Action("GetMaxSequenceOfExistingSubPlan", "PlanningSubAssemblyView")',
+            data: JSON.stringify({ data: Data }),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            success: function (result) {
+                $("#SeqForPerticularNo").html(result);                
+            },
+            error: function (errormessage) {
+                //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Max Sequence Of Existing Sub-Plan for Edit
+    function GetMaxSequenceOfExistingSubPlanForEdit() {
+        
+        var Data = {
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val(),
+            Shift: $('#Shift').val(),
+            Date: $('#Date').val(),
+            ItemCode: $('#ItemCode').val(),
+            Qty: $('#Qty').val()
+        };
+        $.ajax({
+            url: '@Url.Action("GetMaxSequenceOfExistingSubPlanForEdit", "PlanningSubAssemblyView")',
+            data: JSON.stringify({ data: Data }),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            success: function (result) {               
+                $("#EditSqn").html(result);               
+            },
+            error: function (errormessage) {
+                //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Plant
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "PlanningSubAssemblyView")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Plant").html(result);
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        var selectedValue = $("#Plant").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "PlanningSubAssemblyView")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#Family").html(result);
+                DDLItems();
+                BindGrid();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Item by Plant, Family
+    function DDLItems() {
+        var Data = {
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val()
+            };
+        $.ajax({
+            url: '@Url.Action("BindItems", "PlanningSubAssemblyView")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            success: function (result) {
+                $("#ItemCode").html(null);
+                $("#ItemCode").html(result);
+            },
+            error: function (errormessage) {
+                //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind family by Shift
+    function DDLShift() {
+        $.ajax({
+            url: '@Url.Action("BindShift", "PlanningSubAssemblyView")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Shift").html(result);
+                GetCurrentShift();
+                BindGrid();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to Get Current Shift
+    function GetCurrentShift() {
+        $.ajax({
+            url: '@Url.Action("CurrentShift", "PlanningSubAssemblyView")',
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                $("#Shift").val(result);
+            },
+            error: function (result) {
+
+            }
+        });
+    };
+
+    //Function to bind Grid
+    function BindGrid() {
+        $("#divLoader").show();
+        var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                Shift: $('#Shift').val(),
+                Date: $('#Date').val()
+                };
+        $.ajax({
+            url: '@Url.Action("Grid", "PlanningSubAssemblyView")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Grid").html(result);
+                $("#divLoader").hide();
+                GetMaxSequenceOfExistingSubPlan();
+                GetMaxSequenceOfExistingSubPlanForEdit();               
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //$("#EditSqn").select2({
+    //    allowClear: true,
+    //    width: '100%'        
+    //});
+    //$("#Shift").select2({
+    //    allowClear: true,
+    //    width: '100%'        
+    //});
+    $("#Plant").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#Family").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#ItemCode").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#SeqForPerticularNo").select2({
+        allowClear: true,
+        width: '100%',
+    });
+</script>

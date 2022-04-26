@@ -1,0 +1,165 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+
+        #dropdown {
+            position: relative;
+            height: 22px;
+            width: 10em;
+            text-align: left;
+            background-color: white;
+        }
+
+        .highcontrast .e-grid #dropdown {
+            background-color: black;
+        }
+    </style>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-responsive table-hover">
+            <tr style="background-color:#409cc7; color:white;">
+                <th>Auto Id</th>
+                <th>MRN NO </th>
+                <th>ITEM CODE </th>
+                <th>ITEM DESCRIPTION </th>
+                <th>VENDOR CODE </th>
+                <th>VENDOR NAME </th>
+                <th>QUALITY </th>
+                <th>CREATED DATE </th>
+                <th>CREATED TIME </th>
+                <th>STATUS </th>
+                <th>VERIFICATION </th>
+            </tr>
+            @foreach (var d in ViewBag.DataSource)
+            {
+                <tr>
+                    <td>@d.AUTOID</td>
+                    <td>@d.MRN_NO</td>
+                    <td>@d.ITEMCODE</td>
+                    <td>@d.ITEM_DESCRIPTION</td>
+                    <td>@d.VENDOR_CODE</td>
+                    <td>@d.VENDOR_NAME</td>
+                    <td>@d.QUANTITY</td>
+                    <td>@d.CREATEDDATE</td>
+                    <td>@d.CREATEDTIME</td>
+                    <td>@d.STATUS</td>
+                    <td>
+                        <select id="DDLVerification">
+                            <option value="0" selected="selected">-- Select --</option>
+                            <option value="VERIFIED">VERIFIED</option>
+                        </select>
+                    </td>
+                </tr>
+
+            }
+        </table>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+
+        #dropdown {
+            position: relative;
+            height: 22px;
+            width: 10em;
+            text-align: left;
+            background-color: white;
+        }
+
+        .highcontrast .e-grid #dropdown {
+            background-color: black;
+        }
+    </style>
+
+    <div class="table-responsive">
+        @{
+            var DropDownList = new Syncfusion.EJ2.DropDowns.DropDownList() { DataSource = ViewBag.DropDownData, Query = "new ej.data.Query()", AllowFiltering = true, Fields = new Syncfusion.EJ2.DropDowns.DropDownListFieldSettings() { Value = "Value", Text = "Text" } };
+        }
+
+        @(Html.EJS().Grid("Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                        AllowPaging(true).
+                        PageSettings(Page => Page.PageSize(10)).
+                        AllowFiltering().
+                        AllowGrouping().
+                        AllowSorting().
+                        AllowSelection().
+                        AllowTextWrap().
+                        AllowResizing().
+                        SelectionSettings(sel => { sel.PersistSelection(true); sel.EnableSimpleMultiRowSelection(true); }).
+                        AllowReordering().
+                Columns(col =>
+                {
+                    col.Type("checkbox").Width("50").Add();
+                    //col.Field("VERIFICATION").HeaderText("VERIFICATION").Width("150").Template("#dropdown").Add();
+                    col.Field("MRN_NO").HeaderText("MRN NO").IsPrimaryKey(true).Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("ITEMCODE").HeaderText("ITEM CODE").Width("200").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("ITEM_DESCRIPTION").HeaderText("ITEM DESCRIPTION").Width("300").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("VENDOR_CODE").HeaderText("VENDOR CODE").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("VENDOR_NAME").HeaderText("VENDOR NAME").Width("300").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("QUANTITY").HeaderText("QUALITY").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CREATEDDATE").HeaderText("CREATED DATE").Width("180").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CREATEDTIME").HeaderText("CREATED TIME").Width("180").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("STATUS").HeaderText("STATUS").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                }).Render())
+        <script type="text/x-jsrender" id="dropdown">
+            <div id='dropdown'>
+                <select class="e-control e-dropdownlist">
+                    <option value="" selected="selected">-- Select --</option>
+                    <option value="VERIFICATION">VERIFICATION</option>
+                </select>
+            </div>
+        </script>
+
+        <script>
+                    //var ID, PlanID, Seqn, Item_Code;
+
+                    //function commandClick(args) {
+                    //    if (args.rowData != null) {
+                    //        if (args.target.classList.contains('edit')) {
+                    //            $('#exampleModal').modal('show');
+                    //            $('#EditQty').val(args.rowData["QTY_CANBEMADE"]);
+                    //            $('#EditSqn').val(args.rowData["SEQUENCE_NO"]);
+                    //            ID = args.rowData["AUTOID"];
+                    //            PlanID = args.rowData["PLAN_ID"];
+                    //            Seqn = args.rowData["SEQUENCE_NO"];
+                    //        }
+                    //        if (args.target.classList.contains('delete')) {
+                    //            $('#DeleteConfirm').modal('show');
+                    //            ID = args.rowData["AUTOID"];
+                    //            PlanID = args.rowData["PLAN_ID"];
+                    //            Seqn = args.rowData["SEQUENCE_NO"];
+                    //            Item_Code = args.rowData["ITEM_CODE"];
+                    //        }
+                    //    }
+                    //};
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+
+
+

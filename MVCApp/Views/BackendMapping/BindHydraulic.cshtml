@@ -1,0 +1,8 @@
+﻿@model MVCApp.Models.BackendModel
+
+@{
+    <div>
+        @Html.DropDownListFor(model => model.HYDRAULIC, (IEnumerable<SelectListItem>)ViewBag.HYDRAULIC, new { @class = "form-control input-sm" })
+    </div>
+
+}

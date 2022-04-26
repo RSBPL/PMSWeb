@@ -1,0 +1,445 @@
+﻿@model MVCApp.Models.SubAssemblyMapping
+<style>
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .ui-autocomplete {
+        max-height: 400px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+
+     .ui-autocomplete {
+        height: 400px;
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Sub-Assembly Mapping Master</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    @*--------Form------------*@
+    <div class="container" style="width:100%!important">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal form-group">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            @Html.DropDownListFor(model => model.Plant, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.Plant, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                            @Html.DropDownListFor(model => model.Family, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.Family, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Main Sub-Assembly</strong></label>
+                            @Html.DropDownListFor(model => model.MainSubAssembly, Enumerable.Empty<SelectListItem>(), new { @class = "form-control input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.MainSubAssembly, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Short Code</strong></label>
+                            @Html.TextBoxFor(model => model.ShortCode, new { @class = "form-control input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.ShortCode, "", new { @class = "text-danger" })</strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="SubAssembly1" class="text-right control-label col-form-label"><strong>Sub-Assembly 1</strong></label>
+                            @Html.TextBoxFor(Model => Model.SubAssembly1, null, new { @class = "form-control input-sm" })
+                        </div>
+                        <div class="col-md-4">
+                            <label for="SubAssembly2" class="text-right control-label col-form-label"><strong>Sub-Assembly 2</strong></label>
+                            @Html.TextBoxFor(Model => Model.SubAssembly2, null, new { @class = "form-control input-sm" })
+                        </div>
+
+                        <div class="col-md-1">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong class="text-hide">Role Description</strong></label>
+                                </div>
+                                <div class="col-md-12">
+                                    <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        }
+        <div id="Grid"></div>
+    </div>
+</div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<script src="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.js")"></script>
+<link href="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.css")" rel="stylesheet" />
+
+<script>
+    var PLANT, FAMILY, SubAssembly1, SubAssembly2;
+
+    $(document).ready(function () {
+        DDLPlant();
+        AutoComplete1();
+        AutoComplete2();
+    });
+
+    function AutoComplete1() {
+        $.noConflict();
+
+        $("#SubAssembly1").autocomplete({
+            source: function (request, response) {
+            //PLANT = $('#Plant').val();
+            //FAMILY = $('#Family').val();
+            //SubAssembly1 = $('#SubAssembly1').val();
+            /*alert(PLANT); alert(FAMILY); alert(SubAssembly3);*/
+            var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                SubAssembly1: $('#SubAssembly1').val()
+            };
+                $.ajax({
+                    url: "@Url.Action("FillSubAssembly1", "SubAssemblyMappingMaster")",
+                    type: "POST",
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify({ data: Data }),
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            /*console.log(item.DESCRIPTION);*/
+                            return { label: item.DESCRIPTION, value: item.DESCRIPTION };
+                        }))
+                    },
+                    error: function (err) {
+                        alert(err);
+                    }
+                });
+            },
+
+            minLength: 4
+
+          });
+    }
+
+    function AutoComplete2() {
+        /*$.noConflict();*/
+        $("#SubAssembly2").autocomplete({
+            source: function (request, response) {
+            //PLANT = $('#Plant').val();
+            //FAMILY = $('#Family').val();
+            //SubAssembly1 = $('#SubAssembly1').val();
+            /*alert(PLANT); alert(FAMILY); alert(SubAssembly3);*/
+            var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                SubAssembly2: $('#SubAssembly2').val()
+            };
+                $.ajax({
+                    url: "@Url.Action("FillSubAssembly2", "SubAssemblyMappingMaster")",
+                    type: "POST",
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify({ data: Data }),
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            /*console.log(item.DESCRIPTION);*/
+                            return { label: item.DESCRIPTION, value: item.DESCRIPTION };
+                        }))
+                    },
+                    error: function (err) {
+                        alert(err);
+                    }
+                });
+            },
+
+            minLength: 4
+
+          });
+    }
+
+    $("#Plant").on("change", function () {
+        DDLFamilyByPlant();
+        BindGrid();
+    });
+
+    $("#Family").on("change", function () {
+        DDLItems();
+    });
+
+    $("#MainSubAssembly").on("change", function () {
+        BindGrid();
+    });
+
+    //Add planning
+    $("#Add").on("click", function () {
+
+            $("#divLoader").show();
+            var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                MainSubAssembly: $('#MainSubAssembly').val(),
+                SubAssembly1: $('#SubAssembly1').val(),
+                SubAssembly2: $('#SubAssembly2').val(),
+                ShortCode: $('#ShortCode').val()
+            };
+            $.ajax({
+                url: '@Url.Action("Add", "SubAssemblyMappingMaster")',
+                data: JSON.stringify({ data: Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                            $('#SubAssembly1').val(''),
+                            $('#SubAssembly2').val(''),
+                            $('#ShortCode').val('')
+                        BindGrid();
+                    }
+
+                },
+                error: function (errormessage) {
+                    $("#divLoader").hide();
+                    $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                }
+            });
+
+
+
+    });
+
+    function closeAlert(alert) {
+
+        $(alert).hide();
+    };
+    //Function to Add DailyPlanning
+
+
+
+    @*function Add() {
+        if (!$("#Form").valid()) {
+            return false;
+        }
+        else {
+            $("#divLoader").show();
+            var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                MainSubAssembly: $('#MainSubAssembly').val(),
+                SubAssembly1: $('#SubAssembly1').val(),
+                SubAssembly2: $('#SubAssembly2').val(),
+                ShortCode: $('#ShortCode').val()
+                };
+            $.ajax({
+                url: '@Url.Action("Add", "SubAssemblyMappingMaster")',
+                data: JSON.stringify({ data: Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+
+                    if (data.Msg != "" || data.Msg != null ) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function() {$(".alert").alert('close');}, 5000);
+                    }
+                },
+                error: function (errormessage) {
+                    $("#divLoader").hide();
+                    $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function() {$(".alert").alert('close');}, 5000);
+                    //$.each(errormessage, function(i, item)
+                    //{
+
+                    //});
+                }
+            });
+        }
+    };*@
+
+    //Function to bind Plant
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "SubAssemblyMappingMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Plant").html(result);
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        var selectedValue = $("#Plant").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "SubAssemblyMappingMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#Family").html(result);
+
+                DDLItems();
+               /* DDLSubAssembly();*/
+                //PLANT = $('#Plant').val();
+                //alert(PLANT);
+                //FAMILY = $('#Family').val();
+                //alert(FAMILY);
+
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Item by Plant, Family
+    function DDLItems() {
+        var Data = {
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val()
+            };
+        $.ajax({
+            url: '@Url.Action("BindMainSubAssembly", "SubAssemblyMappingMaster")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            success: function (result) {
+                $("#MainSubAssembly").html(null);
+                $("#MainSubAssembly").html(result);
+                BindGrid();
+            },
+            error: function (errormessage) {
+                //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    @*function DDLSubAssembly() {
+        var Data = {
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val()
+            };
+        $.ajax({
+            url: '@Url.Action("BindSubAssembly", "SubAssemblyMappingMaster")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            success: function (result) {
+                $("#SubAssembly1").html(null);
+                $("#SubAssembly2").html(null);
+                $("#SubAssembly1").html(result);
+                $("#SubAssembly2").html(result);
+            },
+            error: function (errormessage) {
+                //alert(errormessage.responseText);
+            }
+        });
+    };*@
+
+
+
+    //Function to bind Grid
+    function BindGrid() {
+        $("#divLoader").show();
+        var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                MainSubAssembly: $('#MainSubAssembly').val()
+                };
+        $.ajax({
+            url: '@Url.Action("Grid", "SubAssemblyMappingMaster")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+
+                $("#Grid").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+
+    $("#Plant").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#Family").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#MainSubAssembly").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    //$("#SubAssembly1").select2({
+    //    allowClear: true,
+    //    width: '100%',
+    //});
+    //$("#SubAssembly2").select2({
+    //    allowClear: true,
+    //    width: '100%',
+    //});
+</script>

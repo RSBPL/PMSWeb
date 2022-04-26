@@ -1,0 +1,174 @@
+﻿@model MVCApp.Models.SideMenuListModel
+
+@*<style>
+    .menu-icon {
+        font-size: 22px!important;
+    }
+    .menu-text {
+        font-family:Arial;
+    }
+</style>*@
+@{
+    var MenuMaster = ViewBag.Menu;
+
+    <div id="sidebar" class="sidebar ace-save-state responsive">
+        <script type="text/javascript">
+            try { ace.settings.loadState('sidebar') } catch (e) { }
+        </script>
+
+        <div class="sidebar-shortcuts" id="sidebar-shortcuts">
+            <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+                <button class="btn btn-success">
+                    <i class="ace-icon fa fa-signal"></i>
+                </button>
+
+                <button class="btn btn-info">
+                    <i class="ace-icon fa fa-pencil"></i>
+                </button>
+
+                <button class="btn btn-warning">
+                    <i class="ace-icon fa fa-users"></i>
+                </button>
+
+                <button class="btn btn-danger">
+                    <i class="ace-icon fa fa-cogs"></i>
+                </button>
+            </div>
+
+            <div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+                <span class="btn btn-success"></span>
+                <span class="btn btn-info"></span>
+                <span class="btn btn-warning"></span>
+                <span class="btn btn-danger"></span>
+            </div>
+        </div><!-- /.sidebar-shortcuts -->
+        @if (MenuMaster != null)
+        {
+            <ul id="sidebarnav" class="nav nav-list">
+                @foreach (var m in MenuMaster.Menu)
+                {
+                    @*<li class="active">
+                            <a href="index.html">
+                                <i class="menu-icon fa fa-tachometer"></i>
+                                <span class="menu-text">@m.Mname </span>
+                            </a>
+                            <b class="arrow"></b>
+                        </li>*@
+                    <li class="">
+                        @if (!string.IsNullOrEmpty(m.Mcontroller) && !string.IsNullOrEmpty(m.Mcontroller))
+                        {
+                            if (!string.IsNullOrEmpty(m.Rout))
+                            {
+                                <a href="@Url.Action(m.Maction, m.Mcontroller, new { id = m.Rout })">
+                                    <i class="menu-icon @m.Icon"></i>
+                                    <span class="menu-text">
+                                        @m.Mname
+                                    </span>
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action(m.Maction, m.Mcontroller)">
+                                    <i class="menu-icon @m.Icon"></i>
+                                    <span class="menu-text">
+                                        @m.Mname
+                                    </span>
+                                </a>
+                            }
+                        }
+                        else
+                        {
+                            <a href="#" class="dropdown-toggle">
+                                <i class="menu-icon @m.Icon"></i>
+                                <span class="menu-text">
+                                    @m.Mname
+                                </span>
+                                <b class="arrow fa fa-angle-down"></b>
+                            </a>
+                        }
+
+                        <b class="arrow"></b>
+                        <ul id="SecondLevelMenu" class="submenu">
+                            @foreach (var sm in MenuMaster.SubMenu)
+                            {
+                                var ss = m.MCode + ".";
+                                if (sm.MCode.Contains(ss))
+                                {
+                                    if (sm.Mcontroller != "" && sm.Maction != "")
+                                    {
+                                        <li class="">
+                                            @if (!string.IsNullOrEmpty(sm.Rout))
+                                            {
+                                                <a href="@Url.Action(sm.Maction, sm.Mcontroller, new { id = sm.Rout })">
+                                                    <i class="menu-icon @sm.Icon"></i>
+                                                    @sm.Mname
+                                                    @*<b class="arrow fa fa-angle-down"></b>*@
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="@Url.Action(sm.Maction, sm.Mcontroller)">
+                                                    <i class="menu-icon @sm.Icon"></i>
+                                                    @sm.Mname
+                                                    @*<b class="arrow fa fa-angle-down"></b>*@
+                                                </a>
+                                            }
+                                            <b class="arrow"></b>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="">
+                                            <a href="typography.html" class="dropdown-toggle">
+                                                <i class="menu-icon @sm.Icon"></i>
+                                                <span class="menu-text">
+                                                    @sm.Mname
+                                                </span>
+                                                <b class="arrow fa fa-angle-down"></b>
+                                            </a>
+                                            <b class="arrow"></b>
+                                            <ul id="ThirdLevelMenu" class="submenu">
+                                                @foreach (var ssm in MenuMaster.SubSubMenu)
+                                                {
+                                                    var sss = sm.MCode + ".";
+                                                    if (ssm.MCode.Contains(sss))
+                                                    {
+                                                        <li class="">
+                                                            @if (!string.IsNullOrEmpty(ssm.Rout))
+                                                            {
+                                                                <a href="@Url.Action(ssm.Maction, ssm.Mcontroller, new { id = ssm.Rout })">
+                                                                    <i class="menu-icon @sm.Icon"></i>
+                                                                    @ssm.Mname
+                                                                    @*<b class="arrow fa fa-angle-down"></b>*@
+                                                                </a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a href="@Url.Action(ssm.Maction, ssm.Mcontroller)">
+                                                                    <i class="menu-icon @sm.Icon"></i>
+                                                                    @ssm.Mname
+                                                                    @*<b class="arrow fa fa-angle-down"></b>*@
+                                                                </a>
+                                                            }                                                          
+                                                            <b class="arrow"></b>
+                                                        </li>
+                                                    }
+                                                }
+                                            </ul>
+                                        </li>
+                                    }
+                                }
+                            }
+                        </ul>
+                    </li>
+                }
+            </ul><!-- /.nav-list -->
+
+        }
+
+        <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+            <i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+        </div>
+    </div>
+
+}

@@ -1,0 +1,996 @@
+﻿@model MVCApp.Models.TractorMster
+<style>
+
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .the-legend {
+        box-shadow: 0px 1px 5px #7f8b8f;
+    }
+    ol, ul {
+        margin: 5px 0px 1px 1px;
+    }
+    .tab-content {
+        padding: 6px 0px 0px 0px;
+    }
+    .ui-autocomplete {
+        max-height: 400px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+
+    .ui-autocomplete {
+        height: 400px;
+    }
+   /* .Ex-btn {
+        margin-left: 82px;
+        WIDTH: 100PX;
+    }*/
+    .frntrimdiv {
+        margin: -4px -40px 0 -24px;
+    }
+    .frntrimdiv2 {
+        margin-left: 13px;
+        width: 240px;
+    }
+    .rearrimdiv {
+        margin: -4px -40px 0 -24px;
+    }
+    .rearrimdiv2 {
+        margin-left: 13px;
+        width: 240px;
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Tractor Master</a>
+        </li>
+    </ul>
+
+</div>
+<div class="page-content">
+
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    <ul class="nav nav-pills" id="myTab">
+        <li class="bg-light"><a data-toggle="tab" href="#Menu1">Tractor Assembly Items</a></li>
+        <li class="bg-light"><a data-toggle="tab" href="#Menu4">Tractor Sub Assembly Items</a></li>
+        <li class="bg-light"><a data-toggle="tab" href="#Menu2">Torque</a></li>
+        <li class="bg-light"><a data-toggle="tab" href="#Menu3">Imported Sub-Assembly</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="SearchItem" style="background-color: cadetblue;margin: 0px 5px 0px 5px;padding: 5px;">
+            <div class="row">
+                <div class="col-md-3 text-right">
+                    <strong style="font-size: 20px;color:white;">Search Existing Tractor </strong>
+                </div>
+                <div class="col-md-9">
+                    @Html.DropDownListFor(model => model.gleSearch, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                </div>
+
+            </div>
+        </div>
+        <div id="Menu1" class="tab-pane fade in">
+            @*--------Form------------*@
+            <div class="container" style="width:100%!important">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form1" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <fieldset class="the-fieldset bg-info">
+                        <div class="form-horizontal form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                                            @Html.DropDownListFor(model => model.Plant, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                            <strong>@Html.ValidationMessageFor(model => model.Plant, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                                            @Html.DropDownListFor(model => model.Family, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                                            <strong>@Html.ValidationMessageFor(model => model.Family, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Tractor</strong></label>
+                                        </div>
+                                        <div class="col-md-9" style="padding: 7px 12px 7px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.ItemCode, null, new { @class = "form-control input-sm" })
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Transmission</strong></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            @Html.CheckBoxFor(model => model.TransmissionChk, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.Transmission, null, new { @class = "form-control input-sm" })
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong class="lblMotor">Engine</strong></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            @Html.CheckBoxFor(model => model.EngineChk, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.Engine, null, new { @class = "form-control input-sm" })
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>LH Rear Tyre</strong></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            @Html.CheckBoxFor(model => model.RearTyreChk, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.RearTyre, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>RH Rear Tyre</strong></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            @Html.CheckBoxFor(model => model.RHRearTyreChk, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.RHRearTyre, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Battery</strong></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            @Html.CheckBoxFor(model => model.BatteryChk, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.Battery, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Hydraulic Pump</strong></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            @Html.CheckBoxFor(model => model.HydraulicPumpChk, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.HydraulicPump, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Steering Assembly</strong></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            @Html.CheckBoxFor(model => model.SteeringAssemblyChk, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.SteeringAssembly, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Radiator Assembly</strong></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            @Html.CheckBoxFor(model => model.RadiatorAssemblyChk, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.RadiatorAssembly, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Alternator</strong></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            @Html.CheckBoxFor(model => model.AlternatorChk, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.Alternator, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Break Pedal</strong></label>
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.BRAKE_PEDAL, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Clutch Pedal</strong></label>
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.CLUTCH_PEDAL, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Spool Value</strong></label>
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.SPOOL_VALUE, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Tandem Pump</strong></label>
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.TANDEM_PUMP, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Fender</strong></label>
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.FENDER, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    @*  *@
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Prefix1</strong></label>
+                                            @Html.TextBoxFor(Model => Model.Prefix1, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                            <strong>@Html.ValidationMessageFor(model => model.Prefix1, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Prefix2</strong></label>
+                                            @Html.TextBoxFor(Model => Model.Prefix2, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                            <strong>@Html.ValidationMessageFor(model => model.Prefix2, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Prefix3</strong></label>
+                                            @Html.TextBoxFor(Model => Model.Prefix3, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                            <strong>@Html.ValidationMessageFor(model => model.Prefix3, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Prefix4</strong></label>
+                                            @Html.TextBoxFor(Model => Model.Prefix4, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                            <strong>@Html.ValidationMessageFor(model => model.Prefix4, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Remarks</strong></label>
+                                            @Html.TextBoxFor(Model => Model.Remarks, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                            <strong>@Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <fieldset class="the-fieldset" style="padding-top: 5px;padding-bottom:0px;">
+                                        <legend class="the-legend"><strong>Default At Planning</strong></legend>
+                                        <div class="row">
+                                            <div class="col-md-1" style="width: 6%!important;">
+                                                @Html.CheckBoxFor(model => model.EnableCarButtonChk, new { @class = "form-control  input-sm" })
+                                            </div>
+                                            <div class="col-md-3" style="width: 25%!important;">
+                                                <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>Enable Care Button</strong></label>
+                                            </div>
+                                            <div class="col-md-1" style="width: 6%!important;">
+                                                @Html.CheckBoxFor(model => model.Seq_Not_RequireChk, new { @class = "form-control  input-sm" })
+                                            </div>
+                                            <div class="col-md-3" style="width: 28%!important;">
+                                                <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>Sequence not require</strong></label>
+                                            </div>
+
+                                            <div class="col-md-1" style="width: 6%!important;">
+                                                @Html.CheckBoxFor(model => model.GenerateSerialNoChk, new { @class = "form-control  input-sm" })
+                                            </div>
+                                            <div class="col-md-3" style="width: 28%!important;">
+                                                <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>Generate Serial No</strong></label>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-1" style="width: 6%!important;">
+                                                @Html.CheckBoxFor(model => model.ElectricMotorChk, new { @class = "form-control  input-sm" })
+                                            </div>
+                                            <div class="col-md-3" style="width: 25%!important;">
+                                                <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>Electric Tractor</strong></label>
+                                            </div>
+                                            <div class="col-md-1" style="width: 6%!important;">
+                                                @Html.RadioButtonFor(model => model.DomesticExport, "Domestic", new { id = "Dom", @class = "form-control  input-sm" })
+                                            </div>
+                                            <div class="col-md-3" style="width: 28%!important;">
+                                                <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>Domestic</strong></label>
+                                            </div>
+                                            <div class="col-md-1" style="width: 6%!important;">
+                                                @Html.RadioButtonFor(model => model.DomesticExport, "Export", new { id = "Exp", @class = "form-control  input-sm" })
+                                            </div>
+                                            <div class="col-md-3" style="width: 25%!important;">
+                                                <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>Export</strong></label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>ShortDsc</strong></label>
+                                        </div>
+                                        <div class="col-md-9" style="padding: 7px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.ShortDesc, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                            <strong>@Html.ValidationMessageFor(model => model.ShortDesc, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Rear Axel</strong></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            @Html.CheckBoxFor(model => model.RearAxelChk, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.RearAxel, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Hydraulic</strong></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            @Html.CheckBoxFor(model => model.HydraulicChk, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.Hydraulic, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>LH Front Tyre</strong></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            @Html.CheckBoxFor(model => model.FrontTyreChk, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.FrontTyre, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>RH Front Tyre</strong></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            @Html.CheckBoxFor(model => model.RHFrontTyreChk, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.RHFrontTyre, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong class="lblDynamic">Backend</strong></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            @Html.CheckBoxFor(model => model.BackendChk, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.Backend, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Steering Motor</strong></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            @Html.CheckBoxFor(model => model.SteeringMotorChk, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.SteeringMotor, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Steering Cylinder</strong></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            @Html.CheckBoxFor(model => model.SteeringCylinderChk, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.SteeringCylinder, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Cluster Assembly</strong></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            @Html.CheckBoxFor(model => model.ClusterAssemblyChk, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.ClusterAssembly, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Starter Motor</strong></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            @Html.CheckBoxFor(model => model.StartorMotorChk, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.StartorMotor, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Rops</strong></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            @Html.CheckBoxFor(model => model.RopsChk, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.Rops, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Fender Railing</strong></label>
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.FENDER_RAILING, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Head Lamp</strong></label>
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.HEAD_LAMP, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Steering wheel</strong></label>
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.STEERING_WHEEL, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Rear Hood Wiring Harness</strong></label>
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.REAR_HOOD_WIRING_HARNESS, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong>Seat</strong></label>
+                                        </div>
+                                        <div class="col-md-8" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.SEAT, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                    @*  *@
+                                    <div class="row">
+                                        <div class="col-md-6 align-right" style="padding: 5px 12px 5px 12px !important;">
+
+                                        </div>
+                                        <div class="col-md-2 align-right" style="padding: 5px 12px 5px 12px !important;">
+                                            <button class="btn btn-success btn-sm " type="button" id="Export"><i class="fa fa-file-excel-o"></i><strong>Export</strong></button>
+                                        </div>
+                                        <div class="col-md-2 align-right" style="padding: 5px 12px 5px 12px !important;">
+
+                                            <button class="btn btn-success btn-sm" type="button" id="Add"><strong>Submit</strong></button>
+                                            <button class="btn btn-success btn-sm" type="button" id="Update"><strong>Update</strong></button>
+
+                                        </div>
+
+                                        <div class="col-md-2 align-right" style="padding: 5px 12px 5px 12px !important;">
+                                            <button class="btn btn-default btn-sm" type="button" id="Clear"><strong>Clear</strong></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                }
+            </div>
+        </div>
+        <div id="Menu4" class="tab-pane fade ">
+            @*--------Form------------*@
+            <div class="container" style="width:100%!important">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form4" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-horizontal form-group">
+                        <fieldset class="the-fieldset bg-info">
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="T4_Plant" class="text-right control-label col-form-label"><strong>PLANT</strong></label><br />
+                                    @Html.DropDownListFor(model => model.T4_Plant, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.T4_Plant, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="T4_Family" class="text-right control-label col-form-label"><strong>FAMILY</strong></label><br />
+                                    @Html.DropDownListFor(model => model.T4_Family, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.T4_Family, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="T4_ItemCode" class="text-right control-label col-form-label"><strong>TRACTOR</strong></label><br />
+                                    @Html.TextBoxFor(Model => Model.T4_ItemCode, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.T4_ItemCode, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="FrontSupport" class="text-right control-label col-form-label"><strong>FRONT SUPPORT</strong></label>
+                                    @Html.TextBoxFor(Model => Model.FrontSupport, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.FrontSupport, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="CenterAxel" class="text-right control-label col-form-label"><strong>CENTER AXLE</strong></label>
+                                    @Html.TextBoxFor(Model => Model.CenterAxel, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.CenterAxel, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="Slider" class="text-right control-label col-form-label"><strong>SLIDER LH</strong></label>
+                                    @Html.TextBoxFor(Model => Model.Slider, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.Slider, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="SliderRH" class="text-right control-label col-form-label"><strong>SLIDER RH</strong></label>
+                                    @Html.TextBoxFor(Model => Model.Slider_RH, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.Slider_RH, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="SteeringColumn" class="text-right control-label col-form-label"><strong>STEERING COLUMN</strong></label>
+                                    @Html.TextBoxFor(Model => Model.SteeringColumn, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.SteeringColumn, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="SteeringBase" class="text-right control-label col-form-label"><strong>STEERING BASE</strong></label>
+                                    @Html.TextBoxFor(Model => Model.SteeringBase, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.SteeringBase, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="Lowerlink" class="text-right control-label col-form-label"><strong>LOWER LINK</strong></label>
+                                    @Html.TextBoxFor(Model => Model.Lowerlink, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.Lowerlink, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="RBFrame" class="text-right control-label col-form-label"><strong>R/B FRAME</strong></label>
+                                    @Html.TextBoxFor(Model => Model.RBFrame, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.RBFrame, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="FuelTank" class="text-right control-label col-form-label"><strong>FUEL TANK</strong></label>
+                                    @Html.TextBoxFor(Model => Model.FuelTank, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.FuelTank, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="Cylinder" class="text-right control-label col-form-label"><strong>CYLINDER</strong></label>
+                                    @Html.TextBoxFor(Model => Model.Cylinder, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.Cylinder, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="FenderRH" class="text-right control-label col-form-label"><strong>FENDER RH </strong></label>
+                                    @Html.TextBoxFor(Model => Model.FenderRH, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.FenderRH, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="FenderLH" class="text-right control-label col-form-label"><strong>FENDER LH</strong></label>
+                                    @Html.TextBoxFor(Model => Model.FenderLH, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.FenderLH, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="FenderHarnessRH" class="text-right control-label col-form-label"><strong>FENDER HARNESS RH</strong></label>
+                                    @Html.TextBoxFor(Model => Model.FenderHarnessRH, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.FenderHarnessRH, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="FenderHarnessLH" class="text-right control-label col-form-label"><strong>FENDER HARNESS LH</strong></label>
+                                    @Html.TextBoxFor(Model => Model.FenderHarnessLH, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.FenderHarnessLH, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="FenderLamp4Types" class="text-right control-label col-form-label"><strong>FENDER LAMP</strong></label>
+                                    @Html.TextBoxFor(Model => Model.FenderLamp4Types, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.FenderLamp4Types, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="RBHarnessLH" class="text-right control-label col-form-label"><strong>R/B HARNESS LH</strong></label>
+                                    @Html.TextBoxFor(Model => Model.RBHarnessLH, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.RBHarnessLH, "", new { @class = "text-danger" })</strong>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="FrontRim" class="text-right control-label col-form-label"><strong>FRONT RIM</strong></label>
+                                </div>
+                                <div class="col-md-1 frntrimdiv">
+                                    @Html.CheckBoxFor(model => model.FrontRimChk, new { @class = "form-control  input-sm" })
+                                </div>
+                                <div class="col-md-2 frntrimdiv2">
+                                    @Html.TextBoxFor(Model => Model.FrontRim, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                </div>
+                                @*<div class="col-md-3">
+                                    <label for="FrontRim" class="text-right control-label col-form-label"><strong>FRONT RIM</strong></label>
+
+                                    @Html.TextBoxFor(Model => Model.FrontRim, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.FrontRim, "", new { @class = "text-danger" })</strong>
+                                </div>*@
+                                @*<div class="col-md-3">
+                                    <label for="RearRim" class="text-right control-label col-form-label"><strong>REAR RIM</strong></label>
+
+                                    @Html.TextBoxFor(Model => Model.RearRim, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.RearRim, "", new { @class = "text-danger" })</strong>
+                                </div>*@
+                                <div class="col-md-3">
+                                    <label for="TyreMake" class="text-right control-label col-form-label"><strong>TYRE MAKE</strong></label>
+                                    @Html.TextBoxFor(Model => Model.TyreMake, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.TyreMake, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="RearHood" class="text-right control-label col-form-label"><strong>REAR HOOD</strong></label>
+                                    @Html.TextBoxFor(Model => Model.RearHood, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.RearHood, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="ClusterMeter" class="text-right control-label col-form-label"><strong>CLUSTER METER</strong></label>
+                                    @Html.TextBoxFor(Model => Model.ClusterMeter, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.ClusterMeter, "", new { @class = "text-danger" })</strong>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="RearRim" class="text-right control-label col-form-label"><strong>REAR RIM</strong></label>
+                                </div>
+                                <div class="col-md-1 rearrimdiv">
+                                    @Html.CheckBoxFor(model => model.RearRimChk, new { @class = "form-control  input-sm" })
+                                </div>
+                                <div class="col-md-2 rearrimdiv2">
+                                    @Html.TextBoxFor(Model => Model.RearRim, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="IPHarness" class="text-right control-label col-form-label"><strong>I.P. HARNESS</strong></label>
+                                    @Html.TextBoxFor(Model => Model.IPHarness, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.IPHarness, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="RadiatorShell" class="text-right control-label col-form-label"><strong>RADIATOR SHELL</strong></label>
+                                    @Html.TextBoxFor(Model => Model.RadiatorShell, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.RadiatorShell, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="AirCleaner" class="text-right control-label col-form-label"><strong>AIR CLEANER</strong></label>
+                                    @Html.TextBoxFor(Model => Model.AirCleaner, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.AirCleaner, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="HeadLampLH" class="text-right control-label col-form-label"><strong>HEAD LAMP LH</strong></label>
+                                    @Html.TextBoxFor(Model => Model.HeadLampLH, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.HeadLampLH, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="HeadLampRH" class="text-right control-label col-form-label"><strong>HEAD LAMP RH</strong></label>
+                                    @Html.TextBoxFor(Model => Model.HeadLampRH, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.HeadLampRH, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="FrontGrill" class="text-right control-label col-form-label"><strong>FRONT GRILL</strong></label>
+                                    @Html.TextBoxFor(Model => Model.FrontGrill, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.FrontGrill, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="MainHarnessBonnet" class="text-right control-label col-form-label"><strong>MAIN HARNESS BONNET</strong></label>
+                                    @Html.TextBoxFor(Model => Model.MainHarnessBonnet, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.MainHarnessBonnet, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="Spindle" class="text-right control-label col-form-label"><strong>SPINDLE</strong></label>
+                                    @Html.TextBoxFor(Model => Model.Spindle, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.Spindle, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="BPS" class="text-right control-label col-form-label"><strong>Brake Pedal Set</strong></label>
+                                    @Html.TextBoxFor(Model => Model.BRK_PAD, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.BRK_PAD, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="FRBRH" class="text-right control-label col-form-label"><strong>Frame Running board (RH)</strong></label>
+                                    @Html.TextBoxFor(Model => Model.FRB_RH, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.FRB_RH, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="FRBLH" class="text-right control-label col-form-label"><strong>Frame Running board (LH)</strong></label>
+                                    @Html.TextBoxFor(Model => Model.FRB_LH, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.FRB_LH, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="FARBS" class="text-right control-label col-form-label"><strong>Frame Assembly Running Board Set</strong></label>
+                                    @Html.TextBoxFor(Model => Model.FR_AS_RB, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.FR_AS_RB, "", new { @class = "text-danger" })</strong>
+                                </div>
+
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-10 align-right" style="padding: 5px 12px 5px 12px !important;">
+
+                                </div>
+
+                                <div class="col-md-1 align-right" style="padding: 5px 12px 5px 12px !important;">
+                                    <button class="btn btn-success btn-sm" type="button" id="AddS"><strong>Submit</strong></button>
+                                    <button class="btn btn-success btn-sm" type="button" id="UpdateS"><strong>Update</strong></button>
+                                </div>
+
+                                <div class="col-md-1 align-right" style="padding: 5px 12px 5px 12px !important;">
+                                    <button class="btn btn-default btn-sm" type="button" id="ClearS"><strong>Clear</strong></button>
+
+                                </div>
+
+                            </div>
+
+                        </fieldset>
+                    </div>
+                }
+            </div>
+        </div>
+        <div id="Menu2" class="tab-pane fade">
+            @*--------Form------------*@
+            <div class="container" style="width:100%!important">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form2" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-horizontal form-group">
+                        <fieldset class="the-fieldset bg-info">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>FRONT AXEL TORQUE 1</strong></label>
+                                    @Html.TextBoxFor(Model => Model.NoOfBoltsFrontAxel, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.NoOfBoltsFrontAxel, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>HYDRAULIC</strong></label>
+                                    @Html.TextBoxFor(Model => Model.NoOfBoltsHydraulic, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.NoOfBoltsHydraulic, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>FRONT TYRE</strong></label>
+                                    @Html.TextBoxFor(Model => Model.NoOfBoltsFrontTYre, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.NoOfBoltsFrontTYre, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>ENGINE TORQUE 1</strong></label>
+                                    @Html.TextBoxFor(Model => Model.NoOfBoltsEnToruqe1, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.NoOfBoltsEnToruqe1, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>ENGINE TORQUE 2</strong></label>
+                                    @Html.TextBoxFor(Model => Model.NoOfBoltsEnToruqe2, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.NoOfBoltsEnToruqe2, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>ENGINE TORQUE 3</strong></label>
+                                    @Html.TextBoxFor(Model => Model.NoOfBoltsEnToruqe3, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.NoOfBoltsEnToruqe3, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>REAR TYRE</strong></label>
+                                    @Html.TextBoxFor(Model => Model.NoOfBoltsRearTYre, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.NoOfBoltsRearTYre, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>BUCKLEUP TORQUE 1</strong></label>
+                                    @Html.TextBoxFor(Model => Model.NoOfBoltsTRANSAXELToruqe1, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.NoOfBoltsTRANSAXELToruqe1, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>BUCKLEUP TORQUE 2</strong></label>
+                                    @Html.TextBoxFor(Model => Model.NoOfBoltsTRANSAXELToruqe2, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.NoOfBoltsTRANSAXELToruqe2, "", new { @class = "text-danger" })</strong>
+                                </div>
+                            </div>
+                            <div class="col-md-2 pull-right">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="fname" class="text-right control-label col-form-label"><strong class="text-hide">Role Description</strong></label>
+                                    </div>
+                                    <div class="col-md-12 align-right">
+                                        @* <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Add Monthly Plan</strong></button>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                }
+            </div>
+        </div>
+        <div id="Menu3" class="tab-pane fade">
+            <div class="container" style="width:100%!important">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form3" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-horizontal form-group">
+                        <fieldset class="the-fieldset bg-info">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                                    @Html.DropDownListFor(model => model.T3_Plant, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.T3_Plant, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                                    @Html.DropDownListFor(model => model.T3_Family, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.T3_Family, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>Item Code</strong></label>
+                                    @Html.DropDownListFor(model => model.T3_ItemCode, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.T3_ItemCode, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-1" style="width: 4%;padding-top: 23px;">
+                                    @Html.CheckBoxFor(model => model.T3_chkNotGenrateSrno, new { @class = "form-control  input-sm" })
+                                </div>
+                                <div class="col-md-1" style="width: 15%;padding-top: 23px;">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>Not Generate Sr.No.</strong></label>
+                                </div>
+                                <div class="col-md-1" style="width: 6%;padding-top: 23px;">
+                                    @*<button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Submit</strong></button>*@
+                                    <button class="btn btn-success btn-sm" type="button" id="T3_Add"><strong>Submit</strong></button>
+                                </div>
+                                <div class="col-md-1" style="padding-top: 23px;">
+                                    &nbsp;&nbsp;&nbsp;<button class="btn btn-default btn-sm" type="button" id="T3_Clear"><strong>Clear</strong></button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8 align-right" style="padding: 5px 12px 5px 12px !important;">
+
+                                </div>
+
+                            </div>
+                        </fieldset>
+                    </div>
+                }
+            </div>
+            <div id="T3_grid"></div>
+        </div>
+    </div>
+</div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+@*<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>*@
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.js")"></script>
+<link href="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.css")" rel="stylesheet" />
+
+@*<script type="text/javascript" src="~/Scripts\TractorMasterJs\TractorMasterTab1.js"></script>
+    <script type="text/javascript" src="~/Scripts\TractorMasterJs\TractorMasterTab2.js"></script>*@
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/TractorMasterJs/TractorMasterTab1.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/TractorMasterJs/TractorMasterTab2.js")"></script>
+
+@*Script for First Tab*@
+<script>
+    //$(document).ready(function () {
+    //    window.localStorage.removeItem('selectedolditem');
+    //    localStorage.setItem("IsTabChange", false);
+    //});
+
+
+    var updateUrl = '@Url.Action("BindPlant", "TractorMaster")';
+    var ItemCode =  '@Url.Action("FillItemCode", "TractorMaster")';
+    var TransMission = '@Url.Action("FillTransMission", "TractorMaster")';
+    var Engine = '@Url.Action("FillEngine", "TractorMaster")';
+    var RearTyre = '@Url.Action("FillRearTyre", "TractorMaster")';
+    var RHRearTyre = '@Url.Action("FillRHRearTyre", "TractorMaster")';
+    var Battery = '@Url.Action("FillBattery", "TractorMaster")';
+    var HydraulicPump = '@Url.Action("FillHydraulicPump", "TractorMaster")';
+    var SteeringAssembly = '@Url.Action("FillSteeringAssembly", "TractorMaster")';
+    var RadiatorAssembly = '@Url.Action("FillRadiatorAssembly", "TractorMaster")';
+    var Alternator = '@Url.Action("FillAlternator", "TractorMaster")';
+    var BRAKEPEDAL = '@Url.Action("FillBRAKE_PEDAL", "TractorMaster")';
+    var CLUTCHPEDAL = '@Url.Action("FillCLUTCH_PEDAL", "TractorMaster")';
+    var SPOOLVALUE = '@Url.Action("FillSPOOL_VALUE", "TractorMaster")';
+    var TANDEMPUMP = '@Url.Action("FillTANDEM_PUMP", "TractorMaster")';
+    var FENDER = '@Url.Action("FillFENDER", "TractorMaster")';
+    var RearAxel = '@Url.Action("FillRearAxel", "TractorMaster")';
+    var Hydraulic = '@Url.Action("FillHydraulic", "TractorMaster")';
+    var FrontTyre = '@Url.Action("FillFrontTyre", "TractorMaster")';
+    var RHFrontTyre = '@Url.Action("FillRHFrontTyre", "TractorMaster")';
+    var Backend = '@Url.Action("FillBackend", "TractorMaster")';
+    var SteeringMotor = '@Url.Action("FillSteeringMotor", "TractorMaster")';
+    var SteeringCylinder = '@Url.Action("FillSteeringCylinder", "TractorMaster")';
+    var ClusterAssembly = '@Url.Action("FillClusterAssembly", "TractorMaster")';
+    var StartorMotor = '@Url.Action("FillStartorMotor", "TractorMaster")';
+    var Rops = '@Url.Action("FillRops", "TractorMaster")';
+    var FENDERRAILING = '@Url.Action("FillFENDER_RAILING", "TractorMaster")';
+    var HEADLAMP = '@Url.Action("FillHEAD_LAMP", "TractorMaster")';
+    var STEERINGWHEEL = '@Url.Action("FillSTEERING_WHEEL", "TractorMaster")';
+    var REARHOODHARNESS = '@Url.Action("FillREAR_HOOD_WIRING_HARNESS", "TractorMaster")';
+    var SEAT = '@Url.Action("FillSEAT", "TractorMaster")';
+    var SearchItem = '@Url.Action("BindSearchItem", "TractorMaster")';
+    var Family = '@Url.Action("BindFamily", "TractorMaster")';
+    @*var T3Plant = '@Url.Action("BindT3_Plant", "TractorMaster")';*@
+    var T3Family = '@Url.Action("BindT3_Family", "TractorMaster")';
+    var T3Item = '@Url.Action("Bind_T3_Item", "TractorMaster")';
+    var T3Grid = '@Url.Action("T3_Grid", "TractorMaster")';
+    var T3SubAssembly = '@Url.Action("Save_T3_SubAssembly_Click", "TractorMaster")';
+    var updateSave = '@Url.Action("Save", "TractorMaster")';
+    var updateUpdate = '@Url.Action("Update", "TractorMaster")';
+    var ExportTractor = '@Url.Action("ExportTractormaster", "TractorMaster")';
+    var EditValueChanged = '@Url.Action("gleSearch_EditValueChanged", "TractorMaster")';
+    var FrontSupport = '@Url.Action("FillFrontSupport", "TractorMaster")';
+    var CenterAxel = '@Url.Action("FillCenterAxel", "TractorMaster")';
+    var Slider = '@Url.Action("FillSlider", "TractorMaster")';
+    var SteeringColumn = '@Url.Action("FillSteeringColumn", "TractorMaster")';
+    var SteeringBase = '@Url.Action("FillSteeringBase", "TractorMaster")';
+    var Lowerlink = '@Url.Action("FillLowerlink", "TractorMaster")';
+    var RBFrame = '@Url.Action("FillRBFrame", "TractorMaster")';
+    var FuelTank = '@Url.Action("FillFuelTank", "TractorMaster")';
+    var Cylinder = '@Url.Action("FillCylinder", "TractorMaster")';
+    var FenderRH = '@Url.Action("FillFenderRH", "TractorMaster")';
+    var FenderLH = '@Url.Action("FillFenderLH", "TractorMaster")';
+    var FenderHarnessRH = '@Url.Action("FillFenderHarnessRH", "TractorMaster")';
+    var FenderHarnessLH = '@Url.Action("FillFenderHarnessLH", "TractorMaster")';
+    var FenderLamp4Types = '@Url.Action("FillFenderLamp4Types", "TractorMaster")';
+    var RBHarnessLH = '@Url.Action("FillRBHarnessLH", "TractorMaster")';
+    var FrontRim = '@Url.Action("FillFrontRim", "TractorMaster")';
+    var RearRim = '@Url.Action("FillRearRim", "TractorMaster")';
+    var TyreMake = '@Url.Action("FillTyreMake", "TractorMaster")';
+    var RearHood = '@Url.Action("FillRearHood", "TractorMaster")';
+    var ClusterMeter = '@Url.Action("FillClusterMeter", "TractorMaster")';
+    var IPHarness = '@Url.Action("FillIPHarness", "TractorMaster")';
+    var RadiatorShell = '@Url.Action("FillRadiatorShell", "TractorMaster")';
+    var AirCleaner = '@Url.Action("FillAirCleaner", "TractorMaster")';
+    var HeadLampLH = '@Url.Action("FillHeadLampLH", "TractorMaster")';
+    var HeadLampRH = '@Url.Action("FillHeadLampRH", "TractorMaster")';
+    var FrontGrill = '@Url.Action("FillFrontGrill", "TractorMaster")';
+    var MainHarnessBonnet = '@Url.Action("FillMainHarnessBonnet", "TractorMaster")';
+    var Spindle = '@Url.Action("FillSpindle", "TractorMaster")';
+    @*var Motor = '@Url.Action("FillMotor", "TractorMaster")';*@
+    var ItemCodes = '@Url.Action("FillItemCodes", "TractorMaster")';
+    var T4Plant = '@Url.Action("BindT4_Plant", "TractorMaster")';
+    var T4Family = '@Url.Action("BindT4_Family", "TractorMaster")';
+    var updateSaveS =  '@Url.Action("SaveS", "TractorMaster")';
+    var updateUpdateS = '@Url.Action("UpdateS", "TractorMaster")';
+    var EditValueChangedTab2 = '@Url.Action("gleSearch_EditValueChangedTab2", "TractorMaster")';
+    var ExcelDownLoad = '@Url.RouteUrl(new{ Controller = "TractorMaster", Action = "Download"})/?file=';
+    var SearchItemS = '@Url.Action("BindSearchItemS", "TractorMaster")';
+
+    //-------------------Add New Jquery Start---------------------------
+    var SliderRH = '@Url.Action("FillSliderRH","TractorMaster")';
+    var BRKPAD = '@Url.Action("FillBRK_PAD", "TractorMaster")';
+    var FRBRH = '@Url.Action("FillFRB_RH", "TractorMaster")';
+    var FRBLH = '@Url.Action("FillFRB_LH", "TractorMaster")';
+    var FRASRB = '@Url.Action("FillFR_AS_RB", "TractorMaster")';
+     //-------------------Add New Jquery End---------------------------
+
+
+</script>

@@ -1,0 +1,60 @@
+﻿
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="table-responsive">
+        @*@{
+            List<object> commands = new List<object>();
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-delete", cssClass = "delete" } });
+        }*@
+
+        @(Html.EJS().Grid("Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                AllowPaging(true).
+                PageSettings(Page => Page.PageSize(7)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+                AllowResizing().
+                Columns(col =>
+                {
+                    col.Field("ITEM_CODE").HeaderText("ITEM CODE").IsPrimaryKey(true).Width("100").Visible(false).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("ITEM_DESCRIPTION").HeaderText("ITEM DESCRIPTION").Width("200").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("ENGINE").HeaderText("ENGINE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("ENGINE_SRLNO").HeaderText("ENGINE SRLNO").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("REARAXEL").HeaderText("REARAXEL").Width("250").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("REARAXEL_SRLNO").HeaderText("REARAXEL SRLNO").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("TRANSMISSION").HeaderText("TRANSMISSION").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("TRANSMISSION_SRLNO").HeaderText("TRANSMISSION SRLNO").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("HYDRALUIC").HeaderText("HYDRALUIC").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("HYDRALUIC_SRLNO").HeaderText("HYDRALUIC SRLNO").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("BATTERY").HeaderText("BATTERY").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("BATTERY_SRLNO").HeaderText("BATTERY_SRLNO").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("SIM_SERIAL_NO").HeaderText("SIM SERIAL NO").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+
+                })
+                  .SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).//AllowRowDragAndDrop().
+                Render())
+
+        
+    </div>
+
+    <script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+    @Html.EJS().ScriptManager()
+</div>
+
+

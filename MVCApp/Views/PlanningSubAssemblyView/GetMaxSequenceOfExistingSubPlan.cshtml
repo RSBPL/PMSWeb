@@ -1,0 +1,9 @@
+﻿@model MVCApp.Models.AddDailyPlanModel
+
+@{
+    <div>
+        @Html.DropDownListFor(Model => Model.SeqForPerticularNo, (IEnumerable<SelectListItem>)ViewBag.DataSource, "--Select--", new { @class = "form-control input-sm" })
+    </div>
+}
+
+

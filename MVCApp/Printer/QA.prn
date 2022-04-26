@@ -1,0 +1,97 @@
+<xpml><page quantity='0' pitch='100.1 mm'></xpml>'Seagull:2.1:DP
+INPUT OFF
+VERBOFF
+INPUT ON
+SYSVAR(48) = 0
+ERROR 15,"FONT NOT FOUND"
+ERROR 18,"DISK FULL"
+ERROR 26,"PARAMETER TOO LARGE"
+ERROR 27,"PARAMETER TOO SMALL"
+ERROR 37,"CUTTER DEVICE NOT FOUND"
+ERROR 1003,"FIELD OUT OF LABEL"
+SYSVAR(35)=0
+OPEN "tmp:setup.sys" FOR OUTPUT AS #1
+PRINT#1,"Printing,Media,Print Area,Media Margin (X),0"
+PRINT#1,"Printing,Media,Clip Default,On"
+CLOSE #1
+SETUP "tmp:setup.sys"
+KILL "tmp:setup.sys"
+CLIP ON
+CLIP BARCODE ON
+LBLCOND 3,2
+<xpml></page></xpml><xpml><page quantity='1' pitch='100.1 mm'></xpml>CLL
+OPTIMIZE "BATCH" ON
+PP44,691:AN7
+NASC 8
+FT "CG Times Bold",8,0,99
+PT "MRN. No. & Date-"
+PP44,659:FT "CG Times Bold",8,0,99
+PT "VENDOR NAME-"
+PP44,627:FT "CG Times Bold",8,0,99
+PT "ITEM CODE-"
+PP44,595:FT "CG Times Bold",8,0,99
+PT "ITEM DESC.-"
+PP78,772:FT "CG Times Bold",12,0,99
+PT "ESCORTS LIMITED AGRI MACHINERY"
+PP231,696:FT "CG Times Bold",11,0,82
+PT "MRN_NO"
+PP248,520:BARSET "CODE128A",2,1,2,80
+PB "MRN_NO"
+PP289,444:FT "CG Times Bold",12,0,99
+PT "MRN_NO"
+PP231,660:FT "CG Times Bold",8,0,99
+PT "VENDOR_CODE"
+PP231,627:FT "CG Times Bold",8,0,99
+PT "ITEM_CODE"
+PP231,596:FT "CG Times Bold",8,0,99
+PT "ITEM_DESC"
+PP44,723:FT "CG Times Bold",8,0,107
+PT "QA-"
+PP231,737:FT "CG Times Bold",12,0,140
+PT "PASS"
+PP44,564:FT "CG Times Bold",8,0,99
+PT "BOX QTY.    -"
+PP231,564:FT "CG Times Bold",8,0,99
+PT "BOX_QTY"
+PP440,696:FT "CG Times Bold",11,0,82
+PT "PRINT_DATE"
+PP395,694:FT "CG Times Bold",10,0,145
+PT "&"
+PP44,307:FT "CG Times Bold",8,0,99
+PT "MRN. No. & Date-"
+PP44,275:FT "CG Times Bold",8,0,99
+PT "VENDOR NAME-"
+PP44,243:FT "CG Times Bold",8,0,99
+PT "ITEM CODE-"
+PP44,210:FT "CG Times Bold",8,0,99
+PT "ITEM DESC.-"
+PP78,387:FT "CG Times Bold",12,0,99
+PT "ESCORTS LIMITED AGRI MACHINERY"
+PP231,312:FT "CG Times Bold",11,0,82
+PT "MRN_NO"
+PP249,136:BARSET "CODE128A",2,1,2,80
+PB "MRN_NO"
+PP289,60:FT "CG Times Bold",12,0,99
+PT "MRN_NO"
+PP231,275:FT "CG Times Bold",8,0,99
+PT "VENDOR_CODE"
+PP231,242:FT "CG Times Bold",8,0,99
+PT "ITEM_CODE"
+PP231,211:FT "CG Times Bold",8,0,99
+PT "ITEM_DESC"
+PP44,339:FT "CG Times Bold",8,0,107
+PT "QA-"
+PP236,353:FT "CG Times Bold",12,0,140
+PT "FAIL"
+PP44,179:FT "CG Times Bold",8,0,99
+PT "BOX QTY.    -"
+PP231,179:FT "CG Times Bold",8,0,99
+PT "BOX_QTY"
+PP442,312:FT "CG Times Bold",11,0,82
+PT "PRINT_DATE"
+PP397,310:FT "CG Times Bold",10,0,145
+PT "&"
+LAYOUT RUN ""
+PF
+PRINT KEY OFF
+<xpml></page></xpml><xpml><end/></xpml>

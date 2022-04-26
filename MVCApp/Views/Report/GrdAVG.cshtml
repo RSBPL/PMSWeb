@@ -1,0 +1,56 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bg-primary" style="padding-top:5px; padding-left:5px;">
+                <center>
+                    <label style="color:white;">@ViewBag.heading</label>
+                    <label style="color: white;padding-right: 10px;" class="pull-right"><strong>TOTAL RECORD : @ViewBag.Total </strong></label>
+                </center>                
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        @(Html.EJS().Grid("GrdAVG").DataSource((System.Data.DataTable)ViewBag.DataSource).
+            Height("400").            
+            AllowResizing().
+            AllowExcelExport().
+            ToolbarClick("toolbarClick").
+            AllowFiltering().
+            AllowGrouping().EnableColumnVirtualization().EnableVirtualization().
+            AllowSorting().
+            Columns(col =>
+            {
+                col.Field("MRN_DATE").HeaderText("MRN_DATE").Add();
+                col.Field("TOTAL_MRN").HeaderText("TOTAL_MRN").Add();
+                col.Field("AVG_HOURS").HeaderText("AVG_HOURS").Add();
+
+            }).
+            Toolbar(new List<string>() { "ExcelExport" }).
+            Render())
+        <script>
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("GrdAVG").ej2_instances[0];
+                gridObj.excelExport();
+            }
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+
+
+
+
+

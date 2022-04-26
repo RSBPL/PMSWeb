@@ -1,0 +1,10 @@
+﻿@model MVCApp.Models.BeforePaintAssemblyModel
+
+@{
+    <div>
+        @Html.DropDownListFor(a => a.Family, (IEnumerable<SelectListItem>)ViewBag.Family, new { @class = "form-control input-sm" })
+    </div>
+}
+
+
+

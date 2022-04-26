@@ -1,0 +1,53 @@
+﻿
+@using System.Data
+@model DataTable
+<style type="text/css">
+    .fntweight {
+        FONT-WEIGHT: 800;
+    }
+    /* === HEADING STYLE #1 === */
+    hr {
+        border: 0;
+        max-width: 100%;
+        background-position: 50%;
+        box-sizing: border-box;
+    }
+
+    .head-10 {
+        text-align: center;
+        color: white;
+        font-size: 20px;
+    }
+
+    .accessory {
+        height: 20px;
+        background-image: radial-gradient( closest-side, hsl(9deg 60% 55%), hsl(0deg 100% 48% / 0%) 100%);
+        position: relative;
+    }
+    
+</style>
+<div class="row">
+    <div style="margin: -60px 0 5px 0;"><h1 class="head-10"><strong>CELL DETAIL</strong></h1></div>
+    <hr class="accessory" style="margin: 0;">
+</div>
+@{
+    <table class="table table-bordered table-condensed table-striped table-responsive">
+        <tr style="background-color: #afaeae;">
+            <th class="fntweight text-center">ITEM CODE</th>
+            <th class="fntweight text-center">DESCRIPTION</th>
+            <th class="fntweight text-center">QUANTITY</th>
+        </tr>
+        @foreach (DataRow row in Model.Rows)
+        {
+            <tr>
+                <td class="text-center">@row["ITEMCODE"]</td>
+                <td class="text-center">@row["DESCRIPTION"]</td>
+                <td class="text-center">@row["QUANTITY"]</td>
+            </tr>
+        }
+
+    </table>
+}
+
+
+

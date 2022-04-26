@@ -1,0 +1,530 @@
+﻿
+@model MVCApp.Models.DashboardModel
+<style>
+    .chartType, .fa-expand, .fa-eye {
+        cursor: pointer;
+    }
+
+    span.selectedChartType {
+        box-shadow: 0 4px 10px 0 rgba(0,0,0,.2),0 4px 20px 0 rgba(0,0,0,.19);
+        background: #fff;
+        color: #333;
+        padding: 3px;
+        border-radius: 3px;
+        top: 0;
+        position: relative;
+    }
+
+    .WD-100 {
+        width: 11%;
+    }
+</style>
+
+<div class="container" style="margin-top:5px;margin-bottom:5px;">
+    @if (TempData["msg"] != null && TempData["msgType"] != null)
+    {
+        <div class="alert @TempData["msgType"]" role="alert" id="alert">
+            <strong>@TempData["msg"]</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    <div class="container" style="width:100%!important">
+        <div class="row" style="margin-bottom: 10px; margin-top: 10px; margin-right: -22px!important;">
+
+        </div>
+        <div class="container-fluid">
+
+        </div>
+    </div>
+    @*--------Form------------*@
+    <div class="container" style="width:100%!important">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal form-group">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="Plant" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            @Html.DropDownListFor(model => model.Plant, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.Plant, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="Family" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                            @Html.DropDownListFor(model => model.Family, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.Family, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-2 WD-100">
+                            <label for="FromDate" class="text-right control-label col-form-label"><strong>From Date</strong></label>
+                            @Html.EJS().DatePickerFor(Model => Model.FromDate).Format("dd-MMM-yyyy").Value(ViewBag.value).Max(ViewBag.maxDate).Render()
+                            <strong>@Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-2 WD-100">
+                            <label for="ToDate" class="text-right control-label col-form-label"><strong>To Date</strong></label>
+                            @Html.EJS().DatePickerFor(Model => Model.ToDate).Format("dd-MMM-yyyy").Value(ViewBag.value).Max(ViewBag.maxDate).Render()
+                            <strong>@Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button type="button" id="Click" class="btn btn-success btn-sm"><i class="ace-icon fa fa-check bigger-110"></i>Submit</button>
+                        </div>
+
+                    </div>
+
+                </fieldset>
+            </div>
+
+        }
+
+    </div>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div class="container-fluid">
+            <div class="row" style="margin-bottom: 10px; margin-top: 10px; margin-right: -22px!important;">
+
+            </div>
+            <!-- Chart -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div style="box-shadow: 0px 0px 8px 0px #88b4bb; margin-bottom:10px;">
+
+                        <div class="" style="background-color:#9abc32; color:darkslategray; padding:5px; text-align:end;">
+                            <span class="pull-left" style="color:black;"><text><b>&nbsp;Daily Production</b></text></span>
+                            <span class="chartType" data-chart-type="bar" data-id="divProduction" data-caller="chart_Production_caller"><i class="fa fa-bar-chart fa-rotate-90" aria-hidden="true" style="width:15px;"></i></span>&nbsp;&nbsp;
+                            <span class="chartType" data-chart-type="Column" data-id="divProduction" data-caller="chart_Production_caller"><i class="fa fa-bar-chart" aria-hidden="true" style="width:15px;"></i></span>&nbsp;&nbsp;
+                            <span class="chartType selectedChartType" data-chart-type="Pie" data-id="divProduction" data-caller="chart_Production_caller"><i class="fa fa-pie-chart" aria-hidden="true" style="width:15px;"></i></span>&nbsp;&nbsp;
+                            <span class="chartType" data-chart-type="Area" data-id="divProduction" data-caller="chart_Production_caller"><i class="fa fa-area-chart" aria-hidden="true" style="width:15px;"></i></span>&nbsp;&nbsp;
+                            <span class="chartType" data-chart-type="Line" data-id="divProduction" data-caller="chart_Production_caller"><i class="fa fa-line-chart" aria-hidden="true" style="width:15px;"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                        </div>
+                        <div class="box-content">
+                            <div id="divProduction" style="min-width: 310px;height: 400px;max-width: 600px;margin: 0 auto"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div style="box-shadow: 0px 0px 8px 0px #88b4bb; margin-bottom:10px;">
+
+                        <div class="" style="background-color:#9abc32; color:darkslategray; padding:5px; text-align:end;">
+                            <span class="pull-left" style="color:black;"><text><b>&nbsp;Available Stock</b></text></span>
+                            <span class="chartType" data-chart-type="bar" data-id="divAvailableStock" data-caller="chart_Available_Stock_caller"><i class="fa fa-bar-chart fa-rotate-90" aria-hidden="true" style="width: 15px; "></i></span>&nbsp;&nbsp;
+                            <span class="chartType" data-chart-type="Column" data-id="divAvailableStock" data-caller="chart_Available_Stock_caller"><i class="fa fa-bar-chart" aria-hidden="true" style="width: 15px; "></i></span>&nbsp;&nbsp;
+                            <span class="chartType selectedChartType" data-chart-type="Pie" data-id="divAvailableStock" data-caller="chart_Available_Stock_caller"><i class="fa fa-pie-chart" aria-hidden="true" style="width:15px;"></i></span>&nbsp;&nbsp;
+                            <span class="chartType" data-chart-type="Area" data-id="divAvailableStock" data-caller="chart_Available_Stock_caller"><i class="fa fa-area-chart" aria-hidden="true" style="width:15px;"></i></span>&nbsp;&nbsp;
+                            <span class="chartType" data-chart-type="Line" data-id="divAvailableStock" data-caller="chart_Available_Stock_caller"><i class="fa fa-line-chart" aria-hidden="true" style="width:15px;"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                        </div>
+                        <div class="box-content">
+                            <div id="divAvailableStock" style="min-width: 310px;height: 400px;max-width: 600px;margin: 0 auto"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-12">
+    <div class="well well-sm" style="box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12)">
+        <div class="row">
+            <div class="col-md-3 padding-right-half">
+                <input type="checkbox" onclick="toggleAutoRefresh(this);" id="reloadCB" style="margin: 6px;" autocomplete="off" />
+                <span style="position: relative; top: -1px; font-weight: 600;">Auto refresh interval (in seconds)</span>
+            </div>
+            <div class="col-md-1 padding-left-half">
+                <input type="text" value="10" id="txtInterval" style="width: 60px; height: 24px;" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<script src="@Url.Content("~/assets/HighChart/highcharts.js")"></script>
+<script src="@Url.Content("~/assets/HighChart/offline-exporting.js")"></script>
+<script src="@Url.Content("~/assets/HighChart/exporting.js")"></script>
+<script src="@Url.Content("~/assets/DashBoardJS/DashBoardJS_Development/DashBoardPopupChartView.js")"></script>
+
+
+
+<script>
+    var divAvailableStock = "divAvailableStock";
+    var divProduction = "divProduction";
+
+    var chartType = "Pie";
+
+    $(document).ready(function () {
+        DDLPlant();
+
+    });
+
+
+    $("#Plant").on("change", function () {
+        DDLFamilyByPlant();
+
+    });
+    $("#Family").on("change", function () {
+         //COMMIT BY SARTHAK
+        //chart_Available_Stock_caller(divAvailableStock, chartType);
+    });
+
+     //Function to bind Plant
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "Home")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#Plant").append(optionhtml);
+                });
+
+
+                DDLFamilyByPlant();
+
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+     //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        var selectedValue = $("#Plant").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "Home")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#Family").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#Family").append(optionhtml);
+                });
+                chart_Production_caller(divProduction, chartType);
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+
+    $("#Click").on("click", function () {
+        chart_Production_caller(divProduction, chartType);
+        //chart_Available_Stock_caller(divAvailableStock, chartType);
+    });
+
+    function chart_Production_caller(chart_element, chartType) {
+        var Obj = {
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val(),
+            FromDate: $('#FromDate').val(),
+            ToDate: $('#ToDate').val()
+        };
+        $.ajax({
+
+            url: '@Url.Action("DisplayChart", "Home")',
+            data: JSON.stringify(Obj),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                if (result.validation != undefined && result.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+
+                else {
+
+                    var data = new Array();
+                    var i = 0;
+                    $.each(result, function (key, isresult) {
+                        var series = new Array(isresult.Item, isresult.Quantity );
+                        data.push(series);
+                        i++;
+                    });
+                    DrawProduction(data, chart_element, chartType);
+                }
+
+            },
+            error: function (result) {
+                //alert(Result);
+            }
+        });
+    }
+    function DrawProduction(series, chart_element, chartType) {
+        //debugger;
+        var chart = new Highcharts.Chart({ // Not Return Series please check it again.
+            chart: {
+                //backgroundColor: '#a3ff9b',
+                renderTo: chart_element,
+                type: chartType.toLowerCase()
+            },
+            title:
+            {
+                text: null
+            },
+
+            legend: {
+                enabled: true,
+                verticalAlign: 'bottom',
+                width: 300,
+                itemWidth: 150,
+                labelFormatter: function () {
+                    var words = this.name.split(/[\s]+/);
+                    var numWordsPerLine = 2;
+                    var str = [];
+
+                    for (var word in words) {
+                        if (word > 0 && word % numWordsPerLine == 0)
+                            str.push('<br>');
+
+                        str.push(words[word]);
+                    }
+
+                    return str.join(' ');
+                }
+            },
+            tooltip: {
+                formatter: function () {
+                    txt = this.point.name;
+                    return '<b>' + this.point.name + '</b>: ' + this.point.y;
+                }
+            },
+
+            credits: {
+                enabled: false
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        style: {
+                            width: '100px'
+                        },
+                        enabled: true,         /*true*/
+                        format: '<b>{point.name}</b>: ({point.y})'
+                    },
+                    showInLegend: false,
+                },
+                series: {
+                    cursor: 'pointer',
+                    point: {
+                        events: {
+                            click: function () {
+
+                            }
+                        }
+                    }
+                },
+            },
+            series: [{
+                name: 'Daily Production',
+                data: series,
+            }],
+            navigation: {
+                buttonOptions: {
+                    enabled: true
+                }
+            },
+        });
+    }
+
+    ///////////////// AVAILABLE STOCK //////////////////////////////////////////////////
+    function chart_Available_Stock_caller(chart_element, chartType) {
+        var Obj = {
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val()
+        };
+        $.ajax({
+
+            url: '@Url.Action("GetAvilableStock", "Home")',
+            data: JSON.stringify(Obj),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                if (result.validation != undefined && result.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+
+                else {
+
+                    var data = new Array();
+                    var xAxisData = new Array();
+                    var i = 0;
+                    $.each(result, function (key, isresult) {
+                        var series = new Array(isresult.Item, isresult.Quantity);
+                        var xdata = new Array(isresult.Item);
+                        data.push(series);
+                        xAxisData.push(xdata);
+                        i++;
+                    });
+                    DrawAvilableStock(data, chart_element, chartType, xAxisData, 'Assembly Line','Quantity');
+                }
+
+            },
+            error: function (result) {
+
+            }
+        });
+    }
+
+
+    function DrawAvilableStock(series, chart_element, chartType, xAxisData, xTitle, yTitle) {
+        var chart = new Highcharts.Chart({ // Not Return Series please check it again.
+            chart: {
+                renderTo: chart_element,
+                type: chartType.toLowerCase()
+            },
+            title:
+            {
+                text: null
+            },
+            xAxis: {
+                categories: xAxisData,
+                title: {
+                    text: xTitle
+                },
+
+                labels: {
+                    step: 1,
+                    rotation: 0
+                }
+            },
+            yAxis: {
+                title: {
+                    text: yTitle
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value;
+                    }
+                }
+            },
+            legend: {
+                enabled: true,
+                verticalAlign: 'bottom',
+                width: 300,
+                itemWidth: 150,
+                labelFormatter: function () {
+                    var words = this.name.split(/[\s]+/);
+                    var numWordsPerLine = 2;
+                    var str = [];
+
+                    for (var word in words) {
+                        if (word > 0 && word % numWordsPerLine == 0)
+                            str.push('<br>');
+
+                        str.push(words[word]);
+                    }
+
+                    return str.join(' ');
+                }
+            },
+            tooltip: {
+                formatter: function () {
+                    txt = this.point.name;
+                    return '<b>' + this.point.name + '</b>: ' + this.point.y;
+                }
+            },
+
+            credits: {
+                enabled: false
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        style: {
+                            width: '100px'
+                        },
+                        enabled: true,         /*true*/
+                        format: '<b>{point.name}</b>: ({point.y})'
+                    },
+                    showInLegend: false,
+                },
+                series: {
+
+                    cursor: 'pointer',
+                    point: {
+                        events: {
+                            click: function () {
+
+                            }
+                        }
+                    }
+                },
+            },
+            series: [{
+                name: 'Available Stock',
+                data: series,
+            }],
+            navigation: {
+                buttonOptions: {
+                    enabled: true
+                }
+            },
+        });
+    }
+
+    $("#Plant").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#Family").select2({
+        allowClear: true,
+        width: '100%',
+    });
+
+</script>
+
+<script>
+    function toggleAutoRefresh(cb, intervalID) {
+        durationSlider();
+
+    }
+</script>
+
+<script>
+    if (localStorage.getItem("RefreshTime") === null) {
+        var RT = $("#txtInterval").val();
+        localStorage.setItem('RefreshTime', RT);
+    }
+    else {
+        var RT = $("#txtInterval").val();
+        localStorage.setItem('RefreshTime', RT);
+    }
+    $("#txtInterval").change(function () {
+        var RT = $("#txtInterval").val();
+        localStorage.setItem('RefreshTime', RT);
+    });
+
+    function durationSlider() {
+        var count = 0;
+        setInterval(function () {
+            var RTGet = localStorage.getItem('RefreshTime');
+            console.log(count);
+            count += 1;
+            if (count >= RTGet) {
+                count = 0;
+                //COMMIT BY SARTHAK
+                //chart_Available_Stock_caller(divAvailableStock, chartType);
+                chart_Production_caller(divProduction, chartType);
+            }
+        }, 1000);
+    }
+</script>

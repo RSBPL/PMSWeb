@@ -1,0 +1,98 @@
+﻿@model MVCApp.Models.RoleModel
+
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Maintenance</a>
+        </li>
+
+        <li class="active">
+            Role
+        </li>
+    </ul>
+</div>
+
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        @if (TempData["msg"] != null && TempData["msgType"] != null)
+        {
+            <div class="alert @TempData["msgType"]" role="alert">
+                <strong>@TempData["msg"]</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+        <div style="margin-top:5px; margin-bottom:5px;">
+            <a href="@Url.Action("Index", "RoleMaster")" class="btn btn-warning btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Go Back</a>
+        </div>
+    </div>
+    <div class="container" style="width:100%!important">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.AutoId)
+            @*<div class="form-horizontal form-group">
+                <fieldset class="the-fieldset">
+                    <legend class="the-legend"><b>Delete Menu</b></legend>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <label for="fname" class="control-label col-form-label"><strong>Role</strong></label>
+                                    <strong>@Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.Role, null, new { @class = "form-control input-sm", @id = "role", @autocomplete = "off" })
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong class="text-hide">Role Description</strong></label>
+                                </div>
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-success btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>*@
+
+            <div class="modal" id="DeleteConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-danger">
+                            <strong class="modal-title" id="exampleModalLabel" style="font-size:25px;"><i class="fa fa-exclamation-circle" style="font-size:35px;" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<strong>Confirmation..!</strong></strong>
+                            <a href="@Url.Action("Index", "RoleMaster")" class="close" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </a>
+                        </div>
+                        <div class="modal-body">
+                            <h4><strong>Are you sure, to delete this Record ?</strong></h4>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="@Url.Action("Index", "RoleMaster")" class="btn btn-success btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Go Back</a>
+                            <button type="submit" class="btn btn-danger btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script src="~/assets/js/jquery-2.1.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#DeleteConfirm').modal('show');
+    });
+</script>
+

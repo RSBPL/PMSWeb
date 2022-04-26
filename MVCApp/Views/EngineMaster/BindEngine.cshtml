@@ -1,0 +1,10 @@
+﻿@model MVCApp.Models.EngineModel
+
+@{
+    <div>
+        @Html.DropDownListFor(model => model.Engine, (IEnumerable<SelectListItem>)ViewBag.Engine, new { @class = "form-control  input-sm" })
+    </div>
+}
+
+
+

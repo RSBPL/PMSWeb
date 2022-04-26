@@ -1,0 +1,1210 @@
+﻿@model MVCApp.Models.EngineModel
+
+@{
+    ViewBag.Title = "Index";
+}
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+
+<style>
+    /*.modal-dialog {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 1%;
+    }
+
+    .modal-content {
+        height: auto;
+        min-height: 100%;
+        border-radius: 0;
+    }*/
+
+    /*.modal-header{
+        background-color: darkcyan;
+    }*/
+    /*the container must be positioned relative:*/
+    .ui-autocomplete {
+        position: relative;
+        display: inline-block;
+        height: 250px;
+    }
+    .ui-autocomplete {
+        max-height: 250px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+
+    .ui-autocomplete {
+        height: 250px;
+    }
+    .well {
+        background-color: #EBF3F9;
+    }
+    .row-static {
+        margin: 20px 155px 20px 155px;
+    }
+    .inj {
+        width: 42%;
+        margin-top: 7px;
+    }
+    .inj1 {
+        width: 64%;
+        margin: 6px -20px 0 25px;
+    }
+    .col-md-9 {
+        padding:10PX;
+    }
+    .col-md-3 {
+        padding: 10PX;
+    }
+    .m-20 {
+        margin: -20px 0 0 -55px;
+    }
+    .hr1 {
+        margin-top: 2px;
+        margin-bottom: 6px;
+        border-top: 1px solid #0a5180;
+        width: 370px;
+    }
+    .W-100 {
+        width: 883px;
+        left: -106px;
+    }
+    .f-left {
+        float: LEFT;
+    }
+    .frm {
+        padding: 20px;
+    }
+    .C-1 {
+        WIDTH: 70px;
+    }
+   .C-2 {
+        WIDTH: 62%;
+    }
+
+
+    .w-adj1 {
+        WIDTH: 155px;
+        margin: -3px 10px -12px 0;
+    }
+    .fp {
+        width: 0px;
+        margin: -17px 14px 0 -25px;
+    }
+    input.largerCheckbox {
+        width: 20px;
+        height: 20px;
+    }
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        /*filter: alpha(opacity=40);  For IE8 and earlier */
+    }
+    .the-legend{
+        box-shadow: 0px 1px 5px #7f8b8f;
+    }
+    .col1 {
+    margin-right:10px;
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Engine</a>
+        </li>
+    </ul>
+</div>
+
+
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    <div id="SearchItem" style="background-color: #6fb3e0;margin: 0px 5px 0px 5px;padding: 5px;">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <strong style="font-size: 19px;color:white;">ENGINE MASTER</strong>
+                <hr class="hr1">
+            </div>
+
+
+        </div>
+    </div>
+</div>
+@*--------Form------------*@
+<div class="container" style="width: 100% !important; margin-left: 4px;">
+    <div class="form-horizontal form-group">
+        <fieldset class="the-fieldset">
+            <table class="table">
+                <tbody>
+                    <tr class="well">
+                        <td>
+                            <form class="form-horizontal frm">
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="fname" class="col-md-1 text-left control-label col-form-label C-1"><strong>PLANT</strong></label>
+                                        <div class="input-group m-50">
+                                            <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-industry"></i></span>
+                                            @Html.DropDownListFor(model => model.PLANT_CODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                            <strong>@Html.ValidationMessageFor(model => model.PLANT_CODE, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="fname" class="col-md-1 text-left control-label col-form-label C-1 "><strong>FAMILY</strong></label>
+                                        <div class="input-group m-50">
+                                            <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-users"></i></span>
+                                            @Html.DropDownListFor(model => model.FAMILY_CODE, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                                            <strong>@Html.ValidationMessageFor(model => model.FAMILY_CODE, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-12">
+                                        <div class="col-md-2">
+                                            <label class="control-label col-form-label"><strong>ENGINE</strong></label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <div class="input-group W-100">
+                                                <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-tractor"></i></span>
+                                                @Html.TextBoxFor(Model => Model.Engine, null, new { placeholder = "SEARCH ENGINE", @class = "form-control input-sm autocomplete" })
+                                                <strong>@Html.ValidationMessageFor(model => model.Engine, "", new { @class = "text-danger" })</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <div class="col-md-4 w-adj1">
+                                            <label class="control-label col-form-label "><strong>FUEL PUMP</strong></label>
+                                        </div>
+                                        <div class="col-md-2 fp">
+                                            <label for="REQUIRE_FUALPUMP" class="text-right control-label col-form-label"></label>
+                                            <div class="form-check">
+                                                @Html.CheckBoxFor(model => model.REQ_FUEL_INJECTION_PUMP, new { @class = "largerCheckbox", })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 input-group C-2 ">
+                                            <span class="input-group-addon"><i class="fas fa-gas-pump"></i></span>
+                                            @Html.TextBoxFor(Model => Model.FUEL_INJECTION_PUMP, null, new { placeholder = "SEARCH FUEL PUMP", @class = "form-control input-sm autocomplete" })
+                                            <strong>@Html.ValidationMessageFor(model => model.FUEL_INJECTION_PUMP, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <div class="col-md-4  w-adj1">
+                                            <label class="control-label col-form-label"><strong>CYLINDER BLOCK</strong></label>
+                                        </div>
+                                        <div class="col-md-2 fp">
+                                            <label for="REQUIRE_CYLINDER_BLOCK" class="text-right control-label col-form-label"></label>
+                                            <div class="form-check">
+                                                @Html.CheckBoxFor(model => model.REQUIRE_CYLINDER_BLOCK, new { @class = "largerCheckbox", })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 input-group C-2 ">
+                                            <span class="input-group-addon"><i class="fas fa-hand-paper"></i></span>
+                                            @Html.TextBoxFor(Model => Model.CYLINDER_BLOCK, null, new { placeholder = "SEARCH CYLINDER BLOCK", @class = "form-control input-sm autocomplete" })
+                                            <strong>@Html.ValidationMessageFor(model => model.CYLINDER_BLOCK, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <div class="col-md-4 w-adj1">
+                                            <label class="control-label col-form-label"><strong>CYLINDER HEAD</strong></label>
+                                        </div>
+                                        <div class="col-md-2 fp">
+                                            <label for="REQUIRE_CYLINDER_BLOCK" class="control-label col-form-label"></label>
+                                            <div class="form-check">
+                                                @Html.CheckBoxFor(model => model.REQUIRE_CYLINDER_HEAD, new { @class = "largerCheckbox", })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 input-group C-2 ">
+                                            <span class="input-group-addon" style="max-width: 100%;"><i class="fab fa-product-hunt"></i></span>
+                                            @Html.TextBoxFor(Model => Model.CYLINDER_HEAD, null, new { placeholder = "SEARCH CYLINDER HEAD", @class = "form-control input-sm autocomplete" })
+                                            <strong>@Html.ValidationMessageFor(model => model.CYLINDER_HEAD, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <div class="col-md-4  w-adj1">
+                                            <label class="control-label col-form-label"><strong>CONNECTING ROD</strong></label>
+                                        </div>
+                                        <div class="col-md-2 fp">
+                                            <label for="REQUIRE_CYLINDER_BLOCK" class="control-label col-form-label"></label>
+                                            <div class="form-check">
+                                                @Html.CheckBoxFor(model => model.REQUIRE_CONNECTING_ROD, new { @class = "largerCheckbox", })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 input-group C-2 ">
+                                            <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-network-wired"></i></span>
+                                            @Html.TextBoxFor(Model => Model.CONNECTING_ROD, null, new { placeholder = "SEARCH CONNECTING ROD", @class = "form-control input-sm autocomplete" })
+                                            <strong>@Html.ValidationMessageFor(model => model.CONNECTING_ROD, "", new { @class = "text-danger" })</strong>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <div class="col-md-4 w-adj1">
+                                            <label class="control-label col-form-label "><strong>CRANK SHAFT</strong></label>
+                                        </div>
+                                        <div class="col-md-2 fp">
+                                            <label for="REQUIRE_CYLINDER_BLOCK" class="control-label col-form-label"></label>
+                                            <div class="form-check">
+                                                @Html.CheckBoxFor(model => model.REQUIRE_CRANK_SHAFT, new { @class = "largerCheckbox", })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 input-group C-2 ">
+                                            <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-heartbeat"></i></span>
+                                            @Html.TextBoxFor(Model => Model.CRANK_SHAFT, null, new { placeholder = "SEARCH CRANK SHAFT", @class = "form-control input-sm autocomplete" })
+                                            <strong>@Html.ValidationMessageFor(model => model.CRANK_SHAFT, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <div class="col-md-4 w-adj1">
+                                            <label class="control-label col-form-label"><strong>CAM SHAFT</strong></label>
+                                        </div>
+                                        <div class="col-md-2 fp">
+                                            <label for="REQUIRE_CYLINDER_BLOCK" class="control-label col-form-label"></label>
+                                            <div class="form-check">
+                                                @Html.CheckBoxFor(model => model.REQUIRE_CAM_SHAFT, new { @class = "largerCheckbox" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 input-group C-2 ">
+                                            <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-link"></i></span>
+                                            @Html.TextBoxFor(Model => Model.CAM_SHAFT, null, new { placeholder = "SEARCH CAM SHAFT", @class = "form-control input-sm autocomplete" })
+                                            <strong>@Html.ValidationMessageFor(model => model.CAM_SHAFT, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <div class="col-md-4 w-adj1">
+                                            <label class="control-label col-form-label"><strong>ECU</strong></label>
+                                        </div>
+                                        <div class="col-md-2 fp">
+                                            <label for="REQUIRE_CYLINDER_BLOCK" class="control-label col-form-label"></label>
+                                            <div class="form-check">
+                                                @Html.CheckBoxFor(model => model.REQUIRE_ECU, new { @class = "largerCheckbox" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 input-group C-2 ">
+                                            <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-link"></i></span>
+                                            @Html.TextBoxFor(Model => Model.ECU, null, new { placeholder = "SEARCH ECU", @class = "form-control input-sm autocomplete" })
+                                            <strong>@Html.ValidationMessageFor(model => model.ECU, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <div class="col-md-6  inj">
+                                            <strong>PREFIX 1</strong>
+                                        </div>
+                                        <div class="col-md-6">
+                                            @Html.TextBoxFor(Model => Model.PREFIX_1, null, new { placeholder = "ENTER PREFIX", @class = "form-control input-sm", @autocomplete = "off" })
+                                            <strong>@Html.ValidationMessageFor(model => model.PREFIX_1, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="row ">
+                                    <div class="col-md-3">
+                                        <div class="col-md-6 inj">
+                                            <strong>INJECTOR</strong>
+                                        </div>
+                                        <div class="col-md-6">
+                                            @Html.DropDownList("INJECTOR", new List<SelectListItem>
+                                                {
+                                                new SelectListItem{ Text="YES", Value = "Y" },
+                                                new SelectListItem{ Text="NO", Value = "N" },
+                                                })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="col-md-8 inj1">
+                                            <strong>NO OF INJECTOR</strong>
+                                        </div>
+                                        <div class="col-md-4">
+                                            @Html.DropDownList("NO_OF_INJECTORS", new List<SelectListItem>
+                                                {
+                                                new SelectListItem{ Text="1", Value = "1" },
+                                                new SelectListItem{ Text="2", Value = "2" },
+                                                new SelectListItem{ Text="3", Value = "3" },
+                                                new SelectListItem{ Text="4", Value = "4" },
+
+                                                })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="col-md-8 inj1">
+                                            <strong>NO OF PISTONS</strong>
+                                        </div>
+                                        <div class="col-md-4">
+                                            @Html.DropDownList("NO_OF_PISTONS", new List<SelectListItem>
+                                                {
+                                                new SelectListItem{ Text="1", Value = "1" },
+                                                new SelectListItem{ Text="2", Value = "2" },
+                                                new SelectListItem{ Text="3", Value = "3" },
+                                                new SelectListItem{ Text="4", Value = "4" },
+
+                                                })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                                        <button class="btn btn-success btn-sm" type="button" id="Update"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+                                        <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                                    </div>
+
+                                    <div class="row">
+                                        <input type="hidden" class="form-control" id="AUTOID" name="AUTOID" placeholder="AUTOID" />
+                                        <div class="col-md-8"></div>
+                                    </div>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
+    </div>
+</div>
+
+
+<div id="Grid"></div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<script src="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.js")"></script>
+@*<link href="@Url.Content("//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.css")" rel="stylesheet" />*@
+
+<script>
+    var NO_OF_PISTONS;
+    var INJECTOR;
+    var PREFIX_1;
+    var NO_OF_INJECTORS;
+    $(document).ready(function () {
+        $.noConflict();
+        DDLPlant();
+        AutoCompleteForEngine();
+        AutoCompleteForFuelPump();
+        AutoCompleteForCYLINDERBLOCK();
+        AutoCompleteForCYLINDERHEAD();
+        AutoCompleteForCONNECTINGROD();
+        AutoCompleteForCRANKSHAFT();
+        AutoCompleteForCAMSHAFT();
+        AutoCompleteForECU();
+        $('#Update').hide();
+        NO_OF_PISTONS = $('#NO_OF_PISTONS').val();
+        INJECTOR = $('#INJECTOR').val();
+        NO_OF_INJECTOR = $('#NO_OF_INJECTOR').val();
+
+    });
+    function AutoCompleteForEngine() {
+
+        $("#Engine").autocomplete({
+            source: function (request, response) {
+
+            var Data = {
+                PLANT_CODE: $('#PLANT_CODE').val(),
+                FAMILY_CODE: $('#FAMILY_CODE').val(),
+                Engine: $('#Engine').val()
+            };
+                $.ajax({
+                    url: "@Url.Action("BindEngine", "EngineMaster")",
+                    type: "POST",
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify({ data: Data }),
+                    success: function (data) {
+                        console.log(data.Text);
+                        response($.map(data, function (item) {
+
+                            return { label: item.Text, value: item.Text };
+                        }))
+
+                    },
+                    error: function (err) {
+                        alert(err);
+                    }
+                });
+            },
+
+            minLength: 4,
+            response: function (event, ui) {
+                if (!ui.content.length) {
+                    var noResult = { value: "", label: "No results found" };
+                    ui.content.push(noResult);
+
+                } else {
+                    //$("#message").empty();
+                }
+            }
+          });
+    }
+    function AutoCompleteForFuelPump() {
+
+        $("#FUEL_INJECTION_PUMP").autocomplete({
+            source: function (request, response) {
+
+            var Data = {
+                PLANT_CODE: $('#PLANT_CODE').val(),
+                FAMILY_CODE: $('#FAMILY_CODE').val(),
+                FUEL_INJECTION_PUMP: $('#FUEL_INJECTION_PUMP').val()
+            };
+                $.ajax({
+                    url: "@Url.Action("BindFualPump", "EngineMaster")",
+                    type: "POST",
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify({ data: Data }),
+                    success: function (data) {
+                        console.log(data.Text);
+                        response($.map(data, function (item) {
+
+                            return { label: item.Text, value: item.Text };
+                        }))
+
+                    },
+                    error: function (err) {
+                        alert(err);
+                    }
+                });
+            },
+
+            minLength: 4,
+            response: function (event, ui) {
+                if (!ui.content.length) {
+                    var noResult = { value: "", label: "No results found" };
+                    ui.content.push(noResult);
+
+                } else {
+                    //$("#message").empty();
+                }
+            }
+
+          });
+    }
+    function AutoCompleteForCYLINDERBLOCK() {
+
+        $("#CYLINDER_BLOCK").autocomplete({
+            source: function (request, response) {
+
+            var Data = {
+                PLANT_CODE: $('#PLANT_CODE').val(),
+                FAMILY_CODE: $('#FAMILY_CODE').val(),
+                CYLINDER_BLOCK: $('#CYLINDER_BLOCK').val()
+            };
+                $.ajax({
+                    url: "@Url.Action("BindCylinderBlock", "EngineMaster")",
+                    type: "POST",
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify({ data: Data }),
+                    success: function (data) {
+                        console.log(data.Text);
+                        response($.map(data, function (item) {
+
+                            return { label: item.Text, value: item.Text };
+                        }))
+
+                    },
+                    error: function (err) {
+                        alert(err);
+                    }
+                });
+            },
+
+            minLength: 4,
+            response: function (event, ui) {
+                if (!ui.content.length) {
+                    var noResult = { value: "", label: "No results found" };
+                    ui.content.push(noResult);
+
+                } else {
+                    //$("#message").empty();
+                }
+            }
+
+          });
+    }
+    function AutoCompleteForCYLINDERHEAD() {
+
+        $("#CYLINDER_HEAD").autocomplete({
+            source: function (request, response) {
+
+            var Data = {
+                PLANT_CODE: $('#PLANT_CODE').val(),
+                FAMILY_CODE: $('#FAMILY_CODE').val(),
+                CYLINDER_HEAD: $('#CYLINDER_HEAD').val()
+            };
+                $.ajax({
+                    url: "@Url.Action("BindCylinderHead", "EngineMaster")",
+                    type: "POST",
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify({ data: Data }),
+                    success: function (data) {
+                        console.log(data.Text);
+                        response($.map(data, function (item) {
+
+                            return { label: item.Text, value: item.Text };
+                        }))
+
+                    },
+                    error: function (err) {
+                        alert(err);
+                    }
+                });
+            },
+
+            minLength: 4,
+            response: function (event, ui) {
+                if (!ui.content.length) {
+                    var noResult = { value: "", label: "No results found" };
+                    ui.content.push(noResult);
+
+                } else {
+                    //$("#message").empty();
+                }
+            }
+
+          });
+    }
+    function AutoCompleteForCONNECTINGROD() {
+
+        $("#CONNECTING_ROD").autocomplete({
+            source: function (request, response) {
+
+            var Data = {
+                PLANT_CODE: $('#PLANT_CODE').val(),
+                FAMILY_CODE: $('#FAMILY_CODE').val(),
+                CONNECTING_ROD: $('#CONNECTING_ROD').val()
+            };
+                $.ajax({
+                    url: "@Url.Action("Bind_Connecting_Rod", "EngineMaster")",
+                    type: "POST",
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify({ data: Data }),
+                    success: function (data) {
+                        console.log(data.Text);
+                        response($.map(data, function (item) {
+
+                            return { label: item.Text, value: item.Text };
+                        }))
+
+                    },
+                    error: function (err) {
+                        alert(err);
+                    }
+                });
+            },
+
+            minLength: 4,
+            response: function (event, ui) {
+                if (!ui.content.length) {
+                    var noResult = { value: "", label: "No results found" };
+                    ui.content.push(noResult);
+
+                } else {
+                    //$("#message").empty();
+                }
+            }
+
+          });
+    }
+    function AutoCompleteForCRANKSHAFT() {
+
+        $("#CRANK_SHAFT").autocomplete({
+            source: function (request, response) {
+
+            var Data = {
+                PLANT_CODE: $('#PLANT_CODE').val(),
+                FAMILY_CODE: $('#FAMILY_CODE').val(),
+                CRANK_SHAFT: $('#CRANK_SHAFT').val()
+            };
+                $.ajax({
+                    url: "@Url.Action("BindCrackShaft", "EngineMaster")",
+                    type: "POST",
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify({ data: Data }),
+                    success: function (data) {
+                        console.log(data.Text);
+                        response($.map(data, function (item) {
+
+                            return { label: item.Text, value: item.Text };
+                        }))
+
+                    },
+                    error: function (err) {
+                        alert(err);
+                    }
+                });
+            },
+
+            minLength: 4,
+            response: function (event, ui) {
+                if (!ui.content.length) {
+                    var noResult = { value: "", label: "No results found" };
+                    ui.content.push(noResult);
+
+                } else {
+                    //$("#message").empty();
+                }
+            }
+
+          });
+    }
+    function AutoCompleteForCAMSHAFT() {
+
+        $("#CAM_SHAFT").autocomplete({
+            source: function (request, response) {
+
+            var Data = {
+                PLANT_CODE: $('#PLANT_CODE').val(),
+                FAMILY_CODE: $('#FAMILY_CODE').val(),
+                CAM_SHAFT: $('#CAM_SHAFT').val()
+            };
+                $.ajax({
+                    url: "@Url.Action("BindCamShaft", "EngineMaster")",
+                    type: "POST",
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify({ data: Data }),
+                    success: function (data) {
+                        console.log(data.Text);
+                        response($.map(data, function (item) {
+
+                            return { label: item.Text, value: item.Text };
+                        }))
+
+                    },
+                    error: function (err) {
+                        alert(err);
+                    }
+                });
+            },
+
+            minLength: 4,
+            response: function (event, ui) {
+                if (!ui.content.length) {
+                    var noResult = { value: "", label: "No results found" };
+                    ui.content.push(noResult);
+
+                } else {
+                    //$("#message").empty();
+                }
+            }
+
+          });
+    }
+    function AutoCompleteForECU() {
+
+        $("#ECU").autocomplete({
+            source: function (request, response) {
+
+            var Data = {
+                PLANT_CODE: $('#PLANT_CODE').val(),
+                FAMILY_CODE: $('#FAMILY_CODE').val(),
+                ECU: $('#ECU').val()
+            };
+                $.ajax({
+                    url: "@Url.Action("BindECU", "EngineMaster")",
+                    type: "POST",
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify({ data: Data }),
+                    success: function (data) {
+                        console.log(data.Text);
+                        response($.map(data, function (item) {
+
+                            return { label: item.Text, value: item.Text };
+                        }))
+
+                    },
+                    error: function (err) {
+                        alert(err);
+                    }
+                });
+            },
+
+            minLength: 3,
+            response: function (event, ui) {
+                if (!ui.content.length) {
+                    var noResult = { value: "", label: "No results found" };
+                    ui.content.push(noResult);
+
+                } else {
+                    //$("#message").empty();
+                }
+            }
+
+          });
+    }
+
+
+
+    $("#PLANT_CODE").on("change", function () {
+        DDLFamilyByPlant();
+    });
+    $("#FAMILY_CODE").on("change", function () {
+       BindGrid();
+    });
+
+     //Function to bind Plant
+    function DDLPlant() {
+        $("#divLoader").show();
+        $.ajax({
+            url: '@Url.Action("BindPlant", "EngineMaster")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#PLANT_CODE").append(optionhtml);
+                });
+
+
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        $("#divLoader").show();
+        var selectedValue = $("#PLANT_CODE").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "EngineMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#FAMILY_CODE").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#FAMILY_CODE").append(optionhtml);
+                });
+                BindGrid();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    function closeAlert(alert) {
+
+        $(alert).hide();
+    };
+
+    function BindGrid() {
+        $("#divLoader").show();
+        var Data = {
+                    PLANT_CODE: $('#PLANT_CODE').val(),
+                    FAMILY_CODE: $('#FAMILY_CODE').val()
+                    };
+        $.ajax({
+            url: '@Url.Action("Grid", "EngineMaster")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Grid").html(null);
+                $("#Grid").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    function Delete() {
+        var data = {
+            AUTOID: AUTOID
+            };
+        $.ajax({
+            url: '@Url.Action("Delete", "EngineMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    //$('#PLANT_CODE').prop('disabled', false);
+                    //$('#FAMILY_CODE').prop('disabled', false);
+                    //$('#Engine').val("");
+                    //$('#PackingStandard').val("");
+                    //$('#Add').show();
+                    //$('#Update').hide();
+                    BindGrid();
+
+                }
+
+            },
+            error: function (errormessage)
+            {
+            }
+        });
+
+    }
+    //add data
+    var REQ_FUEL_INJECTION_PUMP1, REQUIRE_CYLINDER_BLOCK1, REQUIRE_CYLINDER_HEAD1, REQUIRE_CONNECTING_ROD1, REQUIRE_CRANK_SHAFT1,
+        REQUIRE_CAM_SHAFT1, REQUIRE_ECU1;
+    $("#Add").on("click", function () {
+
+        //alert($("#NO_OF_INJECTOR").val());
+        $("#divLoader").show();
+
+        if ($("#REQ_FUEL_INJECTION_PUMP").prop('checked') == true) {
+            REQ_FUEL_INJECTION_PUMP1 = true;
+        }
+        else {
+            REQ_FUEL_INJECTION_PUMP1 = false;
+        }
+        if ($("#REQUIRE_CYLINDER_BLOCK").prop('checked') == true) {
+            REQUIRE_CYLINDER_BLOCK1 = true;
+        }
+        else {
+            REQUIRE_CYLINDER_BLOCK1 = false;
+        }
+        if ($("#REQUIRE_CYLINDER_HEAD").prop('checked') == true) {
+            REQUIRE_CYLINDER_HEAD1 = true;
+        }
+        else {
+            REQUIRE_CYLINDER_HEAD1 = false;
+        }
+        if ($("#REQUIRE_CONNECTING_ROD").prop('checked') == true) {
+            REQUIRE_CONNECTING_ROD1 = true;
+        }
+        else {
+            REQUIRE_CONNECTING_ROD1 = false;
+        }
+        if ($("#REQUIRE_CRANK_SHAFT").prop('checked') == true) {
+            REQUIRE_CRANK_SHAFT1 = true;
+        }
+        else {
+            REQUIRE_CRANK_SHAFT1 = false;
+        }
+        if ($("#REQUIRE_CAM_SHAFT").prop('checked') == true) {
+            REQUIRE_CAM_SHAFT1 = true;
+        }
+        else {
+            REQUIRE_CAM_SHAFT1 = false;
+        }
+        if ($("#REQUIRE_ECU").prop('checked') == true) {
+            REQUIRE_ECU1 = true;
+        }
+        else {
+            REQUIRE_ECU1 = false;
+        }
+
+        var data = {
+            PLANT_CODE: $('#PLANT_CODE').val(),
+            FAMILY_CODE: $('#FAMILY_CODE').val(),
+
+            Engine: $('#Engine').val(),
+
+            FUEL_INJECTION_PUMP: $("#FUEL_INJECTION_PUMP").val(),
+
+            CYLINDER_BLOCK: $("#CYLINDER_BLOCK").val(),
+
+            CYLINDER_HEAD: $("#CYLINDER_HEAD").val(),
+
+            CONNECTING_ROD: $("#CONNECTING_ROD").val(),
+
+            CRANK_SHAFT: $("#CRANK_SHAFT").val(),
+
+            CAM_SHAFT: $("#CAM_SHAFT").val(),
+
+            ECU: $("#ECU").val(),
+
+            NO_OF_PISTONS: $("#NO_OF_PISTONS").val(),
+            NO_OF_INJECTORS: $("#NO_OF_INJECTORS").val(),
+            INJECTOR: $("#INJECTOR").val(),
+            PREFIX_1: $("#PREFIX_1").val(),
+            
+            REQ_FUEL_INJECTION_PUMP: REQ_FUEL_INJECTION_PUMP1,
+            REQUIRE_CYLINDER_BLOCK: REQUIRE_CYLINDER_BLOCK1,
+            REQUIRE_CYLINDER_HEAD: REQUIRE_CYLINDER_HEAD1,
+            REQUIRE_CONNECTING_ROD: REQUIRE_CONNECTING_ROD1,
+            REQUIRE_CRANK_SHAFT: REQUIRE_CRANK_SHAFT1,
+            REQUIRE_CAM_SHAFT: REQUIRE_CAM_SHAFT1,
+            REQUIRE_ECU: REQUIRE_ECU1
+         };
+        $.ajax({
+            url: '@Url.Action("SaveEngineMaster", "EngineMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                
+                $("#divLoader").hide();
+
+                //alert(data.validation);
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    BindGrid();
+
+                }
+
+            },
+            error: function (errormessage) {
+
+            }
+            
+        });
+    });
+
+    //Update Data
+      $("#Update").on("click", function () {
+          $("#divLoader").show();
+
+          if ($("#REQ_FUEL_INJECTION_PUMP").prop('checked') == true) {
+              REQ_FUEL_INJECTION_PUMP1 = true;
+          }
+          else {
+              REQ_FUEL_INJECTION_PUMP1 = false;
+          }
+          if ($("#REQUIRE_CYLINDER_BLOCK").prop('checked') == true) {
+              REQUIRE_CYLINDER_BLOCK1 = true;
+          }
+          else {
+              REQUIRE_CYLINDER_BLOCK1 = false;
+          }
+          if ($("#REQUIRE_CYLINDER_HEAD").prop('checked') == true) {
+              REQUIRE_CYLINDER_HEAD1 = true;
+          }
+          else {
+              REQUIRE_CYLINDER_HEAD1 = false;
+          }
+          if ($("#REQUIRE_CONNECTING_ROD").prop('checked') == true) {
+              REQUIRE_CONNECTING_ROD1 = true;
+          }
+          else {
+              REQUIRE_CONNECTING_ROD1 = false;
+          }
+          if ($("#REQUIRE_CRANK_SHAFT").prop('checked') == true) {
+              REQUIRE_CRANK_SHAFT1 = true;
+          }
+          else {
+              REQUIRE_CRANK_SHAFT1 = false;
+          }
+          if ($("#REQUIRE_CAM_SHAFT").prop('checked') == true) {
+              REQUIRE_CAM_SHAFT1 = true;
+          }
+          else {
+              REQUIRE_CAM_SHAFT1 = false;
+          }
+          if ($("#REQUIRE_ECU").prop('checked') == true) {
+              REQUIRE_ECU1 = true;
+          }
+          else {
+              REQUIRE_ECU1 = false;
+          }
+          var data = {
+              AUTOID: AUTOID,
+              PLANT_CODE: $('#PLANT_CODE').val(),
+              FAMILY_CODE: $('#FAMILY_CODE').val(),
+
+              Engine: $('#Engine').val(),
+
+              FUEL_INJECTION_PUMP: $("#FUEL_INJECTION_PUMP").val(),
+
+              CYLINDER_BLOCK: $("#CYLINDER_BLOCK").val(),
+
+              CYLINDER_HEAD: $("#CYLINDER_HEAD").val(),
+
+              CONNECTING_ROD: $("#CONNECTING_ROD").val(),
+
+              CRANK_SHAFT: $("#CRANK_SHAFT").val(),
+
+              CAM_SHAFT: $("#CAM_SHAFT").val(),
+
+              ECU: $("#ECU").val(),
+
+              NO_OF_PISTONS: $("#NO_OF_PISTONS").val(),
+              NO_OF_INJECTORS: $("#NO_OF_INJECTORS").val(),
+              INJECTOR: $("#INJECTOR").val(),
+              PREFIX_1: $("#PREFIX_1").val(),
+              REQ_FUEL_INJECTION_PUMP: REQ_FUEL_INJECTION_PUMP1,
+              REQUIRE_CYLINDER_BLOCK: REQUIRE_CYLINDER_BLOCK1,
+              REQUIRE_CYLINDER_HEAD: REQUIRE_CYLINDER_HEAD1,
+              REQUIRE_CONNECTING_ROD: REQUIRE_CONNECTING_ROD1,
+              REQUIRE_CRANK_SHAFT: REQUIRE_CRANK_SHAFT1,
+              REQUIRE_CAM_SHAFT: REQUIRE_CAM_SHAFT1,
+              REQUIRE_ECU: REQUIRE_ECU1
+          };
+
+        $.ajax({
+            url: '@Url.Action("Update", "EngineMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                //location.reload(true);
+                $("#divLoader").hide();
+                BindGrid();
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    $('#PLANT_CODE').val("");
+                    $('#FAMILY_CODE').val("");
+                    $('#Engine').val("");
+                    $('#FUEL_INJECTION_PUMP').val("");
+                    $('#CYLINDER_BLOCK').val("");
+                    $('#CYLINDER_HEAD').val("");
+                    $('#CONNECTING_ROD').val("");
+                    $('#CRANK_SHAFT').val("");
+                    $('#CAM_SHAFT').val("");
+                    $('#ECU').val("");
+                    $('#PREFIX_1').val("");
+
+
+                    $('#Engine').prop('disabled', false);
+                    $('#FUEL_INJECTION_PUMP').prop('disabled', false);
+                    $('#CYLINDER_BLOCK').prop('disabled', false);
+                    $('#CYLINDER_HEAD').prop('disabled', false);
+                    $('#CONNECTING_ROD').prop('disabled', false);
+                    $('#CRANK_SHAFT').prop('disabled', false);
+                    $('#CAM_SHAFT').prop('disabled', false);
+                    $('#ECU').prop('disabled', false);
+
+                    $('#NO_OF_PISTONS').prop('disabled', false);
+                    $('#INJECTOR').prop('disabled', false);
+                    $('#PREFIX_1').prop('disabled', false);
+                    $('#NO_OF_INJECTORS').prop('disabled', false);
+
+                    //$('#REQUIRE_FUALPUMP').val("");
+                    if ($("#REQ_FUEL_INJECTION_PUMP").prop('checked') == true) {
+                        $("#REQ_FUEL_INJECTION_PUMP").prop('checked', false);
+                    }
+
+                    //$('#REQUIRE_CYLINDER_BLOCK').val("");
+                    if ($("#REQUIRE_CYLINDER_BLOCK").prop('checked') == true) {
+                        $("#REQUIRE_CYLINDER_BLOCK").prop('checked', false);
+                    }
+                    //$('#REQUIRE_CYLINDER_HEAD').val("");
+                    if ($("#REQUIRE_CYLINDER_HEAD").prop('checked') == true) {
+                        $("#REQUIRE_CYLINDER_HEAD").prop('checked', false);
+                    }
+                    //$('#REQUIRE_CONNECTING_ROD').val("");
+                    if ($("#REQUIRE_CONNECTING_ROD").prop('checked') == true) {
+                        $("#REQUIRE_CONNECTING_ROD").prop('checked', false);
+                    }
+                    //$('#REQUIRE_CRANK_SHAFT').val("");
+                    if ($("#REQUIRE_CRANK_SHAFT").prop('checked') == true) {
+                        $("#REQUIRE_CRANK_SHAFT").prop('checked', false);
+                    }
+                    //$('#REQUIRE_CAM_SHAFT').val("");
+                    if ($("#REQUIRE_CAM_SHAFT").prop('checked') == true) {
+                        $("#REQUIRE_CAM_SHAFT").prop('checked', false);
+                    }
+                    if ($("#REQUIRE_ECU").prop('checked') == true) {
+                        $("#REQUIRE_ECU").prop('checked', false);
+                    }
+
+
+                    $('#Add').show();
+                    $('#Update').hide();
+                    $('#PLANT_CODE').prop('disabled', false);
+                    $('#FAMILY_CODE').prop('disabled', false);
+                   
+                    
+                }
+            },
+            error: function (errormessage)
+            {
+            }
+        });
+    });
+
+    $("#PLANT_CODE,#FAMILY_CODE").select2({
+        allowClear: true,
+        width: '350px',
+    });
+
+    //$("#Engine").select2({
+    //    //allowClear: true,
+    //    width: '100%',
+    //});
+    $("#Clear").on("click", function () {
+        location.reload(true);
+    });
+
+
+
+</script>

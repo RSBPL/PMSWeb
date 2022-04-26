@@ -1,0 +1,274 @@
+﻿<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+
+<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="table-responsive">
+        @{
+            List<object> commands = new List<object>();
+            commands.Add(new { type = "EDIT", buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
+            commands.Add(new { type = "DELETE", buttonOption = new { iconCss = "e-icons e-delete", cssClass = "delete" } });
+            //commands.Add(new { buttonOption = new { iconCss = "e-icons e-xlx", cssClass = "Excel" } });
+        }
+
+        @(Html.EJS().Grid("Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                AllowPaging(true).
+                PageSettings(Page => Page.PageSize(7)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+                AllowResizing().
+                AllowExcelExport().
+                ToolbarClick("toolbarClick").
+                Columns(col =>
+                {
+                    col.HeaderText("ACTION").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Commands(commands).Add();
+                    col.Field("USRNAME").HeaderText("USER NAME").IsPrimaryKey(true).Width("130").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("PSWORD").HeaderText("PASSWORD").Width("150").Visible(false).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("LEVEL_NAME").HeaderText("PREVILLAGE CODE").Width("160").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("U_CODE").HeaderText("UNIT CODE").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("FAMILYCODE").HeaderText("FAMILY CODE").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("U_NAME").HeaderText("UNIT NAME").Width("160").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("STAGEID").HeaderText("STAGE ID").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("STAGE_DESCRIPTION").HeaderText("STAGE DESCRIPTOION").Width("230").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("ISACTIVE").HeaderText("ISACTIVE").Width("130").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("PUNAME").HeaderText("PUNAME").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("STOREBYPASS").HeaderText("STORE BY PASS").Width("160").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("PDIUSER").HeaderText("PDI USER").Width("160").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("MRNSAVE").HeaderText("MRNSAVE").Width("160").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                })
+                  .SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick").
+                 Toolbar(new List<string>() { "ExcelExport" }).Render())
+      
+        <script>
+            var USRNAME;
+            $("#PUNAME,#STAGEID,#Level_Name").select2({
+                //allowClear: true,
+               //width: '300px',
+            });
+            //$("#FAMILY_CODE").select2({
+            //    allowClear: true,
+            //    width: '280px',
+            //});
+
+            function commandClick(args) {
+                if (args.rowData != null) {
+                    if (args.target.classList.contains('edit')) {
+                        USRNAME = args.rowData["USRNAME"];
+                        $("#USRNAME").val(args.rowData["USRNAME"]);
+                        $("#USRNAME").val(args.rowData["USRNAME"]).trigger("change");
+
+                        $("#PSWORD").val(args.rowData["PSWORD"]);
+                        $("#PSWORD").val(args.rowData["PSWORD"]).trigger("change");
+
+                        //var splitlevel = args.rowData["LEVEL_NAME"];
+
+                        //var res = splitlevel.split('#');
+                        //console.log(res[0]);
+                        //alert(args.rowData["LEVEL_NAME"]);
+                        $("#Level_Name").val(args.rowData["LEVEL_NAME"]);
+                        $("#Level_Name").val(args.rowData["LEVEL_NAME"]).trigger("change");
+
+
+
+                        //var splitlevel = args.rowData["UNIT_NAME"];
+                        //var res1 = splitlevel.split('#');
+                        //console.log(res[0]);
+                        //alert(args.rowData["U_CODE"]);
+
+                        $("#U_CODE").val(args.rowData["U_CODE"]);
+                        $("#U_CODE").val(args.rowData["U_CODE"]).trigger("change");
+
+                        $("#U_NAME").val(args.rowData["U_NAME"]);
+                        $("#U_NAME").val(args.rowData["U_NAME"]).trigger("change");
+
+
+                        $("#FAMILY_CODE").val(args.rowData["FAMILYCODE"]);
+                        $("#FAMILY_CODE").val(args.rowData["FAMILYCODE"]).trigger("change");
+
+
+                        if (args.rowData["STAGEID"] != undefined) {
+                            $("#STAGEID").val(args.rowData["STAGEID"]);
+                            $("#STAGEID").val(args.rowData["STAGEID"]).trigger("change");
+                        }
+
+                        if(args.rowData["PUNAME"] == null)
+                        {
+                            args.rowData["PUNAME"] = "---SELECT---"
+                        }
+
+                        $("#PUNAME").val(args.rowData["PUNAME"]);
+                        $("#PUNAME").val(args.rowData["PUNAME"]).trigger("change");
+
+
+
+                        var res = args.rowData["ISACTIVE"];
+                        if (res == "1") {
+                            $("#ISACTIVE").prop('checked', true)
+                        }
+                        else {
+                            $("#ISACTIVE").prop('checked', false)
+                        }
+
+                        var res = args.rowData["STOREBYPASS"];
+                        if (res == "Y") {
+                            $("#STOREBYPASS").prop('checked', true)
+                        }
+                        else {
+                            $("#STOREBYPASS").prop('checked', false)
+                        }
+                        var res = args.rowData["PDIUSER"];
+                        if (res == "Y") {
+                            $("#PDIUSER").prop('checked', true)
+                        }
+                        else {
+                            $("#PDIUSER").prop('checked', false)
+                        }
+
+                        var res = args.rowData["MRNSAVE"];
+                        if (res == "Y") {
+                            $("#MRNSAVE").prop('checked', true)
+                        }
+                        else {
+                            $("#MRNSAVE").prop('checked', false)
+                        }
+
+                        var res = args.rowData["ShowSave"];
+                        if (res == "1") {
+                            $("#ShowSave").prop('checked', true)
+                        }
+                        else {
+                            $("#ShowSave").prop('checked', false)
+                        }
+
+                        var res = args.rowData["ShowDelete"];
+                        if (res == "1") {
+                            $("#ShowDelete").prop('checked', true)
+                        }
+                        else {
+                            $("#ShowDelete").prop('checked', false)
+                        }
+
+                        var res = args.rowData["ShowPrint"];
+                        if (res == "1") {
+                            $("#ShowPrint").prop('checked', true)
+                        }
+                        else {
+                            $("#ShowPrint").prop('checked', false)
+                        }
+
+                        var res = args.rowData["MannualMapping"];
+                        if (res == "1") {
+                            $("#MannualMapping").prop('checked', true)
+                        }
+                        else {
+                            $("#MannualMapping").prop('checked', false)
+                        }
+
+                        var res = args.rowData["SaveButton"];
+                        if (res == "1") {
+                            $("#SaveButton").prop('checked', true)
+                        }
+                        else {
+                            $("#SaveButton").prop('checked', false)
+                        }
+
+                        var res = args.rowData["AllowROPS"];
+                        if (res == "1") {
+                            $("#AllowROPS").prop('checked', true)
+                        }
+                        else {
+                            $("#AllowROPS").prop('checked', false)
+                        }
+
+                        //$('#USRNAME').prop('disabled', true);
+                        //$('#USRNAME').prop('disabled', true);
+                        $("#USRNAME").prop("disabled", true);
+                        //$("#USRNAME").prop('disabled', true);
+                        //$('#PLANT_CODE').prop('disabled', true);
+                        //$('#PSWORD').prop('disabled', true);
+
+                        $('#Add').hide();
+                        $('#Update').show();
+                    }
+                    //Edit();
+                }
+                if (args.target.classList.contains('delete')) {
+                    $('#DeleteConfirm').modal('show');
+                    USRNAME = args.rowData["USRNAME"];
+                }
+                    $("#btnDelete").on("click", function () {
+                    DeleteEngine();
+                });
+
+                //Function to delete User
+                function DeleteEngine() {
+                var Data = {
+                    USRNAME: USRNAME
+                };
+                $('#DeleteConfirm').modal('hide');
+                $("#divLoader").show();
+                $.ajax({
+                    url: '@Url.Action("Delete", "UserMaster")',
+                    data: JSON.stringify(Data),
+                    type: "POST",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        $("#divLoader").hide();
+                        BindGrid();
+                        if (data.Msg != "" || data.Msg != null ) {
+                            $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            setTimeout(function() {$(".alert").alert('close');}, 5000);
+                        }
+                    }
+                });
+            }
+            };
+
+
+
+
+        </script>
+    </div>
+
+    <script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+    @Html.EJS().ScriptManager()
+
+    @*Model for Delete ENGINE*@
+    <div class="modal" id="DeleteConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-danger">
+                    <strong class="modal-title" id="exampleModalLabel" style="font-size:25px;"><i class="fa fa-exclamation-circle" style="font-size:35px;" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<strong>Confirmation..!</strong></strong>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4><strong>Are you sure, to delete this Engine ..?</strong></h4>
+                </div>
+                <div class="modal-footer">
+                    @*<a href="@Url.Action("", "")" class="btn btn-success btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Go Back</a>*@
+                    <button type="button" data-dismiss="modal" class="btn btn-warning btn-sm"><i class="ace-icon fa fa-arrow-left"></i> Go Back</button>
+                    <button type="button" id="btnDelete" class="btn btn-danger btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

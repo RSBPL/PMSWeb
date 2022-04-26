@@ -1,0 +1,7 @@
+﻿@model MVCApp.Models.UserMaster
+@if (ViewBag.FAMILY_CODE != null)
+{
+    <div>
+        @Html.DropDownListFor(model => model.FAMILY_CODE, (IEnumerable<SelectListItem>)ViewBag.FAMILY_CODE, new { @class = "form-control  input-sm" })
+    </div>
+}

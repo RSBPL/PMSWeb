@@ -1,0 +1,125 @@
+﻿@model MVCApp.Models.GoodsRecivingatStoreModel
+<style>
+
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .the-legend {
+        box-shadow: 0px 1px 5px #7f8b8f;
+    }
+    ol, ul {
+        margin: 5px 0px 1px 1px;
+    }
+    .tab-content {
+        padding: 6px 0px 0px 0px;
+    }
+
+
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Goods Receving at Store</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>  
+    <div class="container" style="width:100%!important">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form3" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal form-group">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>SCAN QR CODE</strong></label>
+                            @Html.TextBoxFor(model => model.MRN_QR, new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.MRN_QR, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        
+                        <div class="col-md-1" style="width: 6%;padding-top: 23px;">
+                            <button class="btn btn-success btn-sm" type="button" id="Submit"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Submit</strong></button>             
+                        </div>
+                    </div>
+                   
+                </fieldset>
+            </div>
+        }
+    </div>
+    <div class="page-content">
+        <div id="Grid"></div>        
+    </div>   
+</div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+@*<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>*@
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+
+@*Script for First Tab*@
+<script>
+    $(document).ready(function () {
+       
+    });
+
+    $("#Submit").click(function () {
+        var grid = document.getElementById('Grid').ej2_instances[0];
+        var selectedRecords = grid.getSelectedRecords();
+        var rows = JSON.stringify(selectedRecords); 
+        alert(rows);
+    });
+
+    $("#MRN_QR").change(function () {
+        BindGrid();
+    });
+   
+    function BindGrid() {
+        $("#divLoader").show();
+        var Data = {
+            MRN_QR: $('#MRN_QR').val()              
+            };
+        $.ajax({
+            url: '@Url.Action("Grid", "StoreReceving")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $('#MRN_QR').val("");
+               
+                if (result.includes("Error")) {
+                    $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + result + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+                else {
+                    $("#Grid").html(result);
+                }               
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    }; 
+</script>
+

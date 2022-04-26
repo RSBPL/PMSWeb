@@ -1,0 +1,38 @@
+<xpml><page quantity='0' pitch='200.1 mm'></xpml>'Seagull:2.1:DP
+INPUT OFF
+VERBOFF
+INPUT ON
+SYSVAR(48) = 0
+ERROR 15,"FONT NOT FOUND"
+ERROR 18,"DISK FULL"
+ERROR 26,"PARAMETER TOO LARGE"
+ERROR 27,"PARAMETER TOO SMALL"
+ERROR 37,"CUTTER DEVICE NOT FOUND"
+ERROR 1003,"FIELD OUT OF LABEL"
+SYSVAR(35)=0
+OPEN "tmp:setup.sys" FOR OUTPUT AS #1
+PRINT#1,"Printing,Media,Print Area,Media Margin (X),0"
+PRINT#1,"Printing,Media,Print Area,Media Width,385"
+PRINT#1,"Printing,Media,Print Area,Media Length,1600"
+PRINT#1,"Printing,Media,Clip Default,On"
+CLOSE #1
+SETUP "tmp:setup.sys"
+KILL "tmp:setup.sys"
+CLIP ON
+CLIP BARCODE ON
+LBLCOND 3,2
+<xpml></page></xpml><xpml><page quantity='1' pitch='200.1 mm'></xpml>CLL
+OPTIMIZE "BATCH" ON
+PP6,23:PX1553,371,3
+PP78,73:AN7
+DIR4
+NASC 8
+FT "CG Times Bold",61,0,98
+PT "BULK_LOC"
+PP66,1439:DIR1
+BARSET "QRCODE",1,1,12,2,1
+PB "QR_CODE"
+LAYOUT RUN ""
+PF
+PRINT KEY OFF
+<xpml></page></xpml><xpml><end/></xpml>

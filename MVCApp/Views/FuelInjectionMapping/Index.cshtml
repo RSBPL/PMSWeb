@@ -1,0 +1,439 @@
+﻿@model MVCApp.Models.FIPModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+<style>
+
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .hr1 {
+        margin-top: 2px;
+        margin-bottom: 6px;
+        border-top: 1px solid #e9e0e0;
+        width: 370px;
+    }
+    .inj {
+        width: 100px;
+    }
+    .m-50 {
+        width: 73%;
+        MARGIN: 0 0 0 130px
+    }
+    .W-100 {
+        width: 968px;
+        left: -119px;
+    }
+    .f-left {
+        float: LEFT;
+    }
+    .frm {
+        padding: 20px;
+    }
+    .C-1 {
+        WIDTH: 136px;
+    }
+    .w-adj {
+        WIDTH:100px;
+    }
+
+    .w-adj1 {
+        WIDTH: 155px;
+        margin: -3px 10px -12px 0;
+    }
+    .well {
+        background-color: #6fb3e038;
+    }
+
+    .ui-autocomplete {
+        max-height: 400px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+
+    .ui-autocomplete {
+        height: 400px;
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Fuel Injection Mapping</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    <div id="SearchItem" style="background-color: #6fb3e0; margin: 0px 5px 0px 5px; padding: 5px;">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <strong style="font-size: 19px;color:white;">FUEL INJECTION MAPPING</strong>
+                <hr class="hr1">
+            </div>
+        </div>
+    </div>
+</div>
+
+@*--------Form------------*@
+<div class="container" style=" width: 100% !important;margin-left: 5px;">
+    <div class="form-horizontal form-group">
+        <fieldset class="the-fieldset">
+            <form class="form-horizontal frm well">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="fname" class="col-md-1 text-left control-label col-form-label C-1"><strong>PLANT</strong></label>
+                        <div class="input-group m-50">
+                            <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-industry"></i></span>
+                            @Html.DropDownListFor(model => model.PLANT_CODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.PLANT_CODE, "", new { @class = "text-danger" })</strong>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="fname" class="col-md-1 text-left control-label col-form-label C-1 "><strong>FAMILY</strong></label>
+                        <div class="input-group m-50">
+                            <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-users"></i></span>
+                            @Html.DropDownListFor(model => model.FAMILY_CODE, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.FAMILY_CODE, "", new { @class = "text-danger" })</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="fname" class="col-md-1 text-left control-label col-form-label C-1"><strong>FIP ITEM CODE</strong></label>
+                        <div class="input-group m-50">
+                            <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-project-diagram"></i></span>
+                            @*@Html.DropDownListFor(model => model.ITEM_CODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.ITEM_CODE, "", new { @class = "text-danger" })</strong>*@
+                            @Html.TextBoxFor(Model => Model.ITEM_CODE, null, new { @class = "form-control input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.ITEM_CODE, "", new { @class = "text-danger" })</strong>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="fname" class="col-md-1 text-left control-label col-form-label C-1"><strong>Model Code No</strong></label>
+                        <div class="input-group m-50">
+                            <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-tractor"></i></span>
+                            @Html.TextBoxFor(Model => Model.MODEL_CODE_NO, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.MODEL_CODE_NO, "", new { @class = "text-danger" })</strong>
+
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                            <button class="btn btn-success btn-sm" type="button" id="Update"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </fieldset>
+    </div>
+</div>
+@*Model for Delete FIP*@
+<div class="modal" id="DeleteConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <strong class="modal-title" id="exampleModalLabel" style="font-size:25px;"><i class="fa fa-exclamation-circle" style="font-size:35px;" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<strong>Confirmation..!</strong></strong>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4><strong>Are you sure, to delete this Fuel Injetion Pump Record ..?</strong></h4>
+            </div>
+            <div class="modal-footer">
+                @*<a href="@Url.Action("", "")" class="btn btn-success btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Go Back</a>*@
+                <button type="button" data-dismiss="modal" class="btn btn-warning btn-sm"><i class="ace-icon fa fa-arrow-left"></i> Go Back</button>
+                <button type="button" id="btnDelete" class="btn btn-danger btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="Grid"></div>
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<script src="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.js")"></script>
+<link href="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.css")" rel="stylesheet" />
+
+<script>
+
+
+    $(document).ready(function () {
+        $("#Update").hide();
+        DDLPlant();
+
+        AutoComplete();
+
+    });
+    function AutoComplete() {
+        $.noConflict();
+
+        $("#ITEM_CODE").autocomplete({
+            source: function (request, response) {
+
+            var Data = {
+                PLANT_CODE: $('#PLANT_CODE').val(),
+                FAMILY_CODE: $('#FAMILY_CODE').val(),
+                ITEM_CODE: $('#ITEM_CODE').val()
+            };
+                $.ajax({
+                    url: "@Url.Action("BindItemCode", "FuelInjectionMapping")",
+                    type: "POST",
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify({ data: Data }),
+                    success: function (data) {
+                        console.log(data.Text);
+                        response($.map(data, function (item) {
+
+                            return { label: item.Text, value: item.Text };
+                        }))
+
+                    },
+                    error: function (err) {
+                        alert(err);
+                    }
+                });
+            },
+
+            minLength: 4
+
+          });
+    }
+
+    $("#PLANT_CODE").on("change", function () {
+        DDLFamilyByPlant();
+
+    });
+    $("#FAMILY_CODE").on("change", function () {
+        BindGrid();
+    });
+
+    $("#Clear").on("click", function () {
+        location.reload(true);
+    });
+
+
+    //Insert function
+    $("#Add").on("click", function () {
+
+            $("#divLoader").show();
+            var Data = {
+                PLANT_CODE: $('#PLANT_CODE').val(),
+                FAMILY_CODE: $('#FAMILY_CODE').val(),
+                ITEM_CODE: $('#ITEM_CODE').val(),
+                DESCRIPTION: $('#ITEM_CODE').val(),
+                MODEL_CODE_NO: $('#MODEL_CODE_NO').val()
+
+            };
+            $.ajax({
+                url: '@Url.Action("Add", "FuelInjectionMapping")',
+                data: JSON.stringify({ data: Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+
+                    $("#divLoader").hide();
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#ITEM_CODE').val("");
+                        //$('#PackingStandard').val("");
+                        BindGrid();
+                    }
+                },
+                error: function (errormessage) {
+                    $("#divLoader").hide();
+                    $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+
+                }
+            });
+    });
+
+    function closeAlert(alert) {
+
+      $(alert).hide();
+    };
+    //Function to bind Plant
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "FuelInjectionMapping")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#PLANT_CODE").append(optionhtml);
+                });
+
+
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        var selectedValue = $("#PLANT_CODE").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "FuelInjectionMapping")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#FAMILY_CODE").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#FAMILY_CODE").append(optionhtml);
+                });
+                BindGrid();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+
+    //Function to bind Grid
+    function BindGrid() {
+        $("#divLoader").show();
+        var Data = {
+            PLANT_CODE: $('#PLANT_CODE').val(),
+            FAMILY_CODE: $('#FAMILY_CODE').val(),
+            //ITEM_CODE: $('#ITEM_CODE').val()
+                };
+        $.ajax({
+            url: '@Url.Action("Grid", "FuelInjectionMapping")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+
+                $("#Grid").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    
+    function Delete() {
+        var data = {
+
+            AUTOID: AUTOID
+            };
+        $.ajax({
+            url: '@Url.Action("Delete", "FuelInjectionMapping")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                }
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+
+                    $('#PLANT_CODE').prop('disabled', false);
+                    $('#FAMILY_CODE').prop('disabled', false);  
+                    $('#ITEM_CODE').val("");
+                    $('#Add').show();
+                    $('#Update').hide();
+                    BindGrid();
+
+                }
+
+            },
+            error: function (errormessage)
+            {
+            }
+        });
+
+    }
+    
+
+    
+
+    $("#PLANT_CODE").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#FAMILY_CODE").select2({
+        allowClear: true,
+        width: '100%',
+    });
+
+
+</script>

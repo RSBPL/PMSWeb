@@ -1,0 +1,70 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+
+        #dropdown {
+            position: relative;
+            height: 22px;
+            width: 10em;
+            text-align: left;
+            background-color: white;
+        }
+
+        .highcontrast .e-grid #dropdown {
+            background-color: black;
+        }
+    </style>
+
+    <div class="table-responsive">
+        @(Html.EJS().Grid("GridNewMRN").DataSource((System.Data.DataTable)ViewBag.DataSourceH).
+                        AllowPaging(true).
+                        PageSettings(Page => Page.PageSize(15)).
+                        AllowFiltering().
+                        //AllowGrouping().
+                        AllowSorting().
+                        AllowExcelExport().
+                        ToolbarClick("toolbarClick").
+                        AllowSelection().
+                        AllowTextWrap().
+                        AllowResizing().
+                        EnableAutoFill(true).
+                        AllowReordering().
+                Columns(col =>
+                {
+                    col.Field("MRN_NO").HeaderText("MRN NO").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(140).Add();
+                    col.Field("ITEMCODE").HeaderText("ITEM CODE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(140).Add();
+                    col.Field("ITEM_DESCRIPTION").HeaderText("DESCRIPTION").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(350).Add();
+                    col.Field("VENDOR_CODE").HeaderText("V.CODE").IsPrimaryKey(true).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(100).Add();                    
+                    col.Field("CREATEDDATE").HeaderText("CREATED DATE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(220).Add();                   
+                    col.Field("QUANTITY").HeaderText("QTY").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(80).Add();
+                    col.Field("PUNAME").HeaderText("PUNAME").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(110).Add();
+                    col.Field("STATUS").HeaderText("STATUS").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(110).Add();
+                    col.Field("VEHICLE_NO").HeaderText("VEHICLE NO").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(150).Add();
+                    col.Field("STORAGE").HeaderText("STORE LOCATION").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width(200).Add();
+                }).Toolbar(new List<string>() { "ExcelExport" }).Render())
+        <script>
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("GridNewMRN").ej2_instances[0];
+                gridObj.excelExport();
+            }
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+
+
+
+
+
+
+

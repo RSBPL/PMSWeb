@@ -1,0 +1,42 @@
+﻿<div class="container" style="width:100%!important">
+
+    <div class="table-responsive">
+        <table id="tblApproval" class="table" cellpadding="0" cellspacing="0">
+            <thead>
+                <tr style="color: #14567e!important;">
+                    <th style="width:auto">ID</th>
+                    <th style="width:auto">ITEMCODE</th>
+                    <th style="width:auto">DESCRIPTION</th>
+                    <th style="width:auto">PLANDATE</th>
+                    <th style="width:auto">SHIFT</th>
+                    <th style="width:auto">STATUS</th>
+                    <th style="width:auto">APPROVAL</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var v in ViewBag.DataSource)
+                {
+                    <tr>
+                        <td><lable id="AutoId">@v[0]</lable></td>
+                        <td>@v[2]</td>
+                        <td>@v[3]</td>
+                        <td>@v[5]</td>
+                        <td>@v[6]</td>
+                        <td>@v[4]</td>
+                        <td>
+                            <select class="dropdown" id="ddlApproval" onchange="getValue(this)">
+                                <option value="" class="dropdown-item" selected="selected">--Select--</option>
+                                <option value="Approved" class="dropdown-item">Approved</option>
+                                <option value="Pending" class="dropdown-item">Pending</option>
+                            </select>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+

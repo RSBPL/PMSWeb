@@ -1,0 +1,88 @@
+<xpml><page quantity='0' pitch='76.2 mm'></xpml>'Seagull:2.1:DP
+INPUT OFF
+VERBOFF
+INPUT ON
+SYSVAR(48) = 0
+ERROR 15,"FONT NOT FOUND"
+ERROR 18,"DISK FULL"
+ERROR 26,"PARAMETER TOO LARGE"
+ERROR 27,"PARAMETER TOO SMALL"
+ERROR 37,"CUTTER DEVICE NOT FOUND"
+ERROR 1003,"FIELD OUT OF LABEL"
+SYSVAR(35)=0
+OPEN "tmp:setup.sys" FOR OUTPUT AS #1
+PRINT#1,"Printing,Media,Print Area,Media Margin (X),0"
+PRINT#1,"Printing,Media,Print Method,Ribbon (TTR)"
+PRINT#1,"Printing,Print Quality,Media Sensitivity,Very High"
+PRINT#1,"Printing,Media,LTS Sensitivity Level,0"
+PRINT#1,"Printing,Media,Media Type,Media With Gaps"
+PRINT#1,"Printing,Media,Start Adjust,-108"
+PRINT#1,"Printing,Media,Stop Adjust,0"
+PRINT#1,"Printing,Media,Print Area,Media Width,386"
+PRINT#1,"Printing,Media,Print Area,Media Length,610"
+PRINT#1,"Printing,Print Quality,Darkness,66"
+PRINT#1,"Printing,Print Quality,Contrast,+0%"
+PRINT#1,"Printing,Print Quality,Print Speed,200"
+PRINT#1,"Printing,Media,Media Calibration Mode,Fast"
+PRINT#1,"Printing,Media,Length (Slow Mode),0"
+PRINT#1,"Printing,Media,Clip Default,On"
+CLOSE #1
+SETUP "tmp:setup.sys"
+KILL "tmp:setup.sys"
+LTS& OFF
+CUT OFF
+<xpml></page></xpml><xpml><page quantity='1' pitch='76.2 mm'></xpml>CLL
+PRPOS 25,520
+PRIMAGE "ESCORT2.PCX"
+OPTIMIZE "BATCH" ON
+PP15,522:AN7
+NASC 8
+FT "Arial Black",8,0,99
+PT "JOB:-"
+PP117,571:BARSET "CODE128B",2,1,2,51
+PB "JOB_VAL"
+PP180,517:FT "Arial Black",8,0,99
+PT "JOB_VAL"
+PP3,481:AN1
+PL381,5
+PP3,366:PL381,5
+PP3,252:PL381,5
+PP28,469:AN7
+BARSET "CODE128B",2,1,2,51
+PB "FCODE_VAL"
+PP99,416:FT "Arial Black",8,0,99
+PT "FCODE_VAL"
+PP15,414:FT "Arial Black",8,0,99
+PT "ITEM:-"
+PP92,355:BARSET "CODE128B",2,1,1,51
+PB "SERIES_NO"
+PP96,302:FT "Arial Black",8,0,99
+PT "SERIES_NO"
+PP3,100:AN1
+PL381,5
+PP15,92:AN7
+FT "Arial Black",7,0,99
+PT "ITEM_NAME1"
+PP15,230:FT "Arial Black",8,0,80
+PT "ENG :"
+PP0,10:AN1
+PX589,386,5
+PP92,230:AN7
+FT "Arial Black",8,0,80
+PT "ENGG_VAL"
+PP15,192:FT "Arial Black",8,0,80
+PT "TRAN:"
+PP92,192:FT "Arial Black",8,0,80
+PT "TRANS_VAL"
+PP244,235:BARSET "QRCODE",1,1,4,2,1
+PB "FCODE_VAL,SERIES_NO,ENGG_VAL,TRANS_VAL,MONTH,REAR_VAL,ROPS_SRNO"
+PP15,66:FT "Arial Black",7,0,99
+PT "ITEM_NAME2"
+PP16,154:FT "Arial Black",8,0,80
+PT "REAR:"
+PP92,154:FT "Arial Black",8,0,80
+PT "REAR_VAL"
+LAYOUT RUN ""
+PF
+PRINT KEY OFF
+<xpml></page></xpml><xpml><end/></xpml>

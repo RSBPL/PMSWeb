@@ -1,0 +1,6 @@
+﻿@model MVCApp.Models.Store 
+    @{ 
+        <div>
+            @Html.DropDownListFor(model => model.PlantStore ,(IEnumerable<SelectListItem>)ViewBag.PlantStore, new { @class = "form-control input-sm"})
+        </div>
+    }

@@ -1,0 +1,104 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bg-primary" style="padding-top:5px; padding-Center:5px;">
+                <center>
+                    <label style="color:white;">@ViewBag.heading</label>
+                    <label style="color: white;padding-right: 10px;" class="pull-right"><strong>TOTAL RECORD : @ViewBag.Total </strong></label>
+                </center>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        @(Html.EJS().Grid("GrdTOTShowFullT04").DataSource((System.Data.DataTable)ViewBag.DataSource).
+            Height("400").
+            AllowSelection(false).
+            AllowResizing().
+            AllowExcelExport().
+            ToolbarClick("toolbarClick").
+            AllowFiltering().
+            AllowGrouping().
+            AllowSorting().EnableColumnVirtualization().EnableVirtualization().
+            Columns(col =>
+            {
+                col.Field("FCODE").HeaderText("FCODE").Add();
+                col.Field("OIL QTY").HeaderText("OIL QTY").Add();
+                col.Field("DESCRIPTION").HeaderText("DESCRIPTION").Add();
+                col.Field("JOB").HeaderText("JOB").Add();
+                col.Field("BUCKLE UP DATE").HeaderText("BUCKLE UP DATE").Add();
+                col.Field("BACKEND").HeaderText("BACKEND").Add();
+                col.Field("ENGINE").HeaderText("ENGINE").Add();
+                col.Field("TRACTOR_NO").HeaderText("TRACTOR_NO").Add();
+                //col.Field("ENGINE").HeaderText("ENGINE").Add();
+
+                col.Field("HYDRAULIC_LIFT").HeaderText("HYDRAULIC_LIFT").Add();
+
+                col.Field("REARTYRE_SRLNO1").HeaderText("REARTYRE_SRLNO1").Add();
+                col.Field("REARTYRE_SRLNO2").HeaderText("REARTYRE_SRLNO2").Add();
+                col.Field("REARTYRE_MAKE").HeaderText("REARTYRE_MAKE").Add();
+                col.Field("RTRIM1").HeaderText("RTRIM1").Add();
+                col.Field("RTTYRE1").HeaderText("RTTYRE1").Add();
+                col.Field("RTRIM2").HeaderText("RTRIM2").Add();
+                col.Field("RTTYRE2").HeaderText("RTTYRE2").Add();
+
+                col.Field("FRONTTYRE_SRLNO1").HeaderText("FRONTTYRE_SRLNO1").Add();
+                col.Field("FRONTTYRE_SRLNO2").HeaderText("FRONTTYRE_SRLNO2").Add();
+                col.Field("FRONTTYRE_MAKE").HeaderText("FRONTTYRE_MAKE").Add();
+
+                col.Field("FTRIM1").HeaderText("FTRIM1").Add();
+                col.Field("FTTYRE1").HeaderText("FTTYRE1").Add();
+                col.Field("FTRIM2").HeaderText("FTRIM2").Add();
+                col.Field("FTTYRE2").HeaderText("FTTYRE2").Add();
+                col.Field("BATTERY_SRLNO").HeaderText("BATTERY_SRLNO").Add();
+                col.Field("BATTERY_MAKE").HeaderText("BATTERY_MAKE").Add();
+                col.Field("HYD_PUMP_SRLNO").HeaderText("HYD_PUMP_SRLNO").Add();
+
+                col.Field("STEERING_MOTOR_SRLNO").HeaderText("STEERING_MOTOR_SRLNO").Add();
+                col.Field("STEERING_ASSEMBLY_SRLNO").HeaderText("STEERING_ASSEMBLY_SRLNO").Add();
+                col.Field("STERING_CYLINDER_SRLNO").HeaderText("STERING_CYLINDER_SRLNO").Add();
+                col.Field("RADIATOR_SRLNO").HeaderText("RADIATOR_SRLNO").Add();
+                col.Field("CLUSSTER_SRLNO").HeaderText("CLUSSTER_SRLNO").Add();
+                col.Field("ALTERNATOR_SRLNO").HeaderText("ALTERNATOR_SRLNO").Add();
+
+                col.Field("STARTER_MOTOR_SRLNO").HeaderText("STARTER_MOTOR_SRLNO").Add();
+                col.Field("ROPS_SRNO").HeaderText("ROPS_SRNO").Add();
+                col.Field("SIM_SERIAL_NO").HeaderText("SIM_SERIAL_NO").Add();
+                col.Field("IMEI_NO").HeaderText("IMEI_NO").Add();
+                col.Field("MOBILE").HeaderText("MOBILE").Add();
+                col.Field("ROLL OUT DATE").HeaderText("ROLL OUT DATE").Add();
+                col.Field("CAREBUTTONOIL").HeaderText("PDI OK DATE").Add();
+                col.Field("PDI TACK TIME").HeaderText("PDI TACK TIME").Add();
+                col.Field("FIPSRNO").HeaderText("FIPSRNO").Add();
+            }).
+            Toolbar(new List<string>() { "ExcelExport" }).
+            Render())
+        <script>
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("GrdTOTShowFullT04").ej2_instances[0];
+                gridObj.excelExport();
+            }
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,66 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bg-primary" style="padding-top:5px; padding-left:5px;">
+                <center>
+                    <label style="color:white;">@ViewBag.heading</label>
+                    <label style="color: white;padding-right: 10px;" class="pull-right"><strong>TOTAL RECORD : @ViewBag.Total </strong></label>
+                </center>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        @(Html.EJS().Grid("GrdPART_AUDIT").DataSource((System.Data.DataTable)ViewBag.DataSource).
+            Height("400").
+            AllowSelection(false).
+            AllowResizing().
+            AllowExcelExport().
+            ToolbarClick("toolbarClick").
+            AllowFiltering().
+            AllowGrouping().
+            AllowSorting().EnableColumnVirtualization().EnableVirtualization().
+            Columns(col =>
+            {
+                col.Field("PLANT_CODE").HeaderText("PLANT_CODE").Add();
+                col.Field("FAMILY_CODE").HeaderText("FAMILY_CODE").Add();
+                col.Field("ITEM_CODE").HeaderText("ITEM_CODE").Add();
+                col.Field("ITEM_SRLNO").HeaderText("ITEM_SRLNO").Add();
+                col.Field("PART_DESC").HeaderText("PART_DESC").Add();
+
+                col.Field("EXISTING_JOB").HeaderText("EXISTING_JOB").Add();
+                col.Field("NEW_JOB").HeaderText("NEW_JOB").Add();
+                col.Field("LOGIN_USER").HeaderText("LOGIN_USER").Add();
+                col.Field("IP").HeaderText("IP").Add();
+
+                col.Field("ENTRYDATE").HeaderText("ENTRYDATE").Add();
+                col.Field("REMARKS1").HeaderText("REMARKS1").Add();
+                col.Field("REMARKS2").HeaderText("REMARKS2").Add();
+
+            }).
+            Toolbar(new List<string>() { "ExcelExport" }).
+            Render())
+        <script>
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("GrdPART_AUDIT").ej2_instances[0];
+                gridObj.excelExport();
+            }
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+
+
+

@@ -1,0 +1,510 @@
+﻿@model MVCApp.Models.GoodsRecivingatStoreModel
+<style>
+
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .the-legend {
+        box-shadow: 0px 1px 5px #7f8b8f;
+    }
+    ol, ul {
+        margin: 5px 0px 1px 1px;
+    }
+    .tab-content {
+        padding: 6px 0px 0px 0px;
+    }
+    .adj {
+        float: right !important;
+        margin: -2px 51px 4px 0;
+    }
+    .c-adj{
+        width:140px;
+    }
+    #MRNPrint {
+        margin: 4px 26px 0;
+    }
+
+    
+
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">MRN Verification at Store</a>
+        </li>
+    </ul>
+    <div id="DIV_UNDT" style="float:right; background-color:#409cc7; height: 35px; width: 500px;margin-top: 3px;margin-right: 34px;color: white;"></div>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    <ul class="nav nav-pills">
+        <li class="bg-light active"><a data-toggle="tab" href="#Menu1">MRN Item Verification</a></li>
+        <li class="bg-light"><a data-toggle="tab" href="#Menu2">Verification History</a></li>
+        <li class="bg-light"><a data-toggle="tab" href="#Menu3">Pending For Receving</a></li>
+        <li class="bg-light"><a data-toggle="tab" href="#Menu4">Inspected Items</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="Menu1" class="tab-pane fade in active">
+            <div class="container" style="width:100%!important">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form3" }))
+                {
+                    @Html.AntiForgeryToken()
+                <div class="form-horizontal form-group">
+                    <fieldset class="the-fieldset bg-info">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label for="PLANT" class="text-right control-label col-form-label"><strong>PLANT</strong></label>
+                                @Html.DropDownListFor(model => model.PLANT, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            </div>
+                            <div class="col-md-3">
+                                <label for="FAMILY" class="text-right control-label col-form-label"><strong>FAMILY</strong></label>
+                                @Html.DropDownListFor(model => model.FAMILY, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            </div>
+                            <div class="col-md-2" id="MRNDiv">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>SCAN QR CODE</strong></label>
+                                @Html.TextBoxFor(model => model.MRN_QR, new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.MRN_QR, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-2" id="SrnoDiv">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Enter Serial No.</strong></label>
+                                @Html.TextBoxFor(model => model.SerialNo, new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.SerialNo, "", new { @class = "text-danger" })</strong>
+                            </div>
+
+                            <div class="col-md-1" style="padding-top: 23px;">
+                                <button class="btn btn-success btn-sm" type="button" id="Submit"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                                <button class="btn btn-success btn-sm" type="button" id="Prntsrnobtn"><i class="ace-icon fa fa-print bigger-110"></i><strong>Print</strong></button>
+
+                                @*<input type="hidden" value="@Session["MRNSAVE"].ToString()" id="myHiddenVar" />*@
+                            </div>
+                            <div class="col-md-2" id="ShowMRNPrintOption">
+                                <label for="MRNPrint" class="text-right control-label col-form-label"><strong>Print MRN ?</strong></label>
+                                <div class="form-check">
+                                    @Html.CheckBoxFor(Model => Model.MRNPrint, new { @class = "css-checkbox" })
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="SerialPrintNo" class="text-right control-label col-form-label"><strong>Print Serial No. ?</strong></label>
+                                <div class="form-check">
+                                    @Html.CheckBoxFor(Model => Model.PrintSerialNo, new { @class = "css-checkbox", onchange = "valueChanged()" })
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </fieldset>
+                </div>
+                }
+                <div id="Grid"></div>
+            </div>
+        </div>
+        <div id="Menu2" class="tab-pane fade">
+            <div class="container" style="width:100%!important; MARGIN-BOTTOM: 7px;">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="form-horizontal form-group">
+                        <div class="row">
+                            <div class="col-md-2 c-adj">
+                                <label for="fname" class="control-label col-form-label"><strong>FROM DATE</strong></label>
+                                @Html.EJS().DatePickerFor(Model => Model.FROMDATE).Format("dd-MMM-yyyy").Value(ViewBag.DefaultDate).Render()
+                            </div>
+                            <div class="col-md-2 c-adj">
+                                <label for="fname" class="control-label col-form-label"><strong>TO DATE</strong></label>
+                                @Html.EJS().DatePickerFor(Model => Model.TODATE).Format("dd-MMM-yyyy").Value(ViewBag.DefaultDate).Render()
+                            </div>
+                            <div class="col-md-1" style="width: 6%;padding-top: 23px;">
+                                <button class="btn btn-success btn-sm" type="button" id="GetHistoryGrd"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Submit</strong></button>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div id="T2_grid"></div>
+        </div>
+        <div id="Menu3" class="tab-pane fade">
+                        <div class="row">
+                           
+                            
+                            <div class="col-md-12">
+                                <div class="adj"><button type="button" id="pending" style="background-color: beige;"><i class="fa fa-refresh" aria-hidden="true"></i><strong> Refresh</strong></button></div>
+                            </div>
+                        </div>
+            <div id="T3_grid"></div>
+        </div>
+        <div id="Menu4" class="tab-pane fade">
+           
+                        <div class="row">
+
+
+                            <div class="col-md-12">
+                                <div class="adj"><button type="button" id="inspected" style="background-color: beige;"><i class="fa fa-refresh" aria-hidden="true"></i><strong> Refresh</strong></button></div>
+                            </div>
+                        </div>
+                   
+
+            <div id="T4_grid"></div>
+        </div>
+    </div>
+</div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+
+@*Script for First Tab*@
+<script>
+    var qr;
+    $(document).ready(function () {
+        $("#SrnoDiv").hide();
+        $("#Prntsrnobtn").hide();
+        DDLPlant();
+        $('#MRN_QR').focus();
+        DisplayUNDT();
+        var myVar = setInterval(DisplayUNDT, 1000);
+
+        BindGrid_History();
+        BindGrid_NewMRN();
+        BindGrid_Inspected_Items();
+
+        var showhidebtn = '@Session["MRNSAVE"].ToString()';
+        if (showhidebtn == null || showhidebtn == undefined || showhidebtn == 'N' || showhidebtn == '') {
+
+            $('#Submit').hide();
+        }
+        else {
+
+            $('#Submit').show();
+        }
+
+
+    });
+    function valueChanged() {
+        if ($("#PrintSerialNo").is(":checked")) {
+            $("#SrnoDiv").show();
+            $("#Prntsrnobtn").show();
+            $("#MRNDiv").hide();
+            $("#Submit").hide();
+        }
+        else if ($("#PrintSerialNo").is(":Unchecked")) {
+            $("#SrnoDiv").hide();
+            $("#Prntsrnobtn").hide();
+            $("#MRNDiv").show();
+            $("#Submit").show();
+
+        }
+    }
+
+     $("#Prntsrnobtn").click(function () {
+        //$("#divLoader").show();
+        PLANT = $("#PLANT").val();
+        FAMILY = $("#FAMILY").val();
+        SerialNo = $("#SerialNo").val();
+
+        var Data = {
+            PLANT: $("#PLANT").val(),
+            FAMILY : $("#FAMILY").val(),
+            SerialNo : $("#SerialNo").val()
+        };
+
+
+        $.ajax({
+            url: '@Url.Action("MRNSrlnoPrint", "MRN_VERIFICATION_MASTER")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (data) {
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                }
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                }
+                $("#divLoader").hide();
+            },
+
+            error: function (errormessage) {
+                //alert(errormessage.responseText);
+            }
+
+        });
+     });
+    function closeAlert(alert) {
+
+        $(alert).hide();
+    };
+     //Function to bind Plant
+    function DDLPlant() {
+        $("#divLoader").show();
+        $.ajax({
+            url: '@Url.Action("BindPlant", "MRN_VERIFICATION_MASTER")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#PLANT").append(optionhtml);
+                });
+
+
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        $("#divLoader").show();
+        var selectedValue = $("#PLANT").val();
+        if (selectedValue == "T02") {
+            $("#MRNPrint").prop('checked', false);
+            $("#ShowMRNPrintOption").show();
+        }
+        else {
+            $("#MRNPrint").prop('checked', false);
+            $("#ShowMRNPrintOption").hide();
+        }
+        $.ajax({
+            url: '@Url.Action("BindFamily", "MRN_VERIFICATION_MASTER")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#FAMILY").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#FAMILY").append(optionhtml);
+                });
+
+                $("#divLoader").hide();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    $("#PLANT").on("change", function () {
+        DDLFamilyByPlant();
+        $("#Grid").html(null);
+    });
+     $("#Submit").click(function () {
+        var Data = [];
+        $("#Grid tr").each(function () {
+            var self = $(this);
+            var ch = '';
+            if (self.find("#DDLVerification").prop("checked") == true) {
+                ch = "VERIFIED";
+            }
+
+            var obj = {
+                //AUTOID: self.find("td:eq(10)").text().trim(),
+                AUTOID: self.find("#id").text(),
+                VERIFICATION: ch,
+                MRN_NO: self.find("#mrn").text(),
+                PLANT: self.find("#plant").text(),
+                QUANTITY: self.find("#qty").text(),
+                QTY_RECEIVED: self.find('input[name="QUANTITY"]').val()
+
+            };
+            Data.push(obj);
+        });
+        $.ajax({
+            url: '@Url.Action("Edit", "MRN_VERIFICATION_MASTER")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+
+                if (result.includes("Saved")) {
+                    BindGrid();
+                    $("#MRN_QR").focus();
+                    $('#alert').append('<div class="alert alert-success role = "alert"><strong>' + result + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+                else {
+                    $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + result + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    });
+
+
+
+    $("#GetHistoryGrd").on("click", function () {
+        BindGrid_History();
+    });
+
+    $("#MRN_QR").keydown(function (e) {
+        if (e.keyCode == 13) {
+            //alert("jkljlkj");
+            BindGrid();
+            e.preventDefault();
+            //stopPropagation();
+            //stopImmediatePropagation();
+
+        }
+    });
+
+
+    function BindGrid() {
+        $("#divLoader").show();
+        if ($('#MRN_QR').val() != "") {
+            qr = $('#MRN_QR').val();
+        }
+        if ($("#MRNPrint").prop('checked') == true) {
+            MRNPrint = true;
+        }
+        else {
+            MRNPrint = false;
+        }
+        var Data = {
+            MRN_QR: qr,
+            PLANT: $('#PLANT').val(),
+            FAMILY: $('#FAMILY').val(),
+            MRNPrint: MRNPrint
+
+            };
+        $.ajax({
+            url: '@Url.Action("Grid", "MRN_VERIFICATION_MASTER")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $('#MRN_QR').val("");
+                $("#Grid").html("");
+                if (result.includes("Error")) {
+                    $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + result + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+                else {
+                    $("#Grid").html(result);
+                }
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    function BindGrid_History() {
+        var Data = {
+            FROMDATE: $('#FROMDATE').val(),
+            TODATE: $('#TODATE').val()
+        };
+        $("#divLoader").show();
+        $.ajax({
+            url: '@Url.Action("Grid_History", "MRN_VERIFICATION_MASTER")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#T2_grid").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    };
+
+    $("#pending").on("click", function () {
+        BindGrid_NewMRN();
+    });
+    function BindGrid_NewMRN() {
+        $("#divLoader").show();
+        $.ajax({
+            url: '@Url.Action("Grid_NewMRN", "MRN_VERIFICATION_MASTER")',
+            //data: JSON.stringify(Data),
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#T3_grid").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    };
+
+    $("#inspected").on("click", function () {
+        BindGrid_Inspected_Items();
+    });
+    function BindGrid_Inspected_Items() {
+        $("#divLoader").show();
+        $.ajax({
+            url: '@Url.Action("Grid_Inspected_Items", "MRN_VERIFICATION_MASTER")',
+            //data: JSON.stringify(Data),
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#T4_grid").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    };
+
+    function DisplayUNDT() {
+        $.ajax({
+            url: '@Url.Action("LoginUserDateTime", "Account")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#DIV_UNDT").html(result)
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    };
+
+    $("#PLANT,#FAMILY").select2({
+        allowClear: true,
+        width: '100%',
+    });
+
+</script>
+

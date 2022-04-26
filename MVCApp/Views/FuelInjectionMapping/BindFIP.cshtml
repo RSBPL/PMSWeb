@@ -1,0 +1,6 @@
+﻿@model MVCApp.Models.FIPModel
+@{
+    <div>
+        @Html.DropDownListFor(model => model.ITEM_CODE, (IEnumerable<SelectListItem>)ViewBag.ITEM_CODE, new { @class = "form-control input-sm" })
+    </div>
+    }

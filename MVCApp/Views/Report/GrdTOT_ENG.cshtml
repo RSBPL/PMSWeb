@@ -1,0 +1,73 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bg-primary" style="padding-top:5px; padding-left:5px;">
+                <center>
+                    <label style="color:white;">@ViewBag.heading</label>
+                    <label style="color: white;padding-right: 10px;" class="pull-right"><strong>TOTAL RECORD : @ViewBag.Total </strong></label>
+                </center>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        @(Html.EJS().Grid("GrdTOT_ENG").DataSource((System.Data.DataTable)ViewBag.DataSource).
+            Height("400").
+            AllowSelection(false).
+            AllowResizing().
+            AllowExcelExport().
+            ToolbarClick("toolbarClick").
+            AllowFiltering().
+            AllowGrouping().
+            AllowSorting().EnableColumnVirtualization().EnableVirtualization().
+            Columns(col =>
+            {
+                col.Field("DESCRIPTION").HeaderText("DESCRIPTION").Add();
+                col.Field("ENGINE_SRNO").HeaderText("ENGINE_SRNO").Add();
+                col.Field("CYLINDER_HEAD_SRNO").HeaderText("CYLINDER_HEAD_SRNO").Add();
+                col.Field("CRANKSHAFT_SRNO").HeaderText("CRANKSHAFT_SRNO").Add();
+                col.Field("CAMSHAFT_SRNO").HeaderText("CAMSHAFT_SRNO").Add();
+
+                col.Field("CYLINDER_BLOCK_SRNO").HeaderText("CYLINDER_BLOCK_SRNO").Add();
+                col.Field("INJECTOR1").HeaderText("INJECTOR1").Add();
+                col.Field("INJECTOR2").HeaderText("INJECTOR2").Add();
+                col.Field("INJECTOR3").HeaderText("INJECTOR3").Add();
+
+                col.Field("INJECTOR4").HeaderText("INJECTOR4").Add();
+                col.Field("CONNECTING_ROD_SRNO1").HeaderText("CONNECTING_ROD_SRNO1").Add();
+                col.Field("CONNECTING_ROD_SRNO2").HeaderText("CONNECTING_ROD_SRNO2").Add();
+                col.Field("CONNECTING_ROD_SRNO3").HeaderText("CONNECTING_ROD_SRNO3").Add();
+
+                col.Field("CONNECTING_ROD_SRNO4").HeaderText("CONNECTING_ROD_SRNO4").Add();
+                col.Field("FUEL_INJECTION_PUMP_SRNO").HeaderText("FUEL_INJECTION_PUMP_SRNO").Add();
+                col.Field("SCANDATE").HeaderText("SCANDATE").Add();
+                col.Field("LEAK_TEST").HeaderText("LEAK_TEST").Add();
+
+                col.Field("LEAKTEST_STATUS").HeaderText("LEAKTEST_STATUS").Add();
+                col.Field("LEAKTEST_DATE").HeaderText("LEAKTEST_DATE").Add();
+            }).
+            Toolbar(new List<string>() { "ExcelExport" }).
+            Render())
+        <script>
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("GrdTOT_ENG").ej2_instances[0];
+                gridObj.excelExport();
+            }
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+
+

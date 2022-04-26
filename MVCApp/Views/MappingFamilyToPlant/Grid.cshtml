@@ -1,0 +1,70 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="table-responsive">
+        @{
+            List<object> commands = new List<object>();
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
+            //commands.Add(new { buttonOption = new { iconCss = "e-icons e-delete", cssClass = "delete" } });
+        }
+
+        @(Html.EJS().Grid("Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                AllowPaging(true).
+                PageSettings(Page => Page.PageSize(7)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+                AllowResizing().
+                Columns(col =>
+                {
+                    col.Field("PLANT_CODE").HeaderText("Plant Code").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("FAMILY_CODE").HeaderText("Family Code").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CREATED_BY").HeaderText("Created By").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CREATED_DATE").HeaderText("Created Date").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("UPDATED_BY").HeaderText("Updated By").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("UPDATED_DATE").HeaderText("Updated Date").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+
+
+                    col.HeaderText("EDIT").Width("100").Commands(commands).Width("100").Add();
+                })
+                .SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick").//AllowRowDragAndDrop().
+                Render())
+
+        <script>
+            var PlantCode, FamilyCode, family;
+            function commandClick(args) {
+                if (args.rowData != null) {
+                    if (args.target.classList.contains('edit')) {
+                        $("#PlantCode").val(args.rowData["PLANT_CODE"]);
+                        $("#FamilyCode").val(args.rowData["FAMILY_CODE"]);
+                        
+                        
+                        $('#Add').hide();
+                        $('#Update').show();
+                    }
+                    //Edit();
+                }
+            };
+
+
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+
+
+
+

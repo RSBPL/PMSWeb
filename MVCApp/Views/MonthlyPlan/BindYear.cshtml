@@ -1,0 +1,11 @@
+﻿@model MVCApp.Models.MonthlyPlanModel
+
+@{
+    <div>
+        @Html.DropDownListFor(Model => Model.Year, (IEnumerable<SelectListItem>)ViewBag.Year, "----Select----", new { @class = "form-control input-sm" })
+    </div>
+}
+
+
+
+

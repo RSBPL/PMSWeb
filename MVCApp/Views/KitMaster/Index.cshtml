@@ -1,0 +1,545 @@
+﻿@model MVCApp.Models.KitMaster
+<style>
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .ui-autocomplete {
+        max-height: 400px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+
+     .ui-autocomplete {
+        height: 400px;
+    }
+        input[type='text'].ui-autocomplete-loading {
+
+             background: url('../../Scripts/AutoFill/images/ui-anim_basic_16x16.gif') no-repeat right center;
+
+            }
+    .col3 {
+        width: 200px;
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Kit Master</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    @*--------Form------------*@
+    <div class="container" style="width:100%!important">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal form-group">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="Plant" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            @Html.DropDownListFor(model => model.PLANTCODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.PLANTCODE, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3 ">
+                            <label for="Family" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                            @Html.DropDownListFor(model => model.FAMILYCODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.FAMILYCODE, "", new { @class = "text-danger" })</strong>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="ItemCode" class="text-right control-label col-form-label"><strong>Item Code</strong></label>
+                            @Html.TextBoxFor(Model => Model.ITEMCODE, null, new { @class = "form-control input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.ITEMCODE, "", new { @class = "text-danger" })</strong>
+                        </div>
+                      
+                        <div class="col-md-3 ">
+                            <label for="SMLocation" class="text-right control-label col-form-label"><strong>Super Market Location</strong></label>
+                            @Html.DropDownListFor(model => model.SMLocation, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.SMLocation, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="KitNo" class="text-right control-label col-form-label"><strong>KITNO</strong></label>
+                            @Html.TextBoxFor(model => model.KITNO, new { @class = "form-control input-sm", autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.KITNO, "", new { @class = "text-danger" })</strong>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="QUANTITY" class="text-right control-label col-form-label"><strong>QUANTITY</strong></label>
+                            @Html.TextBoxFor(model => model.QUANTITY, new { @class = "form-control input-sm", autocomplete = "off", @type = "number" })
+                            <strong>@Html.ValidationMessageFor(model => model.QUANTITY, "", new { @class = "text-danger" })</strong>
+                        </div>
+
+                        <div class="col-md-1" style="padding-top: 25px;">
+                            <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                            <button class="btn btn-success btn-sm" type="button" id="Update"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+
+                        </div>
+                        <div class="col-md-1" style="padding-top: 25px;">
+                            <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+
+                </fieldset>
+            </div>
+
+        }
+        <div id="Grid"></div>
+    </div>
+</div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<script src="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.js")"></script>
+<link href="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.css")" rel="stylesheet" />
+
+<script>
+
+
+    $(document).ready(function () {
+        $("#Update").hide();
+        DDLPlant();
+
+        AutoComplete();
+       
+
+    });
+    function AutoComplete() {
+        $.noConflict();
+
+        $("#ITEMCODE").autocomplete({
+            source: function (request, response) {
+
+            var Data = {
+                Plant: $('#PLANTCODE').val(),
+                Family: $('#FAMILYCODE').val(),
+                ItemCode: $('#ITEMCODE').val()
+            };
+                $.ajax({
+                    url: "@Url.Action("BindItemCode", "KitMaster")",
+                    async: false, cache: false,
+                    type: "POST",
+                    //contentType: 'application/json;charset=utf-8',
+                    //dataType: "json",
+                    //data: JSON.stringify({ data: Data }),
+                    data: { data: Data },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            /*console.log(item.Text);*/
+                            return { label: item.Text, value: item.Text };
+                        }))
+
+                    },
+                    error: function (err) {
+                        alert(err);
+                    }
+                });
+            },
+
+            minLength: 4,
+            response: function (event, ui) {
+                if (!ui.content.length) {
+                    var noResult = { value: "", label: "No results found" };
+                    ui.content.push(noResult);
+
+                } else {
+                    
+                }
+            },
+            select: function (event, ui) {
+                /*console.log(ui.item.value);*/
+                BindLocation(ui.item.value)
+               
+
+
+            }
+
+          });
+    }
+    function BindLocation(ItemCode) {
+
+        var Data = {
+            PLANTCODE: $('#PLANTCODE').val(),
+            FAMILYCODE: $('#FAMILYCODE').val(),
+            ITEMCODE: ItemCode
+        };
+                $.ajax({
+                    cache: false, async: false, type: "POST",
+                    url: "@(Url.Action("BindLocation", "KitMaster"))",
+                    data: { data: Data },
+                    success: function (result) {
+                        //var result = data[0];
+                        //console.log(data[0].Value);
+                        //console.log(data[0].Text);
+                        $("#SMLocation").html(null);
+                        $.each(result, function (i) {
+                            var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                            $("#SMLocation").append(optionhtml);
+                        });
+
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve Item.');
+                    }
+                });
+
+    }
+
+   
+
+    $("#PLANTCODE").on("change", function () {
+        DDLFamilyByPlant();
+
+    });
+    $("#FAMILYCODE").on("change", function () {
+        BindGrid();
+    });
+
+    $("#Clear").on("click", function () {
+        location.reload(true);
+    });
+
+
+    //Insert function
+    $("#Add").on("click", function () {
+
+            $("#divLoader").show();
+            var Data = {
+                PLANTCODE: $('#PLANTCODE').val(),
+                FAMILYCODE: $('#FAMILYCODE').val(),
+                KITNO: $('#KITNO').val(),
+                ITEMCODE: $('#ITEMCODE').val(),
+                QUANTITY: $('#QUANTITY').val(),
+                SMLocation: $('#SMLocation').val()
+            };
+            $.ajax({
+                url: '@Url.Action("Add", "KitMaster")',
+                data: JSON.stringify({ data: Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+
+                    $("#divLoader").hide();
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        $('#PLANTCODE').prop('disabled', false);
+                        $('#FAMILYCODE').prop('disabled', false);
+                        $('#KITNO').prop('disabled', false);
+                        $('#ITEMCODE').prop('disabled', false);
+                        $('#KITNO').val("");
+                        $('#ITEMCODE').val("");
+                        $('#SMLocation').empty();
+                        
+                        $('#QUANTITY').val("");
+                        $('#Add').show();
+                        $('#Update').hide();
+                        BindGrid();
+                    }
+                },
+                error: function (errormessage) {
+                    $("#divLoader").hide();
+                    $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+
+                }
+            });
+    });
+
+    function closeAlert(alert) {
+
+      $(alert).hide();
+    };
+    //Function to bind Plant
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "KitMaster")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#PLANTCODE").append(optionhtml);
+                });
+
+
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        var selectedValue = $("#PLANTCODE").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "KitMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#FAMILYCODE").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#FAMILYCODE").append(optionhtml);
+                });
+                BindGrid();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+
+    //Function to bind Grid
+    function BindGrid() {
+        $("#divLoader").show();
+        var Data = {
+            PLANTCODE: $('#PLANTCODE').val(),
+            FAMILYCODE: $('#FAMILYCODE').val()
+                };
+        $.ajax({
+            url: '@Url.Action("Grid", "KitMaster")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+
+                $("#Grid").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //$("#btnDeleteCancel").on("click", function () {
+    //    $('#DeleteConfirm').modal('hide');
+    //});
+    function Delete() {
+        var data = {
+
+            AutoId: AutoId
+            };
+        $.ajax({
+            url: '@Url.Action("Delete", "RawMaterialMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                }
+
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    $('#Plant').prop('disabled', false);
+                    $('#Family').prop('disabled', false);
+                    $('#ItemCode').val("");
+                    $('#PackingStandard').val("");
+                    $('#Add').show();
+                    $('#Update').hide();
+                    BindGrid();
+
+                }
+
+            },
+            error: function (errormessage)
+            {
+            }
+        });
+
+    }
+
+
+    //Update Data
+    $("#Update").on("click", function () {
+          $("#divLoader").show();
+
+        var data = {
+            PLANTCODE: $('#PLANTCODE').val(),
+            FAMILYCODE: $('#FAMILYCODE').val(),
+            KITNO: $('#KITNO').val(),
+            ITEMCODE: $('#ITEMCODE').val(),
+            SMLocation: $('#SMLocation').val(),
+            QUANTITY: $('#QUANTITY').val(),
+            AUTOID: AUTOID
+            };
+        $.ajax({
+            url: '@Url.Action("Update", "KitMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+
+                $("#divLoader").hide();
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                }
+
+
+                else {
+
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    $('#PLANTCODE').prop('disabled', false);
+                    $('#FAMILYCODE').prop('disabled', false);
+                    $('#ITEMCODE').prop('disabled', false);
+                    $('#KITNO').prop('disabled', false);
+                    $('#KITNO').val("");
+                    $('#ITEMCODE').val("");
+                    $('#SMLocation').val("");
+                    $('#QUANTITY').val("");
+                    $('#Add').show();
+                    $('#Update').hide();
+                    BindGrid();
+                }
+
+            },
+            error: function (errormessage)
+            {
+            }
+        });
+    });
+
+     function Delete() {
+        var data = {
+            AUTOID: AUTOID
+            };
+        $.ajax({
+            url: '@Url.Action("Delete", "KitMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                }
+
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    $('#PLANTCODE').prop('disabled', false);
+                    $('#FAMILYCODE').prop('disabled', false);
+                    $('#KITNO').prop('disabled', false);
+                    $('#ITEMCODE').prop('disabled', false);
+                    $('#KITNO').val("");
+                    $('#ITEMCODE').val("");
+                    $('#QUANTITY').val("");
+                    $('#Add').show();
+                    $('#Update').hide();
+                    BindGrid();
+
+                }
+
+            },
+            error: function (errormessage)
+            {
+            }
+        });
+
+    }
+
+    $("#PLANTCODE").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#FAMILYCODE").select2({
+        allowClear: true,
+        width: '100%',
+    });
+
+
+</script>

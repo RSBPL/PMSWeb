@@ -1,0 +1,252 @@
+﻿<div class="container" style="width:100%!important">
+    @*<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>*@
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    @if (!string.IsNullOrEmpty(ViewBag.VisibleSQN))
+    {
+        if (ViewBag.VisibleSQN == "SHOW")
+        {
+            <script>
+                $('#SeqPNo').show();
+                $('#pnlApprove').show();
+                GetMaxSequenceOfExistingSubPlan();
+            </script>
+        }
+        if (ViewBag.VisibleSQN == "HIDE")
+        {
+            <script>
+                $('#SeqPNo').hide();
+            </script>
+        }
+    }
+
+    @if (!string.IsNullOrEmpty(ViewBag.PlanDate))
+    {
+        <script>
+            @*var pd = '@ViewBag.PlanDate';*@
+            $('#PlanDate').show();
+            $('#pnlApprove').show();
+            $('#DisplayPlanDate').val('@ViewBag.PlanDate');
+        </script>
+    }
+    else
+    {
+        <script>
+            $('#pnlApprove').hide();
+            $('#PlanDate').hide();
+        </script>
+    }
+
+    @*Model for Edit*@
+    <div class="modal fade bd-example-modal-sm" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <strong class="modal-title" id="exampleModalLabel" style="font-size:25px;"><i class="fa fa-exclamation-circle" style="font-size:35px;" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<strong>Confirmation..!</strong></strong>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Quantity can be make</label>
+                            <input type="number" class="form-control" id="EditQty" required="Required" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Sequence No.</label>
+                            @Html.DropDownList("EditSqn", Enumerable.Empty<SelectListItem>(), new { @class = "form-control input-sm" })
+                            @*<input type="number" class="form-control" id="EditSqn" required="Required" min="1">*@
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Back</button>
+                    <button type="button" class="btn btn-success btn-sm" id="btnEditSeq">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*Model for Delete*@
+    <div class="modal" id="DeleteConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-danger">
+                    <strong class="modal-title" id="exampleModalLabel" style="font-size:25px;"><i class="fa fa-exclamation-circle" style="font-size:35px;" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<strong>Confirmation..!</strong></strong>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4><strong>Are you sure, to delete planning of this data..?</strong></h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-warning btn-sm"><i class="ace-icon fa fa-arrow-left"></i> Go Back</button>
+                    <button type="button" class="btn btn-danger btn-sm" id="btnSqnDelete"><i class="ace-icon fa fa-check bigger-110"></i> Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="table-responsive">
+
+        @{
+            List<object> commands = new List<object>();
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-delete", cssClass = "delete" } });
+        }
+
+        @(Html.EJS().Grid("Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+
+             AllowFiltering().
+             AllowGrouping().
+             AllowSorting().
+             CommandClick("commandClick").
+             Columns(col =>
+             {
+                 col.Field("SEQ_NO").HeaderText("SQN. No").Width("120").EditType("numericedit").ValidationRules(new { required = true }).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                 col.Field("ITEMCODE").HeaderText("Item Code").Width("150").AllowEditing(false).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                 col.Field("DESCRIPTION").HeaderText("Description").AllowEditing(false).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                 col.Field("SHORTCODE").HeaderText("SHORT CODE").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                 col.Field("AVL").HeaderText("Available").Width("150").AllowEditing(false).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                 col.Field("NOTOK").HeaderText("Not Ok").Width("150").AllowEditing(false).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                 col.Field("QTY").HeaderText("Qty").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                 col.Field("COMPLETED").HeaderText("COMPLETED").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                 col.Field("PENDING").HeaderText("PENDING").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                 col.Field("SUBASSEMBLY1").HeaderText("Sub-Assembly 1").Add();
+                 col.Field("SUBASSEMBLY2").HeaderText("Sub-Assembly 2").Add();
+                 col.HeaderText("").Width("120").Commands(commands).Add();
+             }).
+             Aggregates(agg =>
+             {
+                 agg.Columns(new List<Syncfusion.EJ2.Grids.GridAggregateColumn>() {
+                    new Syncfusion.EJ2.Grids.GridAggregateColumn() { Field = "QTY", Type = "Sum" },
+                    new Syncfusion.EJ2.Grids.GridAggregateColumn() { Field = "AVL", Type = "Sum" },
+                    new Syncfusion.EJ2.Grids.GridAggregateColumn() { Field = "COMPLETED", Type = "Sum" },
+                    new Syncfusion.EJ2.Grids.GridAggregateColumn() { Field = "PENDING", Type = "Sum" }
+                    }).Add();
+             }).
+             Render())
+
+
+    </div>
+    <script>
+            var ID, PlanID, Seqn, Qty, Pending;
+
+
+        function commandClick(args) {
+            if (args.rowData != null) {
+                if (args.target.classList.contains('edit')) {
+                    Pending = args.rowData["PENDING"]
+                    if (Pending != "0") {
+                        $('#exampleModal').modal('show');
+                    };
+
+                    $('#EditQty').val(args.rowData["QTY"]);
+                    $('#EditSqn').val(args.rowData["SEQ_NO"]);
+                    ID = args.rowData["AUTOID"];
+                    PlanID = args.rowData["PLAN_ID"];
+                    Seqn = args.rowData["SEQ_NO"];
+                }
+                if (args.target.classList.contains('delete')) {
+                    $('#DeleteConfirm').modal('show');
+                    ID = args.rowData["AUTOID"];
+                    PlanID = args.rowData["PLAN_ID"];
+                    Seqn = args.rowData["SEQ_NO"];
+                }
+            }
+
+        }
+
+
+            $("#btnEditSeq").on("click", function () {
+                EditSeq();
+            });
+
+            $("#btnSqnDelete").on("click", function () {
+                SqnDelete();
+            });
+
+            //Function to edit sub-assembly
+            function EditSeq() {
+                
+                var Data = {
+                    AutoId: ID,
+                    PlanId: PlanID,
+                    Seq: Seqn,
+                    Plant: $('#Plant').val(),
+                    Family: $('#Family').val(),
+                    Shift: $('#Shift').val(),
+                    Date: $('#Date').val(),
+                    ItemCode: $('#ItemCode').val(),
+                    Qty: $('#EditQty').val(),
+                    TargetSeq: $('#EditSqn').val()
+                };
+                $('#exampleModal').modal('hide');
+                $.ajax({
+                    url: '@Url.Action("EditSeq", "PlanningSubAssemblyView")',
+                    data: JSON.stringify({ data: Data }),
+                    type: "POST",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        
+                        BindGrid();
+                        
+                        if (data.Msg != "" || data.Msg != null ) {
+                            $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            setTimeout(function() {$(".alert").alert('close');}, 5000);
+                        }
+                    },
+                    error: function (errormessage) {
+
+                    }
+                });
+            };
+
+            //Function to delete sub-assembly
+            function SqnDelete() {
+                //$("#divLoader").show();
+                var Data = {
+                    AutoId: ID,
+                    PlanId: PlanID,
+                    Seq: Seqn,
+                    Plant: $('#Plant').val(),
+                    Family: $('#Family').val()
+                };
+                $('#DeleteConfirm').modal('hide');
+                $.ajax({
+                    url: '@Url.Action("DeleteSubAssembly", "PlanningSubAssemblyView")',
+                    data: JSON.stringify({ data: Data }),
+                    type: "POST",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        //$("#divLoader").hide();
+                        BindGrid();
+                        if (data.Msg != "" || data.Msg != null ) {
+                            $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            setTimeout(function() {$(".alert").alert('close');}, 5000);
+                        }
+                    },
+                    error: function (errormessage) {
+
+                    }
+                });
+            };
+    </script>
+</div>
+
+
+@Html.EJS().ScriptManager()
+

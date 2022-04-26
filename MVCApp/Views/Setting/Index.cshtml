@@ -1,0 +1,517 @@
+﻿@model MVCApp.Models.SftSetting
+<style>
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+
+    .col3 {
+        width: 200px;
+    }
+    .le {
+        font-size: 15px;
+        text-align: -webkit-center;
+        font-weight: 700;
+        background: #d1e9ff;
+        border-radius: 5px;
+        border: 1px solid #00b0ff;
+        margin-bottom: 0;
+    }
+    .m-top {
+        margin-top: 7px;
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Setting</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    @*--------Form------------*@
+    <div class="container" style="width:100%!important">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+        {
+            @Html.AntiForgeryToken()
+        <div class="form-horizontal form-group">
+            <fieldset class="the-fieldset bg-info">
+                <div class="row">
+                    <div class="col-md-3 col3">
+                        <label for="Plant" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                        @Html.DropDownListFor(model => model.Plant, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                        <strong>@Html.ValidationMessageFor(model => model.Plant, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-3 ">
+                        <label for="Family" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                        @Html.DropDownListFor(model => model.Family, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                        <strong>@Html.ValidationMessageFor(model => model.Family, "", new { @class = "text-danger" })</strong>
+                    </div>
+
+                    <div class="col-md-1" style="padding-top: 15px;">
+                        <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                    </div>
+                    <div class="col-md-1" style="padding-top: 15px;">
+                        <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="row m-top">
+                <div class="col-md-6">
+                    <fieldset class="the-fieldset bg-info">
+                        <legend class="le">Set Mobile App Message Interval</legend>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="SuccessIntvl" class="text-right control-label col-form-label"><strong>Success Interval</strong></label>
+                                @Html.DropDownListFor(model => model.SuccessIntvl, Enumerable.Empty<SelectListItem>(), new { @class = "form-control input-sm" })
+                            </div>
+                            <div class="col-md-6">
+                                <label for="ErrorIntvl" class="text-right control-label col-form-label"><strong>Error Interval</strong></label>
+                                @Html.DropDownListFor(model => model.ErrorIntvl, Enumerable.Empty<SelectListItem>(), new { @class = "form-control input-sm" })
+                            </div>
+
+
+
+                        </div>
+
+                    </fieldset>
+                </div>
+                <div class="col-md-6">
+                    <fieldset class="the-fieldset bg-info">
+                        <legend class="le">Display Verification Label</legend>
+                        <label for="QtyVeriLbl" class="text-right control-label col-form-label"><strong>Select Printing Option for Quantity Verification</strong></label>
+                        <div class="row">
+                            <div class="col-md-1" style="width: 6%!important;">
+                                @Html.CheckBoxFor(model => model.A4Sheet, new { @class = "form-control  input-sm" })
+                            </div>
+                            <div class="col-md-3" style="width: 25%!important;">
+                                <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>A-4 Sheet</strong></label>
+                            </div>
+                            <div class="col-md-1" style="width: 6%!important;">
+                                @Html.CheckBoxFor(model => model.Barcode, new { @class = "form-control  input-sm" })
+                            </div>
+                            <div class="col-md-3" style="width: 28%!important;">
+                                <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>BarCode</strong></label>
+                            </div>
+
+                            <div class="col-md-1" style="width: 6%!important;">
+                                @Html.CheckBoxFor(model => model.Quality, new { @class = "form-control  input-sm" })
+                            </div>
+                            <div class="col-md-3" style="width: 28%!important;">
+                                <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>Quality</strong></label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="row m-top">
+                <div class="col-md-6">
+                    <fieldset class="the-fieldset bg-info">
+                        <legend class="le">Kanban Label</legend>
+                        <label for="QtyVeriLbl" class="text-right control-label col-form-label"><strong>Select Printing Option for Kanban</strong></label>
+                        <div class="row">
+                            <div class="col-md-1" style="width: 7%!important;">
+                                @Html.RadioButtonFor(model => model.PrintingCategory, "PDF", new { id = "Pdf", @class = "form-control  input-sm", @checked = "true" })
+                            </div>
+                            <div class="col-md-2" style="width: 13%!important;">
+                                <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>PDF</strong></label>
+                            </div>
+                            <div class="col-md-1" style="width: 7%!important;">
+                                @Html.RadioButtonFor(model => model.PrintingCategory, "BARCODES", new { id = "Bar", @class = "form-control  input-sm" })
+                            </div>
+                            <div class="col-md-2" style="width: 13%!important;">
+                                <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>BARCODE</strong></label>
+                            </div>
+
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="col-md-6">
+                    <fieldset class="the-fieldset bg-info">
+                        <legend class="le">QC [From Date] Days</legend>
+                        <label for="QCFromDays" class="text-right control-label col-form-label"><strong>Enter Number of Days</strong></label>
+                        <div class="row">
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(Model => Model.QCFromDays, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            </div>
+
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="row m-top">
+                <div class="col-md-6">
+                    <fieldset class="the-fieldset bg-info">
+                        <legend class="le">Verification Label</legend>
+                        <label for="QtyVeriLbl" class="text-right control-label col-form-label"><strong>Select Printing Option for Verification</strong></label>
+                        <div class="row">
+                            <div class="col-md-1" style="width: 7%!important;">
+                                @Html.RadioButtonFor(model => model.PrintVerification, "BARCODES", new { id = "VrfBar", @class = "form-control  input-sm", @checked = "true" })
+                            </div>
+                            <div class="col-md-2" style="width: 13%!important;">
+                                <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>BARCODE</strong></label>
+                            </div>
+                            <div class="col-md-1" style="width: 7%!important;">
+                                @Html.RadioButtonFor(model => model.PrintVerification, "PDF", new { id = "VrfPdf", @class = "form-control  input-sm" })
+                            </div>
+                            <div class="col-md-2" style="width: 13%!important;">
+                                <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>PDF</strong></label>
+                            </div>
+
+                        </div>
+                    </fieldset>
+                </div>
+
+                
+            </div>
+
+        </div>
+
+        }
+        <div id="Grid"></div>
+    </div>
+</div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+
+<script>
+
+
+    $(document).ready(function () {
+        
+        BindTimeInterval();
+        DDLPlant();
+        
+        
+    });
+
+
+    $("#Plant").on("change", function () {
+        DDLFamilyByPlant();
+
+    });
+    $("#Family").on("change", function () {
+        BindExistingRecord();
+        /*BindGrid();*/
+    });
+
+    $("#Clear").on("click", function () {
+        location.reload(true);
+    });
+
+    function BindTimeInterval() {
+        
+        $.ajax({
+            url: '@Url.Action("BindTimeInterval", "Setting")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#SuccessIntvl").html(null);
+                $("#ErrorIntvl").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#SuccessIntvl").append(optionhtml);
+                    $("#ErrorIntvl").append(optionhtml);
+                });
+                
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    }
+
+    //Function to bind Plant
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "Setting")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#Plant").append(optionhtml);
+                });
+
+
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        var selectedValue = $("#Plant").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "Setting")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#Family").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#Family").append(optionhtml);
+
+                });
+                BindExistingRecord();
+               /* BindGrid();*/
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    function BindExistingRecord() {
+        $("#divLoader").show();
+        var modlType,Verifitype;
+        if ($("#Pdf").is(":checked")) {
+            modlType = $("#Pdf").val();
+        }
+        else if ($("#Bar").is(":checked")) {
+            modlType = $("#Bar").val();
+        }
+
+        if ($("#VrfPdf").is(":checked")) {
+            Verifitype = $("#VrfPdf").val();
+        }
+        else if ($("#VrfBar").is(":checked")) {
+            Verifitype = $("#VrfBar").val();
+        }
+
+        if ($("#A4Sheet").prop('checked') == true) {
+            A4Sheet = true;
+        }
+        else {
+            A4Sheet = false;
+        }
+        if ($("#Barcode").prop('checked') == true) {
+            Barcode = true;
+        }
+        else {
+            Barcode = false;
+        }
+        if ($("#Quality").prop('checked') == true) {
+            Quality = true;
+        }
+        else {
+            Quality = false;
+        }
+        var Data = {
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val(),
+            A4Sheet: A4Sheet,
+            Barcode: Barcode,
+            Quality: Quality,
+            PrintingCategory: modlType,
+            PrintVerification: Verifitype
+
+                };
+        $.ajax({
+            url: '@Url.Action("ExistingRecord", "Setting")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (data) {
+                $("#divLoader").hide();
+
+                if (data.Result.SuccessIntvl !== null) {
+                    $("#SuccessIntvl").val(data.Result.SuccessIntvl);
+                }
+                else {
+                    $("#SuccessIntvl").val("SELECT");
+                }
+                if (data.Result.ErrorIntvl !== null) {
+                    $("#ErrorIntvl").val(data.Result.ErrorIntvl);
+                }
+                else {
+                    $("#ErrorIntvl").val("SELECT");
+                }
+                //console.log(data.Result.A4Sheet);               
+                $("#A4Sheet").prop('checked', data.Result.A4Sheet);
+                $("#Barcode").prop('checked', data.Result.Barcode);
+                $("#Quality").prop('checked', data.Result.Quality);
+
+               // $('[name="PrintingCategory"]').removeAttr('checked');
+                if (data.Result.PrintingCategory !== "" && data.Result.PrintingCategory != null) {
+                    if ("PDF" == data.Result.PrintingCategory) {
+                        $('#Pdf').prop('checked', true);
+                    }
+                    else if ("BARCODES" == data.Result.PrintingCategory) {
+                        $('#Bar').prop('checked', true);
+
+                    }
+                }
+                if (data.Result.PrintVerification !== "" && data.Result.PrintVerification != null) {
+                    if ("PDF" == data.Result.PrintVerification) {
+                        $('#VrfPdf').prop('checked', true);
+                    }
+                    else if ("BARCODES" == data.Result.PrintVerification) {
+                        $('#VrfBar').prop('checked', true);
+
+                    }
+                }
+                if (data.Result.QCFromDays !== null) {
+                    $("#QCFromDays").val(data.Result.QCFromDays);
+                }
+                else {
+                    $('#QCFromDays').val(null);
+                }
+                BindGrid();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    //Function to bind Grid
+    function BindGrid() {
+        $("#divLoader").show();
+        var Data = {
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val()
+
+                };
+        $.ajax({
+            url: '@Url.Action("Grid", "Setting")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+
+                $("#Grid").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Insert function
+    $("#Add").on("click", function () {
+        $("#divLoader").show();
+        if ($("#A4Sheet").prop('checked') == true) {
+            A4Sheet = true;
+        }
+        else {
+            A4Sheet = false;
+        }
+        if ($("#Barcode").prop('checked') == true) {
+            Barcode = true;
+        }
+        else {
+            Barcode = false;
+        }
+        if ($("#Quality").prop('checked') == true) {
+            Quality = true;
+        }
+        else {
+            Quality = false;
+        }
+            var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                SuccessIntvl: $('#SuccessIntvl').val(),
+                ErrorIntvl: $('#ErrorIntvl').val(),
+                QCFromDays: $('#QCFromDays').val(),
+                A4Sheet: A4Sheet,
+                Barcode: Barcode,
+                Quality: Quality,
+                PrintingCategory: $("input[name='PrintingCategory']:checked").val(),
+                PrintVerification: $("input[name='PrintVerification']:checked").val()
+            };
+            $.ajax({
+                url: '@Url.Action("Add", "Setting")',
+                data: JSON.stringify({ data: Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+
+                    $("#divLoader").hide();
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        
+                        BindGrid();
+                    }
+                },
+                error: function (errormessage) {
+                    $("#divLoader").hide();
+                    $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+
+                }
+            });
+    });
+
+    function closeAlert(alert) {
+
+      $(alert).hide();
+    };
+
+    $("#Plant").select2({
+        allowClear: true,
+        width: '185px',
+    });
+    $("#Family").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    //$("#SuccessIntvl,#ErrorIntvl").select2({
+    //    allowClear: true,
+    //    width: '100%',
+    //});
+
+
+</script>

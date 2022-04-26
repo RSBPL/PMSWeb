@@ -1,0 +1,7 @@
+﻿@model MVCApp.Models.StageMsterModel
+@{
+    <div>
+        @Html.DropDownListFor(model => model.FAMILY_CODE, (IEnumerable<SelectListItem>)ViewBag.Family, new { @class = "form-control  input-sm" })
+    </div>
+}
+

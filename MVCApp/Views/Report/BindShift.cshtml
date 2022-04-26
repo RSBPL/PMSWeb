@@ -1,0 +1,9 @@
+﻿@model MVCApp.Models.ReportModel
+
+@{
+    <div>
+        @Html.DropDownListFor(Model => Model.Shift, (IEnumerable<SelectListItem>)ViewBag.Shift, new { @class = "form-control input-sm" })
+    </div>
+}
+
+

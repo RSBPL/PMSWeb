@@ -1,0 +1,1162 @@
+﻿@model MVCApp.Models.OtherSuffix
+
+<style>
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .the-legend {
+        box-shadow: 0px 1px 5px #7f8b8f;
+    }
+
+    ol, ul {
+        margin: 5px 0px 1px 1px;
+    }
+
+    .tab-content {
+        padding: 6px 0px 0px 0px;
+    }
+    .m-50 {
+        width: 73%;
+        MARGIN: 0 0 0 130px
+    }
+    .newinputwidth {
+        MIN-WIDTH: 130px !important;
+        MAX-HEIGHT: 30px !important;
+    }
+    
+</style>
+
+
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Other Master</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    <ul class="nav nav-pills">
+        <li class="bg-light active"><a data-toggle="tab" href="#Menu1">Month & Year Code (Domestic Codes)</a></li>
+        <li class="bg-light"><a data-toggle="tab" href="#Menu2">Month & Year Code (Export Codes)</a></li>
+        <li class="bg-light"><a data-toggle="tab" href="#Menu3">Tyre Manufacturer</a></li>
+        <li class="bg-light"><a data-toggle="tab" href="#Menu4">Battery Manufacturer</a></li>
+        <li class="bg-light"><a data-toggle="tab" href="#Menu5">Shift Detail(s)</a></li>
+        <li class="bg-light"><a data-toggle="tab" href="#Menu6">Dummy Battery DCode</a></li>
+        <li class="bg-light"><a data-toggle="tab" href="#Menu7">Dummy Battery SerialNo</a></li>
+        <li class="bg-light"><a data-toggle="tab" href="#Menu8">FCode Tyres</a></li>
+
+    </ul>
+    @*--------Form------------*@
+<div class="tab-content">
+    <div id="Menu1" class="tab-pane fade in active">
+        <div class="container" style="width:100%!important">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-horizontal form-group ">
+                    <fieldset class="the-fieldset bg-info">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="Plant" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                                @Html.DropDownListFor(model => model.Plant, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+
+                                <strong>@Html.ValidationMessageFor(model => model.Plant, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="Type" class="text-right control-label col-form-label"><strong>Type</strong></label>
+                                @Html.DropDownList("Type", new List<SelectListItem>
+
+                                      {
+                                          new SelectListItem{ Text = "MONTH CODE",Value="DOMESTIC" },
+                                          new SelectListItem{ Text = "QR CODE",Value="QRDOMESTIC"}
+                                      })
+                            </div>
+                            <div class="col-md-3">
+                                <label for="MonthYear" class="text-right control-label col-form-label"><strong>Month</strong></label>
+                                @Html.DropDownListFor(model => model.MonthYear, (IEnumerable<SelectListItem>)ViewBag.Months, new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.MonthYear, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="MyCode" class="text-right control-label col-form-label"><strong>Suffix</strong></label>
+                                @Html.TextBoxFor(Model => Model.MyCode, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.MyCode, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-1" style="padding-top: 23px;">
+                                <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                                <button class="btn btn-success btn-sm" type="button" id="Update"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+                            </div>
+                            <div class="col-md-1" style="padding-top: 23px;">
+                                <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+
+            }
+            <div id="Grid"></div>
+        </div>
+    </div>
+    <div id="Menu2" class="tab-pane fade">
+        <div class="container" style="width:100%!important">
+            <div class="form-horizontal form-group ">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="PlantExport" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            @Html.DropDownListFor(model => model.PlantExport, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+
+                            <strong>@Html.ValidationMessageFor(model => model.PlantExport, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="MonthYear" class="text-right control-label col-form-label"><strong>Month</strong></label>
+
+                            @Html.DropDownListFor(model => model.MonthYearExport, (IEnumerable<SelectListItem>)ViewBag.Months, new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.MonthYearExport, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="MyCode" class="text-right control-label col-form-label"><strong>Suffix</strong></label>
+                            @Html.TextBoxFor(Model => Model.MyCodeExport, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.MyCodeExport, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-success btn-sm" type="button" id="AddExport"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                            <button class="btn btn-success btn-sm" type="button" id="UpdateExport"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-default btn-sm" type="button" id="ClearExport"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div id="GridExport"></div>
+        </div>
+    </div>
+
+    <div id="Menu3" class="tab-pane fade">
+        <div class="container" style="width:100%!important">
+            <div class="form-horizontal form-group ">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="TyreName" class="text-right control-label col-form-label"><strong>Tyre Manufacturer</strong></label>
+                            @Html.TextBoxFor(Model => Model.TyreName, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.TyreName, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-success btn-sm" type="button" id="AddTyre"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                            <button class="btn btn-success btn-sm" type="button" id="UpdateTyre"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-default btn-sm" type="button" id="ClearTyre"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div id="GridTyre"></div>
+        </div>
+    </div>
+
+    <div id="Menu4" class="tab-pane fade">
+        <div class="container" style="width:100%!important">
+            <div class="form-horizontal form-group ">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="BatteryName" class="text-right control-label col-form-label"><strong>Battery Manufacturer</strong></label>
+                            @Html.TextBoxFor(Model => Model.BatteryName, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.BatteryName, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-success btn-sm" type="button" id="AddBattery"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                            <button class="btn btn-success btn-sm" type="button" id="UpdateBattery"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-default btn-sm" type="button" id="ClearBattery"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div id="GridBattery"></div>
+        </div>
+    </div>
+
+    <div id="Menu5" class="tab-pane fade">
+        <div class="container" style="width:100%!important">
+            <div class="form-horizontal form-group ">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label for="ShiftCode" class="text-right control-label col-form-label"><strong>Shift Code</strong></label>
+                            @Html.TextBoxFor(Model => Model.ShiftCode, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.ShiftCode, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-2 ">
+                            <label for="StartTime" class="text-left control-label col-form-label "><strong>Start Time</strong></label>
+                            @Html.EditorFor(m => m.StartTime, new { type = "text", id = "StartTime", @class = "form-control input-sm newinputwidth" })
+                        </div>
+                        <div class="col-md-2 ">
+                            <label for="EndTime" class="text-left control-label col-form-label "><strong>End Time</strong></label>
+                            @Html.EditorFor(m => m.EndTime, new { type = "text", id = "EndTime", @class = "form-control input-sm newinputwidth " })
+                        </div>
+                        <div class="col-md-2">
+                            <label for="NightExist" class="text-right control-label col-form-label"><strong>Night Exists?</strong></label>
+                            <div class="form-check">
+                                @Html.CheckBoxFor(Model => Model.NightExist, new { @class = "largerCheckbox", @checked = "checked" })
+                            </div>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-success btn-sm" type="button" id="AddShift"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                            <button class="btn btn-success btn-sm" type="button" id="UpdateShift"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-default btn-sm" type="button" id="ClearShift"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div id="GridShift"></div>
+        </div>
+    </div>
+
+    <div id="Menu6" class="tab-pane fade">
+        <div class="container" style="width:100%!important">
+            <div class="form-horizontal form-group ">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="PlantBattery" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            @Html.DropDownListFor(model => model.PlantBattery, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+
+                            <strong>@Html.ValidationMessageFor(model => model.PlantBattery, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="BatteryDecode" class="text-right control-label col-form-label"><strong>Battery</strong></label>
+                            @Html.DropDownListFor(model => model.BatteryDecode, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+
+                            <strong>@Html.ValidationMessageFor(model => model.BatteryDecode, "", new { @class = "text-danger" })</strong>
+                        </div>
+
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-success btn-sm" type="button" id="AddDummy"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                            <button class="btn btn-success btn-sm" type="button" id="UpdateDummy"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-default btn-sm" type="button" id="ClearDummy"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div id="GridBatteryDeCode"></div>
+        </div>
+    </div>
+
+    <div id="Menu7" class="tab-pane fade">
+        <div class="container" style="width:100%!important">
+            <div class="form-horizontal form-group ">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="PlantSrl" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            @Html.DropDownListFor(model => model.PlantSrl, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+
+                            <strong>@Html.ValidationMessageFor(model => model.PlantSrl, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="BatterySrl" class="text-right control-label col-form-label"><strong>Battery</strong></label>
+                            @Html.DropDownListFor(model => model.BatterySrl, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+
+                            <strong>@Html.ValidationMessageFor(model => model.BatterySrl, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="DammySrNo" class="text-right control-label col-form-label"><strong>Dummy Serial No.</strong></label>
+                            @Html.TextBoxFor(Model => Model.DammySrNo, null, new { @class = "form-control input-sm", @autocomplete = "off", Type = "number" })
+                            <strong>@Html.ValidationMessageFor(model => model.DammySrNo, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-success btn-sm" type="button" id="AddSrl"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                            <button class="btn btn-success btn-sm" type="button" id="UpdateSrl"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-default btn-sm" type="button" id="ClearSrl"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div id="GridBatterySrl"></div>
+        </div>
+    </div>
+
+    <div id="Menu8" class="tab-pane fade">
+        <div class="container" style="width:100%!important">
+            <div class="form-horizontal form-group ">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="PlantFcode" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            @Html.DropDownListFor(model => model.PlantFcode, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.PlantFcode, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="FamilyFcode" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                            @Html.DropDownListFor(model => model.FamilyFcode, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.FamilyFcode, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="Fcode" class="text-right control-label col-form-label"><strong>FCode</strong></label>
+                            @Html.DropDownListFor(model => model.Fcode, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.Fcode, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="Tyre" class="text-right control-label col-form-label"><strong>Tyre</strong></label>
+                            @Html.DropDownListFor(model => model.Tyre, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.Tyre, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-success btn-sm" type="button" id="AddFCode"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                            <button class="btn btn-success btn-sm" type="button" id="UpdateFCode"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-default btn-sm" type="button" id="ClearFCode"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div id="GridFCodeTyre"></div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+
+        DDLPlant();
+        DDLPlantBattery();
+        DDLPlantSrl();
+        DDLPlantFCode();
+        $('#Update').hide();
+        $('#UpdateExport').hide();
+        $('#UpdateTyre').hide();
+        $('#UpdateBattery').hide();
+        $('#UpdateShift').hide();
+        $('#UpdateDummy').hide();
+        $('#UpdateSrl').hide();
+        $('#UpdateFCode').hide();
+    });
+
+
+    $("#Plant").on('change', function () {
+        BindGrid();
+    });
+    $("#Type").on('change', function () {
+        BindGrid();
+    });
+    $("#PlantExport").on('change', function () {
+        BindGridExport();
+    });
+    $("#PlantFcode").on('change', function () {
+        //$('#AddFCode').show();
+        //$('#UpdateFCode').hide();
+       
+        DDLFamilyByPlant();
+      
+    });
+    $("#FamilyFcode").on('change', function () {
+        DdlDcodeByPlantFamily();
+        BindFCodeTyreGrid();
+    });
+
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "OtherMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Plant").html(result);
+                BindGrid();
+                $("#PlantExport").html(result);
+                BindGridExport();
+               // BindGridExport();
+                //$("#TyreName").html(result);
+                BindTyre();
+                BindGridBattery();
+                BindGridShift();
+                BindGridBatteryDeCode();
+                BindGridBatterySrl();
+                /*BindFCodeTyreGrid();*/
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    // Bind DDLPlantBattery
+    function DDLPlantBattery() {
+        $.ajax({
+            url: '@Url.Action("BindPlantBattery", "OtherMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#PlantBattery").html(result);
+                DDLBatteryDecode();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    // Bind DDLPlantBattery
+    function DDLBatteryDecode() {
+        var PlantBattery = $("#PlantBattery").val();
+        $.ajax({
+            url: '@Url.Action("BindBatteryDecode", "OtherMaster")',
+            data: JSON.stringify({ PlantBattery: PlantBattery }),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#BatteryDecode").html(null);
+                $("#BatteryDecode").html(result);
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+     // Bind DDLPlantSrl
+    function DDLPlantSrl() {
+        $.ajax({
+            url: '@Url.Action("BindPlantSrl", "OtherMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#PlantSrl").html(result);
+                DDLBatterySrl();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    // Bind DDLPlantFCode
+    function DDLPlantFCode() {
+        $.ajax({
+            url: '@Url.Action("BindPlantFCode", "OtherMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#PlantFcode").html(result);
+                DDLFamilyByPlant();
+              /*  BindFCodeTyreGrid();*/
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        var selectedValue = $("#PlantFcode").val();
+        $.ajax({
+            url: '@Url.Action("BindFamilyFCode", "OtherMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#FamilyFcode").html(null);
+                $("#FamilyFcode").html(result);
+                DdlDcodeByPlantFamily();
+                DdlTyre();
+                BindFCodeTyreGrid();
+                //BindGrid();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+     //Function to bind Dcode by Plant and family
+    function DdlDcodeByPlantFamily() {
+
+        var selectedPlantValue = $("#PlantFcode").val();
+        var selectedfamilyValue = $("#FamilyFcode").val();
+
+        $.ajax({
+            url: '@Url.Action("BindFCode", "OtherMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ PlantFcode: selectedPlantValue, FamilyFcode: selectedfamilyValue }),
+            success: function (result) {
+                $("#Fcode").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#Fcode").append(optionhtml);
+                });
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    //Function to bind Fcode by Plant and family
+    function DdlTyre() {
+
+        var selectedPlantValue = $("#PlantFcode").val();
+        var selectedfamilyValue = $("#FamilyFcode").val();
+
+        $.ajax({
+            url: '@Url.Action("BindTyre", "OtherMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ PlantFcode: selectedPlantValue, FamilyFcode: selectedfamilyValue }),
+            success: function (result) {
+                $("#Tyre").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#Tyre").append(optionhtml);
+                });
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    // Bind FCode Tyre Grid
+     function BindFCodeTyreGrid() {
+        $("#divLoader").show();
+        var Data = {
+            PlantFcode: $('#PlantFcode').val(),
+            FamilyFcode: $('#FamilyFcode').val()
+
+                };
+        $.ajax({
+            url: '@Url.Action("GridFCodeTyre", "OtherMaster")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+
+                $("#GridFCodeTyre").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    
+
+
+    // Bind DDLBatterySrl
+    function DDLBatterySrl() {
+        var PlantSrl = $("#PlantSrl").val();
+        $.ajax({
+            url: '@Url.Action("BindBatterySrl", "OtherMaster")',
+            data: JSON.stringify({ PlantSrl: PlantSrl }),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#BatterySrl").html(null);
+                $("#BatterySrl").html(result);
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+        //Bind Grid
+    function BindGrid() {
+        $("#divLoader").show();
+        var type = $("#Type").val();
+        var plant = $("#Plant").val();
+        $.ajax({
+            url: '@Url.Action("Grid", "OtherMaster")',
+            data: JSON.stringify({ Type: type, Plant: plant }),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Grid").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Bind BindGridExport
+     function BindGridExport() {
+        $("#divLoader").show();
+         var PlantExport = $("#PlantExport").val();
+        $.ajax({
+            url: '@Url.Action("GridExport", "OtherMaster")',
+            data: JSON.stringify({PlantExport: PlantExport }),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#GridExport").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Bind BindGridTyre
+    function BindTyre() {
+        $("#divLoader").show();
+        var TyreName = $("#TyreName").val();
+        $.ajax({
+            url: '@Url.Action("GridTyre", "OtherMaster")',
+            data: JSON.stringify({ TyreName: TyreName }),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#GridTyre").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Bind BindGridBattery
+    function BindGridBattery() {
+        $("#divLoader").show();
+        var BatteryName = $("#BatteryName").val();
+        $.ajax({
+            url: '@Url.Action("GridBattery", "OtherMaster")',
+            data: JSON.stringify({ BatteryName: BatteryName }),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#GridBattery").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+     //Bind BindGridShift
+    function BindGridShift() {
+        $("#divLoader").show();
+        var ShiftCode = $("#ShiftCode").val();
+        $.ajax({
+            url: '@Url.Action("GridShift", "OtherMaster")',
+            data: JSON.stringify({ ShiftCode: ShiftCode }),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#GridShift").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+     //Bind BindGridBatteryDeCode
+    function BindGridBatteryDeCode() {
+        $("#divLoader").show();
+        var PlantBattery = $("#PlantBattery").val();
+        $.ajax({
+            url: '@Url.Action("GridBatteryDeCode", "OtherMaster")',
+            data: JSON.stringify({ PlantBattery: PlantBattery }),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#GridBatteryDeCode").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+
+     //Bind BindGridBatterySrl
+    function BindGridBatterySrl() {
+        $("#divLoader").show();
+        var PlantSrl = $("#PlantSrl").val();
+        $.ajax({
+            url: '@Url.Action("GridBatterySrl", "OtherMaster")',
+            data: JSON.stringify({ PlantSrl: PlantSrl }),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#GridBatterySrl").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+
+    $("#Clear").on("click", function () {
+        location.reload(true);
+    });
+    $("#ClearExport").on("click", function () {
+        location.reload(true);
+    });
+    $("#ClearTyre").on("click", function () {
+        location.reload(true);
+    });
+    $("#ClearBattery").on("click", function () {
+        location.reload(true);
+    });
+    $("#ClearShift").on("click", function () {
+        location.reload(true);
+    });
+    $("#ClearDummy").on("click", function () {
+        location.reload(true);
+    });
+    $("#ClearSrl").on("click", function () {
+        location.reload(true);
+    });
+    $("#ClearFCode").on("click", function () {
+        location.reload(true);
+    });
+
+    //Save Data Domestic
+    $("#Add").on("click", function () {
+        $("#divLoader").show();
+
+            var data = {
+                Plant: $('#Plant').val(),
+                Type: $('#Type').val(),
+                MonthYear: $('#MonthYear').val(),
+                MyCode: $('#MyCode').val()
+            };
+            $.ajax({
+                url: '@Url.Action("Save", "OtherMaster")',
+                data: JSON.stringify(data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () { $(".alert").alert('close'); }, 5000);
+
+                        $('#MyCode').val("");
+
+                        BindGrid();
+                    }
+
+
+                },
+                error: function (errormessage) {
+
+                }
+            });
+
+    });
+
+    //Save Data Export
+    $("#AddExport").on("click", function () {
+        $("#divLoader").show();
+        var data = {
+            PlantExport: $('#PlantExport').val(),
+            MonthYearExport: $('#MonthYearExport').val(),
+            MyCodeExport: $('#MyCodeExport').val()
+
+         };
+        $.ajax({
+            url: '@Url.Action("SaveExport", "OtherMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+
+                    $('#MyCodeExport').val("");
+
+                    BindGridExport();
+                }
+
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    });
+
+    //Save Data Tyre Manufacturer
+    $("#AddTyre").on("click", function () {
+        $("#divLoader").show();
+        var Data = {
+            TyreName: $("#TyreName").val()
+         };
+        //var TyreName = $("#TyreName").val();
+        $.ajax({
+            url: '@Url.Action("SaveTyre", "OtherMaster")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    $('#TyreName').val("");
+                    BindTyre();
+                }
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    });
+
+   //Save Data Battery Manufacturer
+    $("#AddBattery").on("click", function () {
+        $("#divLoader").show();
+        var Data = {
+            BatteryName: $("#BatteryName").val()
+         };
+        $.ajax({
+            url: '@Url.Action("SaveBattery", "OtherMaster")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    $('#BatteryName').val("");
+                    BindGridBattery();
+                }
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    });
+
+    //Save Data Shift Details
+    $("#AddShift").on("click", function () {
+        $("#divLoader").show();
+        if ($("#NightExist").prop('checked') == true) {
+            chkbox = true;
+        }
+        else {
+            chkbox = false;
+        }
+        var Data = {
+            ShiftCode: $("#ShiftCode").val(),
+            StartTime: $('#StartTime').val(),
+            EndTime: $('#EndTime').val(),
+            NightExist: chkbox
+         };
+        $.ajax({
+            url: '@Url.Action("SaveShift", "OtherMaster")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    $('#ShiftCode').val("");
+                    $('#StartTime').val("");
+                    $('#EndTime').val("");
+                    BindGridShift();
+                }
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    });
+
+    //Save Data Battery DeCode
+    $("#AddDummy").on("click", function () {
+        $("#divLoader").show();
+        var data = {
+            PlantBattery: $('#PlantBattery').val(),
+            BatteryDecode: $('#BatteryDecode').val()
+         };
+        $.ajax({
+            url: '@Url.Action("SaveBatteryDecode", "OtherMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+
+                    BindGridBatteryDeCode();
+                }
+
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    });
+
+    //Save Data Battery Serial No
+    $("#AddSrl").on("click", function () {
+        $("#divLoader").show();
+        var data = {
+            PlantSrl: $('#PlantSrl').val(),
+            BatterySrl: $('#BatterySrl').val(),
+            DammySrNo: $('#DammySrNo').val()
+         };
+        $.ajax({
+            url: '@Url.Action("SaveBatterySrl", "OtherMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    $('#DammySrNo').val("");
+                    BindGridBatterySrl();
+                }
+
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    });
+
+    // Save Data Fcode Tyre
+    $("#AddFCode").on("click", function () {
+        $("#divLoader").show();
+
+            var data = {
+                PlantFcode: $('#PlantFcode').val(),
+                FamilyFcode: $('#FamilyFcode').val(),
+                Fcode: $('#Fcode').val(),
+                Tyre: $('#Tyre').val()
+            };
+            $.ajax({
+                url: '@Url.Action("SaveFcodetyre", "OtherMaster")',
+                data: JSON.stringify(data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () { $(".alert").alert('close'); }, 5000);
+
+                        BindFCodeTyreGrid();
+                    }
+
+                },
+                error: function (errormessage) {
+
+                }
+            });
+
+    });
+
+     // Update Data Fcode Tyre
+    $("#UpdateFCode").on("click", function () {
+        $("#divLoader").show();
+        var data = {
+              
+                PlantFcode: $('#PlantFcode').val(),
+                FamilyFcode: $('#FamilyFcode').val(),
+                Fcode: $('#Fcode').val(),
+                Tyre: $('#Tyre').val(),
+                AutoId: AutoId
+            };
+            $.ajax({
+                url: '@Url.Action("UpdateFcodetyre", "OtherMaster")',
+                data: JSON.stringify(data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                        $('#PlantFcode').prop('disabled', false);
+                        $('#FamilyFcode').prop('disabled', false);
+                        $('#Fcode').prop('disabled', false);
+                        $('#AddFCode').show();
+                        $('#UpdateFCode').hide();
+                        BindFCodeTyreGrid();
+                    }
+
+                },
+                error: function (errormessage) {
+
+                }
+            });
+
+    });
+    $("#Plant").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#PlantExport").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#PlantBattery").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#PlantSrl").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#BatteryDecode").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#BatterySrl").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#Type").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#MonthYear").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#MonthYearExport").select2({
+        allowClear: true,
+        width: '100%',
+    });
+
+    $("#PlantFcode").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#FamilyFcode").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    
+
+
+
+</script>
+
+
+

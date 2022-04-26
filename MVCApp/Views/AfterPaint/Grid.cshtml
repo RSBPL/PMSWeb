@@ -1,0 +1,111 @@
+﻿@if (ViewBag.CheckURL == "Y")
+{
+    <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" />
+}
+
+
+<style>
+    .green {
+        background: #ABEBC6;
+    }
+
+    .red {
+        background: #F5B7B1;
+    }
+</style>
+
+<style>
+    .e-headercell {
+        background-color: #14567e !important;
+        color: white;
+    }
+
+    .e-summarycell {
+        background-color: #8fbfdc !important;
+    }
+</style>
+
+<div class="page-content">
+    <div class="container-fluid" style="width: 100% !important;padding-bottom: 3px;color: white;font-size: 20px;">
+        <div class="row" style="background-color: #005b77!important">
+            <div class="col-md-2">
+                <label class="text-right control-label col-form-label" id="lblDate">&nbsp;&nbsp;&nbsp;@ViewBag.lblDate</label>
+            </div>
+            <div class="col-md-2">
+                <label class="text-right control-label col-form-label" id="lblTime">&nbsp;&nbsp;&nbsp;@ViewBag.Time</label>
+            </div>
+            <div class="col-md-2">
+                <label class="text-right control-label col-form-label" id="lblShift">&nbsp;&nbsp;&nbsp;@ViewBag.Shift</label>
+            </div>
+            <div class="col-md-2">
+                <label class="text-right control-label col-form-label" id="lblBKTotDay">&nbsp;&nbsp;&nbsp;@ViewBag.lblBKTotDay</label>
+            </div>
+            <div class="col-md-2">
+                <label class="text-right control-label col-form-label" id="lblPending">&nbsp;&nbsp;&nbsp;@ViewBag.lblPending</label>
+            </div>
+            <div class="col-md-2">
+                <img src="@ViewBag.imgstatus" style="visibility:@ViewBag.imgstatusHS">
+            </div>
+        </div>
+    </div>
+
+    @if (ViewBag.lblInfoTF == true)
+    {
+        <div class="alert alert-info" role="alert">
+            <strong>@ViewBag.lblInfo</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+    }
+
+    @if (ViewBag.lblInfodbTF == true)
+    {
+        <div class="alert alert-info" role="alert">
+            <strong>@ViewBag.lblInfodb</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+    }
+
+    @if (ViewBag.lblErrorTF == true)
+    {
+        <div class="alert alert-danger" role="alert">
+            <strong>@ViewBag.lblError</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+    }
+
+    @if (ViewBag.lblErrordbTF == true)
+    {
+        <div class="alert alert-danger" role="alert">
+            <strong>@ViewBag.lblErrordb</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+    }
+
+    <div class="table-responsive">
+        @(Html.EJS().Grid("Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+             RowDataBound("rowDataBound").
+             Columns(col =>
+             {
+                 col.Field("SRNO").HeaderText("SRNO").IsPrimaryKey(true).Width("100").Add();                
+                 col.Field("MODEL").HeaderText("MODEL").Width("200").Add();
+                 col.Field("DESCRIPTION").HeaderText("DESCRIPTION").Add();
+                 col.Field("SHORTCODE").HeaderText("SHORTCODE").Add();
+                 col.Field("PLANNED").HeaderText("PLANNED").Add();
+                 col.Field("ACTUAL").HeaderText("ACTUAL").Add();
+                 col.Field("PENDING").HeaderText("PENDING").Add();
+                 col.Field("AGEING_DAYS").HeaderText("AGEING_DAYS").Add();
+             }).SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Single)).Render())
+        <script>
+            function rowDataBound(args) {
+
+                if (args.data['PENDING'] == 0) {
+                    args.row.classList.add('green');
+                } else {
+                    args.row.classList.add('red');
+                }
+            }
+        </script>
+    </div>
+
+
+    @Html.EJS().ScriptManager()
+
+
+</div>
+

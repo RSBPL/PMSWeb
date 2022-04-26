@@ -1,0 +1,138 @@
+﻿@model MVCApp.Models.MenuModel
+
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Maintenance</a>
+        </li>
+
+        <li class="active">
+            Menu
+        </li>
+    </ul>
+</div>
+
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        @if (TempData["msg"] != null && TempData["msgType"] != null)
+        {
+            <div class="alert @TempData["msgType"]" role="alert">
+                <strong>@TempData["msg"]</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+        <div style="margin-top:5px; margin-bottom:5px;">
+            <a href="@Url.Action("Index", "MenuMaster")" class="btn btn-warning btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Go Back</a>
+        </div>
+    </div>
+    <div class="container" style="width:100%!important">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal form-group">
+                <fieldset class="the-fieldset">
+                    <legend class="the-legend"><b>Create Menu</b></legend>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="fname" class="control-label col-form-label"><strong>Menu Code</strong></label>
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(Model => Model.MenuCode, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.MenuCode, "", new { @class = "text-danger" })</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>Menu Name</strong></label>
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(Model => Model.MenuName, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.MenuName, "", new { @class = "text-danger" })</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>Controller</strong></label>
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(Model => Model.ControllerName, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.ControllerName, "", new { @class = "text-danger" })</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>Action</strong></label>
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(Model => Model.ActionName, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.ActionName, "", new { @class = "text-danger" })</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>Icon</strong></label>
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(Model => Model.Icon, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.Icon, "", new { @class = "text-danger" })</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>Route</strong></label>
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(Model => Model.Rout_Id, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.Rout_Id, "", new { @class = "text-danger" })</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="Sequence" class="text-right control-label col-form-label"><strong>Sequence</strong></label>
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(Model => Model.Sequence, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.Sequence, "", new { @class = "text-danger" })</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="col-md-12">
+                                <label for="fname" class="text-right control-label col-form-label"><strong class="text-hide">Role Description</strong></label>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-success btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </div>
+        }
+    </div>
+</div>
+

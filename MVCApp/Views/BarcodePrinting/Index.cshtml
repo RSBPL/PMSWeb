@@ -1,0 +1,485 @@
+﻿@model MVCApp.Models.Barcode
+<style>
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    #myTable thead tr {
+        background: #438eb961;
+
+    }
+    #myTable tbody tr.even:hover {
+        background-color: #abbac3;
+        cursor: pointer;
+    }
+    #myTable tbody tr.odd:hover {
+        background-color: #abbac3;
+        cursor: pointer;
+    }
+
+    #myTable tr.even:hover td.sorting_1 {
+        background-color: cadetblue;
+        cursor: pointer;
+    }
+    #myTable td {
+        font-size: 15px;
+        font-weight: 400;
+    }
+    .dataTable > thead > tr > th[class*=sorting_] {
+        color: black;
+        font-weight: 600;
+        font-size: 15px;
+    }
+    .dataTables_filter input[type="search"] {
+        width: 209px;
+    }
+    div.dataTables_processing {
+        z-index: 1;
+    }
+   
+
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Barcode Printing</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    @*--------Form------------*@
+    <div class="container" style="width:100%!important">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal form-group">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="Plant" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            @Html.DropDownListFor(model => model.Plant, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                        </div>
+                        <div class="col-md-3 ">
+                            <label for="Family" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                            @Html.DropDownListFor(model => model.Family, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                        </div>
+                        <div class="col-md-3 ">
+                            <label for="BarcodeType" class="text-right control-label col-form-label"><strong>ModuleType</strong></label>
+                            @Html.DropDownListFor(model => model.BarcodeType, new List<SelectListItem>
+                           {
+                               
+                                new SelectListItem { Text = "BULK STORAGE", Value = "BULKSTORAGE" },
+                                new SelectListItem { Text = "SUPER MARKET", Value = "SUPERMARKET" },
+                                 new SelectListItem { Text = "KANBAN", Value = "KANBAN" },
+                           }, new { @class = "form-control  input-sm" })
+                        </div>
+
+
+                        <div class="col-md-1" style="padding-top: 20px;">
+
+                            <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                        </div>
+
+                        <div class="col-md-1" style="padding-top: 20px;">
+                            <button class="btn btn-success btn-sm" type="button" id="Print"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Print</strong></button>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </div>
+
+        }
+
+
+        <table id="myTable" class="table nowrap table-striped table-bordered dt-responsive "  width="100%">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="cbAll" style="margin-left: -11px;" onclick="check_uncheck_checkbox(this.checked);" /></th>
+                    <th>PLANT</th>
+                    <th>FAMILY</th>
+                    <th>LOCATION</th>
+                    <th>KANBAN</th>
+                    <th>ITEM CODE</th>
+                    <th>DESCRIPTION</th>
+                    <th>USAGE/TRACTOR</th>
+                    <th>SAFTY STOCK QUANTITY</th>
+                    <th>NO. OF LOCATIONS ALLOCATED</th>
+                    <th>PACKING TYPE</th>
+                    <th>VERTICAL STACKING LEVEL</th>
+                    <th>BULK STORE SNP</th>
+                    <th>REVISIONR</th>
+                    <th>MAX INVENTORY</th>
+
+                </tr>
+            </thead>
+            <tbody></tbody>
+
+        </table>
+
+
+    </div>
+</div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<link href="~/Scripts/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/DataTable/jquery.dataTables.min.js"></script>
+<link href="~/Scripts/DataTable/Custom.css" rel="stylesheet" />
+
+
+
+
+<script>
+
+
+    $(document).ready(function () {
+
+        $.noConflict();
+        DDLPlant();
+
+    });
+
+
+
+    $("#Plant").on("change", function () {
+        DDLFamilyByPlant();
+
+    });
+    $("#Family").on("change", function () {
+        BindGrid();
+    });
+    $("#BarcodeType").on("change", function () {
+        BindGrid();
+    });
+    $("#Clear").on("click", function () {
+        location.reload(true);
+    });
+
+
+
+    function closeAlert(alert) {
+
+      $(alert).hide();
+    };
+    //Function to bind Plant
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "BarcodePrinting")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#Plant").append(optionhtml);
+                });
+
+
+                DDLFamilyByPlant();
+
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        var selectedValue = $("#Plant").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "BarcodePrinting")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#Family").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#Family").append(optionhtml);
+                });
+                BindGrid();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+
+
+    //Function to bind Grid
+    function BindGrid() {
+        $('#cbAll').prop('checked', false);
+        $('#myTable').DataTable().destroy();
+
+
+        var dtable = $("#myTable").DataTable({
+            "scrollX": true,
+            //"scrollY": 492,
+
+            language: {
+                search: "Search by Itemcode or Location",
+                searchPlaceholder: "Enter min 3 characters"
+            },
+            "autoWidth": false,
+            "lengthChange": false,
+            "pageLength": 20,
+            "ordering": false,
+            "processing": true, // for show progress bar
+            "serverSide": true, // for process server side
+            "filter": true, // this is for disable filter (search box)
+            "orderMulti": false, // for disable multiple column at once
+            "ajax": {
+
+
+                "url": '@Url.Action("Grid", "BarcodePrinting")',
+                "data": function (obj) {
+                    obj.Plant = $('#Plant').val();
+                    obj.Family = $('#Family').val();
+                    obj.BarcodeType = $('#BarcodeType').val();
+
+                },
+                "type": "POST",
+                "datatype": "json"
+            },
+
+
+
+            "columns": [
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<input type="checkbox" name="cbprintQR">';
+                    }
+                },
+                { "data": "Plant", "name": "PLANT"},
+                { "data": "Family", "name": "FAMILY" },
+                { "data": "LOCATION", "name": "LOCATION" },
+                { "data": "KANBAN", "name": "KANBAN" },
+                { "data": "ITEMCODE", "name": "ITEM CODE"},
+                { "data": "ITEM_DESCRIPTION", "name": "DESCRIPTION" },
+                { "data": "USAGEPERTRACTOR", "name": "USAGE PER TRACTOR" },
+                { "data": "SFTSTKQUANTITY", "name": "SAFTY STOCK QUANTITY"},
+                { "data": "NOOFLOCALLOCATED", "name": "NO. OF LOCATIONS ALLOCATED"},
+                { "data": "PACKINGTYPE", "name": "PACKING TYPE"},
+                { "data": "VERTICALSTKLEVEL", "name": "VERTICAL STACKING LEVEL"},
+                { "data": "BULKSTORESNP", "name": "BULK STORE SNP"},
+                { "data": "REVISION", "name": "REVISION" },
+                { "data": "MAX_INVENTORY", "name": "MAX INVENTORY" }
+
+
+
+
+            ],
+            "columnDefs": [
+                { "width": "3%", "targets": 0, "className": "text-center"},
+                { "width": "6%", "targets": 1, "className": "text-center" },
+                { "width": "12%", "targets": 2, "className": "text-center" },
+                { "width": "5%", "targets": 3, "className": "text-center" },
+                { "width": "10%", "targets": 4, "className": "text-center", "visible": false },
+                { "width": "20%", "targets": 5, "className": "text-center" },
+                { "width": "20%", "targets": 6, "className": "text-center" },
+                { "width": "20%", "targets": 7, "className": "text-center" },
+                { "width": "20%", "targets": 8, "className": "text-center" },
+                { "width": "20%", "targets": 9, "className": "text-center" },
+                { "width": "20%", "targets": 10, "className": "text-center" },
+                { "width": "20%", "targets": 11, "className": "text-center" },
+                { "width": "20%", "targets": 12, "className": "text-center"},
+                { "width": "20%", "targets": 13, "className": "text-center" },
+                { "width": "20%", "targets": 14, "className": "text-center" }
+
+
+            ]
+
+        });
+
+
+        $(".dataTables_filter input")
+            .unbind() // Unbind previous default bindings
+            .bind("input", function (e) { // Bind our desired behavior
+                // If the length is 3 or more characters, or the user pressed ENTER, search
+                if (this.value.length >= 3 || e.keyCode == 13) {
+                    // Call the API search function
+                    dtable.search(this.value).draw();
+                }
+                // Ensure we clear the search if they backspace far enough
+                if (this.value == "") {
+                    dtable.search("").draw();
+                }
+                return;
+            });
+    }
+
+
+    $(document).ready(function () {
+        var table = $('#myTable').dataTable(
+            //{
+            //"scrollY": "200px",
+            //"paging": false
+            //}
+        );
+
+        $(document).on("change", "#BarcodeType", function (event) {
+            var selCol = $(this).val();
+            if (selCol == "BULKSTORAGE") {
+                table.api().columns([0, 1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12,13,14]).visible(true);
+                 table.api().columns([4]).visible(false);
+            } else if (selCol == "KANBAN") {
+                table.api().columns([0, 1, 2, 3, 4, 5,6]).visible(true);
+                table.api().columns([7, 8, 9, 10, 11, 12,13,14]).visible(false);
+            } else if (selCol == "SUPERMARKET") {
+                table.api().columns([0, 1, 2, 3, 5, 6, 7]).visible(true);
+                table.api().columns([4,8, 9, 10, 11, 12, 13,14]).visible(false);
+            }
+
+            table.api().columns.adjust().draw(false);
+        });
+    });
+
+    function check_uncheck_checkbox(isChecked) {
+        if (isChecked) {
+            $('input[name="cbprintQR"]').each(function () {
+                this.checked = true;
+            });
+        } else {
+            $('input[name="cbprintQR"]').each(function () {
+                this.checked = false;
+            });
+        }
+    }
+
+    $("#Print").click(function () {
+        var Data = [];
+        $("#myTable tbody tr").each(function () {
+
+            var self = $(this);
+
+            var currentRow = self.closest("tr");
+
+            var data = $('#myTable').DataTable().row(currentRow).data();
+            if (data == undefined || data == null) {
+                $("#divLoader").hide();
+                alert("No record available for printing");
+
+                return false;
+            }
+            else {
+
+                if ((self.find('input[name="cbprintQR"]')).is(':checked')) {
+                      var obj = {
+
+                          Plant: data['Plant'],
+                          Family: data['Family'],
+                          ITEMCODE: data['ITEMCODE'],
+                          ITEM_DESCRIPTION: data['ITEM_DESCRIPTION'],
+                          LOCATION: data['LOCATION'],
+                          KANBAN: data['KANBAN'],
+                          USAGEPERTRACTOR: data['USAGEPERTRACTOR'],
+                          SFTSTKQUANTITY: data['SFTSTKQUANTITY'],
+                          NOOFLOCALLOCATED: data['NOOFLOCALLOCATED'],
+                          PACKINGTYPE: data['PACKINGTYPE'],
+                          VERTICALSTKLEVEL: data['VERTICALSTKLEVEL'],
+                          BULKSTORESNP: data['BULKSTORESNP'],
+                          REVISION: data['REVISION'],
+                          BarcodeType: $("#BarcodeType").val(),
+                          MAX_INVENTORY: data['MAX_INVENTORY']
+                };
+
+                Data.push(obj);
+                }
+
+            }
+
+        });
+        if (Data.length > 0) {
+
+            Print(Data);
+
+        }
+    });
+     function Print(Data) {
+        $("#divLoader").show();
+         $.ajax({
+            url: '@Url.Action("Print", "BarcodePrinting")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json;charset=UTF-8",
+             success: function (data) {
+
+                 $("#divLoader").hide();
+
+                 if (data.Mode == "ERROR") {
+                     $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                     setTimeout(function () {
+                         $.each($('.alert'), function () {
+                             closeAlert(this);
+                         });
+                     }, 5000);
+                 }
+
+                 else if (data.Mode == "PDF") {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                     var file = data.PDFName;
+                     var url = '@Url.Action("Download", "BarcodePrinting")?File=' + file;
+                     window.open(url, '_blank');
+                 }
+
+                 if (data.Mode == "BARCODES") {
+                     $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                     setTimeout(function () {
+                         $.each($('.alert'), function () {
+                             closeAlert(this);
+                         });
+                     }, 5000);
+                 }
+
+             },
+             complete: function () {
+                 $("#divLoader").hide();
+             },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+
+    }
+
+    function ViewPDF(LOCATION, PLANT, FAMILY)
+    {
+        var url = '@Url.Action("KanbanCrystalReport", "BarcodePrinting")?LOCATION=' + LOCATION + '&PLANT=' + PLANT + '&FAMILY=' + FAMILY;
+        window.location.href = url;
+    }
+    $("#Plant,#Family,#BarcodeType").select2({
+        allowClear: true,
+        width: '100%',
+    });
+
+
+</script>

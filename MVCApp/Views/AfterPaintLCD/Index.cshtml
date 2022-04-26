@@ -1,0 +1,67 @@
+﻿@*@if (ViewBag.CheckURL == "Y")
+    {
+        Layout = null;
+    }*@
+@{
+    Layout = null;
+}
+<link rel="icon" href="~/Image/favicon-32x32.png" type="image/x-icon">
+<title>AFTER PAINT LCD</title>
+<discription> </discription>
+<style>
+
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+</style>
+
+
+<div class="container-fluid">
+    <div id="divLoader" style="display:none;">
+        <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+    </div>
+</div>
+
+<div id="Grid"></div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Styles.Render("~/Content/ej2")
+
+<script>
+        var refresh = '@System.Configuration.ConfigurationManager.AppSettings["pagerefresh"].ToString()';
+
+    $(document).ready(function () {
+        BindGrid();
+        var myVar = setInterval(BindGrid, refresh * 1000);
+    });
+
+    //Function to bind Grid
+    function BindGrid() {
+        //$("#divLoader").show();
+        $.ajax({
+            url: '@Url.Action("Grid", "AfterPaintLCD")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Grid").html(result);
+                //$("#divLoader").hide();
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    };
+</script>

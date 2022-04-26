@@ -1,0 +1,409 @@
+﻿@model MVCApp.Models.ItemModel
+<style>
+   
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+
+    input.largerCheckbox {
+        width: 30px;
+        height: 25px;
+    } 
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Rops Master</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    @*--------Form------------*@
+<div class="container" style="width:100%!important">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal form-group">
+            @*<fieldset class="the-fieldset">
+                <legend class="the-legend"><b>Add Daily Plan</b></legend>*@
+            <fieldset class="the-fieldset bg-info">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                        @Html.DropDownListFor(model => model.Plant, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+
+                        <strong>@Html.ValidationMessageFor(model => model.Plant, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                        @Html.DropDownListFor(model => model.Family, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                        <strong>@Html.ValidationMessageFor(model => model.Family, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="Dcode" class="text-right control-label col-form-label"><strong>Dcode</strong></label>
+                        @Html.DropDownListFor(model => model.Dcode, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                        <strong>@Html.ValidationMessageFor(model => model.Dcode, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Start Serial</strong></label>
+                        @Html.TextBoxFor(Model => Model.Start_Serial, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.Start_Serial, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>End Serial</strong></label>
+                        @Html.TextBoxFor(Model => Model.End_Serial, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.End_Serial, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Current Serial</strong></label>
+                        @Html.TextBoxFor(Model => Model.Current_Serial, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.Current_Serial, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Last Printed Date</strong></label>
+                        @Html.TextBoxFor(Model => Model.LastPrintedDate, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.LastPrintedDate, "", new { @class = "text-danger" })</strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="IsSerialNoRequired" class="text-right control-label col-form-label"><strong>Sr.No Required?</strong></label>
+                        <div class="form-check">
+
+                            @Html.CheckBoxFor(Model => Model.IsSerialNoRequired, new { @class = "largerCheckbox", @checked = "checked" })
+
+
+                        </div>
+
+                    </div>
+                    <div class="col-md-1" style="padding-top: 23px;">
+                        <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                        <button class="btn btn-success btn-sm" type="button" id="Update"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+
+
+                    </div>
+                    <div class="col-md-1" style="padding-top: 23px;">
+                        <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="modal" id="DeleteConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+
+                    <div class="modal-body">
+                        <h4><strong>Are you sure, to delete this Record ?</strong></h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnDeleteCancel" class="btn btn-success btn-sm"><i class="fa fa-arrow-left"></i> Cancel</button>
+
+                        <button type="button" id="btnDelete" class="btn btn-danger btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div id="Grid"></div>
+</div>
+</div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+<script>
+
+    $(document).ready(function () {
+        DDLPlant();
+        $('#Update').hide();
+        $("#Current_Serial").attr('disabled', true);
+        $("#LastPrintedDate").attr('disabled', true);
+    });
+
+    $("#btnDeleteCancel").on("click", function () {
+        $('#DeleteConfirm').modal('hide');
+    });
+
+    $("#btnDelete").on("click", function () {
+        $('#DeleteConfirm').modal('hide');
+        $("#divLoader").show();
+        var data = {
+
+            AUTOID: AutoId
+            };
+        $.ajax({
+            url: '@Url.Action("Delete", "RopsMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    $('#Plant').prop('disabled', false);
+                    $('#Family').prop('disabled', false);
+                    $('#Dcode').prop('disabled', false);
+                    $('#Start_Serial').val("");
+                    $('#End_Serial').val("");
+
+                    $('#Add').show();
+                    $('#Update').hide();
+                    BindGrid();
+
+                }
+
+            },
+            error: function (errormessage)
+            {
+            }
+        });
+    });
+
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "RopsMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Plant").html(result);
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        var selectedValue = $("#Plant").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "RopsMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#Family").html(null);
+                $("#Family").html(result);
+                BindGrid();
+                DdlDcodeByPlantFamily();
+
+                //BindGrid();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Dcode by Plant and family
+    function DdlDcodeByPlantFamily() {
+
+        var selectedPlantValue = $("#Plant").val();
+        var selectedfamilyValue = $("#Family").val();
+        $.ajax({
+            url: '@Url.Action("BindDcode", "RopsMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedPlantValue, Family: selectedfamilyValue }),
+            success: function (result) {
+                $("#Dcode").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#Dcode").append(optionhtml);
+                });
+
+
+                //$("#Dcode").html(null);
+                //$("#Dcode").html(result);
+                //BindGrid();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Grid
+    function BindGrid() {
+        $("#divLoader").show();
+        var Data = {
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val()
+                };
+        $.ajax({
+            url: '@Url.Action("Grid", "RopsMaster")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Grid").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+
+    $("#Plant,#Family").select2({
+        allowClear: true,
+        width: '100%',
+    });
+
+
+    $("#Plant").on("change", function () {
+        DDLFamilyByPlant();
+        //DDLStageByPlantFamily();
+    });
+
+    $("#Family").on("change", function () {
+
+        DdlDcodeByPlantFamily();
+        BindGrid();
+    });
+    
+
+    $("#Clear").on("click", function () {
+        location.reload(true);
+    });
+
+    var chkbox;
+
+    //Save Data
+
+    $("#Add").on("click", function () {
+        $("#divLoader").show();
+        if ($("#IsSerialNoRequired").prop('checked') == true) {
+            chkbox = true;
+        }
+        else {
+            chkbox = false;
+        }
+
+        var data = {
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val(),
+            Dcode: $("#Dcode option:selected").text(),
+            Start_Serial: $("#Start_Serial").val(),
+            End_Serial: $("#End_Serial").val(),
+            Current_Serial: $("#Current_Serial").val(),
+            LastPrintedDate: $("#LastPrintedDate").val(),
+            IsSerialNoRequired: chkbox
+
+         };
+        $.ajax({
+            url: '@Url.Action("Save", "RopsMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    $('#Start_Serial').val("");
+                    $('#End_Serial').val("");
+                    BindGrid();
+                }
+
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    });
+
+    //Update Data
+      $("#Update").on("click", function () {
+          $("#divLoader").show();
+          if ($("#IsSerialNoRequired").prop('checked') == true) {
+              chkbox = true;
+          }
+          else {
+              chkbox = false;
+          }
+          var data = {
+            Start_Serial: $("#Start_Serial").val(),
+            End_Serial: $("#End_Serial").val(),
+            Current_Serial: $("#Current_Serial").val(),
+            IsSerialNoRequired: chkbox,
+            AutoId:AutoId
+            };
+        $.ajax({
+            url: '@Url.Action("Update", "RopsMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    $('#Plant').prop('disabled', false);
+                    $('#Family').prop('disabled', false);
+                    $('#Dcode').prop('disabled', false);
+                    $('#Start_Serial').val("");
+                    $('#End_Serial').val("");
+                    $('#Current_Serial').val("");
+                    $('#Current_Serial').prop('disabled', true);
+                    $('#Add').show();
+                    $('#Update').hide();
+                    BindGrid();
+                }
+
+            },
+            error: function (errormessage)
+            {
+            }
+        });
+    });
+
+</script>
+
+

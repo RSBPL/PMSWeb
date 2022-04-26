@@ -1,0 +1,289 @@
+﻿
+<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="table-responsive">
+        @{
+            List<object> commands = new List<object>();
+            //commands.Add(new { type = "Save", buttonOption = new { iconCss = "e-icons e-update", cssClass = "e-flat" } });
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
+            //commands.Add(new { buttonOption = new { iconCss = "e-icons e-delete", cssClass = "delete" } });
+        }
+
+        @(Html.EJS().Grid("Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                AllowPaging(true).
+                PageSettings(Page => Page.PageSize(15)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+                AllowResizing().
+
+                Columns(col =>
+                {
+                    col.HeaderText("SAVE").Commands(commands).Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+
+
+                    col.Field("TRANSACTION_DATE").HeaderText("Date").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("VENDOR_NAME").HeaderText("Vendor Name").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("VENDOR_CODE").HeaderText("Vendor Code").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("MRN_NO").HeaderText("Receipt Number").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("ITEM_DESCRIPTION").HeaderText("Description").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("ITEMCODE").HeaderText("Item Code").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+
+                    col.Field("ITEM_REVISION").HeaderText("Part Receipt Revision").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("QUANTITY").HeaderText("Quantity").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("PUNAME").HeaderText("PU").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("COMMODITY").HeaderText("Commodity").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.HeaderText("Responsibility").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Columns(new List<Syncfusion.EJ2.Grids.GridColumn>()
+                    { new Syncfusion.EJ2.Grids.GridColumn { Field = "BUYER", Width = "140", HeaderText = "Buyer Name",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                      new Syncfusion.EJ2.Grids.GridColumn { Field = "INSPECTOR", Width = "140", TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center, HeaderText = "Inspector Name"} }).Add();
+
+                    col.Field("SKIPLOT_RATIO").HeaderText("Skip Lot Ratio").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+
+                    col.HeaderText("Inspection Of Receipt Part").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Columns(new List<Syncfusion.EJ2.Grids.GridColumn>()
+                    { new Syncfusion.EJ2.Grids.GridColumn { Field = "ISDIM", Width = "140", HeaderText = "DIM Inspection To be Conducted (Y/N)",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                      new Syncfusion.EJ2.Grids.GridColumn { Field = "ISMT", Width = "140", TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center, HeaderText = "MT Test To be Conducted (Y/N)"} }).Add();
+
+                    
+                    col.HeaderText("Partial Lot Clearance  For Dim. To Be Entered by RI Inspector For Lot Disposition").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Columns(new List<Syncfusion.EJ2.Grids.GridColumn>()
+                    { new Syncfusion.EJ2.Grids.GridColumn { Template = "#txttemplate1", HeaderText = "OK Qty", Width = "150", TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                      new Syncfusion.EJ2.Grids.GridColumn { Template = "#txttemplate2", HeaderText = "Reject Qty", Width = "150", TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                      new Syncfusion.EJ2.Grids.GridColumn { Template = "#txttemplate3", HeaderText = "OK under Deviation", Width = "150", TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                      new Syncfusion.EJ2.Grids.GridColumn { Template = "#txttemplate4", HeaderText = "OK After Segregation", Width = "150", TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                      new Syncfusion.EJ2.Grids.GridColumn { Template = "#txttemplate5", HeaderText = "OK after Rework", Width = "150", TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                      new Syncfusion.EJ2.Grids.GridColumn { Template = "#txttemplate6", HeaderText = "Hold Qty", Width = "150", TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center}}).Add();
+
+                    col.HeaderText("Partial Lot Clearance Status For MT. To Be Entered by RI Inspector For Lot Disposition").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Columns(new List<Syncfusion.EJ2.Grids.GridColumn>()
+                    { new Syncfusion.EJ2.Grids.GridColumn { Template = "#txttemplate7", HeaderText = "OK Qty", Width = "150", TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                      new Syncfusion.EJ2.Grids.GridColumn { Template = "#txttemplate8", HeaderText = "Reject Qty", Width = "150", TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                      new Syncfusion.EJ2.Grids.GridColumn { Template = "#txttemplate9", HeaderText = "OK under Deviation", Width = "150", TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                      new Syncfusion.EJ2.Grids.GridColumn { Template = "#txttemplate10", HeaderText = "OK After Segregation", Width = "150", TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                      new Syncfusion.EJ2.Grids.GridColumn { Template = "#txttemplate11", HeaderText = "OK after Rework", Width = "150", TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                      new Syncfusion.EJ2.Grids.GridColumn { Template = "#txttemplate12", HeaderText = "Hold Qty", Width = "150", TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center}}).Add();
+
+                    
+
+                    col.HeaderText("Last 3 Lot RI Status With Date For Dim.").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Columns(new List<Syncfusion.EJ2.Grids.GridColumn>() {
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "DIMOK_QTY1", Width = "100", HeaderText = "OK",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "DIMREJ_QTY1", Width = "120", HeaderText = "Reject",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "DIMOK_AFTEREWORK1", Width = "140", HeaderText = "OK after Rework",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "DIMOK_AFTERSEG1", Width = "140", HeaderText = "OK After Segregation",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "DIMOK_DEV1", Width = "140", HeaderText = "Deviation",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "DIM_DATE1", Width = "140", HeaderText = "Date",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "DIMOK_QTY2", Width = "100", HeaderText = "OK",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "DIMREJ_QTY2", Width = "120", HeaderText = "Reject",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "DIMOK_AFTEREWORK2", Width = "140", HeaderText = "OK after Rework",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "DIMOK_AFTERSEG2", Width = "140", HeaderText = "OK After Segregation",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "DIMOK_DEV2", Width = "140", HeaderText = "Deviation",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "DIM_DATE2", Width = "140", HeaderText = "Date",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "DIMOK_QTY3", Width = "100", HeaderText = "OK",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "DIMREJ_QTY3", Width = "120", HeaderText = "Reject",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "DIMOK_AFTEREWORK3", Width = "140", HeaderText = "OK after Rework",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "DIMOK_AFTERSEG3", Width = "140", HeaderText = "OK After Segregation",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "DIMOK_DEV3", Width = "140", HeaderText = "Deviation",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "DIM_DATE3", Width = "140", TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center, HeaderText = "Date"} }).Add();
+
+                    col.HeaderText("Last 3 Lot RI Status With Date For MT").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Columns(new List<Syncfusion.EJ2.Grids.GridColumn>() {
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "MTOK_QTY1", Width = "100", HeaderText = "OK",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "MTREJ_QTY1", Width = "120", HeaderText = "Reject",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "MTOK_AFTEREWORK1", Width = "140", HeaderText = "OK after Rework",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "MTOK_AFTERSEG1", Width = "140", HeaderText = "OK After Segregation",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "MTOK_DEV1", Width = "140", HeaderText = "Deviation",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "MT_DATE1", Width = "140", HeaderText = "Date",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "MTOK_QTY2", Width = "100", HeaderText = "OK",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "MTREJ_QTY2", Width = "120", HeaderText = "Reject",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "MTOK_AFTEREWORK2", Width = "140", HeaderText = "OK after Rework",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "MTOK_AFTERSEG2", Width = "140", HeaderText = "OK After Segregation",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "MTOK_DEV2", Width = "140", HeaderText = "Deviation",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "MT_DATE2", Width = "140", HeaderText = "Date",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "MTOK_QTY3", Width = "100", HeaderText = "OK",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "MTREJ_QTY3", Width = "120", HeaderText = "Reject",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "MTOK_AFTEREWORK3", Width = "140", HeaderText = "OK after Rework",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "MTOK_AFTERSEG3", Width = "140", HeaderText = "OK After Segregation",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "MTOK_DEV3", Width = "140", HeaderText = "Deviation",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "MT_DATE3", Width = "140", TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center, HeaderText = "Date"} }).Add();
+
+
+                    col.Field("BLANKET_STDPO").HeaderText("Blanket PO/Standard PO").Width("250").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+
+                    col.HeaderText("Part Status").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Columns(new List<Syncfusion.EJ2.Grids.GridColumn>()
+                    { new Syncfusion.EJ2.Grids.GridColumn { Field = "NEW_REGULAR", Width = "140", HeaderText = "New/Regular",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                      new Syncfusion.EJ2.Grids.GridColumn { Field = "NUMTIMES_REC", Width = "150", TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center, HeaderText = "No. Of Time Received"} }).Add();
+
+                    col.Field("STORAGE").HeaderText("Storage Location").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+
+                    col.HeaderText("II Sheet Status").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Columns(new List<Syncfusion.EJ2.Grids.GridColumn>()
+                    { new Syncfusion.EJ2.Grids.GridColumn { Field = "SHEET_AVAILNOT", Width = "150", HeaderText = "Available/Not Available",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center}}).Add();
+
+                    col.HeaderText("Approved Part Deviation").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Columns(new List<Syncfusion.EJ2.Grids.GridColumn>()
+                    { new Syncfusion.EJ2.Grids.GridColumn { Field = "DEVIATION_BALQTY", Width = "150", HeaderText = "Balance Qty", TextAlign = Syncfusion.EJ2.Grids.TextAlign.Center } }).Add();
+
+                    col.Field("PARTHANDOVER_STATUS").HeaderText("Part Handover to Plant Status (Y/N)").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+
+                    col.HeaderText("Last 3 Month PPM").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Columns(new List<Syncfusion.EJ2.Grids.GridColumn>()
+                                  { new Syncfusion.EJ2.Grids.GridColumn { Field = "PPM_3MONTH", Width = "120", HeaderText = "3rd Last Month",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "PPM_3DATE", Width = "120", HeaderText = "3rd Last Month Date",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "PPM_2MONTH", Width = "120", HeaderText = "2nd Last Month",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "PPM_2DATE", Width = "120", HeaderText = "2nd Last Month Date",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "PPM_1MONTH", Width = "120", HeaderText = "Last Month",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "PPM_1DATE", Width = "120", TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center, HeaderText = "Last Month Date"} }).Add();
+
+                    col.Field("SKIP_LOT_3_MONTH_PPM").HeaderText("Skip Lot Last 3 Month PPM").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+
+                    col.Field("MRNAGEING_STATUS").HeaderText("MRN Ageing Status").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    //col.Field("HYPERLINK_FOR_PRINT").HeaderText("Hyperlink For Print Incoming Part Inspection Sheet Here").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+
+                    col.HeaderText("Plant Stock").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Columns(new List<Syncfusion.EJ2.Grids.GridColumn>() {
+                        new Syncfusion.EJ2.Grids.GridColumn { Field = "DOCK_QTY", Width = "130", HeaderText = "Dock",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center },
+                        new Syncfusion.EJ2.Grids.GridColumn { Field = "PAINTSHOP_QTY", Width = "130", TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center, HeaderText = "Paint Shop"},
+                        new Syncfusion.EJ2.Grids.GridColumn { Field = "LINE_QTY", Width = "130", HeaderText = "Line",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center },
+                        new Syncfusion.EJ2.Grids.GridColumn { Field = "STORELOC_QTY", Width = "130", HeaderText = "Storage Location",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center }}).Add();
+
+                    col.Field("PO_REV").HeaderText("PO Revision").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("BOM_REVISION").HeaderText("BOM Revision").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("PLANT_CODE").HeaderText("Plant").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+
+
+                    col.HeaderText("ISIR Status").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Columns(new List<Syncfusion.EJ2.Grids.GridColumn>() {
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "DIM_STATUS", Width = "130", HeaderText = "Dim Status",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "MT_STATUS", Width = "130", HeaderText = "MT Status",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "FITMENT_STATUS", Width = "140", HeaderText = "Fitment Status",TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center},
+                                  new Syncfusion.EJ2.Grids.GridColumn { Field = "SQA_STATUS", Width = "160", TextAlign=Syncfusion.EJ2.Grids.TextAlign.Center, HeaderText = "SQA Status(OK/Reject)"} }).Add();
+
+                })
+                .SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick").Render())
+
+    </div>
+</div>
+
+<script>
+    function commandClick(args) {
+                if (args.rowData != null) {
+                    if (args.target.classList.contains('edit')) {
+                        //event.stopPropagation();
+                        //event.stopImmediatePropagation();
+
+                        var grid = document.getElementById("Grid").ej2_instances[0];
+                        var selectedrowindex = grid.getSelectedRowIndexes();  // get the selected row indexes.
+                        alert(selectedrowindex); // to alert the selected row indexes.
+                        var selectedrecords = grid.getSelectedRecords();  // get the selected records.
+                        console.log(selectedrecords);
+                        //console.log($('.DimOkQty').val());
+                        //console.log($('#DimRejQty').val());
+
+                        var Data = {
+                            TRANSACTION_DATE: args.rowData["TRANSACTION_DATE"],
+                            PLANT_CODE: $('#PLANT_CODE').val(),
+                            FAMILY_CODE: $('#FAMILY_CODE').val(),
+                            MRN_NO: args.rowData["MRN_NO"],
+                            VENDOR_CODE: args.rowData["VENDOR_CODE"],
+                            ITEMCODE: args.rowData["ITEMCODE"],
+                            COMMODITY: args.rowData["COMMODITY"],
+                            BUYER: args.rowData["BUYER"],
+                            INSPECTOR: args.rowData["INSPECTOR"],
+                            SKIPLOT_RATIO: args.rowData["SKIPLOT_RATIO"],
+                            ISDIM: args.rowData["ISDIM"],
+                            ISMT: args.rowData["ISMT"],
+                            DIMOK_QTY0: $('.DimOkQty').val(),
+                            DIMREJ_QTY0: $('#DimRejQty').val(),
+                            DIMOK_DEV0: $('#DimOkDev').val(),
+                            DIMOK_AFTERSEG0: $('#DimOkSeg').val(),
+                            DIMOK_AFTEREWORK0: $('#DimOkRework').val(),
+                            DIMHOLD_QTY0: $('#DimHoldQty').val(),
+                            MTOK_QTY0: $('#MTOkQty').val(),
+                            MTREJ_QTY0: $('#MTRejQty').val(),
+                            MTOK_DEV0: $('#MTOkDev').val(),
+                            MTOK_AFTERSEG0: $('#MTOkSeg').val(),
+                            MTOK_AFTEREWORK0: $('#MTOkRework').val(),
+                            MTHOLD_QTY0: $('#MTHoldQty').val(),
+                            BLANKET_STDPO: args.rowData["BLANKET_STDPO"],
+                            NEW_REGULAR: args.rowData["NEW_REGULAR"],
+                            NUMTIMES_REC: args.rowData["NUMTIMES_REC"],
+                            SHEET_AVAILNOT: args.rowData["SHEET_AVAILNOT"],
+                            DEVIATION_BALQTY: args.rowData["DEVIATION_BALQTY"],
+                            PARTHANDOVER_STATUS: args.rowData["PARTHANDOVER_STATUS"],
+                            AUTOSKIPLOT_PPM: args.rowData["SKIP_LOT_3_MONTH_PPM"],
+                            MRNAGEING_STATUS: args.rowData["MRNAGEING_STATUS"],
+                            DOCK_QTY: args.rowData["DOCK_QTY"],
+                            PAINTSHOP_QTY: args.rowData["PAINTSHOP_QTY"],
+                            LINE_QTY: args.rowData["LINE_QTY"],
+                            STORELOC_QTY: args.rowData["STORELOC_QTY"],
+                            DIM_STATUS: args.rowData["DIM_STATUS"],
+                            MT_STATUS: args.rowData["MT_STATUS"],
+                            FITMENT_STATUS: args.rowData["FITMENT_STATUS"],
+                            SQA_STATUS: args.rowData["SQA_STATUS"]
+                            
+                        };
+                        
+                        
+                        /*AddMRNQC(Data);*/
+
+                    }
+                }
+    };
+
+   
+</script>
+
+
+
+<script id="txttemplate1" type="text/x-template">
+    <input class="DimOkQty" type="text">
+</script>
+<script id="txttemplate2" type="text/x-template">
+    <input id="DimRejQty" type="text">
+</script>
+<script id="txttemplate3" type="text/x-template">
+    <input id="DimOkDev" type="text">
+</script>
+<script id="txttemplate4" type="text/x-template">
+    <input id="DimOkSeg" type="text">
+</script>
+<script id="txttemplate5" type="text/x-template">
+    <input id="DimOkRework" type="text">
+</script>
+<script id="txttemplate6" type="text/x-template">
+    <input id="DimHoldQty" type="text">
+</script>
+
+<script id="txttemplate7" type="text/x-template">
+    <input id="MTOkQty" type="text">
+</script>
+<script id="txttemplate8" type="text/x-template">
+    <input id="MTRejQty" type="text">
+</script>
+<script id="txttemplate9" type="text/x-template">
+    <input id="MTOkDev" type="text">
+</script>
+<script id="txttemplate10" type="text/x-template">
+    <input id="MTOkSeg" type="text">
+</script>
+<script id="txttemplate11" type="text/x-template">
+    <input id="MTOkRework" type="text">
+</script>
+<script id="txttemplate12" type="text/x-template">
+    <input id="MTHoldQty" type="text">
+</script>
+
+@*<script id="Btntemplate" type="text/x-template">
+    <input id="btnSave" type="button">
+</script>*@
+
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+

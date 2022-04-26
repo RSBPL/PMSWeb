@@ -1,0 +1,111 @@
+﻿<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="table-responsive">
+        @{
+            List<object> commands = new List<object>();
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-delete", cssClass = "delete" } });
+        }
+
+        @(Html.EJS().Grid("Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                AllowPaging(true).
+                PageSettings(Page => Page.PageSize(7)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+                AllowResizing().
+                Columns(col =>
+                {
+                    col.HeaderText("EDIT/DELETE").Commands(commands).Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+
+                    col.Field("PLANT_CODE").HeaderText("PLANT").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("FAMILY_CODE").HeaderText("FAMILY").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("STAGE_DESCRIPTION").Visible(false).HeaderText("STAGE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("DESCRIPTION").HeaderText("STAGE_DESCRIPTION").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("START_SERIAL_NUMBER").HeaderText("START_SERIAL_NO.").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+
+                    col.Field("END_SERIAL_NUMBER").HeaderText("END_SERIAL_NO.").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("NUMBER_SUB_ASSEMBLIES").HeaderText("NO._SUB_ASSEMLIES").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("BARCODE_PREFIX").HeaderText("PREFIX").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("SUFFIX").HeaderText("SUFFIX").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+
+                    col.Field("CURRENT_SERIAL_NUMBER").HeaderText("CURRENT_SERIAL_NO.").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("LAST_PRINTED_LABEL_DATE_TI").HeaderText("LAST_PRINTED_LABEL_DATE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+
+                    col.Field("CREATEDBY").HeaderText("Created By").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CREATEDDATE").HeaderText("Created Date").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("UPDATEDBY").HeaderText("Updated By").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("UPDATEDDATE").HeaderText("Updated Date").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+
+
+
+                })
+                .SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick").//AllowRowDragAndDrop().
+                Render())
+
+        <script>
+            $("#Stage").select2({
+                allowClear: true,
+                width: '100%',
+            });
+            //$("#Stage").select2({
+            //    width: '100%',
+            //});
+            var Plant, Family, Stage, StartSerial, EndSerial, NoSubAssesmblies, Prefix, Suffix, CurrentSerial, LastPrintedDate, AutoId;
+            function commandClick(args) {
+                if (args.rowData != null) {
+                    if (args.target.classList.contains('edit')) {
+
+                        $("#Start_Serial").val(args.rowData["START_SERIAL_NUMBER"]);
+                        $("#End_Serial").val(args.rowData["END_SERIAL_NUMBER"]);
+                        $("#No_SubAssemblies").val(args.rowData["NUMBER_SUB_ASSEMBLIES"]);
+
+                        $("#Prefix").val(args.rowData["BARCODE_PREFIX"]);
+                        $("#Suffix").val(args.rowData["SUFFIX"]);
+                        $("#Current_Serial").val(args.rowData["CURRENT_SERIAL_NUMBER"]);
+
+                        $("#LastPrintedDate").val(args.rowData["LAST_PRINTED_LABEL_DATE_TI"]);
+                        AutoId = args.rowData["AUTOID"];
+
+                        $("#Stage").val(args.rowData["STAGE_DESCRIPTION"]);
+                        $("#Stage").val(args.rowData["STAGE_DESCRIPTION"]).trigger("change");
+
+                        $('#Plant').prop('disabled', true);
+                        $('#Family').prop('disabled', true);
+                        $('#Stage').prop('disabled', true);
+
+                        $('#Add').hide();
+                        $('#Update').show();
+                    }
+                    if (args.target.classList.contains('delete')) {
+
+                        AutoId = args.rowData["AUTOID"];
+
+                        $('#DeleteConfirm').modal('show');
+                    }
+
+                }
+            };
+
+
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+

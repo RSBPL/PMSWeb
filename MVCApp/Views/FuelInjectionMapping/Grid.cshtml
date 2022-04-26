@@ -1,0 +1,156 @@
+﻿
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="table-responsive">
+        @{
+            List<object> commands = new List<object>();
+            // commands.Add(new { buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-delete", cssClass = "delete" } });
+        }
+
+        @(Html.EJS().Grid("Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                AllowPaging(true).
+                PageSettings(Page => Page.PageSize(7)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+                AllowResizing().
+                Columns(col =>
+                {
+                    col.HeaderText("ACTION").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Commands(commands).Add();
+                    col.Field("AUTOID").HeaderText("AUTOID").IsPrimaryKey(true).Width("100").Visible(false).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("PLANT_CODE").HeaderText("PLANT CODE").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("FAMILY_CODE").HeaderText("FAMILY CODE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("ITEM_CODE").HeaderText("ITEM CODE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("DESCRIPTION").HeaderText("DESCRIPTION").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("MODEL_CODE_NO").HeaderText("MODEL CODE NO").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("ENTRYDATE").HeaderText("ENTRY DATE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CREATEDBY").HeaderText("CREATED BY").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CREATEDDATE").HeaderText("CREATED DATE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+
+
+
+                })
+                .SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick,").//AllowRowDragAndDrop().
+                Render())
+        <script>
+
+            //var AUTOID;
+            //function commandClick(args) {
+
+            //    if (args.rowData != null) {
+
+            //        if (args.target.classList.contains('delete')) {
+            //            //$('#DeleteConfirm').modal('show');
+
+            //            AUTOID = args.rowData["AUTOID"];
+            //            deleteItem();
+
+            //        }
+            //    }
+            //};
+
+            //function deleteItem() {
+            //    if (confirm("Are you sure, to delete this Record ?")) {
+            //        Delete();
+            //    }
+            //    return false;
+            //}
+
+            //if (args.target.classList.contains('delete')) {
+            //    //$("#divLoader").hide();
+            //    $('#DeleteConfirm').modal('show');
+            //    ID = args.rowData["AUTOID"];
+            //}
+            //$("#btnDelete").on("click", function () {
+            //    Delete();
+            //});
+
+
+            var AUTOID;
+            function commandClick(args) {
+                if (args.rowData != null) {
+                    alert();
+                    if (args.target.classList.contains('delete')) {
+                        $('#DeleteConfirm').modal('show');
+                        AUTOID = args.rowData["AUTOID"];
+                    }
+
+                    //Edit();
+                }
+
+                $("#btnDelete").on("click", function () {
+                DeleteFIP();
+                });
+
+                //Function to delete fip
+                function DeletFIP() {
+                var Data = {
+                    AUTOID: AUTOID
+                    };
+                $('#DeleteConfirm').modal('hide');
+                $("#divLoader").show();
+                $.ajax({
+                    url: '@Url.Action("Delete", "FuelInjectionMapping")',
+                    data: JSON.stringify({ data: Data }),
+                    type: "POST",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        $("#divLoader").hide();
+                        BindGrid();
+                        if (data.Msg != "" || data.Msg != null ) {
+                            $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            setTimeout(function() {$(".alert").alert('close');}, 5000);
+                        }
+                    }
+
+                });
+
+            }
+            };
+
+        </script>
+
+    </div>
+
+    <script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+    @Html.EJS().ScriptManager()
+
+    @*Model for Delete FIP*@
+    <div class="modal" id="DeleteConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-danger">
+                    <strong class="modal-title" id="exampleModalLabel" style="font-size:25px;"><i class="fa fa-exclamation-circle" style="font-size:35px;" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<strong>Confirmation..!</strong></strong>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4><strong>Are you sure, to delete this Fuel Injetion Pump Record ..?</strong></h4>
+                </div>
+                <div class="modal-footer">
+                    @*<a href="@Url.Action("", "")" class="btn btn-success btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Go Back</a>*@
+                    <button type="button" data-dismiss="modal" class="btn btn-warning btn-sm"><i class="ace-icon fa fa-arrow-left"></i> Go Back</button>
+                    <button type="button" id="btnDelete" class="btn btn-danger btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

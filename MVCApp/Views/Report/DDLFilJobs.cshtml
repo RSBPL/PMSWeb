@@ -1,0 +1,9 @@
+﻿@model MVCApp.Models.ReportModel
+
+@{
+    <div>
+        @Html.DropDownListFor(Model => Model.gleJobs, (IEnumerable<SelectListItem>)ViewBag.FillJobs, new { @class = "form-control input-sm" })
+    </div>
+}
+
+

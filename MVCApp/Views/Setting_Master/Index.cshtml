@@ -1,0 +1,96 @@
+﻿
+<style>
+  
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Setting Master</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#Menu1">Planning Days</a></li>
+        <li><a data-toggle="tab" href="#Menu2">Production Capacity</a></li>
+        <li><a data-toggle="tab" href="#Menu3">Weekly Off </a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="Menu1" class="tab-pane fade in active">
+
+        </div>
+        <div id="Menu2" class="tab-pane fade">
+
+        </div>
+        <div id="Menu3" class="tab-pane fade">
+
+        </div>
+    </div>
+
+</div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '@Url.Action("Tab_PlanningDays", "Setting_Master")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Menu1").html(result);
+        },
+            error: function (errormessage) {
+            alert(errormessage.responseText);
+            }
+        });
+        $.ajax({
+            url: '@Url.Action("Tab_ProductionCapacity", "Setting_Master")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Menu2").html(result);
+        },
+            error: function (errormessage) {
+            alert(errormessage.responseText);
+            }
+        });
+        $.ajax({
+            url: '@Url.Action("Tab_WeeklyOff", "Setting_Master")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Menu3").html(result);
+        },
+            error: function (errormessage) {
+            alert(errormessage.responseText);
+            }
+        });
+    });
+</script>
+

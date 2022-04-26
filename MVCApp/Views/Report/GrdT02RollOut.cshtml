@@ -1,0 +1,67 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bg-primary" style="padding-top:5px; padding-left:5px;">
+                <center>
+                    <label style="color:white;">@ViewBag.heading</label>
+                    <label style="color: white;padding-right: 10px;" class="pull-right"><strong>TOTAL RECORD : @ViewBag.Total </strong></label>
+                </center>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        @(Html.EJS().Grid("GrdT02RollOut").DataSource((System.Data.DataTable)ViewBag.DataSource).
+            //Height("400").
+            AllowPaging(true).
+            PageSettings(Page => Page.PageSize(15)).
+            AllowSelection(false).
+            AllowResizing().
+            AllowExcelExport().
+            ToolbarClick("toolbarClick").
+            AllowFiltering().
+            AllowGrouping().
+            AllowSorting().
+            Columns(col =>
+            {
+                col.Field("SERIAL_NO").HeaderText("SERIAL_NO").Width("130").Add();
+                col.Field("FCODE_SRLNO").HeaderText("FCODE_SRLNO").Width("150").Add();
+                col.Field("TRACTORCODE").HeaderText("TRACTORCODE").Width("150").Add();
+                col.Field("JOBID").HeaderText("JOBID").Width("120").Add();
+                col.Field("BUCKLEUP").HeaderText("BUCKLEUP").Width("130").Add();
+                col.Field("ROLLOUT").HeaderText("ROLLOUT").Width("130").Add();
+                col.Field("STAGE10").HeaderText("STAGE10").Width("130").Add();
+                col.Field("STAGE20").HeaderText("STAGE20").Width("130").Add();
+                col.Field("STAGE30").HeaderText("STAGE30").Width("130").Add();
+                col.Field("STAGE40").HeaderText("STAGE40").Width("130").Add();
+                col.Field("SCAN40DATE").HeaderText("SCAN40DATE").Width("140").Add();
+                col.Field("SCAN30DATE").HeaderText("SCAN30DATE").Width("140").Add();
+                col.Field("PDICLEARENECE").HeaderText("PDICLEARENECE").Width("150").Add();
+                col.Field("STATUS").HeaderText("STATUS").Width("120").Add();
+
+            }).
+            Toolbar(new List<string>() { "ExcelExport" }).
+            Render())
+        <script>
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("GrdT02RollOut").ej2_instances[0];
+                gridObj.excelExport();
+            }
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+
+

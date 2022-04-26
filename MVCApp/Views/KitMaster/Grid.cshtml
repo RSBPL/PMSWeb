@@ -1,0 +1,149 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="table-responsive">
+        @{
+            List<object> commands = new List<object>();
+            commands.Add(new { buttonOption = new { type = "EDIT", iconCss = "e-icons e-edit", cssClass = "edit" } });
+            commands.Add(new { buttonOption = new { type = "DELETE", iconCss = "e-icons e-delete", cssClass = "delete" } });
+            commands.Add(new { buttonOption = new { type = "PRINT QR CODE", iconCss = "e-icons e-print", cssClass = "print" } });
+        }
+
+        @(Html.EJS().Grid("Grid1").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                AllowPaging(true).
+                PageSettings(Page => Page.PageSize(15)).
+
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+
+                Columns(col =>
+                {
+                    col.HeaderText("ACTION").Width("160").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Commands(commands).Add();
+                    col.Field("AUTOID").HeaderText("AUTOID").IsPrimaryKey(true).Visible(false).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("PLANT_CODE").HeaderText("PLANT").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("100").Add();
+                    col.Field("FAMILY_CODE").HeaderText("FAMILY").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("150").Add();
+                    col.Field("KITNO").HeaderText("KIT NO").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("150").Add();
+                    col.Field("ITEMCODE").HeaderText("ITEMCODE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("350").Add();
+                    col.Field("SUMKTLOC").HeaderText("LOCATION").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("130").Add();
+                    col.Field("QUANTITY").HeaderText("QUANTITY").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("150").Add();
+                    col.Field("CREATEDBY").HeaderText("CREATED BY").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("150").Add();
+                    col.Field("CREATEDDATE").HeaderText("CREATED DATE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("150").Add();
+                    col.Field("UPDATEEDBY").HeaderText("UPDATEED BY").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("150").Add();
+                    col.Field("UPDATEDDATE").HeaderText("UPDATED DATE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("150").Add();
+
+
+                }).AllowExcelExport().
+                ToolbarClick("toolbarClick")
+                .Toolbar(new List<string>() { "ExcelExport" })
+                .SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick").//AllowRowDragAndDrop().
+                Render())
+
+
+        <script>
+
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("Grid1").ej2_instances[0];
+                gridObj.excelExport();
+            }
+            var AUTOID;
+            function commandClick(args) {
+                if (args.rowData != null) {
+                    if (args.target.classList.contains('edit')) {
+
+                        BindLocation(args.rowData["ITEMCODE"]);
+
+                        AUTOID = args.rowData["AUTOID"];
+                        $("#KITNO").val(args.rowData["KITNO"]);
+                        $("#ITEMCODE").val(args.rowData["ITEMCODE"]);
+                        $("#SMLocation").val(args.rowData["SUMKTLOC"]);
+                        $("#QUANTITY").val(args.rowData["QUANTITY"]);
+                        $('#PLANTCODE').prop('disabled', true);
+                        $('#FAMILYCODE').prop('disabled', true);
+                        $('#ITEMCODE').prop('disabled', true);
+                        $('#KITNO').prop('disabled', true);
+
+                        $('#Add').hide();
+                        $('#Update').show();
+                    }
+                    if (args.target.classList.contains('delete')) {
+
+
+                        AUTOID = args.rowData["AUTOID"];
+                        deleteItem();
+
+                    }
+                    if (args.target.classList.contains('print')) {
+
+
+                        AUTOID = args.rowData["AUTOID"];
+                        KITNO= args.rowData["KITNO"];
+                        PLANT = args.rowData["PLANT_CODE"];
+                        FAMILY = args.rowData["FAMILY_CODE"];
+                        
+                        PrintQr(AUTOID, KITNO, PLANT, FAMILY);
+
+                    }
+                }
+            };
+            function deleteItem() {
+                if (confirm("Are you sure, to delete this Record ?")) {
+                    Delete();
+                }
+                return false;
+            }
+            function PrintQr(AUTOID, kitno,plant,family) 
+                    {
+                        var url = '@Url.Action("PrintKit", "KitMaster")?KITNO=' + kitno + '&PLANT=' + plant + '&FAMILY=' + family;
+                /*  window.location.href = url;*/
+                window.open(url, '_blank');
+                    }
+                @*alert(KITNO);
+
+                    $.ajax({
+                        url: '@Url.Action("PrintKit", "KitMaster")',
+                        data: JSON.stringify({ KITNO: kitno, PLANT : plant,FAMILY:family }),
+                        type: "POST",
+                        contentType: "application/json;charset=utf-8",
+                        dataType: "json",
+                    });*@
+
+                //return false;
+            
+
+        </script>
+    </div>
+</div>
+
+
+@Html.EJS().ScriptManager()
+
+
+
+
+<div class="modal" id="DeleteConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <h4><strong>Are you sure, to delete this Record ?</strong></h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnDeleteCancel" class="btn btn-success btn-sm"><i class="fa fa-arrow-left"></i> Cancel</button>
+
+                <button type="button" id="btnDelete" class="btn btn-danger btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+

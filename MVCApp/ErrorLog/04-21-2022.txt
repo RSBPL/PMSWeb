@@ -1,0 +1,350 @@
+21-Apr-2022 12:30:50 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1907
+____________________________________________________________________________________________
+
+21-Apr-2022 12:30:50 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1913
+   at MVCApp.Controllers.MAHController.Login(String username, String password) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1647
+____________________________________________________________________________________________
+
+21-Apr-2022 12:32:02 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1907
+____________________________________________________________________________________________
+
+21-Apr-2022 12:32:03 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1913
+   at MVCApp.Controllers.MAHController.Login(String username, String password) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1647
+____________________________________________________________________________________________
+
+21-Apr-2022 12:33:25 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1907
+____________________________________________________________________________________________
+
+21-Apr-2022 12:33:25 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1913
+   at MVCApp.Controllers.MAHController.Login(String username, String password) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1647
+____________________________________________________________________________________________
+
+21-Apr-2022 12:33:38 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1907
+____________________________________________________________________________________________
+
+21-Apr-2022 12:33:38 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1913
+   at MVCApp.Controllers.MAHController.Login(String username, String password) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1647
+____________________________________________________________________________________________
+
+21-Apr-2022 12:33:53 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1907
+____________________________________________________________________________________________
+
+21-Apr-2022 12:33:53 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1913
+   at MVCApp.Controllers.MAHController.Login(String username, String password) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1647
+____________________________________________________________________________________________
+
+21-Apr-2022 12:34:18 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1907
+____________________________________________________________________________________________
+
+21-Apr-2022 12:34:18 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1913
+   at MVCApp.Controllers.MAHController.Login(String username, String password) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1647
+____________________________________________________________________________________________
+
+21-Apr-2022 12:34:43 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1907
+____________________________________________________________________________________________
+
+21-Apr-2022 12:34:43 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1913
+   at MVCApp.Controllers.MAHController.Login(String username, String password) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1647
+____________________________________________________________________________________________
+
+21-Apr-2022 12:35:08 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1907
+____________________________________________________________________________________________
+
+21-Apr-2022 12:35:08 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1913
+   at MVCApp.Controllers.MAHController.Login(String username, String password) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1647
+____________________________________________________________________________________________
+
+21-Apr-2022 12:35:37 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1907
+____________________________________________________________________________________________
+
+21-Apr-2022 12:35:37 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1913
+   at MVCApp.Controllers.MAHController.Login(String username, String password) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1647
+____________________________________________________________________________________________
+
+21-Apr-2022 12:35:55 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1907
+____________________________________________________________________________________________
+
+21-Apr-2022 12:35:55 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1913
+   at MVCApp.Controllers.MAHController.Login(String username, String password) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1647
+____________________________________________________________________________________________
+
+21-Apr-2022 12:37:10 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1907
+____________________________________________________________________________________________
+
+21-Apr-2022 12:37:10 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1913
+   at MVCApp.Controllers.MAHController.Login(String username, String password) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1647
+____________________________________________________________________________________________
+
+21-Apr-2022 12:38:46 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1907
+____________________________________________________________________________________________
+
+21-Apr-2022 12:38:46 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1913
+   at MVCApp.Controllers.MAHController.Login(String username, String password) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1647
+____________________________________________________________________________________________
+
+21-Apr-2022 12:39:06 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1907
+____________________________________________________________________________________________
+
+21-Apr-2022 12:39:17 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1913
+   at MVCApp.Controllers.MAHController.Login(String username, String password) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1647
+____________________________________________________________________________________________
+
+21-Apr-2022 6:09:52 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1929
+____________________________________________________________________________________________
+
+21-Apr-2022 6:09:52 PM
+Network Transport: TCP transport address connect failure
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPwd, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassword, Boolean bGetForApp, String affinityInstanceName, Boolean bForceMatch)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, SecureString securedPassword, SecureString securedProxyPassword)
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteReader(Boolean requery, Boolean fillRequest, CommandBehavior behavior)
+   at Oracle.ManagedDataAccess.Client.OracleDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MVCApp.Controllers.MAHController.returnDataTable(String SqlQuery) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1935
+   at MVCApp.Controllers.MAHController.Login(String username, String password) in H:\Naushad\GIT LATEST\GIT LATEST\MVCApp\Controllers\MAHController.cs:line 1669
+____________________________________________________________________________________________
+

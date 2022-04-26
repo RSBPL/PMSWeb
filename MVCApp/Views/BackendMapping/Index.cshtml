@@ -1,0 +1,556 @@
+﻿@model MVCApp.Models.BackendModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+<style>
+
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .hr1 {
+        margin-top: 2px;
+        margin-bottom: 6px;
+        border-top: 1px solid #00f36c;
+        width: 370px;
+    }
+    .inj {
+        width: 100px;
+    }
+    .m-50 {
+        width: 73%;
+        MARGIN: 0 0 0 130px
+    }
+    .W-100 {
+        width: 968px;
+        left: -119px;
+    }
+    .f-left {
+        float: LEFT;
+    }
+    .frm {
+        padding: 20px;
+    }
+    .C-1 {
+        WIDTH: 70px;
+    }
+    .w-adj {
+        WIDTH:100px;
+    }
+
+    .w-adj1 {
+        WIDTH: 155px;
+        margin: -3px 10px -12px 0;
+    }
+    .well {
+        background-color: #ebf6ef;
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Backend Mapping</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    <div id="SearchItem" style="background-color: #87b87f;margin: 0px 5px 0px 5px;padding: 5px;">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <strong style="font-size: 19px;color:white;">BACKEND - BOM MASTER</strong>
+                <hr class="hr1">
+            </div>
+            
+            
+        </div>
+    </div>
+</div>
+
+@*--------Form------------*@
+<div class="container" style=" width: 100%;margin-left: 5px;">
+    <div class="form-horizontal form-group">
+        <fieldset class="the-fieldset">
+            <form class="form-horizontal frm well">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="fname" class="col-md-1 text-left control-label col-form-label C-1"><strong>PLANT</strong></label>
+                        <div class="input-group m-50">
+                            <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-industry"></i></span>
+                            @Html.DropDownListFor(model => model.PLANT_CODE, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.PLANT_CODE, "", new { @class = "text-danger" })</strong>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="fname" class="col-md-1 text-left control-label col-form-label C-1 "><strong>FAMILY</strong></label>
+                        <div class="input-group m-50">
+                            <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-users"></i></span>
+                            @Html.DropDownListFor(model => model.FAMILY_CODE, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.FAMILY_CODE, "", new { @class = "text-danger" })</strong>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="fname" class="col-md-1 text-left control-label col-form-label C-1"><strong>BACKEND</strong></label>
+                        <div class="input-group m-50">
+                            <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-database"></i></span>
+                            @Html.DropDownListFor(model => model.BACKEND, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.BACKEND, "", new { @class = "text-danger" })</strong>
+
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="fname" class="col-md-1 text-left control-label col-form-label C-1 "><strong>HYDRAULIC</strong></label>
+                        <div class="input-group m-50">
+                            <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-tractor"></i></span>
+                            @Html.DropDownListFor(model => model.HYDRAULIC, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.HYDRAULIC, "", new { @class = "text-danger" })</strong>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="fname" class="col-md-1 text-left control-label col-form-label C-1"><strong>TRANSMISSION</strong></label>
+                        <div class="input-group m-50">
+                            <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-random"></i></span>
+                            @Html.DropDownListFor(model => model.TRANSMISSION, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.TRANSMISSION, "", new { @class = "text-danger" })</strong>
+
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="fname" class="col-md-1 text-left control-label col-form-label C-1 "><strong>REARAXEL</strong></label>
+                        <div class="input-group m-50">
+                            <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-truck-monster"></i></span>
+                            @Html.DropDownListFor(model => model.REARAXEL, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.REARAXEL, "", new { @class = "text-danger" })</strong>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <div class="col-md-3">
+                            <div class="col-md-6">
+                                <strong>PREFIX1</strong>
+                            </div>
+                            <div class="col-md-6 inj">
+                                @Html.TextBoxFor(Model => Model.PREFIX1, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.PREFIX1, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="col-md-6">
+                                <strong>PREFIX2</strong>
+                            </div>
+                            <div class="col-md-6 inj">
+                                @Html.TextBoxFor(Model => Model.PREFIX2, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.PREFIX2, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="col-md-6 ">
+                                <strong>SUFFIX1</strong>
+                            </div>
+                            <div class="col-md-6 inj">
+                                @Html.TextBoxFor(Model => Model.SUFFIX1, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.SUFFIX1, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="col-md-6 ">
+                                <strong>SUFFIX2</strong>
+                            </div>
+                            <div class="col-md-6 inj">
+                                @Html.TextBoxFor(Model => Model.SUFFIX2, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.SUFFIX2, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="fname" class="col-md-1 text-left control-label col-form-label C-1 "><strong>REMARKS</strong></label>
+                        <div class="input-group m-50">
+                            <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-comment-alt"></i></span>
+                            @Html.TextAreaFor(Model => Model.REMARKS1, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.REMARKS1, "", new { @class = "text-danger" })</strong>
+
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-1" style="margin-right: 15px;">
+                            <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                            <button class="btn btn-success btn-sm" type="button" id="Update"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </fieldset>
+    </div>
+</div>
+<div id="Grid"></div>
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<script>
+    var PREFIX1;
+    var PREFIX2;
+    var SUFFIX1;
+    var SUFFIX2;
+    var REMARKS1;
+    $(document).ready(function () {
+        DDLPlant();
+        $('#Update').hide();
+
+    });
+    $("#PLANT_CODE").on("change", function () {
+        DDLFamilyByPlant();
+        
+    });
+    $("#FAMILY_CODE").on("change", function () {
+        DDLBackendbyFamilyPlant();
+        BindGrid();
+
+    });
+    $("#BACKEND").on("change", function () {
+        BindGrid();
+
+    });
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "BackendMapping")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#PLANT_CODE").html(result);
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    function DDLFamilyByPlant() {
+        var selectedValue = $("#PLANT_CODE").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "BackendMapping")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#FAMILY_CODE").html(null);
+                $("#FAMILY_CODE").html(result);
+                DDLBackendbyFamilyPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    function DDLBackendbyFamilyPlant() {
+        var obj = {
+            PLANT_CODE: $("#PLANT_CODE").val(),
+            FAMILY_CODE: $("#FAMILY_CODE").val()
+        }
+        $.ajax({
+            url: '@Url.Action("BindBackend", "BackendMapping")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify( obj ),
+            success: function (result) {
+                $("#BACKEND").html(null);
+                $("#BACKEND").html(result);
+                DDLHydraulicbyFamilyPlant();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    function DDLHydraulicbyFamilyPlant() {
+        var obj = {
+            PLANT_CODE: $("#PLANT_CODE").val(),
+            FAMILY_CODE: $("#FAMILY_CODE").val()
+        }
+        $.ajax({
+            url: '@Url.Action("BindHydraulic", "BackendMapping")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify(obj),
+            success: function (result) {
+                $("#HYDRAULIC").html(null);
+                $("#HYDRAULIC").html(result);
+                DDLTransmissionbyFamilyPlant();
+
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    function DDLTransmissionbyFamilyPlant() {
+        var obj = {
+            PLANT_CODE: $("#PLANT_CODE").val(),
+            FAMILY_CODE: $("#FAMILY_CODE").val()
+        }
+        $.ajax({
+            url: '@Url.Action("BindTransmission", "BackendMapping")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify(obj),
+            success: function (result) {
+                $("#TRANSMISSION").html(null);
+                $("#TRANSMISSION").html(result);
+                DDLRearAxelbyFamilyPlant();
+
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    function DDLRearAxelbyFamilyPlant() {
+        var obj = {
+            PLANT_CODE : $("#PLANT_CODE").val(),
+            FAMILY_CODE : $("#FAMILY_CODE").val()
+        }
+
+        $.ajax({
+            url: '@Url.Action("BindRearAxel", "BackendMapping")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify(obj),
+            success: function (result) {
+                $("#REARAXEL").html(null);
+                $("#REARAXEL").html(result);
+                //DDLEnginebyplantfamily();
+                BindGrid();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    function BindGrid() {
+        $("#divLoader").show();
+        var Data = {
+            PLANT_CODE: $('#PLANT_CODE').val(),
+            FAMILY_CODE: $('#FAMILY_CODE').val(),
+            //BACKEND: $('#BACKEND').val()
+
+            //ITEM_CODE: $('#ITEM_CODE').val()
+                };
+        $.ajax({
+            url: '@Url.Action("Grid", "BackendMapping")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Grid").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    //Add
+    $("#Add").on("click", function () {
+        $("#divLoader").show();
+        var data = {
+            PLANT_CODE: $('#PLANT_CODE').val(),
+            FAMILY_CODE: $('#FAMILY_CODE').val(),
+
+            BACKEND: $('#BACKEND').val(),
+            BACKEND_DESC: $('#BACKEND option:selected').text(),
+
+            HYDRAULIC: $('#HYDRAULIC').val(),
+            HYDRAULIC_DESC: $('#HYDRAULIC option:selected').text(),
+
+            TRANSMISSION: $('#TRANSMISSION').val(),
+            TRANSMISSION_DESC: $('#TRANSMISSION option:selected').text(),
+
+            REARAXEL: $('#REARAXEL').val(),
+            REARAXEL_DESC: $('#REARAXEL option:selected').text(),
+
+            PREFIX1: $("#PREFIX1").val(),
+            PREFIX2: $("#PREFIX2").val(),
+            SUFFIX1: $("#SUFFIX1").val(),
+            SUFFIX2: $("#SUFFIX2").val(),
+            REMARKS1: $("#REMARKS1").val()
+         };
+        $.ajax({
+            url: '@Url.Action("SaveBackendMaster", "BackendMapping")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+                BindGrid();
+                //alert(data.validation);
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                   
+
+                    $('#PLANT_CODE').val("");
+                    $('#FAMILY_CODE').val("");
+                    $('#BACKEND').val("");
+                    $('#HYDRAULIC').val("");
+                    $('#TRANSMISSION').val("");
+                    $('#REARAXEL').val("");
+                    $('#PREFIX1').val("");
+                    $('#PREFIX2').val("");
+                    $('#SUFFIX1').val("");
+                    $('#SUFFIX2').val("");
+                    $('#REMARKS1').val("");
+
+                }
+
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    });
+
+    //Update Data
+    $("#Update").on("click", function () {
+        $("#divLoader").show();
+        var data = {
+            AUTOID: AUTOID,
+            PLANT_CODE: $('#PLANT_CODE').val(),
+            FAMILY_CODE: $('#FAMILY_CODE').val(),
+
+            BACKEND: $('#BACKEND').val(),
+            BACKEND_DESC: $('#BACKEND option:selected').text(),
+
+            HYDRAULIC: $('#HYDRAULIC').val(),
+            HYDRAULIC_DESC: $('#HYDRAULIC option:selected').text(),
+
+            TRANSMISSION: $('#TRANSMISSION').val(),
+            TRANSMISSION_DESC: $('#TRANSMISSION option:selected').text(),
+
+            REARAXEL: $('#REARAXEL').val(),
+            REARAXEL_DESC: $('#REARAXEL option:selected').text(),
+
+            PREFIX1: $('#PREFIX1').val(),
+            PREFIX2: $('#PREFIX2').val(),
+            SUFFIX1: $('#SUFFIX1').val(),
+            SUFFIX2: $('#SUFFIX2').val(),
+            REMARKS1: $('#REMARKS1').val()
+        };
+    $.ajax({
+        url: '@Url.Action("Update", "BackendMapping")',
+        data: JSON.stringify(data),
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            $("#divLoader").hide();
+            BindGrid();
+            if (data.validation.includes("error")) {
+                $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                setTimeout(function () { $(".alert").alert('close'); }, 5000);
+            }
+
+            else {
+
+                $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                setTimeout(function () { $(".alert").alert('close'); }, 5000);
+
+                $('#PLANT_CODE').val("");
+                $('#FAMILY_CODE').val("");
+                $('#BACKEND').val("");
+                $('#HYDRAULIC').val("");
+                $('#TRANSMISSION').val("");
+                $('#REARAXEL').val("");
+                $('#PREFIX1').val("");
+                $('#PREFIX2').val("");
+                $('#SUFFIX1').val("");
+                $('#SUFFIX2').val("");
+                $('#REMARKS1').val("");
+
+                    
+                $('#Add').show();
+                $('#Update').hide();
+                $('#PLANT_CODE').prop('disabled', false);
+                $('#FAMILY_CODE').prop('disabled', false);
+                $('#BACKEND').prop('disabled', false);
+                
+            }
+
+        },
+        error: function (errormessage)
+        {
+        }
+    });
+});
+
+
+
+
+    $("#PLANT_CODE").select2({
+        allowClear: true,
+        width: '315px',
+    });
+    $("#FAMILY_CODE").select2({
+        allowClear: true,
+        width: '315px',
+    });
+    //$("#BACKEND").select2({
+    //    allowClear: true,
+    //    width: '350px',
+    //});
+    $("#Clear").on("click", function () {
+        location.reload(true);
+    });
+    //$("#HYDRAULIC").select2({
+    //    allowClear: true,
+    //    width: '350px',
+    //});
+    //$("#TRANSMISSION").select2({
+    //    allowClear: true,
+    //    width: '350px',
+    //});
+    //$("#REARAXEL").select2({
+    //    allowClear: true,
+    //    width: '350px',
+    //});
+
+</script>

@@ -1,0 +1,131 @@
+﻿<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="table-responsive ">
+        @{
+            List<object> commands = new List<object>();
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
+            //commands.Add(new { buttonOption = new { iconCss = "e-icons e-delete", cssClass = "delete" } });
+        }
+
+        @(Html.EJS().Grid("Grid1").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                AllowPaging(true).
+                PageSettings(Page => Page.PageSize(7)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+                AllowResizing().
+                Columns(col =>
+                {
+                    col.HeaderText("Action").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Commands(commands).Width("100").Add();
+                    //col.Field("AUTOID").HeaderText("AUTOID").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("PLANT").HeaderText("PLANT").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("FAMILY").HeaderText("FAMILY").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("VENDORCODE").HeaderText("VENDOR CODE").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("VENDORNAME").HeaderText("VENDOR NAME").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("ITEMCODE").HeaderText("ITEM CODE").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("ITEM_DESCRIPTION").HeaderText("DESCRIPTION").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("DEVIATIONTYPE").HeaderText("DEVIATION TYPE").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("DEVIATIONQTY").HeaderText("DEVIATION QTY").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("ENDDATE").HeaderText("END DATE").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("APPROVEDBY").HeaderText("APPROVED BY").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("REMARKS").HeaderText("Remarks").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("CREATEDBY").HeaderText("CREATED BY").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("CREATEDDATE").HeaderText("CREATED DATE").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("UPDATEDBY").HeaderText("UPDATED BY").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("UPDATEDDATE").HeaderText("UPDATED DATE").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+
+                })
+                .AllowExcelExport().
+                ToolbarClick("toolbarClick")
+                .Toolbar(new List<string>() { "ExcelExport" })
+                .SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick").//AllowRowDragAndDrop().
+                Render())
+        <script>
+
+
+
+
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("Grid1").ej2_instances[0];
+                gridObj.excelExport();
+            }
+            var AutoId;
+            function commandClick(args) {
+                if (args.rowData != null) {
+
+                }
+            };
+
+
+        </script>
+        <script>
+            $("#Plant").select2({
+                allowClear: true,
+                width: '100%',
+            });
+            $("#Family").select2({
+                allowClear: true,
+                width: '100%',
+            });
+            var AUTOID;
+            function commandClick(args) {
+                if (args.rowData != null) {
+                    if (args.target.classList.contains('edit')) {
+                        AUTOID = args.rowData["AUTOID"];
+
+                        $("#Plant").val(args.rowData["PLANT"]);
+                        $("#Family").val(args.rowData["FAMILY"]);
+
+                        var Code = args.rowData["VENDORCODE"];
+                        var Name = args.rowData["VENDORNAME"];
+                        var codeDesc = Code + " # " + Name;
+                        $("#VendorName").val(codeDesc);
+
+                        var itmcode = args.rowData["ITEMCODE"];
+                        var itmdesc = args.rowData["ITEM_DESCRIPTION"];
+                        var codeDesc = itmcode + " # " + itmdesc;
+                        $("#ItemCode").val(codeDesc);
+                        $("#DeviationQty").val(args.rowData["DEVIATIONQTY"]);
+                        $("#EndDate").val(args.rowData["ENDDATE"]);
+                        $("#DeviationType").val(args.rowData["DEVIATIONTYPE"]);
+                        $("#DeviationType").val(args.rowData["DEVIATIONTYPE"]).trigger("change");
+                        $("#AprovedBy").val(args.rowData["APPROVEDBY"]);
+                        $("#Remarks").val(args.rowData["REMARKS"]);
+
+                        $('#Plant').prop('disabled', true);
+                        $('#Family').prop('disabled', true);
+                        $('#VendorName').prop('disabled', true);
+                        $('#ItemCode').prop('disabled', true);
+                        $('#DeviationType').prop('disabled', true);
+                        $('#Add').hide();
+                        $('#Update').show();
+                    }
+
+                }
+            };
+
+
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+
+
+
+

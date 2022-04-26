@@ -1,0 +1,203 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="table-responsive">
+        @{
+            List<object> commands = new List<object>();
+            //commands.Add(new { buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-delete", cssClass = "delete" } });
+        }
+
+        @(Html.EJS().Grid("Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                //AllowPaging(true).
+                //PageSettings(Page => Page.PageSize(7)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+
+                Columns(col =>
+                {
+                    col.Field("PLANT_CODE").HeaderText("Plant").IsPrimaryKey(true).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("100").Add();
+                    col.Field("FAMILY_CODE").HeaderText("Family").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("MAIN_SUB_ASSEMBLY").HeaderText("Main Sub Assembly").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("DESCRIPTION").HeaderText("Description").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("SHORT_CODE").HeaderText("Short Code").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("SUBASSEMBLY1").HeaderText("Sub-Assembly 1").Add();
+                    col.Field("DESCRIPTION1").HeaderText("Description 1").IsPrimaryKey(true).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("SUBASSEMBLY2").HeaderText("Sub-Assembly 2").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("DESCRIPTION2").HeaderText("Sub-Assembly 2").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.HeaderText("").Width("120").Commands(commands).Add();
+                })
+                .SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick").//AllowRowDragAndDrop().
+                Render())
+        <script>
+
+
+                var ID, PlanID, Seqn, Item_Code;
+                function commandClick(args) {
+                    if (args.rowData != null) {
+                        if (args.target.classList.contains('edit')) {
+                            //$('#EditModal').modal('show');
+                            //$('#EditQty').val(args.rowData["QTY_CANBEMADE"]);
+                            //$('#EditSqn').val(args.rowData["SEQUENCE_NO"]);
+                            //ID = args.rowData["AUTOID"];
+                            //PlanID = args.rowData["PLAN_ID"];
+                            //Seqn = args.rowData["SEQUENCE_NO"];
+                        }
+                        if (args.target.classList.contains('delete')) {
+                            var jq2 = jQuery.noConflict();
+                            jq2('#DeleteConfirm').modal('show');
+                            ID = args.rowData["AUTOID"];
+                        }
+                    }
+                };
+
+                $("#btnEditSeq").on("click", function () {
+                    Edit();
+                });
+
+
+                $("#Delete").on("click", function () {
+                    Delete();
+                });
+
+                //Function to edit Tractor Planning
+                function EditSeq() {
+                    $("#divLoader").show();
+                    var Data = {
+                        AutoId: ID,
+                        PlanId: PlanID,
+                        Seq: Seqn,
+                        Plant: $('#Plant').val(),
+                        Family: $('#Family').val(),
+                        Shift: $('#Shift').val(),
+                        Date: $('#Date').val(),
+                        ItemCode: $('#ItemCode').val(),
+                        Qty: $('#EditQty').val(),
+                        TargetSeq: $('#EditSqn').val()
+                    };
+                    $('#exampleModal').modal('hide');
+                    $.ajax({
+                        url: '@Url.Action("EditPlan", "AddDailyPlan")',
+                        data: JSON.stringify({ data: Data }),
+                        type: "POST",
+                        contentType: "application/json;charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {
+                            BindGrid();
+                             $("#divLoader").hide();
+                            $('#Qty').val("");
+                            if (data.Msg != "" || data.Msg != null ) {
+                                $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                                setTimeout(function() {$(".alert").alert('close');}, 5000);
+                            }
+                        },
+                        error: function (errormessage) {
+                            $("#divLoader").hide();
+                            $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            setTimeout(function() {$(".alert").alert('close');}, 5000);
+                        }
+                    });
+                };
+
+
+                function Delete() {
+
+                    var Data = {
+                        AutoId: ID
+                    };
+                    var jq3= jQuery.noConflict();
+                    jq3('#DeleteConfirm').modal('hide');
+                    $.ajax({
+                        url: '@Url.Action("Delete", "SubAssemblyMappingMaster")',
+                        data: JSON.stringify({ data: Data }),
+                        type: "POST",
+                        contentType: "application/json;charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {
+
+                            BindGrid();
+                            $('#Qty').val("");
+                            if (data.Msg != "" || data.Msg != null) {
+                                var jq4 = jQuery.noConflict();
+                                jq4('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                                setTimeout(function () { jq4(".alert").alert('close');}, 5000);
+                            }
+                        },
+                        error: function (errormessage) {
+                            $("#divLoader").hide();
+                            $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            setTimeout(function() {$(".alert").alert('close');}, 5000);
+                        }
+                    });
+            };
+
+        </script>
+    </div>
+</div>
+
+
+@Html.EJS().ScriptManager()
+
+
+@*Model for Edit*@
+<div class="modal fade bd-example-modal-sm" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <strong class="modal-title" id="exampleModalLabel" style="font-size:25px;"><i class="fa fa-exclamation-circle" style="font-size:35px;" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<strong>Confirmation..!</strong></strong>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Quantity can be make</label>
+                        <input type="number" class="form-control" id="EditQty" required="Required" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Sequence No.</label>
+                        <input type="number" class="form-control" id="EditSqn" required="Required" min="1">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Back</button>
+                <button type="button" class="btn btn-success btn-sm" id="btnEditSeq">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Model for Delete Plan*@
+<div class="modal" id="DeleteConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <strong class="modal-title" id="exampleModalLabel" style="font-size:25px;"><i class="fa fa-exclamation-circle" style="font-size:35px;" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<strong>Confirmation..!</strong></strong>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4><strong>Are you sure, to delete this date..?</strong></h4>
+            </div>
+            <div class="modal-footer">
+                @*<a href="@Url.Action("", "")" class="btn btn-success btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Go Back</a>*@
+                <button type="button" data-dismiss="modal" class="btn btn-warning btn-sm"><i class="ace-icon fa fa-arrow-left"></i> Go Back</button>
+                <button type="button" id="Delete" class="btn btn-danger btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,62 @@
+﻿<div class="container" style="width:100%!important">
+    @if (!string.IsNullOrEmpty(ViewBag.ExportButton))
+    {
+        if (ViewBag.ExportButton == "Hide")
+        {
+            <script>
+                $('#AddExcel').hide();
+            </script>
+        }
+        if (ViewBag.ExportButton == "Show")
+        {
+            <script>
+                $('#AddExcel').show();
+            </script>
+        }
+    }
+    <style>
+        .green {
+            background: #ABEBC6;
+        }
+
+        .red {
+            background: #F5B7B1;
+        }
+    </style>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bg-primary" style="padding-top:5px; padding-left:5px;">
+                <label style="color:black;background-color:#fff411;padding-left:10px;padding-right:10px;">NOTE :- Import button will not show until all rows indicate as green.</label>&nbsp;
+                <label style="color:black;background-color:#ABEBC6;padding-left:10px;padding-right:10px;" class="bg-success">Green row indicates valid item code..</label>&nbsp;
+                <label style="color:black;background-color:#F5B7B1;padding-left:10px;padding-right:10px;" class="bg-danger">Red row indicates invalid  item code..</label>
+            </div>
+        </div>       
+    </div>
+    <div class="table-responsive">
+
+        @(Html.EJS().Grid("GridExcel").DataSource((IEnumerable<object>)ViewBag.DataSource).
+             RowDataBound("rowDataBound").
+             Columns(col =>
+             {
+                 col.Field("Plant").HeaderText("Plant").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                 col.Field("Family").HeaderText("Family").IsPrimaryKey(true).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                 col.Field("ItemCode").HeaderText("Item Code").IsPrimaryKey(true).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                 col.Field("Qty").HeaderText("Qty").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+
+             }).SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).
+             Render())
+        <script>
+            function rowDataBound(args) {
+                if (args.data['IsCorrect'] == 1) {
+                    args.row.classList.add('green');
+                }
+                else if (args.data['IsCorrect'] == 0) {
+                    args.row.classList.add('red');
+                }
+            }
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()

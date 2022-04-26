@@ -1,0 +1,299 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8" />
+    <title>Dashboard</title>
+
+    <meta name="description" content="overview &amp; stats" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+    @Styles.Render("~/assets/css")
+
+    <!-- text fonts -->
+    @*<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;lang=en" />*@
+    <style type="text/css">
+        .marquee {
+            margin: 7px 80px 0 64px;
+            padding: 20px 0 0 0;
+            width: 900px;
+        }
+    </style>
+
+
+</head>
+
+<body style="font-family: unset;">
+    <div id="navbar" class="navbar navbar-default ace-save-state">
+        <div class="navbar-container ace-save-state" id="navbar-container">
+            <button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
+                <span class="sr-only">Toggle sidebar</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <div class="navbar-header pull-left">
+                <a href="@Url.Action("Index", "Home")" class="navbar-brand">
+                    <small>
+                        <img class="nav-user-photo" src="~/Image/Logo.png" alt="Jason's Photo" height="30" width="30" /> &nbsp;
+
+                        @if (!string.IsNullOrEmpty(
+                            Convert.ToString(HttpContext.Current.Session["Remarks"]))
+                            )
+                        {
+                            <span style="FONT-WEIGHT: 600;font-size: 118%;"> @Convert.ToString(HttpContext.Current.Session["Remarks"]).ToUpper()</span>
+                        }
+                        else
+                        {
+                            <span style="FONT-WEIGHT: 600;font-size: 118%;">PMS</span>
+                        }
+                        @*<i class="fa fa-leaf"></i> MVC*@
+                    </small>
+                </a>
+            </div>
+            <div class="navbar-buttons navbar-header navbar-brand marquee ">
+                @*<a href="@Url.Action("Index", "Home")" class="navbar-brand marquee">*@
+                <small>
+                    <marquee width="100%" direction="left" style="font-size: 12px; color:#ffd939;" onmouseover="this.stop()" onmouseout="this.start()">
+                        <span id="spanMarquee"></span>
+                    </marquee>
+                </small>
+                @*</a>*@
+            </div>
+
+            <div class="navbar-buttons navbar-header pull-right" role="navigation">
+                <ul class="nav ace-nav">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="light-blue dropdown-modal">
+                            <a data-toggle="dropdown" href="#" class="dropdown-toggle" style="background-color:#438eb9!important;">
+                                <img class="nav-user-photo" src="~/assets/images/avatars/avatar2.png" alt="Jason's Photo" />
+                                <small>Welcome, @HttpContext.Current.User.Identity.Name</small>
+                                @*<span class="user-info">
+                                        <small>Welcome,</small>
+                                    </span>*@
+
+                                <i class="ace-icon fa fa-caret-down"></i>
+                            </a>
+
+                            <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close" style="background-color:#438eb9!important;">
+                                @*<li>
+                                        <a href="#">
+                                            <i class="ace-icon fa fa-cog"></i>
+                                            Settings
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="profile.html">
+                                            <i class="ace-icon fa fa-user"></i>
+                                            Profile
+                                        </a>
+                                    </li>*@
+
+                                @*<li class="divider"></li>*@
+
+                                <li>
+                                    <a href="@Url.Action("Index", "ChangePassword")">
+                                        <i class="fa fa-key"></i>
+                                        Change Password
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="@Url.Action("Logout", "Account")">
+                                        <i class="ace-icon fa fa-power-off"></i>
+                                        Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+
+                </ul>
+            </div>
+        </div><!-- /.navbar-container -->
+    </div>
+
+    <div class="main-container ace-save-state" id="main-container" ">
+        <script type="text/javascript">
+            try { ace.settings.loadState('main-container') } catch (e) { }
+        </script>
+        @* ================================================================================================== *@
+        @{Html.RenderAction("SideMenu", "LeftMenu");}
+
+
+        @*====================================================================================================*@
+        <div class="main-content">
+            <div class="main-content-inner">
+                <div class="ace-settings-container" id="ace-settings-container">
+                    <div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
+                        <i class="ace-icon fa fa-cog bigger-130"></i>
+                    </div>
+
+                    <div class="ace-settings-box clearfix" id="ace-settings-box">
+                        <div class="pull-left width-50">
+                            <div class="ace-settings-item">
+                                <div class="pull-left">
+                                    <select id="skin-colorpicker" class="hide">
+                                        <option data-skin="no-skin" value="#438EB9">#438EB9</option>
+                                        <option data-skin="skin-1" value="#222A2D">#222A2D</option>
+                                        <option data-skin="skin-2" value="#C6487E">#C6487E</option>
+                                        <option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>
+                                    </select>
+                                </div>
+                                <span>&nbsp; Choose Skin</span>
+                            </div>
+
+                            <div class="ace-settings-item">
+                                <input type="checkbox" class="ace ace-checkbox-2 ace-save-state" id="ace-settings-navbar" autocomplete="off" />
+                                <label class="lbl" for="ace-settings-navbar"> Fixed Navbar</label>
+                            </div>
+
+                            <div class="ace-settings-item">
+                                <input type="checkbox" class="ace ace-checkbox-2 ace-save-state" id="ace-settings-sidebar" autocomplete="off" />
+                                <label class="lbl" for="ace-settings-sidebar"> Fixed Sidebar</label>
+                            </div>
+
+                            @*<div class="ace-settings-item">
+                                    <input type="checkbox" class="ace ace-checkbox-2 ace-save-state" id="ace-settings-breadcrumbs" autocomplete="off" />
+                                    <label class="lbl" for="ace-settings-breadcrumbs"> Fixed Breadcrumbs</label>
+                                </div>*@
+
+                            @*<div class="ace-settings-item">
+                                    <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-rtl" autocomplete="off" />
+                                    <label class="lbl" for="ace-settings-rtl"> Right To Left (rtl)</label>
+                                </div>*@
+
+                            <div class="ace-settings-item">
+                                <input type="checkbox" class="ace ace-checkbox-2 ace-save-state" id="ace-settings-add-container" autocomplete="off" />
+                                <label class="lbl" for="ace-settings-add-container">
+                                    Inside
+                                    <b>.container</b>
+                                </label>
+                            </div>
+                        </div><!-- /.pull-left -->
+
+                        <div class="pull-left width-50">
+                            <div class="ace-settings-item">
+                                <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-hover" autocomplete="off" />
+                                <label class="lbl" for="ace-settings-hover"> Submenu on Hover</label>
+                            </div>
+
+                            <div class="ace-settings-item">
+                                <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-compact" autocomplete="off" />
+                                <label class="lbl" for="ace-settings-compact"> Compact Sidebar</label>
+                            </div>
+                            <div class="ace-settings-item">
+                                <label class="lbl" for="ace-settings-compact"> Refresh </label>
+                                <input type="number" class="" id="txtRefreshTime" value="10" autocomplete="off" style="width:60px; height:25px;" />
+                            </div>
+
+                            @*<div class="ace-settings-item">
+                                    <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-highlight" autocomplete="off" />
+                                    <label class="lbl" for="ace-settings-highlight"> Alt. Active Item</label>
+                                </div>*@
+                        </div><!-- /.pull-left -->
+                    </div><!-- /.ace-settings-box -->
+                </div><!-- /.ace-settings-container -->
+                @RenderBody()
+
+
+            </div><!-- /.page-content -->
+        </div><!-- /.main-content -->
+
+        <div class="footer">
+            <div class="footer-inner">
+                <div class="footer-content">
+                    <span class="bigger-120">
+                        <span class="blue bolder">RS Barcoders Pvt.Ltd</span>
+                        &copy; 2020-2021
+                    </span>
+
+                    @*&nbsp; &nbsp;
+                        <span class="action-buttons">
+                            <a href="#">
+                                <i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
+                            </a>
+
+                            <a href="#">
+                                <i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
+                            </a>
+
+                            <a href="#">
+                                <i class="ace-icon fa fa-rss-square orange bigger-150"></i>
+                            </a>
+                        </span>*@
+                </div>
+            </div>
+        </div>
+
+        <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+            <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+        </a>
+
+    </div>
+
+
+    @Html.EJS().ScriptManager()
+
+    <script type="text/javascript">
+        if ('ontouchstart' in document.documentElement) document.write("<script src='/assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+    </script>
+
+    @*@Scripts.Render("~/assets/js")
+        @Scripts.Render("~/assets/MyJS")*@
+
+    @Scripts.Render("~/assets/js")
+    @Scripts.Render("~/assets/MyJS")
+    @Styles.Render("~/Content/ej2")
+
+    <script>
+        if (localStorage.getItem("skin") === null) {
+            localStorage.setItem('skin', 'no-skin');
+            var skinType = localStorage.getItem('skin')
+            $("body").addClass(skinType);
+        }
+        else {
+            var skinType = localStorage.getItem('skin')
+            $("body").addClass(skinType);
+        }
+
+        $("#skin-colorpicker").change(function () {
+            var SkinType = this.options[this.selectedIndex].getAttribute("data-skin");
+            localStorage.setItem('skin', SkinType);
+        });
+
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("DisplayMessage", "Messages")',
+                data: {}, //JSON.stringify(Data),
+                type: "GET",
+                contentType: "application/json;charset=UTF-8",
+                success: function (result) {
+                    var msg;
+                    var myObj = JSON.parse(result);
+                    //alert(myObj[1].DESCRIPTION);
+                    //alert(myObj[0].DESCRIPTION);
+                    for (var i in myObj) {
+                        if (msg != undefined && myObj[i].DESCRIPTION != null) {
+                            msg = msg + ' , ' + myObj[i].DESCRIPTION + '  FROM  ' + myObj[i].PARAMVALUE + ' To ' + myObj[i].STATUS
+                        }
+                        else if (myObj[i].DESCRIPTION!=null) {
+                            msg = myObj[i].DESCRIPTION
+                        }
+                    }
+                    $('#spanMarquee').text(msg);
+                       // alert(result);
+
+                },
+                error: function (errormessage) {
+                //alert(errormessage.responseText);
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>

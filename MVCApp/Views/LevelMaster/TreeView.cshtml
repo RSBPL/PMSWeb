@@ -1,0 +1,12 @@
+﻿
+@{
+    @Html.EJS().TreeView("treedata").ShowCheckBox(true).NodeChecked("nodeChecked").Fields(field =>
+       field.Id("id").
+       ParentID("pid").
+       Text("name").
+       HasChildren("hasChild").
+       Expanded("expanded")
+       .DataSource(ViewBag.dataSource)).CheckedNodes(ViewBag.checkedNodes).AutoCheck(false).Render();
+}
+
+@Html.EJS().ScriptManager()

@@ -1,0 +1,155 @@
+﻿<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="table-responsive">
+        @{
+            List<object> commands = new List<object>();
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-delete", cssClass = "delete"  } });
+        }
+
+        @(Html.EJS().Grid("Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                AllowPaging(true).
+                PageSettings(Page => Page.PageSize(7)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+                AllowResizing().
+                Columns(col =>
+                {
+                    col.HeaderText("ACTION").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Commands(commands).Add();
+                    col.Field("AUTOID").HeaderText("AUTOID").IsPrimaryKey(true).Width("100").Visible(false).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("PLANT_CODE").HeaderText("PLANT CODE").Width("130").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("FAMILY_CODE").HeaderText("FAMILY CODE").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("ITEM_CODE").HeaderText("ITEM CODE").Width("130").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("ITEM_DESC").HeaderText("ITEM DESCRIPTION").Width("170").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("SHORT_CODE").HeaderText("SHORT CODE").Width("180").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("SPOOL_VALUE").HeaderText("SPOOL VALUE").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("SPOOL_DESC").HeaderText("SPOOL VALUE DESCRIPTION").Width("220").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("CYNLINDER").HeaderText("CYLINDER").Width("130").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("CYNLINDER_DESC").HeaderText("CYLINDER DESCRIPTION").Width("200").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("PART1").HeaderText("PART1").Width("130").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("PART1_DESC").HeaderText("PART1 DESCRIPTION").Width("180").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("PART2").HeaderText("PART2").Width("130").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("PART2_DESC").HeaderText("PART2 DESCRIPTION").Width("180").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("CREATEDBY").HeaderText("CREATED BY").Width("130").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("CREATEDDATE").HeaderText("CREATED DATE").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("UPDATEDBY").HeaderText("UPDATED BY").Width("130").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("UPDATEDDATE").HeaderText("UPDATED DATE").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+
+
+                })
+                  .SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick").//AllowRowDragAndDrop().
+                Render())
+
+        <script>
+            var AUTOID;
+            function commandClick(args) {
+                if (args.rowData != null) {
+                    if (args.target.classList.contains('edit')) {
+                        AUTOID = args.rowData["AUTOID"];
+
+                        //ITEM_CODE
+                        var itmcode = args.rowData["ITEM_CODE"];
+                        var itmdesc = args.rowData["ITEM_DESC"];
+                        var codeDesc = itmcode + " # " + itmdesc;
+                        $("#ITEM_CODE").val(codeDesc);
+
+                        var srtcode = args.rowData["SHORT_CODE"];
+                        $("#SHORT_CODE").val(srtcode);
+                        
+                        //SPOOL_VALUE
+                        var SpoolValuecode = args.rowData["SPOOL_VALUE"];
+                        var SpoolValueDesc = args.rowData["SPOOL_DESC"];
+                        var SpoolDesc = SpoolValuecode + " # " + SpoolValueDesc;
+                        $("#SPOOL_VALUE").val(SpoolDesc);
+
+                        
+
+                        //CYNLINDER
+                        var CynlinderValuecode = args.rowData["CYNLINDER"];
+                        var CynlinderValueDesc = args.rowData["CYNLINDER_DESC"];
+                        var CynlinderDesc = CynlinderValuecode + " # " + CynlinderValueDesc;
+                        $("#CYLINDER").val(CynlinderDesc);
+                        
+                        //PART1
+                        var Part1Valuecode = args.rowData["PART1"];
+                        var Part1ValueDesc = args.rowData["PART1_DESC"];
+                        var Part1Desc = Part1Valuecode + " # " + Part1ValueDesc;
+                        $("#PART1").val(Part1Desc);
+                        
+                        //PART2
+                        var Part2Valuecode = args.rowData["PART2"];
+                        var Part2ValueDesc = args.rowData["PART2_DESC"];
+                        var Part2Desc = Part2Valuecode + " # " + Part2ValueDesc;
+                        $("#PART2").val(Part2Desc);
+                        
+
+                        $('#PLANT_CODE').prop('disabled', true);
+                        $('#FAMILY_CODE').prop('disabled', true);
+                        //$('#Engine').prop('disabled', true);
+
+
+                        $('#Add').hide();
+                        $('#Update').show();
+                    }
+                    if (args.target.classList.contains('delete')) {
+
+
+                        AUTOID = args.rowData["AUTOID"];
+                        deleteItem();
+
+                    }
+                }
+
+            };
+            function deleteItem() {
+                if (confirm("Are you sure, to delete this Record ?")) {
+                    Delete();
+                }
+                return false;
+            }
+        </script>
+    </div>
+
+    <script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+    @Html.EJS().ScriptManager()
+
+    @*Model for Delete ENGINE*@
+    <div class="modal" id="DeleteConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-danger">
+                    <strong class="modal-title" id="exampleModalLabel" style="font-size:25px;"><i class="fa fa-exclamation-circle" style="font-size:35px;" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<strong>Confirmation..!</strong></strong>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4><strong>Are you sure, to delete this Engine ..?</strong></h4>
+                </div>
+                <div class="modal-footer">
+                    @*<a href="@Url.Action("", "")" class="btn btn-success btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Go Back</a>*@
+                    <button type="button" data-dismiss="modal" class="btn btn-warning btn-sm"><i class="ace-icon fa fa-arrow-left"></i> Go Back</button>
+                    <button type="button" id="btnDelete" class="btn btn-danger btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,9 @@
+02-Nov-2021 2:23:20 PM
+The handle is invalid.
+
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.Threading.EventWaitHandle.Reset()
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteNonQuery()
+   at MVCApp.Controllers.MAHController.ExecuteBSFaultyItems(FAULTYITEMS fAULITEMS) in D:\Sarthak\MVCApp\MVCApp\Controllers\MAHController.cs:line 1581
+____________________________________________________________________________________________
+

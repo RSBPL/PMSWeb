@@ -1,0 +1,48 @@
+<xpml><page quantity='0' pitch='50.8 mm'></xpml>'Seagull:2.1:DP
+INPUT OFF
+VERBOFF
+INPUT ON
+SYSVAR(48) = 0
+ERROR 15,"FONT NOT FOUND"
+ERROR 18,"DISK FULL"
+ERROR 26,"PARAMETER TOO LARGE"
+ERROR 27,"PARAMETER TOO SMALL"
+ERROR 37,"CUTTER DEVICE NOT FOUND"
+ERROR 1003,"FIELD OUT OF LABEL"
+SYSVAR(35)=0
+OPEN "tmp:setup.sys" FOR OUTPUT AS #1
+PRINT#1,"Printing,Media,Print Area,Media Margin (X),0"
+PRINT#1,"Printing,Media,Clip Default,On"
+CLOSE #1
+SETUP "tmp:setup.sys"
+KILL "tmp:setup.sys"
+CLIP ON
+CLIP BARCODE ON
+LBLCOND 3,2
+<xpml></page></xpml><xpml><page quantity='1' pitch='50.8 mm'></xpml>CLL
+OPTIMIZE "BATCH" ON
+PP3,126:PL381,5
+PP0,20:PX366,386,5
+PP66,228:AN7
+BARSET "CODE128B",2,1,2,52
+PB "HYD_VAL"
+PP130,181:NASC 8
+FT "CG Triumvirate Condensed Bold",9,0,99
+PT "HYD_VAL"
+PP15,181:FT "CG Triumvirate Condensed Bold",8,0,129
+PT "SR:"
+PP133,95:FT "CG Triumvirate Condensed Bold",10,0,99
+PT "STATUS"
+PP3,254:AN1
+PL381,5
+PP15,310:AN7
+FT "CG Triumvirate Condensed Bold",8,0,129
+PT "SR:"
+PP66,356:BARSET "CODE128B",2,1,2,52
+PB "BSLR_NO"
+PP130,310:FT "CG Triumvirate Condensed Bold",9,0,99
+PT "BSLR_NO"
+LAYOUT RUN ""
+PF
+PRINT KEY OFF
+<xpml></page></xpml><xpml><end/></xpml>

@@ -1,0 +1,76 @@
+﻿@model MVCApp.Models.MenuModel
+@using Syncfusion.EJ2
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Maintenance</a>
+        </li>
+
+        <li class="active">
+            Menu
+        </li>
+    </ul>
+</div>
+
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        @if (TempData["msg"] != null && TempData["msgType"] != null)
+        {
+            <div class="alert @TempData["msgType"]" role="alert">
+                <strong>@TempData["msg"]</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+        <div style="margin-top:5px; margin-bottom:5px;">
+            <a href="@Url.Action("Create", "MenuMaster")" class="btn btn-primary btn-sm"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add New</a>
+        </div>
+    </div>
+    <div class="container" style="width:100%!important">
+        <div class="table-responsive">
+            @(Html.EJS().Grid("Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                AllowPaging(true).
+                PageSettings(Page => Page.PageSize(8)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowResizing().
+                Columns(col =>
+                {
+                    col.Field("MENUCODE").HeaderText("Menu Code").IsPrimaryKey(true).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("MNAME").HeaderText("Menu Name").Add();
+                    col.Field("CONTROLLER").HeaderText("Controller Name").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("ACTION").HeaderText("Action Name").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("ROUT_ID").HeaderText("Rout Id").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("SEQUENCE").HeaderText("SEQUENCE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.HeaderText("ACTION").Template("#Template").Width(120).Add();
+                }).
+
+                Render())
+        </div>
+    </div>
+</div>
+@Styles.Render("~/Content/ej2")
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+<script type="text/x-jsrender" id="Template">
+    <a rel='nofollow' href="MenuMaster/Edit?id=${AUTOID}"><i class="ace-icon fa fa-pencil bigger-130"></i></a>&nbsp;&nbsp;&nbsp;
+    <a rel='nofollow' href="MenuMaster/Delete?id=${AUTOID}"><i class="ace-icon fa fa-trash-o bigger-130"></i></a>
+</script>

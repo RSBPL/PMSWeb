@@ -1,0 +1,116 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="table-responsive ">
+        @{
+            List<object> commands = new List<object>();
+            //commands.Add(new { buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-delete", cssClass = "delete" } });
+        }
+
+        @(Html.EJS().Grid("GridYear").DataSource((System.Data.DataTable)ViewBag.DataSourceYear).
+                AllowPaging(true).
+                PageSettings(Page => Page.PageSize(7)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+                AllowResizing().
+                Columns(col =>
+                {
+                    col.HeaderText("Action").Width("120").Commands(commands).Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("PLANT").HeaderText("PLANT").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("TYPE").HeaderText("TYPE").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("MON_YYYY").HeaderText("Year").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("MY_CODE").HeaderText("Code").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("CREATED_BY").HeaderText("Created By").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("CREATED_DATE").HeaderText("Created Date").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+
+
+                    //col.HeaderText("EDIT").Width("100").Commands(commands).Width("100").Add();
+                })
+                .SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick").//AllowRowDragAndDrop().
+                Render())
+
+        <script>
+            var AutoId;
+            function commandClick(args) {
+                if (args.rowData != null) {
+                    if (args.target.classList.contains('delete')) {
+                        $('#DeleteConfirmYear').modal('show');
+                        AutoId = args.rowData["AUTOID"];
+                    }
+                }
+            };
+
+            $("#btnDeleteYear").on("click", function () {
+                Delete();
+            });
+
+            //Function to delete
+            function Delete() {
+                 var Data = {
+                     AutoId:AutoId
+                };
+                $('#DeleteConfirmYear').modal('hide');
+                $("#divLoader").show();
+                $.ajax({
+                    url: '@Url.Action("DeleteYear", "CraneSetting")',
+                    data: JSON.stringify(Data),
+                    type: "POST",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        //$("#divLoader").hide();
+                        BindGridYear();
+                        if (data.Msg != "" || data.Msg != null ) {
+                            $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            setTimeout(function() {$(".alert").alert('close');}, 5000);
+                        }
+                    },
+                    error: function (errormessage) {
+                        $("#divLoader").hide();
+                        $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function() {$(".alert").alert('close');}, 5000);
+                    }
+                });
+            }
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+
+<div class="modal" id="DeleteConfirmYear" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <strong class="modal-title" id="exampleModalLabel1" style="font-size:25px;"><i class="fa fa-exclamation-circle" style="font-size:35px;" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<strong>Confirmation..!</strong></strong>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4><strong>Are you sure, to delete this record ..?</strong></h4>
+            </div>
+            <div class="modal-footer">
+                @*<a href="@Url.Action("", "")" class="btn btn-success btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Go Back</a>*@
+                <button type="button" data-dismiss="modal" class="btn btn-warning btn-sm"><i class="ace-icon fa fa-arrow-left"></i> Go Back</button>
+                <button type="button" id="btnDeleteYear" class="btn btn-danger btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

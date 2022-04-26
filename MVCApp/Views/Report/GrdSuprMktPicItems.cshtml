@@ -1,0 +1,56 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bg-primary" style="padding-top:5px; padding-left:5px;">
+                <center>
+                    <label style="color:white;">@ViewBag.heading</label>
+                    <label style="color: white;padding-right: 10px;" class="pull-right"><strong>TOTAL RECORD : @ViewBag.Total </strong></label>
+                </center>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        @(Html.EJS().Grid("GrdSuprMktPicItems").DataSource((System.Data.DataTable)ViewBag.DataSource).
+            //Height("400").
+            AllowSelection(false).
+            AllowResizing().
+            AllowExcelExport().
+            ToolbarClick("toolbarClick").
+            AllowFiltering().
+            AllowGrouping().
+            AllowSorting().EnableColumnVirtualization().EnableVirtualization().
+            Columns(col =>
+            {
+                col.Field("JOBID").HeaderText("JOBID").Add();
+                col.Field("ITEMCODE").HeaderText("ITEM_CODE").Width("130").Add();
+                col.Field("DESCRIPTN").HeaderText("ITEM_DESCRIPTION").Width("350").Add();
+                col.Field("COMPONENT").HeaderText("COMPONENT").Add();
+                col.Field("QUANTITY").HeaderText("QTY").Width("100").Add();
+                col.Field("PICKED_BY").HeaderText("PICKED_BY").Width("130").Add();
+                col.Field("PICKED_DATE").HeaderText("PICKED_DATE").Add();
+                
+            }).
+            Toolbar(new List<string>() { "ExcelExport" }).
+            Render())
+        <script>
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("GrdSuprMktPicItems").ej2_instances[0];
+                gridObj.excelExport();
+            }
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+

@@ -1,0 +1,154 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="table-responsive ">
+        @{
+            List<object> commands = new List<object>();
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-delete", cssClass = "delete" } });
+        }
+
+        @(Html.EJS().Grid("GridStore1").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                AllowPaging(true).
+                PageSettings(Page => Page.PageSize(7)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+                AllowResizing().
+                Columns(col =>
+                {
+                    col.HeaderText("Action").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Commands(commands).Width("150").Add();
+                    col.Field("PLANT_CODE").HeaderText("Plant").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("FAMILY_CODE").HeaderText("Family").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+
+                    col.Field("STORECODE").HeaderText("Store Code").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("STORENAME").HeaderText("Store Name").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("REMARKS").HeaderText("Remarks").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("CREATED_BY").HeaderText("Created By").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("CREATED_DATE").HeaderText("Created Date").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("UPDATED_BY").HeaderText("Updated By").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("UPDATED_DATE").HeaderText("Updated Date").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+
+
+
+                }).AllowExcelExport().
+                ToolbarClick("toolbarClick")
+                .Toolbar(new List<string>() { "ExcelExport" })
+                .SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick").//AllowRowDragAndDrop().
+                Render())
+
+        <script>
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("GridStore1").ej2_instances[0];
+                gridObj.excelExport();
+            }
+            var AutoId;
+            function commandClick(args) {
+                if (args.rowData != null) {
+                    if (args.target.classList.contains('edit')) {
+                        AutoId = args.rowData["AUTOID"];
+
+                        $("#PlantStore").val(args.rowData["PLANT_CODE"]);
+                        $("#FamilyStore").val(args.rowData["FAMILY_CODE"]);
+                        $("#StoreCode").val(args.rowData["STORECODE"]);
+                        $("#StoreName").val(args.rowData["STORENAME"]);
+                        $("#Remarks").val(args.rowData["REMARKS"]);
+
+                        $('#PlantStore').prop('disabled', true);
+                        $('#FamilyStore').prop('disabled', true);
+                        $('#StoreCode').prop('disabled', true);
+                        $('#Add').hide();
+                        $('#Update').show();
+                    }
+                    //Edit();
+
+                    //Delete
+                    if (args.target.classList.contains('delete')) {
+                        $('#DeleteConfirm').modal('show');
+                        AutoId = args.rowData["AUTOID"];
+                    }
+                }
+            };
+            $("#btnDelete").on("click", function () {
+                Delete();
+                
+            });
+             //Function to delete
+             function Delete() {
+                 var Data = {                 
+                     AutoId: AutoId
+                };
+                $('#DeleteConfirm').modal('hide');
+                $("#divLoader").show();
+                $.ajax({
+                    url: '@Url.Action("DeleteStore", "StoreMaster")',
+                    data: JSON.stringify(Data),
+                    type: "POST",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        $("#divLoader").hide();
+                        $('#Add').show();
+                        $('#Update').hide();
+                        $('#PlantStore').prop('disabled', false);
+                        $('#FamilyStore').prop('disabled', false);
+                        $('#StoreCode').prop('disabled', false);
+                        $('#StoreName').val("");
+                        $('#Remarks').val("");
+                        BindGrid();
+                        if (data.Msg != "" || data.Msg != null ) {
+                            $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            setTimeout(function() {$(".alert").alert('close');}, 5000);
+                        }
+                    },
+                    error: function (errormessage) {
+                        $("#divLoader").hide();
+                        $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    }
+                });
+            }
+
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+
+<div class="modal" id="DeleteConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <strong class="modal-title" id="exampleModalLabel" style="font-size:25px;"><i class="fa fa-exclamation-circle" style="font-size:35px;" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<strong>Confirmation..!</strong></strong>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4><strong>Are you sure, to delete this record ..?</strong></h4>
+            </div>
+            <div class="modal-footer">
+                @*<a href="@Url.Action("", "")" class="btn btn-success btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Go Back</a>*@
+                <button type="button" data-dismiss="modal" class="btn btn-warning btn-sm"><i class="ace-icon fa fa-arrow-left"></i> Go Back</button>
+                <button type="button" id="btnDelete" class="btn btn-danger btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+

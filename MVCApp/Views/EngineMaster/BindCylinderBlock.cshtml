@@ -1,0 +1,8 @@
+﻿@model MVCApp.Models.EngineModel
+
+@{
+    <div>
+        @Html.DropDownListFor(model => model.CYLINDER_BLOCK, (IEnumerable<SelectListItem>)ViewBag.CYLINDER_BLOCK, new { @class = "form-control  input-sm" })
+    </div>
+}
+

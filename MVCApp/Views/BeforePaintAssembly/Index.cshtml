@@ -1,0 +1,621 @@
+﻿@*@model MVCApp.Models.BeforePaintAssemblyModel*@
+@model MVCApp.Common.BeforePaintAssemblyModel
+<style>
+    /*.modal-dialog {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 1%;
+    }
+
+    .modal-content {
+        height: auto;
+        min-height: 100%;
+        border-radius: 0;
+    }*/
+
+    /*.modal-header{
+        background-color: darkcyan;
+    }*/
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-building home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Assembly</a>
+        </li>
+        <li>
+            <i class="ace-icon fa fa-arrow-circle-left home-icon"></i>
+            <a href="#">Before Paint </a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+        <div id="alert2"></div>
+    </div>
+    <div class="container" style="width:100%!important">
+        @*Model for Check Password*@
+        <div class="modal" id="CheckPasswordModel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-info">
+                        <strong class="modal-title" id="exampleModalLabel" style="font-size:25px;"><i class="fa fa-exclamation-circle" style="font-size:35px;" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<strong>Authenticatoin..!</strong></strong>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label">Password</label>
+                                <input type="text" class="form-control" id="Password" required="Required">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        @*<a href="@Url.Action("", "")" class="btn btn-success btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Go Back</a>*@
+                        <button type="button" data-dismiss="modal" class="btn btn-warning btn-sm"><i class="ace-icon fa fa-arrow-left"></i> Go Back</button>
+                        <button type="button" id="btnCheckPassword" class="btn btn-primary btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Click</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*--------Form------------*@
+    <div class="container" style="width:100%!important">
+        <div id="myForm">
+            @using (Html.BeginForm("", "", FormMethod.Post, new { id = "Form" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-horizontal form-group">
+                    @*<fieldset class="the-fieldset">
+                        <legend class="the-legend"><b>Add Daily Plan</b></legend>*@
+                    <fieldset class="the-fieldset bg-info">
+                        @Html.HiddenFor(model => model.Plant)
+                        @Html.HiddenFor(model => model.Family)
+                        @Html.HiddenFor(model => model.FCode)
+                        @Html.HiddenFor(model => model.FCId)
+
+                        <div class="row">
+                            @*<div class="col-md-4">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                                    @Html.DropDownListFor(model => model.Plant, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control" })
+                                    <strong>@Html.ValidationMessageFor(model => model.Plant, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                                    @Html.DropDownListFor(model => model.Family, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control" })
+                                    <strong>@Html.ValidationMessageFor(model => model.Family, "", new { @class = "text-danger" })</strong>
+                                </div>*@
+                            <div class="col-md-4">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Select Hookup Type</strong></label>
+                                @Html.DropDownList("HType", new List<SelectListItem>
+                                {
+                                   new SelectListItem{ Text="JOB", Value = "1" },
+                                   new SelectListItem{ Text="SKID FOR PAINT", Value = "2" },
+                                   new SelectListItem{ Text="FRONT AXLE", Value = "3" },
+                                   new SelectListItem{ Text="EMPTY HOOK", Value = "4" }
+                                })
+                                <strong>@Html.ValidationMessageFor(model => model.HType, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-4" id="jobScan">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Scan JOB</strong></label>
+                                @Html.TextBoxFor(model => model.ScanJOB, new { @class = "form-control " })
+
+                                @*@Html.TextBoxFor(a => a.ENGINE, null, new { type = "number", min = "1", @class = "form-control input-sm", @autocomplete = "off" })*@
+                                <strong>@Html.ValidationMessageFor(model => model.ScanJOB, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            @Html.HiddenFor(model => model.FCode)
+                        </div>
+
+                        <div class="row" id="DetailByJob">
+
+                            <div class="col-md-3">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Rearaxel</strong></label>
+                                @Html.TextBoxFor(model => model.REARAXEL, new { @class = "form-control " })
+                                <strong>@Html.ValidationMessageFor(model => model.REARAXEL, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="fname" class="control-label col-form-label"><strong>Transmission</strong></label>
+                                @Html.TextBoxFor(model => model.TRANSMISSION, new { @class = "form-control" })
+                                @*@Html.EJS().DatePickerFor(Model => Model.Date).Format("dd-MMM-yyyy").Value(ViewBag.DefaultDate).Max(ViewBag.maxDate).Change("datepickerChange").Render()*@
+                                <strong>@Html.ValidationMessageFor(a => a.TRANSMISSION, "", new { @class = "text-danger" })</strong>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Engine</strong></label>
+                                @Html.TextBoxFor(model => model.ENGINE, new { @class = "form-control " })
+                                @*@Html.TextBoxFor(a => a.ENGINE, null, new { type = "number", min = "1", @class = "form-control input-sm", @autocomplete = "off" })*@
+                                <strong>@Html.ValidationMessageFor(model => model.ENGINE, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Hydraulic</strong></label>
+                                @Html.TextBoxFor(model => model.HYDRAULIC, new { @class = "form-control " })
+                                <strong>@Html.ValidationMessageFor(model => model.HYDRAULIC, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Skid</strong></label>
+                                @Html.TextBoxFor(model => model.SKID, new { @class = "form-control" })
+                                <strong>@Html.ValidationMessageFor(model => model.SKID, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Steering Motor</strong></label>
+                                @Html.TextBoxFor(model => model.STERRINGMOTOR, new { @class = "form-control " })
+                                <strong>@Html.ValidationMessageFor(model => model.STERRINGMOTOR, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Starter Motor</strong></label>
+                                @Html.TextBoxFor(model => model.STARTERMOTOR, new { @class = "form-control " })
+                                <strong>@Html.ValidationMessageFor(model => model.STARTERMOTOR, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Alternator</strong></label>
+                                @Html.TextBoxFor(model => model.ALTERNATOR, new { @class = "form-control " })
+                                <strong>@Html.ValidationMessageFor(model => model.ALTERNATOR, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Hydraulic Pump</strong></label>
+                                @Html.TextBoxFor(model => model.HYDRAULIC_PUMP, new { @class = "form-control " })
+                                <strong>@Html.ValidationMessageFor(model => model.HYDRAULIC_PUMP, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Remarks</strong></label>
+                                @Html.TextBoxFor(model => model.REMARKS, new { @class = "form-control " })
+                                <strong>@Html.ValidationMessageFor(model => model.REMARKS, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>FIP</strong></label>
+                                @Html.TextBoxFor(model => model.FIP, new { @class = "form-control " })
+                                <strong>@Html.ValidationMessageFor(model => model.FIP, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <label for="fname" class="text-right control-label col-form-label"><strong>Hook No</strong></label>
+                                        @Html.TextBoxFor(model => model.HOOKNO, new { @class = "form-control " })
+                                        <strong>@Html.ValidationMessageFor(model => model.HOOKNO, "", new { @class = "text-danger" })</strong>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="fname" class="text-right control-label col-form-label" style="color:#d9edf7"><strong>.</strong></label>
+                                        @Html.CheckBoxFor(model => model.HookChk, new { @class = "form-control " })
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-12 align-right" style="margin-top:27PX; margin-bottom:10px; ">
+                                @*<div class="row">*@
+                                @*<input type="submit" value="Submit" class="btn btn-block btn-primary" id="btnSubmit" />*@
+
+                                @*<button class="btn btn-info btn-sm" type="button" id="GetDetail" style="width:125px;"><i class="ace-icon fa fa-plus-square bigger-90"></i><strong>Get Detail</strong></button>*@
+                                <button class="btn btn-success btn-sm" type="button" id="Update" style="width:125px;"><i class="ace-icon fa fa-plus-square bigger-90"></i><strong>Save</strong></button>
+                                <button class="btn btn-secondary btn-sm" type="button" id="Clear" style="width:125px"><i class="ace-icon fa fa-eraser bigger-90"></i><strong>Clear</strong></button>
+                                <button class="btn btn-warning btn-sm float-left" type="button" id="btnPassword" style="width:125px;"><i class="ace-icon fa fa-plus-square bigger-90"></i><strong>Edit Detail</strong></button>
+                                @*</div>*@
+                            </div>
+                        </div>
+
+                        <div id="DetailByRearaxle_Skid" class="row">
+                            <div class="col-md-3">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Hook Number</strong></label>
+                                @Html.TextBoxFor(model => model.HKNo, null, new { @class = "form-control " })
+                                <strong>@Html.ValidationMessageFor(model => model.HKNo, "", new { @class = "text-danger" })</strong>
+                            </div>
+
+                            <div class="col-md-9 " style="margin-top:27PX; margin-bottom:10px; ">
+                                <button class="btn btn-success btn-sm" type="button" id="SaveDetail" style="width:125px;"><i class="ace-icon fa fa-plus-square bigger-90"></i><strong>Save</strong></button>
+                                <button class="btn btn-secondary btn-sm" type="button" id="ClearPnl2" style="width:125px"><i class="ace-icon fa fa-eraser bigger-90"></i><strong>Clear</strong></button>
+                                @*</div>*@
+                            </div>
+                        </div>
+                        <div>
+                            @Html.LabelFor(model => model.ENGINE_DCODE, new { id = "ENGINE_DCODE" })
+
+                        </div>
+                    </fieldset>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+<script>
+    $(document).ready(function () {
+        PnlShowHide();
+        $("#Update").hide();
+        $("#btnPassword").hide();
+        $("#DetailByRearaxle_Skid").hide();
+        $('#label').hide();
+        $("#HookChk").attr("checked", true);
+        $("#ENGINE_DCODE").hide();
+    });
+
+    //$("#Plant").on("change", function () {
+    //    DDLFamilyByPlant();
+    //});
+    $("#ScanJOB").change(function () {
+        GetDetailbyId();
+    });
+
+    $("#Clear").on("click", function () {
+        Clear();
+    });
+
+    $("#btnPassword").on("click", function () {
+        $('#CheckPasswordModel').modal('show');
+    });
+
+    //$("#GetDetail").on("click", function () {
+
+    //});
+
+    $("#Update").on("click", function () {
+        UpdateRecord();
+    });
+
+    $("#SaveDetail").on("click", function () {
+        UpdateSecondPanel();
+    });
+
+    $("#ClearPnl2").on("click", function () {
+        $('#HKNo').val("");
+    });
+
+     $("#btnCheckPassword").on("click", function () {
+            $("#divLoader").show();
+            var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                Password: $('#Password').val()
+            };
+            $.ajax({
+                url: '@Url.Action("CheckPassword", "BeforePaintAssembly")',
+                data: JSON.stringify({ data: Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+                    $('#CheckPasswordModel').modal('hide');
+                    if (data.includes("OK")) {
+                        $('#TRANSMISSION').removeAttr('readonly');
+                        $('#REARAXEL').removeAttr('readonly');
+                        $('#ENGINE').removeAttr('readonly');
+                        $('#HYDRAULIC').removeAttr('readonly');
+                        $('#SKID').removeAttr('readonly');
+                        $('#STERRINGMOTOR').removeAttr('readonly');
+                        $('#STARTERMOTOR').removeAttr('readonly');
+                        $('#ALTERNATOR').removeAttr('readonly');
+                        $('#FIP').removeAttr('readonly');
+                        $('#HOOKNO').removeAttr('readonly');
+                    }
+                    else {
+                        $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + data + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    }
+                }
+            });
+     });
+
+    @*function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "BeforePaintAssembly")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Plant").html(result);
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+
+            }
+        });
+    };*@
+
+    @*function DDLFamilyByPlant() {
+        var selectedValue = $("#Plant").val();
+        $.ajax({
+            url: '@Url.Action("BindFamilyByPlant", "BeforePaintAssembly")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#Family").html(result);
+        },
+            error: function (errormessage) {
+
+            }
+        });
+    };*@
+
+    function PnlShowHide() {
+        if ($('#HType').val() == '1') {
+            $("#DetailByJob").show();
+            $("#DetailByRearaxle_Skid").hide();
+            $("#jobScan").show();
+        }
+        else if ($('#HType').val() == '2') {
+            $("#DetailByJob").hide();
+            $("#DetailByRearaxle_Skid").show();
+            $("#jobScan").hide();
+        }
+        else if ($('#HType').val() == '3') {
+            $("#DetailByJob").hide();
+            $("#DetailByRearaxle_Skid").show();
+            $("#jobScan").hide();
+        }
+        else if ($('#HType').val() == '4') {
+            $("#DetailByJob").hide();
+            $("#DetailByRearaxle_Skid").show();
+            $("#jobScan").hide();
+        }
+        else {
+            $("#DetailByJob").hide();
+            $("#DetailByRearaxle_Skid").hide();
+            $("#jobScan").show();
+        }
+    };
+
+    $('#HType').on('change', function () {
+        PnlShowHide();
+        GetNextHookNo();
+    });
+
+    function UpdateRecord() {
+        var Chk;
+        if ($("#HookChk").prop("checked") == true) {
+            Chk = true;
+        }
+        else {
+            Chk = false;
+        }
+        var data = {
+            Plant: $("#Plant").val(),
+            Family: $("#Family").val(),
+            FCode:$("#FCode").val(),
+            ScanJob: $("#ScanJOB").val(),
+            TRANSMISSION: $('#TRANSMISSION').val(),
+            REARAXEL: $('#REARAXEL').val(),
+            ENGINE: $('#ENGINE').val(),
+            HYDRAULIC: $('#HYDRAULIC').val(),
+            SKID: $('#SKID').val(),
+            STERRINGMOTOR: $('#STERRINGMOTOR').val(),
+            STARTERMOTOR: $('#STARTERMOTOR').val(),
+            ALTERNATOR: $('#ALTERNATOR').val(),
+            FIP: $('#FIP').val(),
+            FCId: $("#FCId").val(),
+            HYDRAULIC_PUMP: $("#HYDRAULIC_PUMP").val(),
+            REMARKS: $("#REMARKS").val(),
+            HOOKNO: $('#HOOKNO').val(),
+            HookChk: Chk,
+            ENGINE_DCODE: $('#ENGINE_DCODE').text()
+        };
+        $("#divLoader").show();
+        $.ajax({
+            url: '@Url.Action("UpdateRecord", "BeforePaintAssembly")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            success: function (result) {
+                $("#divLoader").hide();
+                if (result.Msg.includes("Update successfully")) {
+                    GetNextHookNo();
+                    Clear();
+
+                    $('#alert').append('<div class="alert alert-success role = "alert"><strong>' + result.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+
+                    $('#alert2').html("");
+                    $('#alert2').append('<div class="alert alert-info role = "alert"><strong>' + result.MsgHook + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                }
+                else {
+                    $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + result.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    //setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+            }
+        })
+    }
+
+    function UpdateSecondPanel() {
+        var data = {
+            Plant: $("#Plant").val(),
+            Family: $("#Family").val(),
+            HType: $("#HType option:selected").text(),
+            HKNo: $('#HKNo').val()
+        };
+        $("#divLoader").show();
+        $.ajax({
+            url: '@Url.Action("UpdateRecordDummy", "BeforePaintAssembly")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            success: function (result) {
+                $("#divLoader").hide();
+                if (result.Msg.includes("Update Successfully")) {
+                    GetNextHookNo();
+                    $('#alert').append('<div class="alert alert-success role = "alert"><strong>' + result.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+                else {
+                    $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + result.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    //setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+            }
+        })
+    }
+
+    function GetNextHookNo() {
+        $.ajax({
+        url: '@Url.Action("GetNextHookNo", "BeforePaintAssembly")',
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            $("#HKNo").val(data);
+        }
+        });
+    }
+
+    function Clear() {
+        $("#Update").hide();
+        $("#btnPassword").hide();
+        $("#FCode").val("");
+        $("#ScanJOB").val("");
+        $('#TRANSMISSION').val("");
+        $('#REARAXEL').val("");
+        $('#ENGINE').val("");
+        $('#HYDRAULIC').val("");
+        $('#SKID').val("");
+        $('#STERRINGMOTOR').val("");
+        $('#STARTERMOTOR').val("");
+        $('#ALTERNATOR').val("");
+        $('#FIP').val("");
+        $("#FCId").val("");
+        $('#HOOKNO').val("");
+        $('#HYDRAULIC_PUMP').val("");
+        $('#REMARKS').val("");
+    };
+
+    function GetDetailbyId() {
+         var data = {
+                    //Plant: $("#Plant").val(),
+                    //Family: $("#Family").val(),
+                    ScanJob: $("#ScanJOB").val()
+        }
+        $("#divLoader").show();
+         $.ajax({
+            url: '@Url.Action("GetDetailbyId", "BeforePaintAssembly")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            //dataType: "json",
+            success: function (result) {
+                //debugger;
+                //$('#Plant').val(result.Plant);
+                //$('#Family').val(result.Family);
+                //$('#FCode').val(result.FCode);
+                $("#divLoader").hide();
+                //console.log(result.ErrorMsg);
+                if (result.ErrorMsg.includes("rollout done")) {
+                    $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + result.ErrorMsg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+                else if (result.ErrorMsg.includes("Error")) {
+                    $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + result.ErrorMsg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+                else {
+                    $("#Update").show();
+                    $("#btnPassword").show();
+
+                    $('#Plant').val(result.Plant);
+                    $('#Family').val(result.Family);
+
+                    $('#FCode').val(result.FCode);
+
+                    var txt = $('#TRANSMISSION').val(result.TRANSMISSION);
+                    if (txt.val() != null && txt.val() != '') {
+                        $('#TRANSMISSION').attr('readonly', 'true');
+                    }
+                    var txt = $('#REARAXEL').val(result.REARAXEL);
+                    if (txt.val() != null && txt.val() != '') {
+                        $('#REARAXEL').attr('readonly', 'true');
+                    }
+                    var txt = $('#ENGINE').val(result.ENGINE);
+                    if (txt.val() != null && txt.val() != '') {
+                        $('#ENGINE').attr('readonly', 'true');
+                    }
+
+                    var txt = $('#HYDRAULIC').val(result.HYDRAULIC);
+                    if (txt.val() != null && txt.val() != '') {
+                        $('#HYDRAULIC').attr('readonly', 'true');
+                    }
+                    var txt = $('#SKID').val(result.SKID);
+                    if (txt.val() != null && txt.val() != '') {
+                        $('#SKID').attr('readonly', 'true');
+                    }
+                    var txt = $('#STERRINGMOTOR').val(result.STERRINGMOTOR);
+                    if (txt.val() != null && txt.val() != '') {
+                        $('#STERRINGMOTOR').attr('readonly', 'true');
+                    }
+                    var txt = $('#STARTERMOTOR').val(result.STARTERMOTOR);
+                    if (txt.val() != null && txt.val() != '') {
+                        $('#STARTERMOTOR').attr('readonly', 'true');
+                    }
+                    var txt = $('#ALTERNATOR').val(result.ALTERNATOR);
+                    if (txt.val() != null && txt.val() != '') {
+                        $('#ALTERNATOR').attr('readonly', 'true');
+                    }
+                    var txt = $('#FIP').val(result.FIP);
+                    if (txt.val() != null && txt.val() != '') {
+                        $('#FIP').attr('readonly', 'true');
+                    }
+
+                    var txt = $('#HYDRAULIC_PUMP').val(result.HYDRAULIC_PUMP);
+                    if (txt.val() != null && txt.val() != '') {
+                        $('#HYDRAULIC_PUMP').attr('readonly', 'true');
+                    }
+                    var txt = $('#REMARKS').val(result.REMARKS);
+                    if (txt.val() != null && txt.val() != '') {
+                        $('#REMARKS').attr('readonly', 'true');
+                    }
+
+                    $('#FCId').val(result.FCId);
+                    var txt = $('#HOOKNO').val(result.HOOKNO);
+                    if (txt.val() != null && txt.val() != '') {
+                        //$('#HOOKNO').attr('readonly', 'true');
+                    }
+
+
+
+                        $("label[for='ENGINE_DCODE']").text(result.ENGINE_DCODE);
+
+
+
+
+
+                }
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    };
+
+    $("#HType").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    //$("#Plant").select2({
+    //    allowClear: true,
+    //    width: '100%',
+    //});
+    //$("#Family").select2({
+    //    allowClear: true,
+    //    width: '100%',
+    //});
+</script>

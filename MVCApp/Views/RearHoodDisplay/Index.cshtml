@@ -1,0 +1,372 @@
+﻿@using System.Data;
+@model System.Data.DataSet
+
+@{ Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/LCD/CSS/StyleSheet.css" rel="stylesheet" />
+    <link rel="icon" href="~/Image/favicon-32x32.png" type="image/x-icon">
+    <title>REAR HOOD DISPLAY</title>
+    <style>
+
+        html, body {
+            background-color: white;
+            height: 100%;
+            margin: 0;
+        }
+
+        h2 {
+            margin: 0 130px 0 130px;
+        }
+
+
+        div.table-title {
+            display: block;
+            margin: auto;
+            max-width: 600px;
+            padding: 5px;
+            width: 100%;
+        }
+
+        .table-title h3 {
+            color: #fafafa;
+            font-size: 30px;
+            font-weight: 400;
+            font-style: normal;
+            font-family: "Roboto", helvetica, arial, sans-serif;
+            text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+            text-transform: uppercase;
+        }
+
+
+        /** Table Styles */
+
+        .table-fill {
+            background: white;
+            border-radius: 3px;
+            border-collapse: collapse;
+            height: 150PX;
+            margin: 0;
+            /*max-width: 600px;*/
+            padding: 10px;
+            width: 50%;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            animation: float 5s infinite;
+        }
+
+        .th1 {
+            color: #ffffff;
+            background: #065499;
+            border: 2px solid #a3a085;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 5px;
+            text-align: left;
+            text-shadow: 0 1px 1px rgb(0 0 0 / 10%);
+            vertical-align: middle;
+        }
+
+
+            .th1:first-child {
+                border-top-left-radius: 3px;
+            }
+
+            .th1:last-child {
+                border-top-right-radius: 3px;
+            }
+
+        .tr1:hover td {
+            background: #4E5066;
+            color: #FFFFFF;
+        }
+
+        .tr1:first-child {
+        }
+
+        /*.tr1:last-child {
+                border-bottom: none;
+            }*/
+
+        /*.tr1:nth-child(odd) td {
+                background: #EBEBEB;
+            }
+
+            .tr1:nth-child(odd):hover td {
+                background: #4E5066;
+            }*/
+
+        /* .tr1:last-child td:first-child {
+                border-bottom-left-radius: 3px;
+            }
+
+            .tr1:last-child td:last-child {
+                border-bottom-right-radius: 3px;
+            }*/
+
+        .td1 {
+            background: #FFFFFF;
+            text-align: center;
+            font-weight: bold;
+            font-size: 20px;
+            color: black;
+        }
+
+
+        .th1.text-left {
+            text-align: center;
+        }
+
+        .th1.text-center {
+            text-align: center;
+        }
+
+        .th1.text-right {
+            text-align: center;
+        }
+
+        .td1.text-left {
+            text-align: center;
+        }
+
+        .td1.text-center {
+            text-align: center;
+        }
+
+        .td1.text-right {
+            text-align: center;
+        }
+
+        table tbody tr td {
+            border: 1px solid black;
+        }
+
+        tr:nth-child(odd) {
+            background-color: rgb(157 228 255);
+        }
+
+        .tr1:nth-child(odd) {
+            background-color: rgb(157 228 255);
+        }
+
+
+        /*/ Automatic Serial Number Row /
+        .css-serial {
+            counter-reset: serial-number;
+            / Set the serial number counter to 0 /
+        }
+
+        .css-serial td:first-child:before {
+            counter-increment: serial-number;
+            / Increment the serial number counter / content: counter(serial-number);
+            / Display the counter /
+        }*/
+        .leftgrid {
+            float: left;
+            text-align: center;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .tdhide {
+            display: none;
+        }
+
+        .head-header {
+            font-size: 30px;
+            color: #ffffff;
+            margin-top: -35px;
+            float: right;
+            WIDTH: 63%;
+            FONT-FAMILY: fangsong;
+        }
+
+
+        .hr1 {
+            border-top: 3px solid #01f5c7;
+            width: 50%;
+            margin-top: -33px;
+            BACKGROUND-COLOR: brown;
+        }
+
+        .tr2 {
+            color: #ffffff;
+            background: #0c7096;
+            border: 2px solid black;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 5px;
+            text-align: left;
+            text-shadow: 0 1px 1px rgb(0 0 0 / 10%);
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="row">
+            <div class="col-md-12 " style="BACKGROUND: #065499; HEIGHT: 60PX;">
+                <div class="col-md-2">
+                    <img src="~/Image/logo.gif" Height="50" Width="80" style="margin: 5px;" />
+                </div>
+                <div class="col-md-10">
+                    <strong class="head-header" style="margin-top: -50px;">REAR HOOD DISPLAY</strong>
+
+                </div>
+            </div>
+        </div>
+        
+        <div style="width: 100%">
+            <input type="hidden" id="PlantCode" value="@ViewBag.PlantCode" />
+            <div style="width: 100%; color: #fff; background-color: #065499; border-color: #428bca; height: 40px; padding: 0; text-align: center; vertical-align: central;">
+                <table style="width: 100%">
+                    <tr style="font-size: 25px;" class="tr2">
+                        <td align="center">
+                            <label ID="lblDate" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                        </td>
+                        <td align="center">
+                            <label ID="lblTime" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                        </td>
+                        <td align="center">
+                            <label ID="lblShift" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                        </td>
+                        <td align="center">
+                            <label ID="lblBKTotDay" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                        </td>
+                        <td align="center">
+                            <label ID="lblSftotDay" runat="server" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+
+            @*<div id="lblError" style="padding-left: 40px; width: 96%" visible="false" class="alert-box error">
+            </div>*@
+
+            <div class="row ">
+                <div class="col-md-12" style="float: left; text-align: center; font-size: 20px;  font-weight: bold; width: 100%;">
+                    <table class="table-fill css-serial table-hover" style="width: 100%; height: 40px;" id="tbldetail">
+                        <thead>
+                            <tr>
+                                <th class="text-left th1">SRLNO</th>
+                                <th class="text-left th1">F-CODE</th>
+                                <th class="text-left th1">SHORT NAME</th>
+                                <th class="text-left th1">QUANTITY</th>
+                                <th class="text-left th1">HOOK</th>
+                                <th class="text-left th1">REAR HOOD</th>
+                                <th class="text-left th1">CLUSTER METER</th>
+                                <th class="text-left th1">I.P HARNESS</th>
+                                <th class="text-left th1">RADIATOR SHELL</th>
+                                <th class="text-left th1">AIR CLEANER</th>
+                                <th class="text-left th1">HEAD LAMP LH</th>
+                                <th class="text-left th1">HEAD LAMP RH</th>
+                                @*<th class="text-left th1">PLANNED</th>
+                                <th class="text-left th1">DONE</th>
+                                <th class="text-left th1">PENDING</th>*@
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+</body>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        checkinfo();
+    });
+    var refresh = '@System.Configuration.ConfigurationManager.AppSettings["pagerefresh"].ToString()';
+    window.onload = function () {
+        setInterval(function () {
+            checkinfo();
+        }, refresh*1000);
+    };
+
+    function checkinfo() {
+            var Data = $('#PlantCode').val();
+            if (Data != null && Data != undefined && Data != "") {
+            $.ajax({
+            url: '@Url.Action("getPlanVertical", "RearHoodDisplay")',
+            data: { PLANTCODE: Data },
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+                success: function (result) {
+                    Setlblvalue(result);
+            },
+                error: function (errormessage) {
+                //alert(errormessage.responseText);
+                }
+            });
+            }
+
+        }
+    function Setlblvalue(data) {
+
+        if (data.tdError == true) {
+            $("#tdError").show();
+            $("#lblErrordb").text(data.lblErrordb);
+        } else {
+            $("#tdError").hide();
+        }
+
+        $("#lblDate").text(data.lblDate);
+        $("#lblTime").text(data.lblTime);
+        $("#lblShift").text(data.lblShift);
+        $("#lblProductionUnit").text(data.lblProductionUnit);
+        $("#lblPlanQty").text(data.lblPlanQty);
+        $("#lblPending").text(data.lblPending);
+        $("#lblBKTotDay").text(data.lblBKTotDay);
+        $("#lblPlanQty").text(data.lblPlanQty);
+        $("#lblBK").text(data.lblBK);
+        $("#lblPending").text(data.lblPending);
+        $("#lblBKTotDay").text(data.lblBKTotDay);
+        $("#lblSftotDay").text(data.lblSftotDay);
+        $('#tbldetail tbody').html('');
+        for (var i = 0; i < data.PTtabls.length; i++) {
+            var rawCode = i;
+            var tr;
+            if (data.PTtabls[i].PENDING > 0) {
+              tr=  "<tr id='" + data.PTtabls[i] + "'>";
+            }
+            else {
+                tr = "<tr  id='" + data.PTtabls[i] + "'>";
+            }
+            var row = $(tr);
+            $("#tbldetail").append(row);
+
+            row.append("<td>" + data.PTtabls[i].SRNO + "</td>");
+
+            row.append("<td><span id='FCODE" + rawCode + "'>" + data.PTtabls[i].FCODE + "</span></td>");
+            row.append("<td><span id='SHORTNAME" + rawCode + "'>" + data.PTtabls[i].SHORTNAME + "</span></td>");
+            row.append("<td><span id='QTY" + rawCode + "'>" + data.PTtabls[i].QTY + "</span></td>");
+            row.append("<td><span id='HOOK" + rawCode + "'>" + data.PTtabls[i].HOOK + "</span></td>");
+            row.append("<td><span id='REAR_HOOD" + rawCode + "'>" + data.PTtabls[i].REAR_HOOD + "</span></td>");
+            row.append("<td><span id='CLUSTER_METER" + rawCode + "'>" + data.PTtabls[i].CLUSTER_METER + "</span></td>");
+            row.append("<td><span id='IP_HARNESS" + rawCode + "'>" + data.PTtabls[i].IP_HARNESS + "</span></td>");
+            row.append("<td><span id='RADIATOR_SHELL" + rawCode + "'>" + data.PTtabls[i].RADIATOR_SHELL + "</span></td>");
+            row.append("<td><span id='AIR_CLEANER" + rawCode + "'>" + data.PTtabls[i].AIR_CLEANER + "</span></td>");
+            row.append("<td><span id='HEAD_LAMP_LH" + rawCode + "'>" + data.PTtabls[i].HEAD_LAMP_LH + "</span></td>");
+            row.append("<td><span id='HEAD_LAMP_RH" + rawCode + "'>" + data.PTtabls[i].HEAD_LAMP_RH + "</span></td>");
+            //row.append("<td><span id='PLANNED" + rawCode + "'>" + data.PTtabls[i].PLANNED + "</span></td>");
+            //row.append("<td><span id='DONE" + rawCode + "'>" + data.PTtabls[i].DONE + "</span></td>");
+            //row.append("<td><span id='PENDING" + rawCode + "'>" + data.PTtabls[i].PENDING + "</span></td>");
+        }
+        //debugger;
+        //GetTaskComplete(result);
+    }
+
+</script>
+
+</html>

@@ -1,0 +1,244 @@
+﻿<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="table-responsive">
+        @{
+            List<object> commands = new List<object>();
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-delete", cssClass = "delete" } });
+        }
+
+        @(Html.EJS().Grid("Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                AllowPaging(true).
+                PageSettings(Page => Page.PageSize(7)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+                AllowResizing().
+                Columns(col =>
+                {
+                    col.HeaderText("ACTION").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Commands(commands).Add();
+                    col.Field("USRNAME").HeaderText("USER NAME").IsPrimaryKey(true).Width("100").Visible(false).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("PSWORD").HeaderText("PASSWORD").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("L_CODE").HeaderText("LAVEL NAME").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("U_CODE").HeaderText("PLANT CODE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("FAMILYCODE").HeaderText("FAMILY CODE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+
+                    col.Field("F_NAME").HeaderText("").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("STAGEID").HeaderText("STAGE ID").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("INACTIVE").HeaderText("INACTIVE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("PUNAME").HeaderText("PU NAME").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+
+                    
+                    col.Field("CREATEDBY").HeaderText("CREATED BY").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CREATEDDATE").HeaderText("CREATED DATE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("UPDATEDBY").HeaderText("UPDATED BY").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("UPDATEDDATE").HeaderText("UPDATED DATE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+
+
+                })
+                  .SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick").//AllowRowDragAndDrop().
+                Render())
+
+        @*<script>
+            var AUTOID;
+            $("#FUEL_INJECTION_PUMP,#CYLINDER_BLOCK,#CYLINDER_HEAD,#CONNECTING_ROD,#CRANK_SHAFT,#CAM_SHAFT").select2({
+                //allowClear: true,
+                width: '300px',
+            });
+
+            $("#INJECTOR").select2({
+                //allowClear: true,
+                width: '70px',
+            });
+            $("#NO_OF_PISTONS").select2({
+                //allowClear: true,
+                width: '50px',
+            });
+
+
+            function commandClick(args) {
+
+                if (args.rowData != null) {
+                    if (args.target.classList.contains('edit')) {
+                        AUTOID = args.rowData["AUTOID"];
+
+
+                        $("#PLANT_CODE").val(args.rowData["PLANT_CODE"]);
+                        $("#FAMILY_CODE").val(args.rowData["FAMILY_CODE"]);
+
+                        $("#Engine").val(args.rowData["ITEM_CODE"]);
+                        /*$("#Engine").val(args.rowData["ITEM_CODE"]).trigger("change");*/
+
+                        //alert(args.rowData["REQUIRE_FUALPUMP"]);
+
+                        $("#FUEL_INJECTION_PUMP").val(args.rowData["FUEL_INJECTION_PUMP"]);
+                        $("#FUEL_INJECTION_PUMP").val(args.rowData["FUEL_INJECTION_PUMP"]).trigger("change");
+
+
+                        var res = args.rowData["REQ_FUEL_INJECTION_PUMP"];
+                        if (res == "1") {
+                            $("#REQ_FUEL_INJECTION_PUMP").prop('checked', true)
+                        }
+                        else {
+                            $("#REQ_FUEL_INJECTION_PUMP").prop('checked', false)
+                        }
+
+                        $("#CYLINDER_BLOCK").val(args.rowData["CYLINDER_BLOCK"]);
+                        $("#CYLINDER_BLOCK").val(args.rowData["CYLINDER_BLOCK"]).trigger("change");
+
+                        var res = args.rowData["REQUIRE_CYLINDER_BLOCK"];
+                        if (res == "1") {
+                            $("#REQUIRE_CYLINDER_BLOCK").prop('checked', true)
+                        }
+                        else {
+                            $("#REQUIRE_CYLINDER_BLOCK").prop('checked', false)
+                        }
+
+                        $("#CYLINDER_HEAD").val(args.rowData["CYLINDER_HEAD"]);
+                        $("#CYLINDER_HEAD").val(args.rowData["CYLINDER_HEAD"]).trigger("change");
+
+
+                        var res = args.rowData["REQUIRE_CYLINDER_HEAD"];
+                        if (res == "1") {
+                            $("#REQUIRE_CYLINDER_HEAD").prop('checked', true)
+                        }
+                        else {
+                            $("#REQUIRE_CYLINDER_HEAD").prop('checked', false)
+                        }
+
+
+                        $("#CONNECTING_ROD").val(args.rowData["CONNECTING_ROD"]);
+                        $("#CONNECTING_ROD").val(args.rowData["CONNECTING_ROD"]).trigger("change");
+
+                        var res = args.rowData["REQUIRE_CONNECTING_ROD"];
+                        if (res == "1") {
+                            $("#REQUIRE_CONNECTING_ROD").prop('checked', true)
+                        }
+                        else {
+                            $("#REQUIRE_CONNECTING_ROD").prop('checked', false)
+                        }
+
+                        $("#CRANK_SHAFT").val(args.rowData["CRANK_SHAFT"]);
+                        $("#CRANK_SHAFT").val(args.rowData["CRANK_SHAFT"]).trigger("change");
+
+                        var res = args.rowData["REQUIRE_CRANK_SHAFT"];
+                        if (res == "1") {
+                            $("#REQUIRE_CRANK_SHAFT").prop('checked', true)
+                        }
+                        else {
+                            $("#REQUIRE_CRANK_SHAFT").prop('checked', false)
+                        }
+
+                        $("#CAM_SHAFT").val(args.rowData["CAM_SHAFT"]);
+                        $("#CAM_SHAFT").val(args.rowData["CAM_SHAFT"]).trigger("change");
+
+                        var res = args.rowData["REQUIRE_CAM_SHAFT"];
+                        if (res == "1") {
+                            $("#REQUIRE_CAM_SHAFT").prop('checked', true)
+                        }
+                        else {
+                            $("#REQUIRE_CAM_SHAFT").prop('checked', false)
+                        }
+
+                        $("#NO_OF_PISTONS").val(args.rowData["NO_OF_PISTONS"]);
+                        $("#NO_OF_PISTONS").val(args.rowData["NO_OF_PISTONS"]).trigger("change");
+
+
+                        $("#INJECTOR").val(args.rowData["INJECTOR"]);
+                        $("#INJECTOR").val(args.rowData["INJECTOR"]).trigger("change");
+
+                        $("#PREFIX_1").val(args.rowData["PREFIX_1"]);
+
+
+
+                        $('#PLANT_CODE').prop('disabled', true);
+                        $('#FAMILY_CODE').prop('disabled', true);
+                        $('#Engine').prop('disabled', true);
+
+
+                        $('#Add').hide();
+                        $('#Update').show();
+                    }
+                    //Edit();
+                }
+                if (args.target.classList.contains('delete')) {
+                    $('#DeleteConfirm').modal('show');
+                    AUTOID = args.rowData["AUTOID"];
+                }
+                $("#btnDelete").on("click", function () {
+                DeleteEngine();
+            });
+
+            //Function to delete Engine
+            function DeleteEngine() {
+                var Data = {
+                    AUTOID: AUTOID
+                };
+                $('#DeleteConfirm').modal('hide');
+                $("#divLoader").show();
+                $.ajax({
+                    url: '@Url.Action("Delete", "EngineMaster")',
+                    data: JSON.stringify(Data),
+                    type: "POST",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        $("#divLoader").hide();
+                        BindGrid();
+                        if (data.Msg != "" || data.Msg != null ) {
+                            $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            setTimeout(function() {$(".alert").alert('close');}, 5000);
+                        }
+                    }
+                });
+            }
+            };
+
+
+
+
+        </script>*@
+    </div>
+
+    <script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+    @Html.EJS().ScriptManager()
+
+    @*Model for Delete User*@
+    <div class="modal" id="DeleteConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-danger">
+                    <strong class="modal-title" id="exampleModalLabel" style="font-size:25px;"><i class="fa fa-exclamation-circle" style="font-size:35px;" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<strong>Confirmation..!</strong></strong>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4><strong>Are you sure, to delete this Engine ..?</strong></h4>
+                </div>
+                <div class="modal-footer">
+                    @*<a href="@Url.Action("", "")" class="btn btn-success btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Go Back</a>*@
+                    <button type="button" data-dismiss="modal" class="btn btn-warning btn-sm"><i class="ace-icon fa fa-arrow-left"></i> Go Back</button>
+                    <button type="button" id="btnDelete" class="btn btn-danger btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

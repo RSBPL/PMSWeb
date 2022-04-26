@@ -1,0 +1,7 @@
+﻿@model MVCApp.Models.TractorMster
+@{
+    <div>
+        @Html.DropDownListFor(Model => Model.T4_Family, (IEnumerable<SelectListItem>)ViewBag.T4Family, new { @class = "form-control input-sm" });
+    </div>
+}
+

@@ -1,0 +1,24 @@
+30-Oct-2021 3:35:09 PM
+Index (zero based) must be greater than or equal to zero and less than the size of the argument list.
+   at System.Text.StringBuilder.AppendFormatHelper(IFormatProvider provider, String format, ParamsArray args)
+   at System.String.FormatHelper(IFormatProvider provider, String format, ParamsArray args)
+   at System.String.Format(String format, Object[] args)
+   at MVCApp.Controllers.MAHController.UpdateItemBarcode(BOXBARCODE bOXBARCODE) in D:\Sarthak\MVCApp\MVCApp\Controllers\MAHController.cs:line 786
+____________________________________________________________________________________________
+
+30-Oct-2021 3:41:49 PM
+Index (zero based) must be greater than or equal to zero and less than the size of the argument list.
+   at System.Text.StringBuilder.AppendFormatHelper(IFormatProvider provider, String format, ParamsArray args)
+   at System.String.FormatHelper(IFormatProvider provider, String format, ParamsArray args)
+   at System.String.Format(String format, Object[] args)
+   at MVCApp.Controllers.MAHController.UpdateItemBarcode(BOXBARCODE bOXBARCODE) in D:\Sarthak\MVCApp\MVCApp\Controllers\MAHController.cs:line 786
+____________________________________________________________________________________________
+
+30-Oct-2021 4:27:54 PM
+ORA-00933: SQL command not properly ended
+   at OracleInternal.ServiceObjects.OracleCommandImpl.VerifyExecution(OracleConnectionImpl connectionImpl, Int32& cursorId, Boolean bThrowArrayBindRelatedErrors, OracleException& exceptionForArrayBindDML, Boolean& hasMoreRowsInDB, Boolean bFirstIterationDone)
+   at OracleInternal.ServiceObjects.OracleCommandImpl.ExecuteNonQuery(String commandText, OracleParameterCollection paramColl, CommandType commandType, OracleConnectionImpl connectionImpl, Int32 longFetchSize, Int64 clientInitialLOBFS, OracleDependencyImpl orclDependencyImpl, Int64[]& scnFromExecution, OracleParameterCollection& bindByPositionParamColl, Boolean& bBindParamPresent, OracleException& exceptionForArrayBindDML, Boolean isFromEF)
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteNonQuery()
+   at MVCApp.Controllers.MAHController.ExecuteFaultyItems(FAULTYITEMS fAULITEMS) in D:\Sarthak\MVCApp\MVCApp\Controllers\MAHController.cs:line 1467
+____________________________________________________________________________________________
+

@@ -1,0 +1,256 @@
+﻿<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+
+<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="table-responsive">
+        @{
+            List<object> commands = new List<object>();
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-delete", cssClass = "delete" } });
+        }
+
+        @(Html.EJS().Grid("Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                AllowPaging(true).
+                PageSettings(Page => Page.PageSize(7)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+                AllowResizing().
+                Columns(col =>
+                {
+                    col.HeaderText("EDIT/DELETE").Commands(commands).Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+
+                    col.Field("PLANT_CODE").HeaderText("PLANT").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("FAMILY_CODE").HeaderText("FAMILY").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("STAGE_ID").HeaderText("STAGE_ID").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("STAGE_DESCRIPTION").HeaderText("STAGE_DESCRIPTION").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("PRODUCT_TYPE").HeaderText("PRODUCT_TYPE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("START_STAGE").HeaderText("START_STAGE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("END_STAGE").HeaderText("END_STAGE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("PRINT_LABEL").HeaderText("PRINT_LABEL").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("PRINT_LABEL_QUANTITY").HeaderText("PRINT_LABEL_QUANTITY").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("SHOW_STAGE_FORM").HeaderText("SHOW_STAGE_FORM").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("STAGE_1_NAME").HeaderText("STAGE_1_NAME").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("STAGE_2_NAME").HeaderText("STAGE_2_NAME").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("STAGE_3_NAME").HeaderText("STAGE_3_NAME").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("SCAN_JOB").HeaderText("SCAN_JOB").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("SCAN_JOB_KEY_STOKES").HeaderText("SCAN_JOB_KEY_STOKES").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("SCAN_SERIAL").HeaderText("SCAN_SERIAL").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("SCAN_SERIAL_KEY_STOKES").HeaderText("SCAN_SERIAL_KEY_STOKES").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("SCAN_SUB_ASSEMBLY_1").HeaderText("SCAN_SUB_ASSEMBLY_1").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("SCAN_SUB_ASSEMBLY_1_KEY_STOKES").HeaderText("SCAN_SUB_ASSEMBLY_1_KEY_STOKES").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("SCAN_SUB_ASSEMBLY_2").HeaderText("SCAN_SUB_ASSEMBLY_2").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("SCAN_SUB_ASSEMBLY_2_KEY_STOKES").HeaderText("SCAN_SUB_ASSEMBLY_2_KEY_STOKES").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("SCAN_SUB_ASSEMBLY_3").HeaderText("SCAN_SUB_ASSEMBLY_3").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("SCAN_SUB_ASSEMBLY_3_KEY_STOKES").HeaderText("SCAN_SUB_ASSEMBLY_3_KEY_STOKES").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("ONLINE_SCREEN").HeaderText("ONLINE_SCREEN").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("START_FIFO").HeaderText("START_FIFO").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("END_FIFO").HeaderText("END_FIFO").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("MOVE_COMPLETE").HeaderText("MOVE_COMPLETE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("DELAY_TIME").HeaderText("DELAY_TIME").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("ISBIG").HeaderText("ISBIG").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("OFFLINE_KEYCODE").HeaderText("OFFLINE_KEYCODE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("IPADDR").HeaderText("IPADDR").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("IPPORT").HeaderText("IPPORT").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("AD_USER").HeaderText("AD_USER").Visible(false).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("AD_PASSWORD").Visible(false).HeaderText("AD_PASSWORD").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CREATED_BY").HeaderText("CREATED_BY").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CREATED_DATE").HeaderText("CREATED_DATE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("UPDATED_BY").HeaderText("UPDATED_BY").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("UPDATED_DATE").HeaderText("UPDATED_DATE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("AUTOID").HeaderText("AUTOID").IsPrimaryKey(true).Visible(false).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+
+
+                    
+                })
+                .SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick").//AllowRowDragAndDrop().
+                Render())
+
+        <script>
+            $("#STAGE_ID,#OFFLINEITEMS").select2({
+                width: '100%',
+               
+                //dropdownParent: $("#CellAliasModel")
+            });
+            var AutoId;
+            function commandClick(args) {
+                if (args.rowData != null) {
+                    if (args.target.classList.contains('edit')) {
+                        AutoId = args.rowData["AUTOID"];
+                        $("#PLANT_CODE").val(args.rowData["PLANT_CODE"]);
+                        $("#FAMILY_CODE").val(args.rowData["FAMILY_CODE"]);
+
+                        $("#STAGE_ID").val(args.rowData["STAGE_ID"]);
+                        $("#STAGE_ID").val(args.rowData["STAGE_ID"]).trigger("change"); 
+
+                        $("#STAGE_DESCRIPTION").val(args.rowData["STAGE_DESCRIPTION"]); 
+                        $("#PRODUCT_TYPE").val(args.rowData["PRODUCT_TYPE"]);
+
+
+                        
+                        if (args.rowData["START_STAGE"] == "1") {
+                            $("#START_STAGE").prop('checked', true)
+                        }
+                        else {
+                            $("#START_STAGE").prop('checked', false)
+                        }
+                        if (args.rowData["END_STAGE"] == "1") {
+                            $("#END_STAGE").prop('checked', true)
+                        }
+                        else {
+                            $("#END_STAGE").prop('checked', false)
+                        }
+                        if (args.rowData["PRINT_LABEL"] == "1") {
+                            $("#PRINT_LABEL").prop('checked', true)
+                        }
+                        else {
+                            $("#PRINT_LABEL").prop('checked', false)
+                        }
+
+                        $("#PRINT_LABEL_QUANTITY").val(args.rowData["PRINT_LABEL_QUANTITY"]); 
+
+                        if (args.rowData["SHOW_STAGE_FORM"] == "1") {
+                            $("#SHOW_STAGE_FORM").prop('checked', true)
+                        }
+                        else {
+                            $("#SHOW_STAGE_FORM").prop('checked', false)
+                        }
+
+                        $("#STAGE_1_NAME").val(args.rowData["STAGE_1_NAME"]);
+                        $("#STAGE_2_NAME").val(args.rowData["STAGE_2_NAME"]);
+                        $("#STAGE_3_NAME").val(args.rowData["STAGE_3_NAME"]);  
+
+                        if (args.rowData["SCAN_JOB"] == "1") {
+                            $("#SCAN_JOB").prop('checked', true)
+                        }
+                        else {
+                            $("#SCAN_JOB").prop('checked', false)
+                        }
+
+                        $("#SCAN_JOB_KEY_STOKES").val(args.rowData["SCAN_JOB_KEY_STOKES"]);  
+                        
+                        if (args.rowData["SCAN_SERIAL"] == "1") {
+                            $("#SCAN_SERIAL").prop('checked', true)
+                        }
+                        else {
+                            $("#SCAN_SERIAL").prop('checked', false)
+                        }
+                        $("#SCAN_SERIAL_KEY_STOKES").val(args.rowData["SCAN_SERIAL_KEY_STOKES"]); 
+
+                        if (args.rowData["SCAN_SUB_ASSEMBLY_1"] == "1") {
+                            $("#SCAN_SUB_ASSEMBLY_1").prop('checked', true)
+                        }
+                        else {
+                            $("#SCAN_SUB_ASSEMBLY_1").prop('checked', false)
+                        }
+                        $("#SCAN_SUB_ASSEMBLY_1_KEY_STOKES").val(args.rowData["SCAN_SUB_ASSEMBLY_1_KEY_STOKES"]);
+
+
+                        if (args.rowData["SCAN_SUB_ASSEMBLY_2"] == "1") {
+                            $("#SCAN_SUB_ASSEMBLY_2").prop('checked', true)
+                        }
+                        else {
+                            $("#SCAN_SUB_ASSEMBLY_2").prop('checked', false)
+                        }
+                        $("#SCAN_SUB_ASSEMBLY_2_KEY_STOKES").val(args.rowData["SCAN_SUB_ASSEMBLY_2_KEY_STOKES"]);
+
+                        if (args.rowData["SCAN_SUB_ASSEMBLY_3"] == "1") {
+                            $("#SCAN_SUB_ASSEMBLY_3").prop('checked', true)
+                        }
+                        else {
+                            $("#SCAN_SUB_ASSEMBLY_3").prop('checked', false)
+                        }
+                        $("#SCAN_SUB_ASSEMBLY_3_KEY_STOKES").val(args.rowData["SCAN_SUB_ASSEMBLY_3_KEY_STOKES"]);
+
+                        if (args.rowData["ONLINE_SCREEN"] == "1") {
+                            $("#ONLINE_SCREEN").prop('checked', true)
+                        }
+                        else {
+                            $("#ONLINE_SCREEN").prop('checked', false)
+                        }
+
+                        if (args.rowData["START_FIFO"] == "1") {
+                            $("#START_FIFO").prop('checked', true)
+                        }
+                        else {
+                            $("#START_FIFO").prop('checked', false)
+                        }
+                        if (args.rowData["END_FIFO"] == "1") {
+                            $("#END_FIFO").prop('checked', true)
+                        }
+                        else {
+                            $("#END_FIFO ").prop('checked', false)
+                        }
+                        if (args.rowData["MOVE_COMPLETE"] == "1") {
+                            $("#MOVE_COMPLETE").prop('checked', true)
+                        }
+                        else {
+                            $("#MOVE_COMPLETE ").prop('checked', false)
+                        }
+                        if (args.rowData["DELAY_TIME"] == "1") {
+                            $("#DELAY_TIME").prop('checked', true)
+                        }
+                        else {
+                            $("#DELAY_TIME ").prop('checked', false)
+                        }
+                        //$("#DELAY_TIME").val(args.rowData["DELAY_TIME"]); 
+                        if (args.rowData["ISBIG"] == "1") {
+                            $("#ISBIG").prop('checked', true)
+                        }
+                        else {
+                            $("#ISBIG ").prop('checked', false)
+                        }
+                        
+                        $("#IPADDR").val(args.rowData["IPADDR"]); 
+                        $("#IPPORT").val(args.rowData["IPPORT"]); 
+                        $("#AD_USER").val(args.rowData["AD_USER"]); 
+                        $("#AD_PASSWORD").val(args.rowData["AD_PASSWORD"]);
+
+                        $("#OFFLINEITEMS").val(args.rowData["OFFLINE_KEYCODE"]);
+                        $("#OFFLINEITEMS").val(args.rowData["OFFLINE_KEYCODE"]).trigger("change");
+                        
+                       
+                        
+                        
+
+
+
+                        $('#PLANT_CODE').prop('disabled', true);
+                        $('#FAMILY_CODE').prop('disabled', true);
+                        $('#STAGE_ID').prop('disabled', true);
+                        $('#OFFLINEITEMS').prop('disabled', true); 
+
+                        $('#Add').hide();
+                        $('#Update').show();
+                    }
+                    if (args.target.classList.contains('delete')) {
+
+                        AutoId = args.rowData["AUTOID"];
+
+                        $('#DeleteConfirm').modal('show');
+                    }
+                }
+            };
+
+
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+

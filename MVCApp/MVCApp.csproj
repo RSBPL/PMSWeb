@@ -1,0 +1,1328 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.6\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props" Condition="Exists('..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.6\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" />
+  <Import Project="..\packages\Microsoft.NetFramework.Analyzers.2.9.6\build\Microsoft.NetFramework.Analyzers.props" Condition="Exists('..\packages\Microsoft.NetFramework.Analyzers.2.9.6\build\Microsoft.NetFramework.Analyzers.props')" />
+  <Import Project="..\packages\Microsoft.NetCore.Analyzers.2.9.6\build\Microsoft.NetCore.Analyzers.props" Condition="Exists('..\packages\Microsoft.NetCore.Analyzers.2.9.6\build\Microsoft.NetCore.Analyzers.props')" />
+  <Import Project="..\packages\Microsoft.CodeQuality.Analyzers.2.9.6\build\Microsoft.CodeQuality.Analyzers.props" Condition="Exists('..\packages\Microsoft.CodeQuality.Analyzers.2.9.6\build\Microsoft.CodeQuality.Analyzers.props')" />
+  <Import Project="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props" Condition="Exists('..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{68940386-3E8A-47AD-9CE8-FD79B737799F}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MVCApp</RootNamespace>
+    <AssemblyName>MVCApp</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort>
+    </IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TypeScriptTarget>ES2020</TypeScriptTarget>
+    <TypeScriptJSXEmit>React</TypeScriptJSXEmit>
+    <TypeScriptModuleKind>None</TypeScriptModuleKind>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptSourceMap>True</TypeScriptSourceMap>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+    <ExcludeGeneratedDebugSymbol>true</ExcludeGeneratedDebugSymbol>
+    <LegacyPublishPropertiesPageEnabled>true</LegacyPublishPropertiesPageEnabled>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TypeScriptTarget>ES2019</TypeScriptTarget>
+    <TypeScriptJSXEmit>React</TypeScriptJSXEmit>
+    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptSourceMap>True</TypeScriptSourceMap>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+    <LegacyPublishPropertiesPageEnabled>true</LegacyPublishPropertiesPageEnabled>
+    <ExcludeGeneratedDebugSymbol>false</ExcludeGeneratedDebugSymbol>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ClosedXML, Version=0.95.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.0.95.2\lib\net40\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine">
+      <HintPath>c:\program files (x86)\sap businessobjects\crystal reports for .net framework 4.0\common\sap businessobjects enterprise xi 4.0\win32_x86\dotnet\CrystalDecisions.CrystalReports.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.ReportSource">
+      <HintPath>c:\program files (x86)\sap businessobjects\crystal reports for .net framework 4.0\common\sap businessobjects enterprise xi 4.0\win32_x86\dotnet\CrystalDecisions.ReportSource.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.Shared">
+      <HintPath>c:\program files (x86)\sap businessobjects\crystal reports for .net framework 4.0\common\sap businessobjects enterprise xi 4.0\win32_x86\dotnet\CrystalDecisions.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="EncodeDecode, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\EncodeDecode.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelNumberFormat, Version=1.0.10.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelNumberFormat.1.0.10\lib\net20\ExcelNumberFormat.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Oracle.ManagedDataAccess, Version=4.122.1.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Oracle.ManagedDataAccess.dll</HintPath>
+    </Reference>
+    <Reference Include="Oracle.Web, Version=2.122.1.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Oracle.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="QRCoder, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QRCoder.1.4.1\lib\net40\QRCoder.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.EJ2, Version=18.1500.0.53, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.EJ2.MVC5.18.1.0.53\lib\net45\Syncfusion.EJ2.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Syncfusion.Licensing, Version=18.1450.0.53, Culture=neutral, PublicKeyToken=632609b4d040f6b4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Licensing.18.1.0.53\lib\net45\Syncfusion.Licensing.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.Threading.Tasks" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Http, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.7\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.7\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Common\Assemblyfunctions.cs" />
+    <Compile Include="Common\Function.cs" />
+    <Compile Include="Common\JobFinalFunction.cs" />
+    <Compile Include="Common\MAHModals.cs" />
+    <Compile Include="Common\PrintAssemblyBarcodes.cs" />
+    <Compile Include="Common\ReportType.cs" />
+    <Compile Include="Common\TractorAssemblyModals.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Admin\MessagesController.cs" />
+    <Compile Include="Controllers\Admin\SettingController.cs" />
+    <Compile Include="Controllers\Admin\UserMasterController.cs" />
+    <Compile Include="Controllers\Assembly\BackendPartModificationController.cs" />
+    <Compile Include="Controllers\Assembly\HookUpAndDownController.cs" />
+    <Compile Include="Controllers\Assembly\ImportExportController.cs" />
+    <Compile Include="Controllers\Assembly\JobFinalController.cs" />
+    <Compile Include="Controllers\BarcodePrinting\TracktorSubAssemblyController.cs" />
+    <Compile Include="Controllers\BarcodePrinting\SubAssemblyController.cs" />
+    <Compile Include="Controllers\BarcodePrinting\GateEntryController.cs" />
+    <Compile Include="Controllers\LCD\AfterPaintLCD2Controller.cs" />
+    <Compile Include="Controllers\LCD\BuckleUpController.cs" />
+    <Compile Include="Controllers\LCD\BuckleUpPTController.cs" />
+    <Compile Include="Controllers\ChangePasswordController.cs" />
+    <Compile Include="Controllers\Assembly\EngineAssemblyController.cs" />
+    <Compile Include="Controllers\DCU\TractorController.cs" />
+    <Compile Include="Controllers\InjectorsController.cs" />
+    <Compile Include="Controllers\LCD\BulkstorageLocationController.cs" />
+    <Compile Include="Controllers\LCD\DailyPartScanningScreenController.cs" />
+    <Compile Include="Controllers\LCD\EngineTransferSystemDispalyController.cs" />
+    <Compile Include="Controllers\LCD\FrontAxelSubAssemblyController.cs" />
+    <Compile Include="Controllers\LCD\FTTractorAssemblyController.cs" />
+    <Compile Include="Controllers\LCD\HydraulicLiftAssemblyController.cs" />
+    <Compile Include="Controllers\LCD\MRNLcdController.cs" />
+    <Compile Include="Controllers\LCD\RearHoodDisplayController.cs" />
+    <Compile Include="Controllers\LCD\SuperMarketLocationController.cs" />
+    <Compile Include="Controllers\LCD\TractorLoadingController.cs" />
+    <Compile Include="Controllers\LCD\TyreSubAssemblyTVController.cs" />
+    <Compile Include="Controllers\MAHController.cs" />
+    <Compile Include="Controllers\Masters\AddControllerController.cs" />
+    <Compile Include="Controllers\Masters\BackendMappingController.cs" />
+    <Compile Include="Controllers\Masters\CraneMasterController.cs" />
+    <Compile Include="Controllers\Masters\CraneSettingController.cs" />
+    <Compile Include="Controllers\Masters\EngineMasterController.cs" />
+    <Compile Include="Controllers\Masters\FuelInjectionMappingController.cs" />
+    <Compile Include="Controllers\Masters\HydrualicMasterController.cs" />
+    <Compile Include="Controllers\Masters\MappingFamilyToPlantController.cs" />
+    <Compile Include="Controllers\Masters\OtherMasterController.cs" />
+    <Compile Include="Controllers\Masters\StageMasterController.cs" />
+    <Compile Include="Controllers\LayoutsController.cs" />
+    <Compile Include="Controllers\MHS\BarcodePrintingController.cs" />
+    <Compile Include="Controllers\MHS\BulkStorageController.cs" />
+    <Compile Include="Controllers\MHS\DashbordController.cs" />
+    <Compile Include="Controllers\MHS\DeviationMasterController.cs" />
+    <Compile Include="Controllers\MHS\KanbanMasterController.cs" />
+    <Compile Include="Controllers\MHS\KitMasterController.cs" />
+    <Compile Include="Controllers\MHS\MRNDisplaySheetController.cs" />
+    <Compile Include="Controllers\MHS\RawMaterialMasterController.cs" />
+    <Compile Include="Controllers\MHS\StoreMasterController.cs" />
+    <Compile Include="Controllers\Planning\AddDailyPlanController.cs" />
+    <Compile Include="Controllers\LCD\AfterPaintLCDController.cs" />
+    <Compile Include="Controllers\Planning\ApprovalMasterController.cs" />
+    <Compile Include="Controllers\Assembly\BeforePaintAssemblyController.cs" />
+    <Compile Include="Controllers\LCD\BeforePaintLCDController.cs" />
+    <Compile Include="Controllers\Masters\FamilyMasterController.cs" />
+    <Compile Include="Controllers\Masters\FamilySerialController.cs" />
+    <Compile Include="Controllers\Masters\PlantMasterController.cs" />
+    <Compile Include="Controllers\Masters\RopsMasterController.cs" />
+    <Compile Include="Controllers\Masters\HolidayMasterController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\Masters\ItemMasterController.cs" />
+    <Compile Include="Controllers\LCD\LCDController.cs" />
+    <Compile Include="Controllers\LCD\LCDLiveController.cs" />
+    <Compile Include="Controllers\LeftMenuController.cs" />
+    <Compile Include="Controllers\Admin\LevelMasterController.cs" />
+    <Compile Include="Controllers\Admin\MenuMasterController.cs" />
+    <Compile Include="Controllers\Planning\MonthlyPlanController.cs" />
+    <Compile Include="Controllers\MHS\MRN_VERIFICATION_MASTERController.cs" />
+    <Compile Include="Controllers\Masters\PlanningSubAssemblyViewController.cs" />
+    <Compile Include="Controllers\MHS\QualityMasterController.cs" />
+    <Compile Include="Controllers\ReportController.cs" />
+    <Compile Include="Controllers\Admin\RoleMasterController.cs" />
+    <Compile Include="Controllers\SettingMasterController.cs" />
+    <Compile Include="Controllers\Planning\Setting_MasterController.cs" />
+    <Compile Include="Controllers\StoreRecevingController.cs" />
+    <Compile Include="Controllers\Masters\SubAssemblyMappingMasterController.cs" />
+    <Compile Include="Controllers\Masters\TractorMasterController.cs" />
+    <Compile Include="Controllers\testController.cs" />
+    <Compile Include="Controllers\TestDatatableController.cs" />
+    <Compile Include="CrystalReports\Kanban.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Kanban.rpt</DependentUpon>
+      <SubType>Component</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="CrystalReports\kitting.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>kitting.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CrystalReports\MRNSheet.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MRNSheet.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CrystalReports\Receipt.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Receipt.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AddController.cs" />
+    <Compile Include="Models\AddDailyPlanModel.cs" />
+    <Compile Include="Models\APGRID.cs" />
+    <Compile Include="Models\APGRID2.cs" />
+    <Compile Include="Models\BackendModel.cs" />
+    <Compile Include="Models\BackendModification.cs" />
+    <Compile Include="Models\Barcode.cs" />
+    <Compile Include="Models\BeforePaintAssemblyModel.cs" />
+    <Compile Include="Models\BEFOREPAINTLCDGRID.cs" />
+    <Compile Include="Models\BulkLayout.cs" />
+    <Compile Include="Models\BulkStorage.cs" />
+    <Compile Include="Models\CommonModel.cs" />
+    <Compile Include="Models\CraneMapping.cs" />
+    <Compile Include="Models\CraneSetting.cs" />
+    <Compile Include="Models\DashboardModel.cs" />
+    <Compile Include="Models\DeviationModels.cs" />
+    <Compile Include="Models\EKIDashbordModel.cs" />
+    <Compile Include="Models\EngineAssembly.cs" />
+    <Compile Include="Models\EngineModel.cs" />
+    <Compile Include="Models\FIPModel.cs" />
+    <Compile Include="Models\TracktorSubAssemblyModel.cs" />
+    <Compile Include="Models\SubAssemblyModel.cs" />
+    <Compile Include="Models\GateEntryModel.cs" />
+    <Compile Include="Models\GoodsRecivingatStoreModel.cs" />
+    <Compile Include="Models\HolidaysModel.cs" />
+    <Compile Include="Models\HookUpAndDown.cs" />
+    <Compile Include="Models\HydrualicMaster.cs" />
+    <Compile Include="Models\ItemModel.cs" />
+    <Compile Include="Models\JOBSTATUS.cs" />
+    <Compile Include="Models\KanbanMaster.cs" />
+    <Compile Include="Models\KitMaster.cs" />
+    <Compile Include="Models\LCDLiveModel.cs" />
+    <Compile Include="Models\LevelModel.cs" />
+    <Compile Include="Models\Login.cs" />
+    <Compile Include="Models\MappingFamilyToPlant.cs" />
+    <Compile Include="Models\MenuModel.cs" />
+    <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\MonthlyPlanModel.cs" />
+    <Compile Include="Models\MRNDisplayModel.cs" />
+    <Compile Include="Models\MRNQCModel.cs" />
+    <Compile Include="Models\OtherSuffix.cs" />
+    <Compile Include="Models\PlantAndFamily.cs" />
+    <Compile Include="Models\PrivilegeModel.cs" />
+    <Compile Include="Models\RawMaterialMaster.cs" />
+    <Compile Include="Models\ReportModel.cs" />
+    <Compile Include="Models\RoleModel.cs" />
+    <Compile Include="Models\SftSetting.cs" />
+    <Compile Include="Models\SettingModel.cs" />
+    <Compile Include="Models\StageMsterModel.cs" />
+    <Compile Include="Models\Store.cs" />
+    <Compile Include="Models\SubAssemblyMapping.cs" />
+    <Compile Include="Models\TRACTOR.cs" />
+    <Compile Include="Models\TractorMster.cs" />
+    <Compile Include="Models\UserMaster.cs" />
+    <Compile Include="Models\Validation.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="assets\Chart\exporting.js" />
+    <Content Include="assets\Chart\highcharts.js" />
+    <Content Include="assets\css\ace-ie.min.css" />
+    <Content Include="assets\css\ace-part2.min.css" />
+    <Content Include="assets\css\ace-rtl.min.css" />
+    <Content Include="assets\css\ace-skins.min.css" />
+    <Content Include="assets\css\ace.min.css" />
+    <Content Include="assets\css\bootstrap-colorpicker.min.css" />
+    <Content Include="assets\css\bootstrap-datepicker3.min.css" />
+    <Content Include="assets\css\bootstrap-datetimepicker.min.css" />
+    <Content Include="assets\css\bootstrap-duallistbox.min.css" />
+    <Content Include="assets\css\bootstrap-editable.min.css" />
+    <Content Include="assets\css\bootstrap-multiselect.min.css" />
+    <Content Include="assets\css\bootstrap-timepicker.min.css" />
+    <Content Include="assets\css\bootstrap.min.css" />
+    <Content Include="assets\css\chosen.min.css" />
+    <Content Include="assets\css\colorbox.min.css" />
+    <Content Include="assets\css\CustomCss.css" />
+    <Content Include="assets\css\daterangepicker.min.css" />
+    <Content Include="assets\css\dropzone.min.css" />
+    <Content Include="assets\css\font-awesome.min.css" />
+    <Content Include="assets\css\fonts.googleapis.com.css" />
+    <Content Include="assets\css\fullcalendar.min.css" />
+    <Content Include="assets\css\images\meteorshower2.jpg" />
+    <Content Include="assets\css\images\pattern.jpg" />
+    <Content Include="assets\css\jquery-ui.custom.min.css" />
+    <Content Include="assets\css\jquery-ui.min.css" />
+    <Content Include="assets\css\jquery.gritter.min.css" />
+    <Content Include="assets\css\prettify.min.css" />
+    <Content Include="assets\css\select2.min.css" />
+    <Content Include="assets\css\ui.jqgrid.min.css" />
+    <Content Include="assets\DashBoardJS\DashBoardJS_Development\AdditiionalActivity.js" />
+    <Content Include="assets\DashBoardJS\DashBoardJS_Development\DashBoard.js" />
+    <Content Include="assets\DashBoardJS\DashBoardJS_Development\DashBoardPopupChartView.js" />
+    <Content Include="assets\DashBoardJS\DashBoardJS_Diployment\AdditiionalActivity.min.js" />
+    <Content Include="assets\DashBoardJS\DashBoardJS_Diployment\DashBoard.min.js" />
+    <Content Include="assets\DashBoardJS\DashBoardJS_Diployment\DashBoardPopupChartView.min.js" />
+    <Content Include="assets\DashBoardJS\DashBoardJS_Diployment\Date.min.js" />
+    <Content Include="assets\DashBoardJS\Export-Html-Table-To-Excel-Spreadsheet-using-jQuery-table2excel\demo\index.html" />
+    <Content Include="assets\DashBoardJS\Export-Html-Table-To-Excel-Spreadsheet-using-jQuery-table2excel\dist\jquery.table2excel.js" />
+    <Content Include="assets\DashBoardJS\Export-Html-Table-To-Excel-Spreadsheet-using-jQuery-table2excel\dist\jquery.table2excel.min.js" />
+    <Content Include="assets\DashBoardJS\Export-Html-Table-To-Excel-Spreadsheet-using-jQuery-table2excel\Gruntfile.js" />
+    <Content Include="assets\DashBoardJS\Export-Html-Table-To-Excel-Spreadsheet-using-jQuery-table2excel\src\jquery.table2excel.js" />
+    <Content Include="assets\font-awesome\4.5.0\css\font-awesome.min.css" />
+    <Content Include="assets\font-awesome\4.5.0\fonts\fontawesome-webfont.svg" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="assets\HighChart\export-data.js" />
+    <Content Include="assets\HighChart\exporting.js" />
+    <Content Include="assets\HighChart\highcharts.js" />
+    <Content Include="assets\HighChart\highcharts.src.js" />
+    <Content Include="assets\HighChart\offline-exporting.js" />
+    <Content Include="assets\images\avatars\avatar.png" />
+    <Content Include="assets\images\avatars\avatar1.png" />
+    <Content Include="assets\images\avatars\avatar2.png" />
+    <Content Include="assets\images\avatars\avatar3.png" />
+    <Content Include="assets\images\avatars\avatar4.png" />
+    <Content Include="assets\images\avatars\avatar5.png" />
+    <Content Include="assets\images\avatars\profile-pic.jpg" />
+    <Content Include="assets\images\avatars\user.jpg" />
+    <Content Include="assets\images\bootstrap-colorpicker\alpha-horizontal.png" />
+    <Content Include="assets\images\bootstrap-colorpicker\alpha.png" />
+    <Content Include="assets\images\bootstrap-colorpicker\hue-horizontal.png" />
+    <Content Include="assets\images\bootstrap-colorpicker\hue.png" />
+    <Content Include="assets\images\bootstrap-colorpicker\saturation.png" />
+    <Content Include="assets\images\email\email1.png" />
+    <Content Include="assets\images\email\email2.png" />
+    <Content Include="assets\images\email\email3.png" />
+    <Content Include="assets\images\email\email4.png" />
+    <Content Include="assets\images\gallery\image-1.jpg" />
+    <Content Include="assets\images\gallery\image-2.jpg" />
+    <Content Include="assets\images\gallery\image-3.jpg" />
+    <Content Include="assets\images\gallery\image-4.jpg" />
+    <Content Include="assets\images\gallery\image-5.jpg" />
+    <Content Include="assets\images\gallery\image-6.jpg" />
+    <Content Include="assets\images\gallery\thumb-1.jpg" />
+    <Content Include="assets\images\gallery\thumb-2.jpg" />
+    <Content Include="assets\images\gallery\thumb-3.jpg" />
+    <Content Include="assets\images\gallery\thumb-4.jpg" />
+    <Content Include="assets\images\gallery\thumb-5.jpg" />
+    <Content Include="assets\images\gallery\thumb-6.jpg" />
+    <Content Include="assets\images\placeholder\165x90.png" />
+    <Content Include="assets\images\placeholder\255x150.png" />
+    <Content Include="assets\images\placeholder\530x270.png" />
+    <Content Include="assets\images\placeholder\550x280.png" />
+    <Content Include="assets\js\ace-editable.min.js" />
+    <Content Include="assets\js\ace-elements.min.js" />
+    <Content Include="assets\js\ace-extra.min.js" />
+    <Content Include="assets\js\ace.min.js" />
+    <Content Include="assets\js\autosize.min.js" />
+    <Content Include="assets\js\bootbox.js" />
+    <Content Include="assets\js\bootstrap-colorpicker.min.js" />
+    <Content Include="assets\js\bootstrap-datepicker.min.js" />
+    <Content Include="assets\js\bootstrap-datetimepicker.min.js" />
+    <Content Include="assets\js\bootstrap-editable.min.js" />
+    <Content Include="assets\js\bootstrap-markdown.min.js" />
+    <Content Include="assets\js\bootstrap-multiselect.min.js" />
+    <Content Include="assets\js\bootstrap-tag.min.js" />
+    <Content Include="assets\js\bootstrap-timepicker.min.js" />
+    <Content Include="assets\js\bootstrap-wysiwyg.min.js" />
+    <Content Include="assets\js\bootstrap.min.js" />
+    <Content Include="assets\js\buttons.colVis.min.js" />
+    <Content Include="assets\js\buttons.flash.min.js" />
+    <Content Include="assets\js\buttons.html5.min.js" />
+    <Content Include="assets\js\buttons.print.min.js" />
+    <Content Include="assets\js\chosen.jquery.min.js" />
+    <Content Include="assets\js\dataTables.buttons.min.js" />
+    <Content Include="assets\js\dataTables.select.min.js" />
+    <Content Include="assets\js\daterangepicker.min.js" />
+    <Content Include="assets\js\dropzone.min.js" />
+    <Content Include="assets\js\excanvas.min.js" />
+    <Content Include="assets\js\fullcalendar.min.js" />
+    <Content Include="assets\js\grid.locale-en.js" />
+    <Content Include="assets\js\holder.min.js" />
+    <Content Include="assets\js\html5shiv.min.js" />
+    <Content Include="assets\js\jquery-1.11.3.min.js" />
+    <Content Include="assets\js\jquery-2.1.4.min.js" />
+    <Content Include="assets\js\jquery-additional-methods.min.js" />
+    <Content Include="assets\js\jquery-typeahead.js" />
+    <Content Include="assets\js\jquery-ui.custom.min.js" />
+    <Content Include="assets\js\jquery-ui.min.js" />
+    <Content Include="assets\js\jquery.bootstrap-duallistbox.min.js" />
+    <Content Include="assets\js\jquery.colorbox.min.js" />
+    <Content Include="assets\js\jquery.dataTables.bootstrap.min.js" />
+    <Content Include="assets\js\jquery.dataTables.min.js" />
+    <Content Include="assets\js\jquery.easypiechart.min.js" />
+    <Content Include="assets\js\jquery.flot.min.js" />
+    <Content Include="assets\js\jquery.flot.pie.min.js" />
+    <Content Include="assets\js\jquery.flot.resize.min.js" />
+    <Content Include="assets\js\jquery.gritter.min.js" />
+    <Content Include="assets\js\jquery.hotkeys.index.min.js" />
+    <Content Include="assets\js\jquery.inputlimiter.min.js" />
+    <Content Include="assets\js\jquery.jqGrid.min.js" />
+    <Content Include="assets\js\jquery.knob.min.js" />
+    <Content Include="assets\js\jquery.maskedinput.min.js" />
+    <Content Include="assets\js\jquery.mobile.custom.min.js" />
+    <Content Include="assets\js\jquery.nestable.min.js" />
+    <Content Include="assets\js\jquery.raty.min.js" />
+    <Content Include="assets\js\jquery.sparkline.index.min.js" />
+    <Content Include="assets\js\jquery.ui.touch-punch.min.js" />
+    <Content Include="assets\js\jquery.validate.min.js" />
+    <Content Include="assets\js\markdown.min.js" />
+    <Content Include="assets\js\moment.min.js" />
+    <Content Include="assets\js\prettify.min.js" />
+    <Content Include="assets\js\respond.min.js" />
+    <Content Include="assets\js\select2.min.js" />
+    <Content Include="assets\js\spin.js" />
+    <Content Include="assets\js\spinbox.min.js" />
+    <Content Include="assets\js\tree.min.js" />
+    <Content Include="assets\js\wizard.min.js" />
+    <Content Include="assets\swf\flashExport.swf" />
+    <Content Include="bin\Antlr3.Runtime.dll" />
+    <Content Include="bin\ClosedXML.dll" />
+    <Content Include="bin\CRVsPackageLib.dll" />
+    <Content Include="bin\CrystalDecisions.CrystalReports.Design.dll" />
+    <Content Include="bin\CrystalDecisions.CrystalReports.Engine.dll" />
+    <Content Include="bin\CrystalDecisions.CrystalReports.TemplateEngine.dll" />
+    <Content Include="bin\CrystalDecisions.Data.AdoDotNetInterop.dll" />
+    <Content Include="bin\CrystalDecisions.Enterprise.Viewing.ReportSource.dll" />
+    <Content Include="bin\CrystalDecisions.ReportAppServer.ClientDoc.dll" />
+    <Content Include="bin\CrystalDecisions.ReportAppServer.CommLayer.dll" />
+    <Content Include="bin\CrystalDecisions.ReportAppServer.CommonControls.dll" />
+    <Content Include="bin\CrystalDecisions.ReportAppServer.CommonObjectModel.dll" />
+    <Content Include="bin\CrystalDecisions.ReportAppServer.Controllers.dll" />
+    <Content Include="bin\CrystalDecisions.ReportAppServer.CubeDefModel.dll" />
+    <Content Include="bin\CrystalDecisions.ReportAppServer.DataDefModel.dll" />
+    <Content Include="bin\CrystalDecisions.ReportAppServer.DataSetConversion.dll" />
+    <Content Include="bin\CrystalDecisions.ReportAppServer.ObjectFactory.dll" />
+    <Content Include="bin\CrystalDecisions.ReportAppServer.Prompting.dll" />
+    <Content Include="bin\CrystalDecisions.ReportAppServer.ReportDefModel.dll" />
+    <Content Include="bin\CrystalDecisions.ReportAppServer.XmlSerialize.dll" />
+    <Content Include="bin\CrystalDecisions.ReportSource.dll" />
+    <Content Include="bin\CrystalDecisions.Shared.dll" />
+    <Content Include="bin\CrystalDecisions.VSDesigner.dll" />
+    <Content Include="bin\CrystalDecisions.Web.dll" />
+    <Content Include="bin\CrystalDecisions.Windows.Forms.dll" />
+    <Content Include="bin\DevExpress.Data.v19.2.dll" />
+    <Content Include="bin\DevExpress.Printing.v19.2.Core.dll" />
+    <Content Include="bin\DevExpress.RichEdit.v19.2.Core.dll" />
+    <Content Include="bin\DevExpress.RichEdit.v19.2.Export.dll" />
+    <Content Include="bin\DevExpress.Web.ASPxThemes.v19.2.dll" />
+    <Content Include="bin\DevExpress.Web.Mvc5.v19.2.dll" />
+    <Content Include="bin\DevExpress.Web.v19.2.dll" />
+    <Content Include="bin\EncodeDecode.dll" />
+    <Content Include="bin\EntityFramework.dll" />
+    <Content Include="bin\EntityFramework.SqlServer.dll" />
+    <Content Include="bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll" />
+    <Content Include="bin\Microsoft.Web.Infrastructure.dll" />
+    <Content Include="bin\MVCApp.dll" />
+    <Content Include="bin\MVCApp.pdb" />
+    <Content Include="bin\Newtonsoft.Json.dll" />
+    <Content Include="bin\Oracle.ManagedDataAccess.dll" />
+    <Content Include="bin\Oracle.Web.dll" />
+    <Content Include="bin\roslyn\csc.exe" />
+    <Content Include="bin\roslyn\csi.exe" />
+    <Content Include="bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll" />
+    <Content Include="bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll" />
+    <Content Include="bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll" />
+    <Content Include="bin\roslyn\System.AppContext.dll" />
+    <Content Include="bin\roslyn\System.Collections.Immutable.dll" />
+    <Content Include="bin\roslyn\System.Diagnostics.StackTrace.dll" />
+    <Content Include="bin\roslyn\System.IO.FileSystem.dll" />
+    <Content Include="bin\roslyn\System.IO.FileSystem.Primitives.dll" />
+    <Content Include="bin\roslyn\System.Reflection.Metadata.dll" />
+    <Content Include="bin\roslyn\vbc.exe" />
+    <Content Include="bin\roslyn\VBCSCompiler.exe" />
+    <Content Include="bin\Syncfusion.EJ2.dll" />
+    <Content Include="bin\Syncfusion.Licensing.dll" />
+    <Content Include="bin\System.Net.Http.Formatting.dll" />
+    <Content Include="bin\System.Web.Helpers.dll" />
+    <Content Include="bin\System.Web.Http.dll" />
+    <Content Include="bin\System.Web.Http.WebHost.dll" />
+    <Content Include="bin\System.Web.Mvc.dll" />
+    <Content Include="bin\System.Web.Optimization.dll" />
+    <Content Include="bin\System.Web.Razor.dll" />
+    <Content Include="bin\System.Web.WebPages.Deployment.dll" />
+    <Content Include="bin\System.Web.WebPages.dll" />
+    <Content Include="bin\System.Web.WebPages.Razor.dll" />
+    <Content Include="bin\WebGrease.dll" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\ej2\bootstrap.css" />
+    <Content Include="Content\ej2\bootstrap4.css" />
+    <Content Include="Content\ej2\compatibility\bootstrap.css" />
+    <Content Include="Content\ej2\compatibility\bootstrap4.css" />
+    <Content Include="Content\ej2\compatibility\fabric.css" />
+    <Content Include="Content\ej2\compatibility\highcontrast.css" />
+    <Content Include="Content\ej2\compatibility\material.css" />
+    <Content Include="Content\ej2\fabric.css" />
+    <Content Include="Content\ej2\highcontrast.css" />
+    <Content Include="Content\ej2\material.css" />
+    <Content Include="Content\LCD\CSS\animate.css" />
+    <Content Include="Content\LCD\CSS\bootstrap.min.css" />
+    <Content Include="Content\LCD\CSS\e_sso_style.css" />
+    <Content Include="Content\LCD\CSS\jquery-ui.css" />
+    <Content Include="Content\LCD\CSS\jquery.datepick.css" />
+    <Content Include="Content\LCD\CSS\Login.css" />
+    <Content Include="Content\LCD\CSS\select2.css" />
+    <Content Include="Content\LCD\CSS\start\images\1.png" />
+    <Content Include="Content\LCD\CSS\start\images\animated-overlay.gif" />
+    <Content Include="Content\LCD\CSS\start\images\bg_download_btn.png" />
+    <Content Include="Content\LCD\CSS\start\images\t1.png" />
+    <Content Include="Content\LCD\CSS\start\images\ui-bg_flat_55_999999_40x100.png" />
+    <Content Include="Content\LCD\CSS\start\images\ui-bg_flat_75_aaaaaa_40x100.png" />
+    <Content Include="Content\LCD\CSS\start\images\ui-bg_glass_45_0078ae_1x400.png" />
+    <Content Include="Content\LCD\CSS\start\images\ui-bg_glass_55_f8da4e_1x400.png" />
+    <Content Include="Content\LCD\CSS\start\images\ui-bg_glass_75_79c9ec_1x400.png" />
+    <Content Include="Content\LCD\CSS\start\images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
+    <Content Include="Content\LCD\CSS\start\images\ui-bg_gloss-wave_45_e14f1c_500x100.png" />
+    <Content Include="Content\LCD\CSS\start\images\ui-bg_gloss-wave_50_6eac2c_500x100.png" />
+    <Content Include="Content\LCD\CSS\start\images\ui-bg_gloss-wave_70_ffdd57_500x100.png" />
+    <Content Include="Content\LCD\CSS\start\images\ui-bg_gloss-wave_75_2191c0_500x100.png" />
+    <Content Include="Content\LCD\CSS\start\images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
+    <Content Include="Content\LCD\CSS\start\images\ui-bg_inset-hard_100_fcfdfd_1x100.png" />
+    <Content Include="Content\LCD\CSS\start\images\ui-icons_0078ae_256x240.png" />
+    <Content Include="Content\LCD\CSS\start\images\ui-icons_056b93_256x240.png" />
+    <Content Include="Content\LCD\CSS\start\images\ui-icons_d8e7f3_256x240.png" />
+    <Content Include="Content\LCD\CSS\start\images\ui-icons_e0fdff_256x240.png" />
+    <Content Include="Content\LCD\CSS\start\images\ui-icons_f5e175_256x240.png" />
+    <Content Include="Content\LCD\CSS\start\images\ui-icons_f7a50d_256x240.png" />
+    <Content Include="Content\LCD\CSS\start\images\ui-icons_fcd113_256x240.png" />
+    <Content Include="Content\LCD\CSS\start\jquery-ui-1.10.3.custom.css" />
+    <Content Include="Content\LCD\CSS\start\jquery-ui-1.10.3.custom.min.css" />
+    <Content Include="Content\LCD\CSS\StyleSheet.css" />
+    <Content Include="Content\LCD\font-awesome\css\font-awesome.css" />
+    <Content Include="Content\LCD\font-awesome\css\font-awesome.min.css" />
+    <Content Include="Content\LCD\font-awesome\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\LCD\Js\jquery-1.9.1.min.js" />
+    <Content Include="Content\select2\dist\css\select2.min.css" />
+    <Content Include="Content\select2\dist\js\i18n\af.js" />
+    <Content Include="Content\select2\dist\js\i18n\ar.js" />
+    <Content Include="Content\select2\dist\js\i18n\az.js" />
+    <Content Include="Content\select2\dist\js\i18n\bg.js" />
+    <Content Include="Content\select2\dist\js\i18n\bs.js" />
+    <Content Include="Content\select2\dist\js\i18n\build.txt" />
+    <Content Include="Content\select2\dist\js\i18n\ca.js" />
+    <Content Include="Content\select2\dist\js\i18n\cs.js" />
+    <Content Include="Content\select2\dist\js\i18n\da.js" />
+    <Content Include="Content\select2\dist\js\i18n\de.js" />
+    <Content Include="Content\select2\dist\js\i18n\dsb.js" />
+    <Content Include="Content\select2\dist\js\i18n\el.js" />
+    <Content Include="Content\select2\dist\js\i18n\en.js" />
+    <Content Include="Content\select2\dist\js\i18n\es.js" />
+    <Content Include="Content\select2\dist\js\i18n\et.js" />
+    <Content Include="Content\select2\dist\js\i18n\eu.js" />
+    <Content Include="Content\select2\dist\js\i18n\fa.js" />
+    <Content Include="Content\select2\dist\js\i18n\fi.js" />
+    <Content Include="Content\select2\dist\js\i18n\fr.js" />
+    <Content Include="Content\select2\dist\js\i18n\gl.js" />
+    <Content Include="Content\select2\dist\js\i18n\he.js" />
+    <Content Include="Content\select2\dist\js\i18n\hi.js" />
+    <Content Include="Content\select2\dist\js\i18n\hr.js" />
+    <Content Include="Content\select2\dist\js\i18n\hsb.js" />
+    <Content Include="Content\select2\dist\js\i18n\hu.js" />
+    <Content Include="Content\select2\dist\js\i18n\hy.js" />
+    <Content Include="Content\select2\dist\js\i18n\id.js" />
+    <Content Include="Content\select2\dist\js\i18n\is.js" />
+    <Content Include="Content\select2\dist\js\i18n\it.js" />
+    <Content Include="Content\select2\dist\js\i18n\ja.js" />
+    <Content Include="Content\select2\dist\js\i18n\km.js" />
+    <Content Include="Content\select2\dist\js\i18n\ko.js" />
+    <Content Include="Content\select2\dist\js\i18n\lt.js" />
+    <Content Include="Content\select2\dist\js\i18n\lv.js" />
+    <Content Include="Content\select2\dist\js\i18n\mk.js" />
+    <Content Include="Content\select2\dist\js\i18n\ms.js" />
+    <Content Include="Content\select2\dist\js\i18n\nb.js" />
+    <Content Include="Content\select2\dist\js\i18n\nl.js" />
+    <Content Include="Content\select2\dist\js\i18n\pl.js" />
+    <Content Include="Content\select2\dist\js\i18n\ps.js" />
+    <Content Include="Content\select2\dist\js\i18n\pt-BR.js" />
+    <Content Include="Content\select2\dist\js\i18n\pt.js" />
+    <Content Include="Content\select2\dist\js\i18n\ro.js" />
+    <Content Include="Content\select2\dist\js\i18n\ru.js" />
+    <Content Include="Content\select2\dist\js\i18n\sk.js" />
+    <Content Include="Content\select2\dist\js\i18n\sl.js" />
+    <Content Include="Content\select2\dist\js\i18n\sr-Cyrl.js" />
+    <Content Include="Content\select2\dist\js\i18n\sr.js" />
+    <Content Include="Content\select2\dist\js\i18n\sv.js" />
+    <Content Include="Content\select2\dist\js\i18n\th.js" />
+    <Content Include="Content\select2\dist\js\i18n\tk.js" />
+    <Content Include="Content\select2\dist\js\i18n\tr.js" />
+    <Content Include="Content\select2\dist\js\i18n\uk.js" />
+    <Content Include="Content\select2\dist\js\i18n\vi.js" />
+    <Content Include="Content\select2\dist\js\i18n\zh-CN.js" />
+    <Content Include="Content\select2\dist\js\i18n\zh-TW.js" />
+    <Content Include="Content\select2\dist\js\select2.full.min.js" />
+    <Content Include="Content\select2\dist\js\select2.min.js" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Image\bg-header.jpg" />
+    <Content Include="Image\favicon-32x32.png" />
+    <Content Include="Image\Green.png" />
+    <Content Include="Image\Loader.gif" />
+    <Content Include="Image\Loaderold.gif" />
+    <Content Include="Image\logo.gif" />
+    <Content Include="Image\Logo.png" />
+    <Content Include="Image\print.jpg" />
+    <Content Include="Image\print.png" />
+    <Content Include="Image\Red.png" />
+    <Content Include="Scripts\AutoFill\images\ui-anim_basic_16x16.gif" />
+    <Content Include="Scripts\AutoFill\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
+    <Content Include="Scripts\AutoFill\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
+    <Content Include="Scripts\AutoFill\images\ui-bg_glass_100_f6f6f6_1x400.png" />
+    <Content Include="Scripts\AutoFill\images\ui-bg_glass_100_fdf5ce_1x400.png" />
+    <Content Include="Scripts\AutoFill\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Scripts\AutoFill\images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
+    <Content Include="Scripts\AutoFill\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
+    <Content Include="Scripts\AutoFill\images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
+    <Content Include="Scripts\AutoFill\images\ui-icons_222222_256x240.png" />
+    <Content Include="Scripts\AutoFill\images\ui-icons_228ef1_256x240.png" />
+    <Content Include="Scripts\AutoFill\images\ui-icons_ef8c08_256x240.png" />
+    <Content Include="Scripts\AutoFill\images\ui-icons_ffd27a_256x240.png" />
+    <Content Include="Scripts\AutoFill\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Scripts\AutoFill\jquery-ui.css" />
+    <Content Include="Scripts\AutoFill\jquery-ui.js" />
+    <Content Include="Scripts\AutoFill\jquery-ui.min.css" />
+    <Content Include="Scripts\AutoFill\jquery-ui.min.js" />
+    <Content Include="Scripts\AutoFill\jquery-ui.structure.css" />
+    <Content Include="Scripts\AutoFill\jquery-ui.structure.min.css" />
+    <Content Include="Scripts\AutoFill\jquery-ui.theme.css" />
+    <Content Include="Scripts\AutoFill\jquery-ui.theme.min.css" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="assets\font-awesome\4.5.0\fonts\fontawesome-webfont.eot" />
+    <Content Include="assets\font-awesome\4.5.0\fonts\fontawesome-webfont.ttf" />
+    <Content Include="assets\font-awesome\4.5.0\fonts\fontawesome-webfont.woff" />
+    <Content Include="assets\font-awesome\4.5.0\fonts\fontawesome-webfont.woff2" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="bin\MVCApp.dll.config" />
+    <Content Include="bin\roslyn\csc.exe.config" />
+    <Content Include="bin\roslyn\csc.rsp" />
+    <Content Include="bin\roslyn\csi.rsp" />
+    <Content Include="bin\roslyn\Microsoft.CSharp.Core.targets" />
+    <Content Include="bin\roslyn\Microsoft.VisualBasic.Core.targets" />
+    <Content Include="bin\roslyn\vbc.exe.config" />
+    <Content Include="bin\roslyn\vbc.rsp" />
+    <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
+    <Content Include="libman.json" />
+    <Content Include="assets\DashBoardJS\Export-Html-Table-To-Excel-Spreadsheet-using-jQuery-table2excel\.editorconfig" />
+    <Content Include="assets\DashBoardJS\Export-Html-Table-To-Excel-Spreadsheet-using-jQuery-table2excel\.gitignore" />
+    <Content Include="assets\DashBoardJS\Export-Html-Table-To-Excel-Spreadsheet-using-jQuery-table2excel\.gitpod.yml" />
+    <Content Include="assets\DashBoardJS\Export-Html-Table-To-Excel-Spreadsheet-using-jQuery-table2excel\.jshintrc" />
+    <Content Include="assets\DashBoardJS\Export-Html-Table-To-Excel-Spreadsheet-using-jQuery-table2excel\.travis.yml" />
+    <Content Include="assets\DashBoardJS\Export-Html-Table-To-Excel-Spreadsheet-using-jQuery-table2excel\bower.json" />
+    <Content Include="assets\DashBoardJS\Export-Html-Table-To-Excel-Spreadsheet-using-jQuery-table2excel\CHANGELOG.md" />
+    <Content Include="assets\DashBoardJS\Export-Html-Table-To-Excel-Spreadsheet-using-jQuery-table2excel\CONTRIBUTING.md" />
+    <Content Include="assets\DashBoardJS\Export-Html-Table-To-Excel-Spreadsheet-using-jQuery-table2excel\demo\download.xls" />
+    <Content Include="assets\DashBoardJS\Export-Html-Table-To-Excel-Spreadsheet-using-jQuery-table2excel\package.json" />
+    <Content Include="assets\DashBoardJS\Export-Html-Table-To-Excel-Spreadsheet-using-jQuery-table2excel\README.md" />
+    <Content Include="assets\DashBoardJS\Export-Html-Table-To-Excel-Spreadsheet-using-jQuery-table2excel\serve.json" />
+    <Content Include="assets\DashBoardJS\Export-Html-Table-To-Excel-Spreadsheet-using-jQuery-table2excel\table2excel.jquery.json" />
+    <Content Include="assets\DashBoardJS\Export-Html-Table-To-Excel-Spreadsheet-using-jQuery-table2excel\yarn.lock" />
+    <Content Include="Scripts\DataTable\Custom.css" />
+    <Content Include="Scripts\DataTable\jquery.dataTables.min.css" />
+    <Content Include="Scripts\DataTable\jquery.dataTables.min.js" />
+    <Content Include="Scripts\ej2\ej2.min.js" />
+    <Content Include="Scripts\ej2\ej2.min.js.map" />
+    <Content Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </Content>
+    <Content Include="Printer\Output.prn" />
+    <Content Include="Content\LCD\CSS\start\images\Thumbs.db" />
+    <Content Include="Content\LCD\font-awesome\css\font-awesome.css.map" />
+    <Content Include="Content\LCD\font-awesome\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\LCD\font-awesome\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\LCD\font-awesome\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\LCD\font-awesome\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Content\LCD\font-awesome\fonts\FontAwesome.otf" />
+    <Content Include="Content\LCD\font-awesome\less\animated.less" />
+    <Content Include="Content\LCD\font-awesome\less\bordered-pulled.less" />
+    <Content Include="Content\LCD\font-awesome\less\core.less" />
+    <Content Include="Content\LCD\font-awesome\less\fixed-width.less" />
+    <Content Include="Content\LCD\font-awesome\less\font-awesome.less" />
+    <Content Include="Content\LCD\font-awesome\less\icons.less" />
+    <Content Include="Content\LCD\font-awesome\less\larger.less" />
+    <Content Include="Content\LCD\font-awesome\less\list.less" />
+    <Content Include="Content\LCD\font-awesome\less\mixins.less" />
+    <Content Include="Content\LCD\font-awesome\less\path.less" />
+    <Content Include="Content\LCD\font-awesome\less\rotated-flipped.less" />
+    <Content Include="Content\LCD\font-awesome\less\screen-reader.less" />
+    <Content Include="Content\LCD\font-awesome\less\stacked.less" />
+    <Content Include="Content\LCD\font-awesome\less\variables.less" />
+    <Content Include="Content\LCD\font-awesome\scss\font-awesome.scss" />
+    <Content Include="Content\LCD\font-awesome\scss\_animated.scss" />
+    <Content Include="Content\LCD\font-awesome\scss\_bordered-pulled.scss" />
+    <Content Include="Content\LCD\font-awesome\scss\_core.scss" />
+    <Content Include="Content\LCD\font-awesome\scss\_fixed-width.scss" />
+    <Content Include="Content\LCD\font-awesome\scss\_icons.scss" />
+    <Content Include="Content\LCD\font-awesome\scss\_larger.scss" />
+    <Content Include="Content\LCD\font-awesome\scss\_list.scss" />
+    <Content Include="Content\LCD\font-awesome\scss\_mixins.scss" />
+    <Content Include="Content\LCD\font-awesome\scss\_path.scss" />
+    <Content Include="Content\LCD\font-awesome\scss\_rotated-flipped.scss" />
+    <Content Include="Content\LCD\font-awesome\scss\_screen-reader.scss" />
+    <Content Include="Content\LCD\font-awesome\scss\_stacked.scss" />
+    <Content Include="Content\LCD\font-awesome\scss\_variables.scss" />
+    <Content Include="Printer\QA.prn" />
+    <Content Include="Printer\bulkstorage.prn" />
+    <Content Include="Printer\supermarket.prn" />
+    <Content Include="Printer\Verify_Box.prn" />
+    <Content Include="Printer\kanban.prn" />
+    <Content Include="Printer\Mrnsrnoprint.prn" />
+    <Content Include="Printer\BACKENDFT.PRN" />
+    <Content Include="Printer\HYDOK.prn" />
+    <Content Include="Printer\Gate2.prn" />
+    <None Include="Properties\PublishProfiles\ESCORT_TRACTOR.pubxml" />
+    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\ej2\fuse.min.js" />
+    <Content Include="Scripts\jquery-3.3.1.js" />
+    <Content Include="Scripts\jquery-3.3.1.min.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.doubleScroll.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\TractorMasterJs\TractorMasterTab1.js" />
+    <Content Include="Scripts\TractorMasterJs\TractorMasterTab2.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\AddDailyPlan\Index.cshtml" />
+    <Content Include="Views\AddDailyPlan\BindShift.cshtml" />
+    <Content Include="Views\AddDailyPlan\BindPlant.cshtml" />
+    <Content Include="Views\AddDailyPlan\BindFamily.cshtml" />
+    <Content Include="Views\AddDailyPlan\BindTyres.cshtml" />
+    <Content Include="Views\AddDailyPlan\BindModelType.cshtml" />
+    <Content Include="Views\AddDailyPlan\Grid.cshtml" />
+    <Content Include="Views\AddDailyPlan\BindItems.cshtml" />
+    <Content Include="Views\PlanningSubAssemblyView\Index.cshtml" />
+    <Content Include="Views\PlanningSubAssemblyView\Grid.cshtml" />
+    <Content Include="Views\PlanningSubAssemblyView\BindPlant.cshtml" />
+    <Content Include="Views\PlanningSubAssemblyView\BindFamily.cshtml" />
+    <Content Include="Views\PlanningSubAssemblyView\BindShift.cshtml" />
+    <Content Include="Views\PlanningSubAssemblyView\BindItems.cshtml" />
+    <Content Include="Views\LCD\Index.cshtml" />
+    <Content Include="Views\SettingMaster\Index.cshtml" />
+    <Content Include="Views\MonthlyPlan\Index.cshtml" />
+    <Content Include="Views\MonthlyPlan\BindMonth.cshtml" />
+    <Content Include="Views\MonthlyPlan\BindYear.cshtml" />
+    <Content Include="Views\MonthlyPlan\Grid.cshtml" />
+    <Content Include="Views\MonthlyPlan\CheckItemCodeExistAndGridDisplayMonthlyPlan.cshtml" />
+    <Content Include="Views\PlanningSubAssemblyView\GetMaxSequenceOfExistingSubPlan.cshtml" />
+    <Content Include="Views\MonthlyPlan\BindItems.cshtml" />
+    <Content Include="Views\Setting_Master\Index.cshtml" />
+    <Content Include="Views\Setting_Master\Tab_PlanningDays.cshtml" />
+    <Content Include="Views\Setting_Master\Tab_ProductionCapacity.cshtml" />
+    <Content Include="Views\Setting_Master\Tab_WeeklyOff.cshtml" />
+    <Content Include="Views\Setting_Master\PD_Grid.cshtml" />
+    <Content Include="Views\Setting_Master\PC_Grid.cshtml" />
+    <Content Include="Views\Setting_Master\WO_Grid.cshtml" />
+    <Content Include="Views\HolidayMaster\Index.cshtml" />
+    <Content Include="Views\HolidayMaster\Grid.cshtml" />
+    <Content Include="Views\MonthlyPlan\BindFamily.cshtml" />
+    <Content Include="Views\Setting_Master\BindFamily.cshtml" />
+    <Content Include="Views\MenuMaster\Create.cshtml" />
+    <Content Include="Views\MenuMaster\DELETE.cshtml" />
+    <Content Include="Views\MenuMaster\Edit.cshtml" />
+    <Content Include="Views\MenuMaster\INDEX.cshtml" />
+    <Content Include="Views\LevelMaster\Index.cshtml" />
+    <Content Include="Views\LevelMaster\TreeView.cshtml" />
+    <Content Include="Views\LeftMenu\SideMenu.cshtml" />
+    <Content Include="Views\ROLEMASTER\Create.cshtml" />
+    <Content Include="Views\ROLEMASTER\Delete.cshtml" />
+    <Content Include="Views\ROLEMASTER\Edit.cshtml" />
+    <Content Include="Views\ROLEMASTER\Index.cshtml" />
+    <Content Include="Views\SubAssemblyMappingMaster\Index.cshtml" />
+    <Content Include="Views\SubAssemblyMappingMaster\BindPlant.cshtml" />
+    <Content Include="Views\SubAssemblyMappingMaster\BindFamily.cshtml" />
+    <Content Include="Views\SubAssemblyMappingMaster\BindMainSubAssembly.cshtml" />
+    <Content Include="Views\SubAssemblyMappingMaster\BindSubAssembly.cshtml" />
+    <Content Include="Views\SubAssemblyMappingMaster\BindSubAssembly2.cshtml" />
+    <Content Include="Views\SubAssemblyMappingMaster\Grid.cshtml" />
+    <Content Include="Views\LCDLive\Index.cshtml" />
+    <Content Include="Views\LCDLive\Grid.cshtml" />
+    <Content Include="Views\LCDLive\BindPlant.cshtml" />
+    <Content Include="Views\LCDLive\BindFamily.cshtml" />
+    <Content Include="Views\ApprovalMaster\Index.cshtml" />
+    <Content Include="Views\ApprovalMaster\BindPlant.cshtml" />
+    <Content Include="Views\ApprovalMaster\BindFamily.cshtml" />
+    <Content Include="Views\ApprovalMaster\BindShift.cshtml" />
+    <Content Include="Views\ApprovalMaster\Grid.cshtml" />
+    <Content Include="Views\PlanningSubAssemblyView\GetMaxSequenceOfExistingSubPlanForEdit.cshtml" />
+    <Content Include="Views\Report\Index.cshtml" />
+    <Content Include="Views\Report\ReportType.cshtml" />
+    <Content Include="Views\Report\DDLFilJobs.cshtml" />
+    <Content Include="Views\Report\BindShift.cshtml" />
+    <Content Include="Views\Report\GrdDaily_Crane.cshtml" />
+    <Content Include="Views\Report\RecordNotFoundGrid.cshtml" />
+    <Content Include="Views\Report\GrdPART_AUDIT_CRANE.cshtml" />
+    <Content Include="Views\Report\GrdPRDBACKEND_T04.cshtml" />
+    <Content Include="Views\Report\GrdERROR.cshtml" />
+    <Content Include="Views\Report\GrdTOTShowFullT04.cshtml" />
+    <Content Include="Views\Report\GrdTOTShowFull.cshtml" />
+    <Content Include="Views\Report\GrdTOTShowLessT04.cshtml" />
+    <Content Include="Views\Report\GrdTOTShowLess.cshtml" />
+    <Content Include="Views\Report\GrdHYD.cshtml" />
+    <Content Include="Views\Report\GrdRT.cshtml" />
+    <Content Include="Views\Report\GrdFT.cshtml" />
+    <Content Include="Views\Report\GrdJOBDATA.cshtml" />
+    <Content Include="Views\Report\GrdPLAN_AUDIT.cshtml" />
+    <Content Include="Views\Report\GrdCHECK_JOB.cshtml" />
+    <Content Include="Views\Report\GrdJOB.cshtml" />
+    <Content Include="Views\Report\GrdRELJOBS.cshtml" />
+    <Content Include="Views\Report\GrdEN_AUDIT.cshtml" />
+    <Content Include="Views\Report\GrdTOT_ENG.cshtml" />
+    <Content Include="Views\Report\GrdPART_AUDIT.cshtml" />
+    <Content Include="Views\Report\GrdDAILY_VEHICLE.cshtml" />
+    <Content Include="Views\Report\GrdAVG.cshtml" />
+    <Content Include="Views\Report\GrdAVG_TIME.cshtml" />
+    <Content Include="Views\Report\GrdMAX_MIN.cshtml" />
+    <Content Include="Views\Report\GrdVIP.cshtml" />
+    <Content Include="Views\Report\GrdNOM.cshtml" />
+    <Content Include="Views\Report\GrdPRD.cshtml" />
+    <Content Include="Views\Report\BindFilterBy.cshtml" />
+    <Content Include="Views\BeforePaintLCD\Index.cshtml" />
+    <Content Include="Views\LCD\Grid.cshtml" />
+    <Content Include="Views\BeforePaintLCD\Grid.cshtml" />
+    <Content Include="Views\AfterPaint\Index.cshtml" />
+    <Content Include="Views\AfterPaint\Grid.cshtml" />
+    <Content Include="Views\AfterPaintLCD\Index.cshtml" />
+    <Content Include="Views\AfterPaintLCD\Grid.cshtml" />
+    <Content Include="Views\AfterPaintLCD2\Index.cshtml" />
+    <Content Include="Views\AfterPaintLCD2\Grid.cshtml" />
+    <Content Include="Views\MonthlyPlan\RecordNotFoundGrid.cshtml" />
+    <Content Include="Views\AddDailyPlan\BindBackendFcodes.cshtml" />
+    <Content Include="Views\Report\GrdPRDENGINES.cshtml" />
+    <Content Include="Views\Report\GrdPRDTRANSMISSION.cshtml" />
+    <Content Include="Views\Report\GrdPRDHYDRAULIC.cshtml" />
+    <Content Include="Views\Report\GrdPRDREARAXEL.cshtml" />
+    <Content Include="Views\TractorMaster\Index.cshtml" />
+    <Content Include="Views\TractorMaster\BindSearchItem.cshtml" />
+    <Content Include="Views\TractorMaster\BindPlant.cshtml" />
+    <Content Include="Views\TractorMaster\BindFamily.cshtml" />
+    <Content Include="Views\ItemMaster\Index.cshtml" />
+    <Content Include="Views\ItemMaster\BindPlant.cshtml" />
+    <Content Include="Views\ItemMaster\BindFamily.cshtml" />
+    <Content Include="Views\ItemMaster\Grid.cshtml" />
+    <Content Include="Views\TractorMaster\BindT3_Family.cshtml" />
+    <Content Include="Views\TractorMaster\T3_Grid.cshtml" />
+    <Content Include="Views\StoreReceving\Index.cshtml" />
+    <Content Include="Views\StoreReceving\Grid.cshtml" />
+    <Content Include="Views\MRN_VERIFICATION_MASTER\Grid.cshtml" />
+    <Content Include="Views\MRN_VERIFICATION_MASTER\Index.cshtml" />
+    <Content Include="Views\Report\GrdPRDBACKEND_T05.cshtml" />
+    <Content Include="Views\MRN_VERIFICATION_MASTER\Grid_History.cshtml" />
+    <Content Include="Views\QualityMaster\Index.cshtml" />
+    <Content Include="Views\QualityMaster\Grid_Report.cshtml" />
+    <Content Include="Views\QualityMaster\Grid_NewMRN.cshtml" />
+    <Content Include="Views\BeforePaintAssembly\BindFamilyByPlant.cshtml" />
+    <Content Include="Views\BeforePaintAssembly\BindPlant.cshtml" />
+    <Content Include="Views\BeforePaintAssembly\GetDetailbyId.cshtml" />
+    <Content Include="Views\BeforePaintAssembly\Index.cshtml" />
+    <Content Include="Views\BeforePaintAssembly\Save.cshtml" />
+    <Content Include="Views\MRN_VERIFICATION_MASTER\Grid_NewMRN.cshtml" />
+    <Content Include="Views\Account\LoginUserDateTime.cshtml" />
+    <Content Include="Views\MRN_VERIFICATION_MASTER\Grid_Inspected_Items.cshtml" />
+    <Content Include="Views\Report\GrdMRNITEMS.cshtml" />
+    <Content Include="Views\Report\GrdTOTHookUpDate.cshtml" />
+    <Content Include="Views\FamilySerial\Index.cshtml" />
+    <Content Include="Views\FamilySerial\BindPlant.cshtml" />
+    <Content Include="Views\FamilySerial\BindFamily.cshtml" />
+    <Content Include="Views\FamilySerial\BindStage.cshtml" />
+    <Content Include="Views\FamilySerial\Grid.cshtml" />
+    <Content Include="Views\RopsMaster\Index.cshtml" />
+    <Content Include="Views\RopsMaster\BindPlant.cshtml" />
+    <Content Include="Views\RopsMaster\BindFamily.cshtml" />
+    <Content Include="Views\RopsMaster\BindDcode.cshtml" />
+    <Content Include="Views\RopsMaster\Grid.cshtml" />
+    <Content Include="Views\PlantMaster\Index.cshtml" />
+    <Content Include="Views\PlantMaster\Grid.cshtml" />
+    <Content Include="Views\FamilyMaster\Grid.cshtml" />
+    <Content Include="Views\FamilyMaster\Index.cshtml" />
+    <Content Include="Views\Report\BindFamily.cshtml" />
+    <Content Include="Views\test\Index.cshtml" />
+    <Content Include="Views\StageMaster\Index.cshtml" />
+    <Content Include="Views\StageMaster\BindPlant.cshtml" />
+    <Content Include="Views\StageMaster\BindFamily.cshtml" />
+    <Content Include="Views\StageMaster\BindStageId.cshtml" />
+    <Content Include="Views\StageMaster\BindStage.cshtml" />
+    <Content Include="Views\StageMaster\Grid.cshtml" />
+    <Content Include="Views\ChangePassword\Index.cshtml" />
+    <Content Include="Views\QualityMaster\Grid_4.cshtml" />
+    <Content Include="Views\CraneMaster\BindCrane.cshtml" />
+    <Content Include="Views\CraneMaster\BindEngine.cshtml" />
+    <Content Include="Views\CraneMaster\BindFamily.cshtml" />
+    <Content Include="Views\CraneMaster\BindPlant.cshtml" />
+    <Content Include="Views\CraneMaster\Grid.cshtml" />
+    <Content Include="Views\CraneMaster\Index.cshtml" />
+    <Content Include="Views\CraneSetting\BindPlant.cshtml" />
+    <Content Include="Views\CraneSetting\BindPlantYear.cshtml" />
+    <Content Include="Views\CraneSetting\Grid.cshtml" />
+    <Content Include="Views\CraneSetting\GridYear.cshtml" />
+    <Content Include="Views\CraneSetting\Index.cshtml" />
+    <Content Include="Views\MappingFamilyToPlant\BindFamilyPlant.cshtml" />
+    <Content Include="Views\MappingFamilyToPlant\Checkbox.cshtml" />
+    <Content Include="Views\MappingFamilyToPlant\Grid.cshtml" />
+    <Content Include="Views\MappingFamilyToPlant\Index.cshtml" />
+    <Content Include="Views\OtherMaster\BindBatteryDecode.cshtml" />
+    <Content Include="Views\OtherMaster\BindBatterySrl.cshtml" />
+    <Content Include="Views\OtherMaster\BindPlant.cshtml" />
+    <Content Include="Views\OtherMaster\BindPlantBattery.cshtml" />
+    <Content Include="Views\OtherMaster\BindPlantExport.cshtml" />
+    <Content Include="Views\OtherMaster\BindPlantSrl.cshtml" />
+    <Content Include="Views\OtherMaster\Grid.cshtml" />
+    <Content Include="Views\OtherMaster\GridBattery.cshtml" />
+    <Content Include="Views\OtherMaster\GridBatteryDeCode.cshtml" />
+    <Content Include="Views\OtherMaster\GridBatterySrl.cshtml" />
+    <Content Include="Views\OtherMaster\GridExport.cshtml" />
+    <Content Include="Views\OtherMaster\GridShift.cshtml" />
+    <Content Include="Views\OtherMaster\GridTyre.cshtml" />
+    <Content Include="Views\OtherMaster\Index.cshtml" />
+    <Content Include="Views\BackendMapping\BindBackend.cshtml" />
+    <Content Include="Views\BackendMapping\BindFamily.cshtml" />
+    <Content Include="Views\BackendMapping\BindHydraulic.cshtml" />
+    <Content Include="Views\BackendMapping\BindPlant.cshtml" />
+    <Content Include="Views\BackendMapping\BindRearAxel.cshtml" />
+    <Content Include="Views\BackendMapping\BindTransmission.cshtml" />
+    <Content Include="Views\BackendMapping\Grid.cshtml" />
+    <Content Include="Views\BackendMapping\Index.cshtml" />
+    <Content Include="Views\EngineMaster\BindCamShaft.cshtml" />
+    <Content Include="Views\EngineMaster\BindCrackShaft.cshtml" />
+    <Content Include="Views\EngineMaster\BindCylinderBlock.cshtml" />
+    <Content Include="Views\EngineMaster\BindCylinderHead.cshtml" />
+    <Content Include="Views\EngineMaster\BindEngine.cshtml" />
+    <Content Include="Views\EngineMaster\BindFamily.cshtml" />
+    <Content Include="Views\EngineMaster\BindFualPump.cshtml" />
+    <Content Include="Views\EngineMaster\BindPlant.cshtml" />
+    <Content Include="Views\EngineMaster\Bind_Connecting_Rod.cshtml" />
+    <Content Include="Views\EngineMaster\Grid.cshtml" />
+    <Content Include="Views\EngineMaster\Index.cshtml" />
+    <Content Include="Views\FuelInjectionMapping\BindFamily.cshtml" />
+    <Content Include="Views\FuelInjectionMapping\BindFIP.cshtml" />
+    <Content Include="Views\FuelInjectionMapping\BindPlant.cshtml" />
+    <Content Include="Views\FuelInjectionMapping\Grid.cshtml" />
+    <Content Include="Views\FuelInjectionMapping\Index.cshtml" />
+    <Content Include="Views\RawMaterialMaster\Index.cshtml" />
+    <Content Include="Views\RawMaterialMaster\Grid.cshtml" />
+    <Content Include="Views\AddController\BindFamily.cshtml" />
+    <Content Include="Views\AddController\BindPlant.cshtml" />
+    <Content Include="Views\AddController\BindStage.cshtml" />
+    <Content Include="Views\AddController\Grid.cshtml" />
+    <Content Include="Views\AddController\Index.cshtml" />
+    <Content Include="Views\BulkStorage\BindFamily.cshtml" />
+    <Content Include="Views\BulkStorage\BindItem.cshtml" />
+    <Content Include="Views\BulkStorage\BindPlant.cshtml" />
+    <Content Include="Views\BulkStorage\Grid.cshtml" />
+    <Content Include="Views\BulkStorage\Index.cshtml" />
+    <Content Include="Views\StoreMaster\BindFamilyStore.cshtml" />
+    <Content Include="Views\StoreMaster\BindFamilySuper.cshtml" />
+    <Content Include="Views\StoreMaster\BindPlantStore.cshtml" />
+    <Content Include="Views\StoreMaster\BindPlantSuper.cshtml" />
+    <Content Include="Views\StoreMaster\GridStore.cshtml" />
+    <Content Include="Views\StoreMaster\GridSuperMarket.cshtml" />
+    <Content Include="Views\StoreMaster\Index.cshtml" />
+    <Content Include="Views\KanbanMaster\Grid.cshtml" />
+    <Content Include="Views\KanbanMaster\Index.cshtml" />
+    <Content Include="Views\UserMaster\BindFamily.cshtml" />
+    <Content Include="Views\UserMaster\BindPlant.cshtml" />
+    <Content Include="Views\UserMaster\BindPrivillgeCode.cshtml" />
+    <Content Include="Views\UserMaster\BindPUName.cshtml" />
+    <Content Include="Views\UserMaster\BindStageId.cshtml" />
+    <Content Include="Views\UserMaster\Grid.cshtml" />
+    <Content Include="Views\UserMaster\GridUserMaster.cshtml" />
+    <Content Include="Views\UserMaster\Index.cshtml" />
+    <Content Include="Views\Injectors\Index.cshtml" />
+    <Content Include="Views\Injectors\_GetDailyPlanVertical.cshtml" />
+    <Content Include="Views\Report\GrdBulkStorageItem.cshtml" />
+    <Content Include="Views\Report\GrdSuperMktItem.cshtml" />
+    <Content Include="Views\Report\GrdSuprMktPicItems.cshtml" />
+    <Content Include="Views\Layouts\Index.cshtml" />
+    <Content Include="Views\Layouts\BulkStorageLayout.cshtml" />
+    <Content Include="Views\Layouts\SuperMktLayout.cshtml" />
+    <Content Include="Views\Layouts\CellDetail.cshtml" />
+    <Content Include="Views\EngineAssembly\Index.cshtml" />
+    <Content Include="Views\RawMaterialMaster\EKIgrid.cshtml" />
+    <Content Include="Views\BulkStorage\EKIgrid.cshtml" />
+    <Content Include="Views\BuckleUpPT\Index.cshtml" />
+    <Content Include="Views\BuckleUp\Index.cshtml" />
+    <Content Include="Views\FrontAxelSubAssembly\Index.cshtml" />
+    <Content Include="Views\HydrualicMaster\HydrualicMasterGrid.cshtml" />
+    <Content Include="Views\HydrualicMaster\Index.cshtml" />
+    <Content Include="Views\TractorMaster\BindSearchItemS.cshtml" />
+    <Content Include="Views\TractorMaster\BindT3_Plant.cshtml" />
+    <Content Include="Views\TractorMaster\BindT4_Family.cshtml" />
+    <Content Include="Views\TractorMaster\BindT4_Plant.cshtml" />
+    <Content Include="Views\RearHoodDisplay\Index.cshtml" />
+    <Content Include="Views\TyreSubAssemblyTV\Index.cshtml" />
+    <Content Include="Views\OtherMaster\BindFamilyFCode.cshtml" />
+    <Content Include="Views\OtherMaster\BindPlantFCode.cshtml" />
+    <Content Include="Views\OtherMaster\GridFCodeTyre.cshtml" />
+    <Content Include="Views\Setting\Index.cshtml" />
+    <Content Include="Views\Setting\Grid.cshtml" />
+    <Content Include="Views\BarcodePrinting\Index.cshtml" />
+    <Content Include="Views\ImportExport\Index.cshtml" />
+    <Content Include="Views\Report\GrdBlkStrgCap.cshtml" />
+    <Content Include="Views\Report\GrdSupMktCap.cshtml" />
+    <Content Include="Views\Messages\Grid.cshtml" />
+    <Content Include="Views\Messages\Index.cshtml" />
+    <Content Include="Views\TestDatatable\Index.cshtml" />
+    <Content Include="Views\TractorLoading\Index.cshtml" />
+    <Content Include="Views\HookUpAndDown\Grid.cshtml" />
+    <Content Include="Views\HookUpAndDown\Index.cshtml" />
+    <Content Include="Views\HydraulicLiftAssembly\Index.cshtml" />
+    <Content Include="Views\KitMaster\Grid.cshtml" />
+    <Content Include="Views\KitMaster\Index.cshtml" />
+    <Content Include="Views\BulkstorageLocation\Index.cshtml" />
+    <Content Include="Views\SuperMarketLocation\Index.cshtml" />
+    <Content Include="Views\Report\GrdShtRecVrf.cshtml" />
+    <Content Include="Views\Report\GrdShtRecQc.cshtml" />
+    <Content Include="Views\Report\GrdBlkFaulty.cshtml" />
+    <Content Include="Views\Report\GrdSmFaulty.cshtml" />
+    <Content Include="Views\FTTractorAssembly\Index.cshtml" />
+    <Content Include="Views\DailyPartScanningScreen\Index.cshtml" />
+    <Content Include="Views\MRNLcd\Index.cshtml" />
+    <Content Include="Views\Dashbord\Index.cshtml" />
+    <Content Include="Views\Report\GrdReprintLabel.cshtml" />
+    <Content Include="Views\Report\GrdRollOut.cshtml" />
+    <Content Include="Views\ImportExport\Grid.cshtml" />
+    <Content Include="Views\Report\GrdItemExceedInventory.cshtml" />
+    <Content Include="Views\Report\GrdItemOtherSNP.cshtml" />
+    <Content Include="Views\Report\GrdMaterialShortBulk.cshtml" />
+    <Content Include="Views\MRNDisplaySheet\Grid.cshtml" />
+    <Content Include="Views\MRNDisplaySheet\Index.cshtml" />
+    <Content Include="Views\Report\GrdStockStatus.cshtml" />
+    <Content Include="Views\Report\GrdMaterialShortSuperMkt.cshtml" />
+    <Content Include="Views\Report\GRDStoreReport.cshtml" />
+    <Content Include="Views\Report\GrdBulkTempLoc.cshtml" />
+    <Content Include="Views\Report\GrdT02RollOut.cshtml" />
+    <Content Include="Views\Report\GrdPDI_AUDIT.cshtml" />
+    <Content Include="Views\Report\GrdROLL_AUDIT.cshtml" />
+    <Content Include="Views\DeviationMaster\Grid.cshtml" />
+    <Content Include="Views\DeviationMaster\Index.cshtml" />
+    <Content Include="Views\GateEntry\Index.cshtml" />
+    <Content Include="Views\Report\GrdKIT_SCANNING.cshtml" />
+    <Content Include="Views\SubAssembly\Index1.cshtml" />
+    <Content Include="Views\SubAssembly\Grid.cshtml" />
+    <Content Include="Views\SubAssembly\Index.cshtml" />
+    <Content Include="Views\TracktorSubAssembly\Index.cshtml" />
+    <Content Include="Views\BackendPartModification\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="LogFiles\" />
+    <Folder Include="Views\API\" />
+    <Folder Include="Views\SuperMktLayout\" />
+    <Folder Include="Views\Tractor\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="packages.config" />
+    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.3.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+    <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\analyzers\dotnet\cs\Microsoft.CodeAnalysis.VersionCheckAnalyzer.resources.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\analyzers\dotnet\Microsoft.CodeAnalysis.VersionCheckAnalyzer.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.9.6\analyzers\dotnet\cs\Humanizer.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.9.6\analyzers\dotnet\cs\Microsoft.CodeQuality.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.9.6\analyzers\dotnet\cs\Microsoft.CodeQuality.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.2.9.6\analyzers\dotnet\cs\Microsoft.NetCore.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.2.9.6\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.6\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.6\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>7</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Excel">
+      <Guid>{00020813-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>8</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Scripts\ej2\ej2.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CrystalReports\Receipt.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Receipt.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CrystalReports\Kanban.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Kanban.cs</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CrystalReports\kitting.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>kitting.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CrystalReports\MRNSheet.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>MRNSheet.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeQuality.Analyzers.2.9.6\build\Microsoft.CodeQuality.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeQuality.Analyzers.2.9.6\build\Microsoft.CodeQuality.Analyzers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.NetCore.Analyzers.2.9.6\build\Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NetCore.Analyzers.2.9.6\build\Microsoft.NetCore.Analyzers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.NetFramework.Analyzers.2.9.6\build\Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NetFramework.Analyzers.2.9.6\build\Microsoft.NetFramework.Analyzers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.6\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.6\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

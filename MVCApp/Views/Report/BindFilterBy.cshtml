@@ -1,0 +1,10 @@
+﻿@model MVCApp.Models.ReportModel
+
+@{
+    <div>
+        @Html.DropDownListFor(Model => Model.FilterBy, (IEnumerable<SelectListItem>)ViewBag.FilterBy, new { @class = "form-control input-sm" })
+    </div>
+}
+
+
+

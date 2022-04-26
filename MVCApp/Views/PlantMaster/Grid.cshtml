@@ -1,0 +1,86 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="table-responsive">
+        @{
+            List<object> commands = new List<object>();
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-delete", cssClass = "delete" } });
+        }
+
+        @(Html.EJS().Grid("Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                AllowPaging(true).
+                PageSettings(Page => Page.PageSize(7)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+                AllowResizing().
+                Columns(col =>
+                {
+                    col.HeaderText("EDIT/DELETE").Commands(commands).Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("U_CODE").HeaderText("PLANT CODE").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("U_NAME").HeaderText("NAME").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("U_ADD").HeaderText("ADDRESS").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("U_PHONE").HeaderText("PHONE").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("U_EMAIL").HeaderText("EMAIL.").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("U_FAX").HeaderText("FAX").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("U_REMARKS").HeaderText("REMARKS").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("U_CREATEDBY").HeaderText("Created By").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("U_CREATEDDATE").HeaderText("Created Date").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("U_UPDATEDBY").HeaderText("Updated By").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("U_UPDATEDDATE").HeaderText("Updated Date").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    
+                })
+                .SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick").//AllowRowDragAndDrop().
+                Render())
+
+        <script>
+            var U_CODE;
+            function commandClick(args) {
+                if (args.rowData != null) {
+                    if (args.target.classList.contains('edit')) {
+
+
+                       
+                        $("#PlantCode").val(args.rowData["U_CODE"]);
+                        $("#PlantName").val(args.rowData["U_NAME"]);
+                        $("#PlantAddress").val(args.rowData["U_ADD"]);
+
+                        $("#PlantPhone").val(args.rowData["U_PHONE"]);
+                        $("#PlantEmail").val(args.rowData["U_EMAIL"]);
+                        $("#PlantFax").val(args.rowData["U_FAX"]);
+                        $("#Remarks").val(args.rowData["U_REMARKS"]);
+
+                        U_CODE = args.rowData["U_CODE"];
+
+                        $('#PlantCode').prop('disabled', true);
+                        
+                         $('#Add').hide();
+                         $('#Update').show();
+                    }
+                    if (args.target.classList.contains('delete')) {
+
+                        U_CODE = args.rowData["U_CODE"];
+
+                        $('#DeleteConfirm').modal('show');
+                    }
+                }
+            };
+
+
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()

@@ -1,0 +1,65 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bg-primary" style="padding-top:5px; padding-left:5px;">
+                <center>
+                    <label style="color:white;">@ViewBag.heading</label>
+                    <label style="color: white;padding-right: 10px;" class="pull-right"><strong>TOTAL RECORD : @ViewBag.Total </strong></label>
+                </center>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        @(Html.EJS().Grid("GrdReprintLabel").DataSource((System.Data.DataTable)ViewBag.DataSource).
+            //Height("400").
+            AllowPaging(true).
+            PageSettings(Page => Page.PageSize(15)).
+            AllowSelection(false).
+            AllowResizing().
+            AllowExcelExport().
+            ToolbarClick("toolbarClick").
+            AllowFiltering().
+            AllowGrouping().
+            AllowSorting().
+            Columns(col =>
+            {
+                col.Field("PLANT_CODE").HeaderText("PLANT CODE").Width("130").Add();
+                col.Field("FAMILY_CODE").HeaderText("FAMILY CODE").Width("130").Add();
+                col.Field("MRN").HeaderText("MRN").Width("130").Add();
+                col.Field("ITEM_CODE").HeaderText("ITEM CODE").Width("130").Add();
+                col.Field("STAGE").HeaderText("STAGE").Width("100").Add();
+                col.Field("LOGIN_USER").HeaderText("USER").Width("130").Add();
+                col.Field("PRINT_DATE").HeaderText("PRINT DATE").Width("170").Add();
+                col.Field("TRANSACTION_TYPE").HeaderText("TRANSACTION").Width("150").Add();
+                col.Field("PACKING_STD").HeaderText("PACKING").Width("110").Add();
+                col.Field("QUANTITY").HeaderText("QUANTITY").Width("120").Add();
+                col.Field("MATERIAL_CATEGORY").HeaderText("MATERIAL").Width("120").Add();
+                col.Field("IMPLEMENTED").HeaderText("IMPLEMENTED").Width("120").Add();
+
+
+            }).
+            Toolbar(new List<string>() { "ExcelExport" }).
+            Render())
+        <script>
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("GrdReprintLabel").ej2_instances[0];
+                gridObj.excelExport();
+            }
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+

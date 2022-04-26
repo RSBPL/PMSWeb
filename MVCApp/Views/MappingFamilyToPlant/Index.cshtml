@@ -1,0 +1,264 @@
+﻿
+@model MVCApp.Models.MappingFamilyToPlant
+@using Syncfusion.EJ2
+@using Syncfusion.EJ2.Lists
+
+<style>
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Mapping Family To Plant</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    @*--------Form------------*@
+    <div class="container" style="width:100%!important">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal form-group">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            @Html.DropDownListFor(model => model.PlantCode, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+
+                            <strong>@Html.ValidationMessageFor(model => model.PlantCode, "", new { @class = "text-danger" })</strong>
+                        </div>
+
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                            <button class="btn btn-success btn-sm" type="button" id="Update"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+
+
+                        </div>
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        }
+
+        <div id="element">
+            @*@Html.EJS().ListView("element").DataSource((IEnumerable<object>)ViewBag.dataSource).Fields(new ListViewFieldSettings { Text = "Text", Id = "Id" }).ShowCheckBox(true).Render()*@
+        </div>
+        <div id="Grid"></div>
+    </div>
+</div>
+
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+<script>
+
+    $(document).ready(function () {
+        DDLPlant();
+        $('#Update').hide();
+        //BindGrid();
+        BindCheckbox();
+    });
+
+    $("#Clear").on("click", function () {
+        location.reload(true);
+    });
+
+    function BindCheckbox() {
+        $("#divLoader").show();
+
+        $.ajax({
+            url: '@Url.Action("Checkbox", "MappingFamilyToPlant")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            //data: JSON.stringify({ PlantCode: selectedValue }),
+            success: function (result) {
+               // $("#FamilyCode").html(null);
+                $("#element").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+
+
+     function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindFamilyPlant", "MappingFamilyToPlant")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#PlantCode").html(result);
+                //DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+
+    //Function to bind Grid
+    function BindGrid() {
+        $("#divLoader").show();
+        var Data = {
+            PlantCode: $('#PlantCode').val(),
+            FamilyCode: $('#FamilyCode').val(),
+                };
+        $.ajax({
+            url: '@Url.Action("Grid", "MappingFamilyToPlant")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Grid").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Save Data
+    $("#Add").on("click", function () {
+        $("#divLoader").show();
+        var selecteditem = document.getElementById('element').ej2_instances[0].getSelectedItems();
+        var selectedfamily = '';
+        for (var i = 0; i < (selecteditem["data"]).length; i++) {
+            var family = selecteditem["text"][i].split("#");
+            if (family!='') {
+                selectedfamily = selectedfamily + family[0] + ",";
+                
+            }
+        }
+        if (selectedfamily != null)
+            selectedfamily = selectedfamily.substr(0, selectedfamily.length - 1).trim();
+        //alert(selectedfamily);
+        var data = {
+            PlantCode: $('#PlantCode').val(),
+            //FamilyCode: $('#FamilyCode').val()
+            FamilyCode: selectedfamily
+         };
+        $.ajax({
+            url: '@Url.Action("Save", "MappingFamilyToPlant")',
+
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    //$('#PlantCode').val("");
+                    //$('#FamilyCode').val("");
+                    //BindGrid();
+                }
+
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    });
+
+    //Update Data
+      @*$("#Update").on("click", function () {
+          $("#divLoader").show();
+         
+
+          var selecteditem = document.getElementById('element').ej2_instances[0].getSelectedItems();
+          var selectedfamily = '';
+          for (var i = 0; i < (selecteditem["data"]).length; i++) {
+              var family = selecteditem["text"][i].split("#");
+              if (family != '') {
+                  selectedfamily = selectedfamily + family[0] + ",";
+
+              }
+          }
+
+          if (selectedfamily != null)
+              selectedfamily = selectedfamily.substr(0, selectedfamily.length - 1).trim();
+          alert(selectedfamily);
+        
+          var data = {
+              PlantCode: $('#PlantCode').val(), 
+              FamilyCode: selectedfamily
+          };
+        $.ajax({
+            url: '@Url.Action("Update", "MappingFamilyToPlant")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    //$('#PlantCode').val("");
+                    //$('#PlantCode').val("");
+
+                    $('#Add').show();
+                    $('#Update').hide();
+                    BindGrid();
+                }
+            },
+            error: function (errormessage)
+            {
+            }
+        });
+      });*@
+    $("#PlantCode").select2({
+        allowClear: true,
+        width: '100%',
+    });
+
+</script>
+
+

@@ -1,0 +1,134 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    
+    <div class="table-responsive">
+        @{
+            List<object> commands = new List<object>();
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-delete", cssClass = "delete" } });
+        }
+        @(Html.EJS().Grid("GridKanban").DataSource((System.Data.DataTable)ViewBag.DataSource).
+            Height("300").
+            AllowPaging(true).
+            PageSettings(Page => Page.PageSize(25)).
+            AllowSelection(false).
+            AllowResizing().
+            AllowExcelExport().
+            ToolbarClick("toolbarClick").
+            AllowFiltering().
+            AllowSorting().
+            CommandClick("commandClick").
+            Columns(col =>
+            {
+                col.HeaderText("Action").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Commands(commands).Width("150").Add();
+
+                col.Field("KANBAN_NO").HeaderText("KANBAN NUMBER").Width("170").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                col.Field("PLANT_CODE").HeaderText("PLANT").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                col.Field("FAMILY_CODE").HeaderText("FAMILY").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                col.Field("ITEM_CODE").HeaderText("ITEM ").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                col.Field("ITEM_DESCRIPTION").HeaderText("DESCRIPTION ").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                col.Field("SUMKTLOC").HeaderText("LOCATION").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                col.Field("CAPACITY").HeaderText("CAPACITY").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                col.Field("SAFTY_STOCK_QUANTITY").HeaderText("SAFTY STOCK QUANTITY").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                col.Field("NO_OF_BINS").HeaderText("NO. OF BINS").Width("130").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                col.Field("USAGE_PER_TRACTOR").HeaderText("USAGE PER TRACTOR").Width("130").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                col.Field("CREATED_BY").HeaderText("CREATED BY").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                col.Field("CREATED_DATE").HeaderText("CREATED DATE").Width("165").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                col.Field("UPDATED_BY").HeaderText("UPDATED BY").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                col.Field("UPDATED_DATE").HeaderText("UPDATED DATE").Width("165").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+
+
+
+            }).
+            Toolbar(new List<string>() { "ExcelExport" }).
+            Render())
+        <script>
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("GridKanban").ej2_instances[0];
+                gridObj.excelExport();
+            }
+            //$("#SuperMarketLoc").select2({
+            //    allowClear: true,
+            //    width: '100%',
+            //});
+
+            function commandClick(args) {
+                if (args.rowData != null) {
+                    if (args.target.classList.contains('edit')) {
+                        AutoId = args.rowData["AUTOID"];
+
+                        //$("#Plant").val(args.rowData["PLANT_CODE"]);
+                        //$("#Family").val(args.rowData["FAMILY_CODE"]);
+
+                        //$("#Item").val(args.rowData["ITEM_CODE"]);
+                        var itmcode = args.rowData["ITEM_CODE"];
+                        var itmdesc = args.rowData["ITEM_DESCRIPTION"];
+                        var codeDesc = itmcode + " # " + itmdesc;
+                        $("#Item").val(codeDesc);
+
+                        $("#SuperMarketLoc").val(args.rowData["SUMKTLOC"]);
+                        /*$("#SuperMarketLoc").trigger("change");*/
+                        $("#Capacity").val(args.rowData["CAPACITY"]);
+                        $("#SftStkQuantity").val(args.rowData["SAFTY_STOCK_QUANTITY"]);
+                        $("#NoOfBins").val(args.rowData["NO_OF_BINS"]);
+                        $('#Plant').prop('disabled', true);
+                        $('#Family').prop('disabled', true);
+                        $('#SuperMarketLoc').prop('disabled', true);
+                        $('#UsagePerTractor').prop('disabled', true);
+                        $('#Item').prop('disabled', true);
+                        $('#NoOfBins').prop('disabled', true);
+
+
+                        $('#Add').hide();
+                        $('#Update').show();
+                        $('#divkanban').hide();
+                    }
+                    if (args.target.classList.contains('delete')) {
+
+                        AutoId = args.rowData["AUTOID"];
+                        deleteItem();
+
+                    }
+                }
+            }
+            function deleteItem() {
+                if (confirm("Are you sure, to delete this Record ?")) {
+                    Delete();
+                }
+                return false;
+            }
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+
+<div class="modal" id="DeleteConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <h4><strong>Are you sure, to delete this Record ?</strong></h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnDeleteCancel" class="btn btn-success btn-sm"><i class="fa fa-arrow-left"></i> Cancel</button>
+
+                <button type="button" id="btnDelete" class="btn btn-danger btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

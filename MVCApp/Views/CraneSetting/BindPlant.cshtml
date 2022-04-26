@@ -1,0 +1,6 @@
+﻿@model MVCApp.Models.CraneSetting
+    @{ 
+        <div>
+            @Html.DropDownListFor(m => m.Plant , (IEnumerable<SelectListItem>)ViewBag.Plant, new { @class = "form-control input-sm"})
+        </div>
+    }

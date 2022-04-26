@@ -1,0 +1,298 @@
+﻿@model MVCApp.Models.PlantAndFamily
+<style>
+    
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Plant Master</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    @*--------Form------------*@
+<div class="container" style="width:100%!important">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal form-group">
+
+            <fieldset class="the-fieldset bg-info">
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <label for="PlantCode" class="text-right control-label col-form-label"><strong>Plant Code</strong></label>
+                        @Html.TextBoxFor(Model => Model.PlantCode, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.PlantCode, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="PlantName" class="text-right control-label col-form-label"><strong>Name</strong></label>
+                        @Html.TextBoxFor(Model => Model.PlantName, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.PlantName, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="PlantAddress" class="text-right control-label col-form-label"><strong>Address</strong></label>
+                        @Html.TextAreaFor(Model => Model.PlantAddress, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.PlantAddress, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="PlantPhone" class="text-right control-label col-form-label"><strong>Phone No.</strong></label>
+                        @Html.TextBoxFor(Model => Model.PlantPhone, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.PlantPhone, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="PlantFax" class="text-right control-label col-form-label"><strong>Fax No.</strong></label>
+                        @Html.TextBoxFor(Model => Model.PlantFax, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.PlantFax, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="PlantEmail" class="text-right control-label col-form-label"><strong>Email Id</strong></label>
+                        @Html.TextBoxFor(Model => Model.PlantEmail, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.PlantEmail, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="Remarks" class="text-right control-label col-form-label"><strong>Remarks</strong></label>
+                        @Html.TextBoxFor(Model => Model.Remarks, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-1" style="padding-top: 23px;">
+                        <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                        <button class="btn btn-success btn-sm" type="button" id="Update"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+
+
+                    </div>
+                    <div class="col-md-1" style="padding-top: 23px;">
+                        <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="modal" id="DeleteConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    
+                    <div class="modal-body">
+                        <h4><strong>Are you sure, to delete this Record ?</strong></h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnDeleteCancel" class="btn btn-success btn-sm"><i class="fa fa-arrow-left"></i> Cancel</button>
+
+                        <button type="button" id="btnDelete" class="btn btn-danger btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div id="Grid"></div>
+</div>
+</div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+<script>
+
+    $(document).ready(function () {
+
+        $('#Update').hide();
+        BindGrid();
+    });
+
+    $("#btnDeleteCancel").on("click", function () {
+        $('#DeleteConfirm').modal('hide');
+    });
+
+    $("#btnDelete").on("click", function () {
+        $('#DeleteConfirm').modal('hide');
+        $("#divLoader").show();
+        var data = {
+
+            PlantCode: U_CODE
+            };
+        $.ajax({
+            url: '@Url.Action("Delete", "PlantMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    $('#PlantCode').prop('disabled', false);
+                    $('#PlantCode').val("");
+                    $('#PlantName').val("");
+                    $('#PlantAddress').val("");
+                    $('#PlantPhone').val("");
+                    $('#PlantEmail').val("");
+                    $('#PlantFax').val("");
+                    $('#Remarks').val("");
+
+
+                    $('#Add').show();
+                    $('#Update').hide();
+                    BindGrid();
+                }
+
+            },
+            error: function (errormessage)
+            {
+            }
+        });
+    });
+
+    $("#Clear").on("click", function () {
+        location.reload(true);
+    });
+
+    //Save Data
+    $("#Add").on("click", function () {
+        $("#divLoader").show();
+        var data = {
+            PlantCode: $('#PlantCode').val(),
+            PlantName: $('#PlantName').val(),
+            PlantAddress: $('#PlantAddress').val(),
+            PlantPhone: $("#PlantPhone").val(),
+            PlantEmail: $("#PlantEmail").val(),
+            PlantFax: $("#PlantFax").val(),
+            Remarks: $("#Remarks").val()
+         };
+        $.ajax({
+            url: '@Url.Action("Save", "PlantMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    $('#PlantCode').val("");
+                    $('#PlantName').val("");
+                    $('#PlantAddress').val("");
+                    $('#PlantPhone').val("");
+                    $('#PlantEmail').val("");
+                    $('#PlantFax').val("");
+                    $('#Remarks').val("");
+                    BindGrid();
+                }
+
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    });
+
+
+    function BindGrid() {
+        $("#divLoader").show();
+
+        $.ajax({
+            url: '@Url.Action("Grid", "PlantMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Grid").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Update Data
+      $("#Update").on("click", function () {
+         $("#divLoader").show();
+          var data = {
+
+              PlantCode: U_CODE,
+              PlantName: $('#PlantName').val(),
+              PlantAddress: $('#PlantAddress').val(),
+              PlantPhone: $("#PlantPhone").val(),
+              PlantEmail: $("#PlantEmail").val(),
+              PlantFax: $("#PlantFax").val(),
+              Remarks: $("#Remarks").val()
+            };
+        $.ajax({
+            url: '@Url.Action("Update", "PlantMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    $('#PlantCode').prop('disabled', false);
+                    $('#PlantCode').val("");
+                    $('#PlantName').val("");
+                    $('#PlantAddress').val("");
+                    $('#PlantPhone').val("");
+                    $('#PlantEmail').val("");
+                    $('#PlantFax').val("");
+                    $('#Remarks').val("");
+
+
+                    $('#Add').show();
+                    $('#Update').hide();
+                    BindGrid();
+                }
+
+            },
+            error: function (errormessage)
+            {
+            }
+        });
+    });
+
+</script>
+
+

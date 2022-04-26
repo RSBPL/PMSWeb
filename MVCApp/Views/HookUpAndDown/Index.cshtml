@@ -1,0 +1,456 @@
+﻿@using Syncfusion.EJ2;
+@model MVCApp.Models.HookUpAndDown
+
+@*<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />*@
+<style>
+
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .hr1 {
+        margin-top: 2px;
+        margin-bottom: 6px;
+        border-top: 2px solid #023a5f;
+        width: 370px;
+    }
+    .inj {
+        width: 100px;
+    }
+    .m-50 {
+        width: 73%;
+        MARGIN: 0 0 0 130px
+    }
+    .W-100 {
+        width: 968px;
+        left: -119px;
+    }
+    .f-left {
+        float: LEFT;
+    }
+    .frm {
+        padding: 20px;
+    }
+    .C-1 {
+        WIDTH: 70px;
+    }
+    .w-adj {
+        WIDTH:100px;
+    }
+
+    .w-adj1 {
+        WIDTH: 155px;
+        margin: -3px 10px -12px 0;
+    }
+    .well {
+        background-color: #e8f2f9;
+    }
+    table.dataTable thead.tr.th {
+        background-color: #14567e;
+    }
+    table.dataTable tr.odd {
+        color: #7a7979;
+        background-color: #c2c2c269;
+        font-size: 13px;
+        font-weight: bolder;
+    }
+
+    table.dataTable tr.even {
+        color: #7a7979;
+        background-color: #eeeeee;
+        font-size: 13px;
+        font-weight: bolder;
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">HookUp And Down</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    <div id="SearchItem" style="background-color: #6fb3e0; margin: 0px 5px 0px 5px; padding: 5px;">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <strong style="font-size: 19px;color:white;">HOOKUP AND DOWN</strong>
+                <hr class="hr1">
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    @*--------Form------------*@
+    <div class="container" style="width:100%!important">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal form-group">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            @Html.DropDownListFor(model => model.PLANTCODE, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.PLANTCODE, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>FAMILY</strong></label>
+                            @Html.DropDownListFor(model => model.FAMILYCODE, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.FAMILYCODE, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>STAGE</strong></label>
+                            @Html.DropDownList("STAGE", new List<SelectListItem>
+                                                {
+                                                new SelectListItem{ Text="---SELECT---", Value = "0"},
+                                                new SelectListItem{ Text="LIST OF PENDING JOBS (DATE RANGE)", Value = "1", Selected =  true },
+                                                new SelectListItem{ Text="BEFORE PAINT(HOOK UP)", Value = "2" },
+                                                new SelectListItem{ Text="AFTER PAINT (HOOK DOWN)", Value = "3" },
+                                                new SelectListItem{ Text="HOOK UP/DOWN", Value = "4" },
+                                                new SelectListItem{ Text="LIST OF PENDING JOBS (NOT HOOKED UP)", Value = "5" },
+                                                new SelectListItem{ Text="LIST OF HOOKED UP JOBS WITH FINAL STICKER PRINTED", Value = "6" },
+                                                new SelectListItem{ Text="TODAY HOOKUP", Value = "7" },
+                                                new SelectListItem{ Text="TODAY HOOK DOWN", Value = "8" },
+                                                new SelectListItem{ Text="FINAL STICKER NOT PRINTED", Value = "9" },
+                                                new SelectListItem{ Text="FINISH JOB", Value = "10" },
+                                                new SelectListItem{ Text="JOB OUT FROM PAINT SHOP FINAL STICKER NOT PRINTED", Value = "11" },
+
+                                                })
+                            @*@Html.DropDownListFor(model => model.STAGE, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+            <strong>@Html.ValidationMessageFor(model => model.STAGE, "", new { @class = "text-danger" })</strong>*@
+                        </div>
+
+                        <div class="col-md-2">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>From Date</strong></label>
+                            @Html.EJS().DatePickerFor(Model => Model.ToDate).Format("dd-MMM-yyyy").Value(ViewBag.value).Render()
+                            <strong>@Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger" })</strong>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>To Date</strong></label>
+                            @Html.EJS().DatePickerFor(Model => Model.FromDate).Format("dd-MMM-yyyy").Value(ViewBag.value).Render()
+                            <strong>@Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger" })</strong>
+                        </div>
+
+
+                        <div class="col-md-1">
+                            <div style="MARGIN-TOP: 25px;">
+                                <button class="btn btn-success btn-sm" type="button" id="Show"><i class="ace-icon fa fa-search-plus bigger-110"></i><strong>SHOW</strong></button>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div style="MARGIN-TOP: 25px;">
+                                <button class="btn btn-success btn-sm" type="button" id="Save"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        }
+        <fieldset>
+            <table id="demoGrid" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="cbAll" style="margin-left: -11px;" onclick="check_uncheck_checkbox(this.checked);" /></th>
+                        <th>HOOK</th>
+                        <th>HOOK NO</th>
+                        <th>TRACTOR CODE</th>
+                        <th>DESCRIPTION</th>
+                        <th>ENTRYDATE</th>
+                        <th>JOBID</th>
+                        <th>AGEING DAYS</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </fieldset>
+    </div>
+</div>
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+@*<link href="~/Scripts/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/DataTable/jquery.dataTables.min.js"></script>
+<link href="~/Scripts/DataTable/Custom.css" rel="stylesheet" />*@
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+        $.noConflict();
+        DDLPlant();
+
+
+    });
+    var table = $('#demoGrid').DataTable();
+
+
+
+    $("#PLANTCODE").on("change", function () {
+        DDLFamilyByPlant();
+    });
+    $("#Show").on("click", function () {
+        BindGrid();
+    });
+
+    //Function to bind Plant
+    function DDLPlant() {
+        //$("#divLoader").show();
+        $.ajax({
+            url: '@Url.Action("BindPlant", "HookUpAndDown")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#PLANTCODE").append(optionhtml);
+                });
+
+
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        //$("#divLoader").show();
+        var selectedValue = $("#PLANTCODE").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "HookUpAndDown")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#FAMILYCODE").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#FAMILYCODE").append(optionhtml);
+                });
+                //BindGrid();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+
+    function BindGrid() {
+        $('#demoGrid').DataTable().destroy();
+        var dtable = $("#demoGrid").DataTable({
+            //"scrollX": true,
+            //"scrollY": 480,
+
+            "autoWidth": false,
+            "lengthChange": true,
+            "pageLength": 10,
+            "ordering": false,
+            "processing": true, // for show progress bar
+            "serverSide": true, // for process server side
+            "filter": true, // this is for disable filter (search box)
+            "orderMulti": false, // for disable multiple column at once
+            language: {
+                search: "SEARCH BY TRACTOR CODE OR JOB ID",
+                searchPlaceholder: "Enter min 3 characters",
+                width: "250PX"
+            },
+            "ajax": {
+                "url": '@Url.Action("Grid","HookUpAndDown")',
+                "data": function (obj) {
+                    obj.PLANTCODE = $('#PLANTCODE').val();
+                    obj.FAMILYCODE = $('#FAMILYCODE').val();
+                    obj.STAGE = $('#STAGE').val();
+                    obj.ToDate = $('#ToDate').val();
+                    obj.FromDate = $('#FromDate').val();
+
+                },
+                "type": "POST",
+                "datatype": "json"
+            },
+
+
+            "columns": [
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<input type="checkbox" name="HookCheck">';
+                    }
+                },
+                { "data": "HOOK", "name": "HOOK"},
+                { "data": "HOOK_NO", "name": "HOOK_NO" },
+                { "data": "ITEM_CODE", "name": "ITEM_CODE" },
+                { "data": "DESCRIPTION", "name": "DESCRIPTION"},
+                { "data": "ENTRYDATE", "name": "ENTRYDATE"},
+                { "data": "JOBID", "name": "JOBID"},
+                { "data": "AGEING_DAYS", "name": "AGEING_DAYS"}
+
+
+            ],
+            "columnDefs": [
+                { "width": "3%", "className": "text-center", "targets": 0 },
+                { "width": "6%", "className": "text-center", "targets": 1 },
+                { "width": "6%", "className": "text-center", "targets": 2 },
+                { "width": "12%", "className": "text-center", "targets": 3 },
+                { "width": "15%", "className": "text-center", "targets": 4 },
+                { "width": "15%", "className": "text-center", "targets": 5 },
+                { "width": "15%", "className": "text-center", "targets": 6 },
+                { "width": "15%", "className": "text-center", "targets": 7 }
+
+            ]
+
+
+        });
+
+        $(".dataTables_filter input")
+            .unbind() // Unbind previous default bindings
+            .bind("input", function (e) { // Bind our desired behavior
+                // If the length is 3 or more characters, or the user pressed ENTER, search
+                if (this.value.length >= 3 || e.keyCode == 13) {
+                    // Call the API search function
+                    dtable.search(this.value).draw();
+                }
+                // Ensure we clear the search if they backspace far enough
+                if (this.value == "") {
+                    dtable.search("").draw();
+                }
+                return;
+            });
+
+    }
+    function check_uncheck_checkbox(isChecked) {
+        if (isChecked) {
+            $('input[name="HookCheck"]').each(function () {
+                this.checked = true;
+            });
+        } else {
+            $('input[name="HookCheck"]').each(function () {
+                this.checked = false;
+            });
+        }
+    }
+
+
+    $("#Save").click(function () {
+        var Data = [];
+        $("#demoGrid tbody tr").each(function () {
+            var self = $(this);
+            var currentRow = self.closest("tr");
+            var data = $('#demoGrid').DataTable().row(currentRow).data();
+
+            if (data == undefined || data == null) {
+                $("#divLoader").hide();
+                alert("No record selected for Hook");
+                return false;
+            }
+            else {
+
+                if ((self.find('input[name="HookCheck"]')).is(':checked')) {
+                    var obj = {
+
+                        PLANTCODE: $('#PLANTCODE').val(),
+                        FAMILYCODE: $('#FAMILYCODE').val(),
+                        STAGE: $('#STAGE').val(),
+                        ToDate: $('#ToDate').val(),
+                        FromDate: $('#FromDate').val(),
+                        HOOK_NO: data['HOOK_NO'],
+                        ITEM_CODE: data['ITEM_CODE'],
+                        DESCRIPTION: data['DESCRIPTION'],
+                        ENTRYDATE: data['ENTRYDATE'],
+                        JOBID: data['JOBID'],
+                        HOOK: data['HOOK']
+                    };
+                    Data.push(obj);
+                }
+
+            }
+
+        });
+        if (Data.length > 0) {
+
+            HookSave(Data);
+
+        }
+    });
+    function HookSave(Data) {
+
+        $("#divLoader").show();
+         $.ajax({
+
+            url: '@Url.Action("Save", "HookUpAndDown")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json;charset=UTF-8",
+             success: function (data) {
+                 $("#divLoader").hide();
+                 if (data.validation.includes("error")) {
+                     $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                     setTimeout(function () {
+                         $.each($('.alert'), function () {
+                             closeAlert(this);
+                         });
+                     }, 5000);
+                 }
+
+                 else {
+                     $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                     setTimeout(function () {
+                         $.each($('.alert'), function () {
+                             closeAlert(this);
+                         });
+                     }, 5000);
+
+                 }
+                 BindGrid();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+
+    }
+    function closeAlert(alert) {
+
+        $(alert).hide();
+    };
+
+    $("#PLANTCODE,#FAMILYCODE").select2({
+        allowClear: true,
+        width: '180px',
+    });
+    $("#STAGE").select2({
+        allowClear: true,
+        width: '180px',
+    });
+</script>

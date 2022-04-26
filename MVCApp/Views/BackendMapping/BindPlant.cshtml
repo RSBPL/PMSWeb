@@ -1,0 +1,7 @@
+﻿@model MVCApp.Models.BackendModel
+
+@{
+    <div>
+        @Html.DropDownListFor(model => model.PLANT_CODE, (IEnumerable<SelectListItem>)ViewBag.Unit, new { @class = "form-control input-sm" })
+    </div>
+}

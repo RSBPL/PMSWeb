@@ -1,0 +1,293 @@
+﻿<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="table-responsive">
+        @{
+            List<object> commands = new List<object>();
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-delete", cssClass = "delete" } });
+        }
+
+        @(Html.EJS().Grid("Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                AllowPaging(true).
+                PageSettings(Page => Page.PageSize(7)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+                AllowResizing().
+                Columns(col =>
+                {
+                    col.HeaderText("ACTION").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Commands(commands).Add();
+                    col.Field("AUTOID").HeaderText("AUTOID").IsPrimaryKey(true).Width("100").Visible(false).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("PLANT_CODE").HeaderText("PLANT CODE").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("FAMILY_CODE").HeaderText("FAMILY CODE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("ITEM_CODE").HeaderText("ENGINE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("ITEM_DESC").HeaderText("DESCRIPTION").Width("250").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("FUEL_INJECTION_PUMP").HeaderText("FUEL PUMP").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("FUEL_INJECTION_PUMP_DESC").HeaderText("FUEL PUMP DESCRIPTION").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CYLINDER_BLOCK").HeaderText("CYLINDER BLOCK").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CYLINDER_BLOCK_DESC").HeaderText("CYLINDER BLOCK DESCRIPTION").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CYLINDER_HEAD").HeaderText("CYLINDER HEAD").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CYLINDER_HEAD_DESC").HeaderText("CYLINDER HEAD DESCRIPTION").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CONNECTING_ROD").HeaderText("CONNECTING_ROD").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CONNECTING_ROD_DESC").HeaderText("CONNECTING ROD DESC").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CRANK_SHAFT").HeaderText("CRANK SHAFT").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CRANK_SHAFT_DESC").HeaderText("CRANK SHAFT DESC").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CAM_SHAFT").HeaderText("CAM SHAFT").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CAM_SHAFT_DESC").HeaderText("CAM SHAFT DESC").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("ECU").HeaderText("ECU").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("ECU_DESC").HeaderText("ECU DECRIPTION").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("INJECTOR").HeaderText("INJECTOR").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("REQ_FUEL_INJECTION_PUMP").HeaderText("REQUIRE FUEL PUMP").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("REQUIRE_CYLINDER_BLOCK").HeaderText("REQUIRE CYLINDER BLOCK").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("REQUIRE_CYLINDER_HEAD").HeaderText("REQUIRE CYLINDER HEAD").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("REQUIRE_CONNECTING_ROD").HeaderText("REQUIRE CONNECTING ROD").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("REQUIRE_CRANK_SHAFT").HeaderText("REQUIRE CRANK SHAFT").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("REQUIRE_CAM_SHAFT").HeaderText("REQUIRE CAM SHAFT").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("REQ_ECU").HeaderText("REQUIRE ECU").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("PREFIX_1").HeaderText("PREFIX 1").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("NO_OF_PISTONS").HeaderText("NO OF PISTONS").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("NO_OF_INJECTORS").HeaderText("NO OF INJECTORS").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CREATEDBY").HeaderText("CREATED BY").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CREATEDDATE").HeaderText("CREATED DATE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("UPDATEDBY").HeaderText("UPDATED BY").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("UPDATEDDATE").HeaderText("UPDATED DATE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+
+
+                })
+                  .SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick").//AllowRowDragAndDrop().
+                Render())
+
+        <script>
+            var AUTOID;
+            function commandClick(args) {
+                if (args.rowData != null) {
+                    if (args.target.classList.contains('edit')) {
+                        AUTOID = args.rowData["AUTOID"];
+                        //Engine
+                        var itmcode = args.rowData["ITEM_CODE"];
+                        var itmdesc = args.rowData["ITEM_DESC"];
+                        var codeDesc = itmcode + " # " + itmdesc;
+                        if (codeDesc == "null # null") {
+                            $("#Engine").val("");
+                        }
+                        else {
+                            $("#Engine").val(codeDesc);
+                        }
+
+                        //FuelPump
+                        var FuelCode = args.rowData["FUEL_INJECTION_PUMP"];
+                        var FuelDesc = args.rowData["FUEL_INJECTION_PUMP_DESC"];
+                        var FuelPumpDesc = FuelCode + " # " + FuelDesc;
+                        
+                        if (FuelPumpDesc == "null # null") {
+                            $("#FUEL_INJECTION_PUMP").val("");
+
+                        }
+                        else {
+                            $("#FUEL_INJECTION_PUMP").val(FuelPumpDesc);
+                        }
+                        var res = args.rowData["REQ_FUEL_INJECTION_PUMP"];
+                        if (res == "1") {
+                            $("#REQ_FUEL_INJECTION_PUMP").prop('checked', true)
+                        }
+                        else {
+                            $("#REQ_FUEL_INJECTION_PUMP").prop('checked', false)
+                        }
+
+                        //CYLINDER BLOCK
+                        var CylinderBlockCode = args.rowData["CYLINDER_BLOCK"];
+                        var CylinderDesc = args.rowData["CYLINDER_BLOCK_DESC"];
+                        var CylinderBlockDesc = CylinderBlockCode + " # " + CylinderDesc;
+                        if (CylinderBlockDesc == "null # null") {
+                            $("#CYLINDER_BLOCK").val("");
+                        }
+                        else {
+                            $("#CYLINDER_BLOCK").val(CylinderBlockDesc);
+                        }
+                        var res = args.rowData["REQUIRE_CYLINDER_BLOCK"];
+                        if (res == "1") {
+                            $("#REQUIRE_CYLINDER_BLOCK").prop('checked', true)
+                        }
+                        else {
+                            $("#REQUIRE_CYLINDER_BLOCK").prop('checked', false)
+                        }
+
+                        //CYLINDER HEAD
+                        var CylinderHeadCode = args.rowData["CYLINDER_HEAD"];
+                        var CylinderHDesc = args.rowData["CYLINDER_HEAD_DESC"];
+                        var CylinderHeadDesc = CylinderHeadCode + " # " + CylinderHDesc;
+                        if (CylinderHeadDesc == "null # null") {
+                            $("#CYLINDER_HEAD").val("");
+                        }
+                        else {
+                            $("#CYLINDER_HEAD").val(CylinderHeadDesc);
+                        }
+                        var res = args.rowData["REQUIRE_CYLINDER_HEAD"];
+                        if (res == "1") {
+                            $("#REQUIRE_CYLINDER_HEAD").prop('checked', true)
+                        }
+                        else {
+                            $("#REQUIRE_CYLINDER_HEAD").prop('checked', false)
+                        }
+
+                        //CONNECTING ROD
+                        var ConnectingRodCode = args.rowData["CONNECTING_ROD"];
+                        var ConnectingRDesc = args.rowData["CONNECTING_ROD_DESC"];
+                        var ConnectingRodDesc = ConnectingRodCode + " # " + ConnectingRDesc;
+                        if (ConnectingRodDesc == "null # null") {
+                            $("#CONNECTING_ROD").val("");
+                        }
+                        else {
+                            $("#CONNECTING_ROD").val(ConnectingRodDesc);
+                        }
+                        
+                        var res = args.rowData["REQUIRE_CONNECTING_ROD"];
+                        if (res == "1") {
+                            $("#REQUIRE_CONNECTING_ROD").prop('checked', true)
+                        }
+                        else {
+                            $("#REQUIRE_CONNECTING_ROD").prop('checked', false)
+                        }
+
+                        //CRANK SHAFT
+                        var CrankShaftCode = args.rowData["CRANK_SHAFT"];
+                        var CrankSDesc = args.rowData["CRANK_SHAFT_DESC"];
+                        var CrankShaftDesc = CrankShaftCode + " # " + CrankSDesc;
+                        if (CrankShaftDesc == "null # null") {
+                            $("#CRANK_SHAFT").val("");
+                        }
+                        else {
+                            $("#CRANK_SHAFT").val(CrankShaftDesc);
+                        }
+
+                        var res = args.rowData["REQUIRE_CRANK_SHAFT"];
+                        if (res == "1") {
+                            $("#REQUIRE_CRANK_SHAFT").prop('checked', true)
+                        }
+                        else {
+                            $("#REQUIRE_CRANK_SHAFT").prop('checked', false)
+                        }
+
+                        //CAM SHAFT
+                        var CamShaftCode = args.rowData["CAM_SHAFT"];
+                        var CamSDesc = args.rowData["CAM_SHAFT_DESC"];
+                        var CamShaftDesc = CamShaftCode + " # " + CamSDesc;
+                        if (CamShaftDesc == "null # null") {
+                            $("#CAM_SHAFT").val("");
+                        }
+                        else {
+                            $("#CAM_SHAFT").val(CamShaftDesc);
+                        }
+                        var res = args.rowData["REQUIRE_CAM_SHAFT"];
+                        if (res == "1") {
+                            $("#REQUIRE_CAM_SHAFT").prop('checked', true)
+                        }
+                        else {
+                            $("#REQUIRE_CAM_SHAFT").prop('checked', false)
+                        }
+
+                        //ECU
+                        var ECUCode = args.rowData["ECU"];
+                        var ECUDesc = args.rowData["ECU_DESC"];
+                        var ECUDesc1 = ECUCode + " # " + ECUDesc;
+                        if (ECUDesc1 == "undefined # undefined") {
+                            $("#ECU").val("");
+                        }
+                        else {
+                            $("#ECU").val(ECUDesc1);
+                        }
+                        
+                        var res = args.rowData["REQ_ECU"];
+                        if (res == "1") {
+                            $("#REQUIRE_ECU").prop('checked', true)
+                        }
+                        else {
+                            $("#REQUIRE_ECU").prop('checked', false)
+                        }
+
+
+
+                        $("#NO_OF_PISTONS").val(args.rowData["NO_OF_PISTONS"]);
+                        $("#NO_OF_PISTONS").val(args.rowData["NO_OF_PISTONS"]).trigger("change");
+
+                        
+
+
+                        $("#INJECTOR").val(args.rowData["INJECTOR"]);
+                        $("#INJECTOR").val(args.rowData["INJECTOR"]).trigger("change");
+
+                        $("#NO_OF_INJECTORS").val(args.rowData["NO_OF_INJECTORS"]);
+                        $("#NO_OF_INJECTORS").val(args.rowData["NO_OF_INJECTORS"]).trigger("change");
+
+                        $("#PREFIX_1").val(args.rowData["PREFIX_1"]);
+
+
+                        $('#PLANT_CODE').prop('disabled', true);
+                        $('#FAMILY_CODE').prop('disabled', true);
+                        $('#Engine').prop('disabled', true);
+
+
+                        $('#Add').hide();
+                        $('#Update').show();
+                    }
+                    if (args.target.classList.contains('delete')) {
+
+
+                        AUTOID = args.rowData["AUTOID"];
+                        deleteItem();
+
+                    }
+                }
+                
+            };
+            function deleteItem() {
+                if (confirm("Are you sure, to delete this Record ?")) {
+                    Delete();
+                }
+                return false;
+            }
+        </script>
+    </div>
+
+    <script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+    @Html.EJS().ScriptManager()
+
+    @*Model for Delete ENGINE*@
+    <div class="modal" id="DeleteConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-danger">
+                    <strong class="modal-title" id="exampleModalLabel" style="font-size:25px;"><i class="fa fa-exclamation-circle" style="font-size:35px;" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<strong>Confirmation..!</strong></strong>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4><strong>Are you sure, to delete this Engine ..?</strong></h4>
+                </div>
+                <div class="modal-footer">
+                    @*<a href="@Url.Action("", "")" class="btn btn-success btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Go Back</a>*@
+                    <button type="button" data-dismiss="modal" class="btn btn-warning btn-sm"><i class="ace-icon fa fa-arrow-left"></i> Go Back</button>
+                    <button type="button" id="btnDelete" class="btn btn-danger btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

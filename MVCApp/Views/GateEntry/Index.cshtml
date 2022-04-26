@@ -1,0 +1,527 @@
+﻿@using Syncfusion.EJ2;
+@model MVCApp.Models.GateEntryModel
+<style>
+
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .lblStrng {
+        font-size: xx-large;
+        color: white;
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Gate Entry</a>
+        </li>
+        <li>
+            <a href="#">MRN- LABLE- PRINTING</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    @*--------Form------------*@
+    <div class="container" style="width:100%!important">
+        <div class="form-horizontal form-group">
+
+            <fieldset class="the-fieldset bg-info">
+                <div class="row">
+                    <div id="ddlSH">
+                        <div class="col-md-2">
+                            <label for="NotValidateJob" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            <div class="form-check">
+                                @Html.DropDownListFor(model => model.PLANTCODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.PLANTCODE, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="NotValidateJob" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                            <div class="form-check">
+                                @Html.DropDownListFor(model => model.FAMILYCODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.FAMILYCODE, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check" style="margin: 25px 0 0 15px;">
+                                <input type="checkbox" name="Print2Label" />
+                                <label for="NotValidateJob" class="text-right control-label col-form-label"><strong>PRINT 2 LABEL</strong></label>
+                            </div>
+
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check" style="margin: 25px 0 0 15px;">
+                                <input type="checkbox" name="REPRINT" onchange="showdateCritria();" />
+                                <label for="NotValidateJob" class="text-right control-label col-form-label"><strong>REPRINT</strong></label>
+                            </div>
+
+                        </div>
+                        <div class="col-md-1"  style="margin: 25px 0 0 15px;">
+                            <button class="btn btn-success btn-sm" type="button" id="Print"><i class="ace-icon fa fa-print bigger-110"></i><strong>Print</strong></button>
+                        </div>
+                    </div>
+                    @*<div class="col-md-6" style="background-color: blue; height: 60px;">
+                            <label for="NotValidateJob" class="text-center control-label col-form-label"><strong class="lblStrng">MRN- LABLE- PRINTING</strong></label>
+
+                        </div>*@
+                </div>
+                <div class="clearfix" style="padding: 0 0 25px 0;"></div>
+                <div class="row">
+               
+                    <div id="RePrintDate">
+                        <div class="col-md-2">
+                            <label for="NotValidateJob" class="text-right control-label col-form-label"><strong>MRN Date</strong></label>
+                            @Html.EJS().DatePickerFor(Model => Model.FromDate).Format("dd-MMM-yyyy").Value(ViewBag.value).Max(ViewBag.maxDate).Render()
+                            <strong>@Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-1" style="margin: 25px 0 0 15px;">
+                            <button class="btn btn-success btn-sm" type="button" id="Info"><i class="ace-icon fa fa-info bigger-110"></i><strong>Info</strong></button>
+                        </div>
+                        <div class="col-md-1" style="margin: 25px 0 0 15px;">
+                            <button class="btn btn-success btn-sm" type="button" id="btnOracleUpdate"><i class="ace-icon fa fa-info-circle bigger-110"></i><strong>Oracle update</strong></button>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <table id="demoGrid" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="cbAll" style="margin-left: -11px;" onclick="check_uncheck_checkbox(this.checked);" /> Select MRN</th>
+                    <th>TRANSACTION_DATE</th>
+                    <th>MRN_NO</th>
+                    <th>VEHICLE_NO</th>
+                    <th>VENDOR_CODE</th>
+                    <th>VENDOR_NAME</th>
+                    <th>INVOICE_NO</th>
+                    <th>INVOICE_DATE</th>
+                    <th>ITEM</th>
+                    <th>TOTAL_ITEM</th>
+                    <th>SOURCE_TYPE</th>
+                    <th>ORGANIZATION_CODE</th>
+                    <th>STATUS</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<link href="~/Scripts/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/DataTable/jquery.dataTables.min.js"></script>
+<link href="~/Scripts/DataTable/Custom.css" rel="stylesheet" />
+<!-- #endregion -->
+<script>
+$("#RePrintDate").hide();
+    function showdateCritria() {
+        if ($('input[name="REPRINT"]').is(':checked')) {
+            $("#RePrintDate").show();
+        } else {
+            $("#RePrintDate").hide();
+        }
+    }
+    $(document).ready(function () {
+        $.noConflict();
+        DDLPlant();
+        BindGrid();
+    });
+    $("#PLANTCODE").on("change", function () {
+        BindGrid();
+        DDLFamilyByPlant();
+    });
+    $("#Info").on('click', function () {
+        BindGrid();
+    });
+       //Function to bind Plant
+    function DDLPlant() {
+        //$("#divLoader").show();
+        $.ajax({
+            url: '@Url.Action("BindPlant", "GateEntry")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#PLANTCODE").append(optionhtml);
+                });
+
+
+                DDLFamilyByPlant();
+                //BindGrid();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        //$("#divLoader").show();
+        var selectedValue = $("#PLANTCODE").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "GateEntry")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#FAMILYCODE").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#FAMILYCODE").append(optionhtml);
+                });
+                BindGrid();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    var table = $('#demoGrid').DataTable();
+
+    function BindGrid() {
+        $('#demoGrid').DataTable().destroy();
+        var dtable = $("#demoGrid").DataTable({
+            "scrollX": true,
+            "autoWidth": false,
+            "lengthChange": true,
+            "pageLength": 20,
+            "ordering": false,
+            "processing": true, // for show progress bar
+            "serverSide": true, // for process server side
+            "filter": true, // this is for disable filter (search box)
+            "orderMulti": false, // for disable multiple column at once
+            language: {
+                search: "SEARCH BY MRN No",
+                searchPlaceholder: "Enter min 3 characters",
+                width: "250PX"
+            },
+            "ajax": {
+                "url": '@Url.Action("Grid","GateEntry")',
+                "data": function (obj) {
+                    obj.PLANTCODE = $('#PLANTCODE').val();
+                    obj.FAMILYCODE = $('#FAMILYCODE').val();
+                    obj.STAGE = $('#STAGE').val();
+                    obj.ToDate = $('#ToDate').val();
+                    obj.FromDate = $('#FromDate').val();
+                    if ($('input[name="REPRINT"]').is(':checked')) {
+                        obj.CheckboxReprint = true;
+                    }
+                    if ($('input[name="Print2Label"]').is(':checked')) {
+                        obj.CheckboxPrint2Label = true;
+                    }
+                },
+                "type": "POST",
+                "datatype": "json"
+            },
+
+
+            "columns": [
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<input type="checkbox" name="SelectMRN">';
+                    }
+                },
+                { "data": "TRANSACTION_DATE"},
+                { "data": "MRN_NO"},
+                { "data": "VEHICLE_NO"},
+                { "data": "VENDOR_CODE"},
+                { "data": "VENDOR_NAME"},
+                { "data": "INVOICE_NO"},
+                { "data": "INVOICE_DATE"},
+                { "data": "ITEM"},
+                { "data": "TOTAL_ITEM"},
+                { "data": "SOURCE_TYPE"},
+                { "data": "ORGANIZATION_CODE"},
+                { "data": "STATUS"}
+
+
+            ],
+            "columnDefs": [
+                { "width": "3%", "className": "text-center", "targets": 0 },
+                { "width": "6%", "className": "text-center", "targets": 1 },
+                { "width": "6%", "className": "text-center", "targets": 2 },
+                { "width": "12%", "className": "text-center", "targets": 3 },
+                { "width": "15%", "className": "text-center", "targets": 4 },
+                { "width": "15%", "className": "text-center", "targets": 5 },
+                { "width": "15%", "className": "text-center", "targets": 6 },
+                { "width": "15%", "className": "text-center", "targets": 7 },
+                { "width": "15%", "className": "text-center", "targets": 8 },
+                { "width": "15%", "className": "text-center", "targets": 9 },
+                { "width": "15%", "className": "text-center", "targets": 10 },
+                { "width": "15%", "className": "text-center", "targets": 11 },
+                { "width": "15%", "className": "text-center", "targets": 12 }
+
+            ]
+
+
+        });
+
+        $(".dataTables_filter input")
+            .unbind() // Unbind previous default bindings
+            .bind("input", function (e) { // Bind our desired behavior
+                // If the length is 3 or more characters, or the user pressed ENTER, search
+                if (this.value.length >= 3 || e.keyCode == 13) {
+                    // Call the API search function
+                    dtable.search(this.value).draw();
+                }
+                // Ensure we clear the search if they backspace far enough
+                if (this.value == "") {
+                    dtable.search("").draw();
+                }
+                return;
+            });
+
+    }
+    function check_uncheck_checkbox(isChecked) {
+        if (isChecked) {
+            $('input[name="SelectMRN"]').each(function () {
+                this.checked = true;
+            });
+        } else {
+            $('input[name="SelectMRN"]').each(function () {
+                this.checked = false;
+            });
+        }
+    }
+
+    $("#Print").click(function () {
+        var Data = [];
+        var selectedMrn = 0;
+        var reprintchecked = false;
+        var print2labelchecked = false;
+        $("#demoGrid tbody tr").each(function () {
+            var self = $(this);
+            var currentRow = self.closest("tr");
+            var data = $('#demoGrid').DataTable().row(currentRow).data();
+            if ($('input[name="REPRINT"]').is(':checked')) {
+                reprintchecked = true;
+            } if ($('input[name="Print2Label"]').is(':checked')) {
+                print2labelchecked = true;
+            }
+
+            if ((self.find('input[name="SelectMRN"]')).is(':checked')) {
+                var obj = {
+
+                    TRANSACTION_DATE: data['TRANSACTION_DATE'],
+                    MRN_NO: data['MRN_NO'],
+                    VEHICLE_NO: data['VEHICLE_NO'],
+                    VENDOR_CODE: data['VENDOR_CODE'],
+                    VENDOR_NAME: data['VENDOR_NAME'],
+                    INVOICE_NO: data['INVOICE_NO'],
+                    INVOICE_DATE: data['INVOICE_DATE'],
+                    ITEM: data['ITEM'],
+                    TOTAL_ITEM: data['TOTAL_ITEM'],
+                    SOURCE_TYPE: data['SOURCE_TYPE'],
+                    ORGANIZATION_CODE: data['ORGANIZATION_CODE'],
+                    FAMILYCODE: $('#FAMILYCODE').val(),
+                    CheckboxReprint: reprintchecked,
+                    CheckboxPrint2Label: print2labelchecked,
+                    STATUS: data['STATUS']
+                };
+                Data.push(obj);
+                selectedMrn++;
+            }
+
+
+
+        });
+        if (selectedMrn < 1) {
+            $("#divLoader").hide();
+            alert("No record selected for MRN");
+            return false;
+        }
+        if (Data.length > 0) {
+
+            PRINTMRN(Data,"Print");
+
+        }
+    });
+
+    function PRINTMRN(Data,Type) {
+
+        $("#divLoader").show();
+        if (Type == "Print") {
+            $.ajax({
+
+                url: '@Url.Action("PRINT", "GateEntry")',
+                data: JSON.stringify(Data),
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json;charset=UTF-8",
+                success: function (data) {
+                    $("#divLoader").hide();
+                    if (data == "1") {
+                        $('#alert').append('<div class="alert" role = "alert"><strong>Vehicle Number Not Found</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+                    //if (data.validation.includes("error")) {
+                    //    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    //    setTimeout(function () {
+                    //        $.each($('.alert'), function () {
+                    //            closeAlert(this);
+                    //        });
+                    //    }, 5000);
+                    //}
+
+                    //else {
+                    //    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    //    setTimeout(function () {
+                    //        $.each($('.alert'), function () {
+                    //            closeAlert(this);
+                    //        });
+                    //    }, 5000);
+
+                    //}
+                    BindGrid();
+                },
+                error: function (errormessage) {
+                    //alert(errormessage.responseText);
+                }
+            });
+        } else {
+             $.ajax({
+
+                url: '@Url.Action("OracleUpdate", "GateEntry")',
+                data: JSON.stringify(Data),
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json;charset=UTF-8",
+                success: function (data) {
+                    $("#divLoader").hide();
+                    if (data == "1") {
+                        $('#alert').append('<div class="alert" role = "alert"><strong>Vehicle Number Not Found</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    } else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+                    //if (data.validation.includes("error")) {
+                    //    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    //    setTimeout(function () {
+                    //        $.each($('.alert'), function () {
+                    //            closeAlert(this);
+                    //        });
+                    //    }, 5000);
+                    //}
+
+                    //else {
+                    //    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    //    setTimeout(function () {
+                    //        $.each($('.alert'), function () {
+                    //            closeAlert(this);
+                    //        });
+                    //    }, 5000);
+
+                    //}
+                    BindGrid();
+                },
+                error: function (errormessage) {
+                    //alert(errormessage.responseText);
+                }
+            });
+        }
+
+    }
+
+    $("#btnOracleUpdate").click(function () {
+        var Data = [];
+        var selectedMrn = 0;
+        var reprintchecked = false;
+        var print2labelchecked = false;
+        $("#demoGrid tbody tr").each(function () {
+            var self = $(this);
+            var currentRow = self.closest("tr");
+            var data = $('#demoGrid').DataTable().row(currentRow).data();
+            if ($('input[name="REPRINT"]').is(':checked')) {
+                reprintchecked = true;
+            } if ($('input[name="Print2Label"]').is(':checked')) {
+                print2labelchecked = true;
+            }
+
+            if ((self.find('input[name="SelectMRN"]')).is(':checked')) {
+                var obj = {
+
+                    TRANSACTION_DATE: data['TRANSACTION_DATE'],
+                    MRN_NO: data['MRN_NO'],
+                    VEHICLE_NO: data['VEHICLE_NO'],
+                    VENDOR_CODE: data['VENDOR_CODE'],
+                    VENDOR_NAME: data['VENDOR_NAME'],
+                    INVOICE_NO: data['INVOICE_NO'],
+                    INVOICE_DATE: data['INVOICE_DATE'],
+                    ITEM: data['ITEM'],
+                    TOTAL_ITEM: data['TOTAL_ITEM'],
+                    SOURCE_TYPE: data['SOURCE_TYPE'],
+                    ORGANIZATION_CODE: data['ORGANIZATION_CODE'],
+                    FAMILYCODE: $('#FAMILYCODE').val(),
+                    CheckboxReprint: reprintchecked,
+                    CheckboxPrint2Label: print2labelchecked,
+                    STATUS: data['STATUS']
+                };
+                Data.push(obj);
+                selectedMrn++;
+            }
+
+
+
+        });
+        if (selectedMrn < 1) {
+            $("#divLoader").hide();
+            alert("No record selected for MRN");
+            return false;
+        }
+        if (Data.length > 0) {
+
+            PRINTMRN(Data,"UpdateOracle");
+
+        }
+    });
+    $("#FAMILYCODE").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#PLANTCODE").select2({
+        allowClear: true,
+        width: '100%',
+    });
+</script>
+
+

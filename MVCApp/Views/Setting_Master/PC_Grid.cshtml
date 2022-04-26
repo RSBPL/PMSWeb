@@ -1,0 +1,38 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="table-responsive">
+        @(Html.EJS().Grid("PC_Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+             //AllowPaging(true).
+             //PageSettings(Page => Page.PageSize(7)).
+             //AllowFiltering().
+             //AllowGrouping().
+             //AllowSorting().
+             //AllowSelection().
+             //AllowTextWrap().
+             Columns(col =>
+             {
+                 col.Field("PLANT_CODE").HeaderText("PLANT").IsPrimaryKey(true).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("180").Add();
+                 col.Field("FAMILY_CODE").HeaderText("FAMILY").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                 col.Field("DESCRIPTION").HeaderText("DESCRIPTION").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                 col.Field("PARAMVALUE").HeaderText("MAX PRODUCTION").IsPrimaryKey(true).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Width("150").Add();
+                 col.HeaderText("").Width("120");
+             }).SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).
+             Render())
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+
+
+

@@ -1,0 +1,78 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bg-primary" style="padding-top:5px; padding-left:5px;">
+                <center>
+                    <label style="color:white;">@ViewBag.heading</label>
+                    <label style="color: white;padding-right: 10px;" class="pull-right"><strong>TOTAL RECORD : @ViewBag.Total </strong></label>
+                </center>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        @(Html.EJS().Grid("GrdMRNITEMS").DataSource((System.Data.DataTable)ViewBag.DataSource).
+            Height("400").
+            AllowSelection(false).
+            AllowResizing().
+            AllowExcelExport().
+            ToolbarClick("toolbarClick").
+            AllowFiltering().
+            AllowGrouping().
+            AllowSorting().EnableColumnVirtualization().EnableVirtualization().
+            Columns(col =>
+            {
+                col.Field("MRN_NO").HeaderText("MRN").Add();
+                col.Field("VENDOR_CODE").HeaderText("V.CODE").Add();
+                col.Field("VENDOR_NAME").HeaderText("V.NAME").Add();
+                col.Field("VEHICLE_NO").HeaderText("VEHICLE NO.").Add();
+                col.Field("INVOICE_NO").HeaderText("INVOICE NO.").Add();
+                col.Field("INVOICE_DATE").HeaderText("INVOICE DATE").Add();
+
+                col.Field("ITEMCODE").HeaderText("ITEM CODE").Add();
+                col.Field("ITEM_DESCRIPTION").HeaderText("DESCRIPTION").Add();
+                col.Field("QUANTITY").HeaderText("QTY.").Add();
+                col.Field("STATUS").HeaderText("STATUS").Add();
+                col.Field("STORAGE_LOCATION").HeaderText("STORAGE LOCATION").Add();
+                col.Field("PRINTED_ON").HeaderText("PRINTED ON").Add();
+
+                col.Field("TIMEIN").HeaderText("TIME IN").Add();
+                col.Field("IN_BY").HeaderText("IN BY").Add();
+                col.Field("TIMEOUT").HeaderText("TIME OUT").Add();
+                col.Field("OUT_BY").HeaderText("OUT BY").Add();
+
+                col.Field("STORE_SCANDATE").HeaderText("SCAN DATE").Add();
+                col.Field("STORE_SCANBY").HeaderText("SCAN BY").Add();
+                col.Field("TOTAL_HOURS").HeaderText("TOTAL HOURS").Add();
+            }).
+            Toolbar(new List<string>() { "ExcelExport" }).
+            Render())
+        <script>
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("GrdMRNITEMS").ej2_instances[0];
+                gridObj.excelExport();
+            }
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+
+
+
+
+
+
+
+

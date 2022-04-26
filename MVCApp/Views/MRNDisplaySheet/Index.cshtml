@@ -1,0 +1,726 @@
+﻿
+@model MVCApp.Models.MRNQCVIEWMODEL
+<style>
+   #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .textaligncenter {
+        text-align: center;
+    }
+    #myTable_wrapper{
+        overflow:auto;
+    }
+    #myTable thead tr {
+        background: #438eb961;
+        text-align:center;
+    }
+    .dataTable > thead > tr > th[class*=sorting_] {
+        color: black;
+        font-size: 14px;
+        /*font-weight: 600;
+        font-size: 15px;*/
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">MRN Display Sheet</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+
+    @*--------Form------------*@
+    <div class="container" style="width:100%!important">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal form-group">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="PLANT_CODE" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            @Html.DropDownListFor(model => model.PLANT_CODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                        </div>
+                        <div class="col-md-3">
+                            <label for="FAMILY_CODE" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                            @Html.DropDownListFor(model => model.FAMILY_CODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                        </div>
+                        <div class="col-md-2 WD-100">
+                            <label for="FROMDATE" class="text-right control-label col-form-label"><strong>From Date</strong></label>
+                            @Html.EJS().DatePickerFor(Model => Model.FROMDATE).Format("dd-MMM-yyyy").Value(ViewBag.value).Max(ViewBag.maxDate).Render()
+
+                        </div>
+                        <div class="col-md-2 WD-100">
+                            <label for="TODATE" class="text-right control-label col-form-label"><strong>To Date</strong></label>
+                            @Html.EJS().DatePickerFor(Model => Model.TODATE).Format("dd-MMM-yyyy").Value(ViewBag.value).Max(ViewBag.maxDate).Render()
+                        </div>
+                        <div class="col-md-2" style="padding-top: 23px;">
+                            <button type="button" id="Submit" class="btn btn-success btn-sm"><i class="ace-icon fa fa-check bigger-110"></i>Search</button>
+                            <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                        </div>
+
+                    </div>
+
+                </fieldset>
+            </div>
+        }
+        <table id="myTable" class="table nowrap table-striped table-bordered dt-responsive" width="100%">
+            <thead>
+                <tr>
+                    <th colspan="11"></th>
+                    <th colspan="2" class="textaligncenter">Responsibility</th>
+                    <th></th>
+                    <th colspan="2" class="textaligncenter">Inspection Of Receipt Part</th>
+                    <th colspan="6" class="textaligncenter">Partial Lot Clearance  For Dim. To Be Entered by RI Inspector For Lot Disposition</th>
+                    <th colspan="6" class="textaligncenter">Partial Lot Clearance Status For MT. To Be Entered by RI Inspector For Lot Disposition</th>
+                    <th colspan="24" class="textaligncenter">Last 3 Lot RI Status With Date For Dim.</th>
+                    <th colspan="24" class="textaligncenter">Last 3 Lot RI Status With Date For MT</th>
+                    <th></th>
+                    <th colspan="2" class="textaligncenter">Part Status</th>
+                    <th></th>
+                    <th>|| Sheet Status</th>
+                    <th>Approved Part Deviation </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th colspan="4" class="textaligncenter">Plant Stock</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th> </th>
+                    <th> </th>
+                    <th colspan="4" class="textaligncenter">ISIR Status</th>
+                </tr>
+                <tr>
+                    <th>ACTION</th>
+                    <th>Date</th>
+                    <th>Vendor Name</th>
+                    <th>Vendor Code</th>
+                    <th>Receipt Number</th>
+                    <th>Description</th>
+                    <th>Item Code</th>
+                    <th>Part Receipt Revision</th>
+                    <th>Quantity</th>
+                    <th>PU</th>
+                    <th>Commodity</th>
+
+
+                    <th>Buyer Name</th>
+                    <th>Inspector Name</th>
+
+
+                    <th>Skip Lot Ratio</th>
+
+
+                    <th>DIM Inspection To be Conducted</th>
+                    <th>MT Test To be Conducted</th>
+
+
+
+                    <th>OK Qty</th>
+                    <th>Reject Qty</th>
+                    <th>OK under Deviation</th>
+                    <th>OK After Segregation</th>
+                    <th>OK after Rework</th>
+                    <th>Hold Qty</th>
+
+
+
+                    <th>OK Qty</th>
+                    <th>Reject Qty</th>
+                    <th>OK under Deviation</th>
+                    <th>OK After Segregation</th>
+                    <th>OK after Rework</th>
+                    <th>Hold Qty</th>
+
+
+
+                    <th>OK</th>
+                    <th>Reject</th>
+                    <th>OK after Rework</th>
+                    <th>OK After Segregation</th>
+                    <th>Deviation</th>
+                    <th>Hold QTY</th>
+                    <th>MRN Date</th>
+                    <th>Inspection Date</th>
+                    <th>OK</th>
+                    <th>Reject</th>
+                    <th>OK after Rework</th>
+                    <th>OK After Segregation</th>
+                    <th>Deviation</th>
+                    <th>Hold QTY</th>
+                    <th>MRN Date</th>
+                    <th>Inspection Date</th>
+                    <th>OK</th>
+                    <th>Reject</th>
+                    <th>OK after Rework</th>
+                    <th>OK After Segregation</th>
+                    <th>Deviation</th>
+                    <th>Hold QTY</th>
+                    <th>MRN Date</th>
+                    <th>Inspection Date</th>
+
+
+
+                    <th>OK</th>
+                    <th>Reject</th>
+                    <th>OK after Rework</th>
+                    <th>OK After Segregation</th>
+                    <th>Deviation</th>
+                    <th>Hold QTY</th>
+                    <th>MRN Date</th>
+                    <th>Inspection Date</th>
+                    <th>OK</th>
+                    <th>Reject</th>
+                    <th>OK after Rework</th>
+                    <th>OK After Segregation</th>
+                    <th>Deviation</th>
+                    <th>Hold QTY</th>
+                    <th>MRN Date</th>
+                    <th>Inspection Date</th>
+                    <th>OK</th>
+                    <th>Reject</th>
+                    <th>OK after Rework</th>
+                    <th>OK After Segregation</th>
+                    <th>Deviation</th>
+                    <th>Hold QTY</th>
+                    <th>MRN Date</th>
+                    <th>Inspection Date</th>
+
+
+                    <th>Blanket PO/Standard PO</th>
+
+
+                    <th>New/Regular</th>
+                    <th>No. Of Time Received</th>
+
+
+                    <th>Storage Location</th>
+
+
+                    <th>Available/Not Available</th>
+
+
+
+                    <th>Deviation Balance Qty</th>
+
+
+                    <th>Part Handover to Plant Status (Y/N)</th>
+
+
+                    <th>3rd Last Month</th>
+                    <th>3rd Last Month Date</th>
+                    <th>2nd Last Month</th>
+                    <th>2nd Last Month Date</th>
+                    <th>Last Month</th>
+                    <th>Last Month Date</th>
+
+
+
+                    <th>Skip Lot Last 3 Month PPM</th>
+                    <th>MRN Ageing Status</th>
+                    <th>Print Incoming Part</th>
+
+                    <th>Dock</th>
+                    <th>Paint Shop</th>
+                    <th>Line</th>
+                    <th>Storage Location</th>
+
+
+                    <th>PO Revision</th>
+                    <th>BOM Revision</th>
+                    <th>Plant</th>
+
+
+                    <th>Dim Status</th>
+                    <th>MT Status</th>
+                    <th>Fitment Status</th>
+                    <th>SQA Status(OK/Reject)</th>
+
+                </tr>
+            </thead>
+            <tbody></tbody>
+
+        </table>
+
+    </div>
+</div>
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<link href="~/Scripts/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/DataTable/jquery.dataTables.min.js"></script>
+<link href="~/Scripts/DataTable/Custom.css" rel="stylesheet" />
+<script>
+    $(document).ready(function () {
+        $.noConflict();
+        DDLPlant();
+
+
+    });
+    $("#PLANT_CODE").on("change", function () {
+        DDLFamilyByPlant();
+    });
+
+    //$("#FAMILY_CODE").on("change", function () {
+    //    BindGrid();
+    //});
+    $("#Clear").on("click", function () {
+        location.reload(true);
+    });
+    $("#Submit").on("click", function () {
+        $("#divLoader").show();
+        BindGrid();
+    });
+
+    function closeAlert(alert) {
+
+        $(alert).hide();
+    };
+       //Function to bind Plant
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "MRNDisplaySheet")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#PLANT_CODE").append(optionhtml);
+                });
+                DDLFamilyByPlant();
+
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+      //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        var selectedValue = $("#PLANT_CODE").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "MRNDisplaySheet")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#FAMILY_CODE").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#FAMILY_CODE").append(optionhtml);
+                });
+                BindGrid();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+     //Function to bind Grid
+
+    function BindGrid() {
+
+        $("#divLoader").show();
+        $('#myTable').DataTable().destroy();
+
+
+        var dtable = $("#myTable").DataTable({
+           /* "scrollX": true,*/
+
+            "autoWidth": true,
+            "lengthChange": false,
+            "pageLength": 20,
+            "ordering": false,
+            "processing": true, 
+            "serverSide": true, 
+            "filter": false, 
+            "orderMulti": false,
+            "language":
+            {
+                "processing": "<img style='width:50px; height:50px;margin: -26px 0 0 0;' src='/Image/Loader.gif' />"
+            },
+            "ajax": {
+
+
+                "url": '@Url.Action("Grid", "MRNDisplaySheet")',
+                "data": function (obj) {
+                    obj.PLANT_CODE = $('#PLANT_CODE').val();
+                    obj.FAMILY_CODE = $('#FAMILY_CODE').val();
+                    obj.FROMDATE = $('#FROMDATE').val();
+                    obj.TODATE = $('#TODATE').val();
+
+                },
+                "type": "POST",
+                "datatype": "json"
+            },
+
+
+
+            "columns": [
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<input type="button" value="Save" class="btnSave btn btn-danger">';
+                    }
+                },
+                { "data": "TRANSACTION_DATE", "className":"colcolor" },
+                { "data": "VENDOR_NAME"},
+                { "data": "VENDOR_CODE"},
+                { "data": "MRN_NO"},
+                { "data": "DESCRIPTION"},
+                { "data": "ITEMCODE"},
+                { "data": "ITEM_REVISION"},
+                { "data": "QUANTITY"},
+                { "data": "PUNAME"},
+                { "data": "COMMODITY"},
+                { "data": "BUYER"},
+                { "data": "INSPECTOR"},
+                { "data": "SKIPLOT_RATIO"},
+                { "data": "ISDIM"} ,
+                { "data": "ISMT" },
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<input type="text" name="DimOkQty0" style="background-color: #d9edf7">';
+                    }
+                },
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<input type="text" name="DimRejQty0" style="background-color: #d9edf7">';
+                    }
+                },
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<input type="text" name="DimOkDev0" style="background-color: #d9edf7">';
+                    }
+                },
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<input type="text" name="DimOkSeg0" style="background-color: #d9edf7">';
+                    }
+                },
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<input type="text" name="DimOkRework0" style="background-color: #d9edf7">';
+                    }
+                },
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<input type="text" name="DimHoldQty0" style="background-color: #d9edf7">';
+                    }
+                },
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<input type="text" name="MTOkQty0" style="background-color: #d9edf7">';
+                    }
+                },
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<input type="text" name="MTRejQty0" style="background-color: #d9edf7">';
+                    }
+                },
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<input type="text" name="MTOkDev0" style="background-color: #d9edf7">';
+                    }
+                },
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<input type="text" name="MTOkSeg0" style="background-color: #d9edf7">';
+                    }
+                },
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<input type="text" name="MTOkRework0" style="background-color: #d9edf7">';
+                    }
+                },
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<input type="text" name="MTHoldQty0" style="background-color: #d9edf7">';
+                    }
+                },
+                { "data": "DIMOK_QTY1" },
+                { "data": "DIMREJ_QTY1" },
+                { "data": "DIMOK_DEV1" },
+                { "data": "DIMOK_AFTERSEG1" },
+                { "data": "DIMOK_AFTEREWORK1" },
+                { "data": "DIMHOLD_QTY1" },
+                { "data": "DIM_DATE1" },
+                { "data": "DIM_INSPECTIONDATE1" },
+                { "data": "DIMOK_QTY2" },
+                { "data": "DIMREJ_QTY2" },
+                { "data": "DIMOK_DEV2" },
+                { "data": "DIMOK_AFTERSEG2" },
+                { "data": "DIMOK_AFTEREWORK2" },
+                { "data": "DIMHOLD_QTY2" },
+                { "data": "DIM_DATE2" },
+                { "data": "DIM_INSPECTIONDATE2" },
+                { "data": "DIMOK_QTY3" },
+                { "data": "DIMREJ_QTY3" },
+                { "data": "DIMOK_DEV3" },
+                { "data": "DIMOK_AFTERSEG3" },
+                { "data": "DIMOK_AFTEREWORK3" },
+                { "data": "DIMHOLD_QTY3" },
+                { "data": "DIM_DATE3" },
+                { "data": "DIM_INSPECTIONDATE3" },
+                { "data": "MTOK_QTY1" },
+                { "data": "MTREJ_QTY1" },
+                { "data": "MTOK_DEV1" },
+                { "data": "MTOK_AFTERSEG1" },
+                { "data": "MTOK_AFTEREWORK1" },
+                { "data": "MTHOLD_QTY1" },
+                { "data": "MT_DATE1" },
+                { "data": "MT_INSPECTIONDATE1" },
+                { "data": "MTOK_QTY2" },
+                { "data": "MTREJ_QTY2" },
+                { "data": "MTOK_DEV2" },
+                { "data": "MTOK_AFTERSEG2" },
+                { "data": "MTOK_AFTEREWORK2" },
+                { "data": "MTHOLD_QTY2" },
+                { "data": "MT_DATE2" },
+                { "data": "MT_INSPECTIONDATE2" },
+                { "data": "MTOK_QTY3" },
+                { "data": "MTREJ_QTY3" },
+                { "data": "MTOK_DEV3" },
+                { "data": "MTOK_AFTERSEG3" },
+                { "data": "MTOK_AFTEREWORK3" },
+                { "data": "MTHOLD_QTY3" },
+                { "data": "MT_DATE3" },
+                { "data": "MT_INSPECTIONDATE3" },
+
+
+                { "data": "BLANKET_STDPO" },
+                { "data": "NEW_REGULAR" },
+                { "data": "NUMTIMES_REC" },
+                { "data": "STORAGE_LOC" },
+                { "data": "SHEET_AVAILNOT" },
+                { "data": "DEVIATION_BALQTY" },
+                { "data": "PARTHANDOVER_STATUS" },
+                { "data": "PPM_3MONTH" },
+                { "data": "PPM_3DATE" },
+                { "data": "PPM_2MONTH" },
+                { "data": "PPM_2DATE" },
+                { "data": "PPM_1MONTH" },
+                { "data": "PPM_1DATE" },
+                { "data": "AVG3MONTH_PPM" },
+                { "data": "MRNAGEING_STATUS" },
+                {
+                    "render": function (data, type, full, meta) {
+                        //var mrnno = full.MRN_NO.val();
+                        var mrnno = full.MRN_NO;
+                        var itemCode = full.ITEMCODE;
+                        //return '<button type="button" id="btnCustomPrint" class="btn btn-warning btn-sm"><i class="fa fa-arrow-left"></i>Print</button>'
+                        return '<a href="../ekidev/MRNDISPLAYSHEET/CrystalReportForMRN?MRN=' + mrnno + '&ItemCode=' + itemCode + '&PlantCode=' + $('#PLANT_CODE').val() + '&familyCode=' + $('#FAMILY_CODE').val() + '" target="_blank">Inspection Sheet</a> ';
+                    }
+                },
+                { "data": "DOCK_QTY" },
+
+                { "data": "PAINTSHOP_QTY" },
+                { "data": "LINE_QTY" },
+                { "data": "STORELOC_QTY" },
+                { "data": "PO_REV" },
+                { "data": "BOM_REVISION" },
+                { "data": "PLANT_CODE" },
+                { "data": "DIM_STATUS" },
+                { "data": "MT_STATUS" },
+                { "data": "FITMENT_STATUS" },
+                { "data": "SQA_STATUS" }
+
+
+
+
+            ],
+            columnDefs: [
+                {
+                    "targets": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,92,93,94,95,96,97,98,99,100,101,102],
+                    "createdCell": function (td, cellData, rowData, row, col) {
+                        $(td).css('background-color', '#87B87F'),
+                            $(td).css('color', 'white'),
+                            $(td).css('font-size', '14px'),
+                            $(td).css('text-align', 'center')
+                            
+                            
+                    }
+                }
+                
+                
+            ]
+            
+           
+            //"columnDefs": [
+            //    { "width": "3%", "targets": 0, "className": "text-center"},
+            //    { "width": "6%", "targets": 1, "className": "text-center" },
+            //    { "width": "12%", "targets": 2, "className": "text-center" },
+            //    { "width": "5%", "targets": 3, "className": "text-center" },
+            //    { "width": "10%", "targets": 4, "className": "text-center", "visible": false },
+            //    { "width": "20%", "targets": 5, "className": "text-center" },
+            //    { "width": "20%", "targets": 6, "className": "text-center" },
+            //    { "width": "20%", "targets": 7, "className": "text-center" },
+            //    { "width": "20%", "targets": 8, "className": "text-center" },
+            //    { "width": "20%", "targets": 9, "className": "text-center" },
+            //    { "width": "20%", "targets": 10, "className": "text-center" },
+            //    { "width": "20%", "targets": 11, "className": "text-center" },
+            //    { "width": "20%", "targets": 12, "className": "text-center"},
+            //    { "width": "20%", "targets": 13, "className": "text-center" },
+            //    { "width": "20%", "targets": 14, "className": "text-center" }
+
+
+            //]
+
+        }); 
+
+        $("#divLoader").hide();
+
+       
+    }
+
+    $('#myTable tbody').on('click', '.btnSave', function () {
+
+        var self = $(this);
+        var currentRow = self.closest("tr");
+        var data = $('#myTable').DataTable().row(currentRow).data();
+        /*console.log(currentRow.find('input[name="DimOkQty"]').val());*/
+        var obj = {
+            TRANSACTION_DATE: data["TRANSACTION_DATE"],
+            PLANT_CODE: $('#PLANT_CODE').val(),
+            FAMILY_CODE: $('#FAMILY_CODE').val(),
+            MRN_NO: data["MRN_NO"],
+            VENDOR_CODE: data["VENDOR_CODE"],
+            ITEMCODE: data["ITEMCODE"],
+            QUANTITY: data["QUANTITY"],
+            COMMODITY: data["COMMODITY"],
+            BUYER: data["BUYER"],
+            INSPECTOR: data["INSPECTOR"],
+            SKIPLOT_RATIO: data["SKIPLOT_RATIO"],
+            ISDIM: data["ISDIM"],
+            ISMT: data["ISMT"],
+            DIMOK_QTY0: currentRow.find('input[name="DimOkQty0"]').val(),
+            DIMREJ_QTY0: currentRow.find('input[name="DimRejQty0"]').val(),
+            DIMOK_DEV0: currentRow.find('input[name="DimOkDev0"]').val(),
+            DIMOK_AFTERSEG0: currentRow.find('input[name="DimOkSeg0"]').val(),
+            DIMOK_AFTEREWORK0: currentRow.find('input[name="DimOkRework0"]').val(),
+            DIMHOLD_QTY0: currentRow.find('input[name="DimHoldQty0"]').val(),
+            MTOK_QTY0: currentRow.find('input[name="MTOkQty0"]').val(),
+            MTREJ_QTY0: currentRow.find('input[name="MTRejQty0"]').val(),
+            MTOK_DEV0: currentRow.find('input[name="MTOkDev0"]').val(),
+            MTOK_AFTERSEG0: currentRow.find('input[name="MTOkSeg0"]').val(),
+            MTOK_AFTEREWORK0: currentRow.find('input[name="MTOkRework0"]').val(),
+            MTHOLD_QTY0: currentRow.find('input[name="MTHoldQty0"]').val(),
+            BLANKET_STDPO: data["BLANKET_STDPO"],
+            NEW_REGULAR: data["NEW_REGULAR"],
+            NUMTIMES_REC: data["NUMTIMES_REC"],
+            SHEET_AVAILNOT: data["SHEET_AVAILNOT"],
+            DEVIATION_BALQTY: data["DEVIATION_BALQTY"],
+            PARTHANDOVER_STATUS: data["PARTHANDOVER_STATUS"],
+
+            PPM_3MONTH: data["PPM_3MONTH"],
+            PPM_3DATE: data["PPM_3DATE"],
+            PPM_2MONTH: data["PPM_2MONTH"],
+            PPM_2DATE: data["PPM_2DATE"],
+            PPM_1MONTH: data["PPM_1MONTH"],
+            PPM_1DATE: data["PPM_1DATE"],
+
+            AVG3MONTH_PPM: data["AVG3MONTH_PPM"],
+
+            MRNAGEING_STATUS: data["MRNAGEING_STATUS"],
+            DOCK_QTY: data["DOCK_QTY"],
+            PAINTSHOP_QTY: data["PAINTSHOP_QTY"],
+            LINE_QTY: data["LINE_QTY"],
+            STORELOC_QTY: data["STORELOC_QTY"],
+            DIM_STATUS: data["DIM_STATUS"],
+            MT_STATUS: data["MT_STATUS"],
+            FITMENT_STATUS: data["FITMENT_STATUS"],
+            SQA_STATUS: data["SQA_STATUS"]
+
+         };
+        AddMRNQC(obj);
+     });
+    
+    function AddMRNQC(Data) {
+        $("#divLoader").show();
+         $.ajax({
+                url: '@Url.Action("Add", "MRNDisplaySheet")',
+                data: JSON.stringify({ data: Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+
+                 $("#divLoader").hide();
+                 if (data.validation != undefined && data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+
+                        BindGrid();
+                    }
+                },
+                error: function (errormessage) {
+                    $("#divLoader").hide();
+                    $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+
+                }
+         });
+
+    }
+
+
+    $("#PLANT_CODE").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#FAMILY_CODE").select2({
+        allowClear: true,
+        width: '100%',
+    });
+</script>

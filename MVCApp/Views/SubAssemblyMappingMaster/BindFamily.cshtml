@@ -1,0 +1,9 @@
+﻿@model MVCApp.Models.AddDailyPlanModel
+
+@{
+    <div>
+        @Html.DropDownListFor(Model => Model.Family, (IEnumerable<SelectListItem>)ViewBag.Family, new { @class = "form-control input-sm" })
+    </div>
+}
+
+

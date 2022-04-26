@@ -1,0 +1,6 @@
+﻿@model MVCApp.Models.AddController
+    @{ 
+        <div>
+            @Html.DropDownListFor(model =>model.Stage ,(IEnumerable<SelectListItem>)ViewBag.Stage, new { @class = "form-control input-sm"})
+        </div>
+    }

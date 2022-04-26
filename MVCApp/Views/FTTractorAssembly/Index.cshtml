@@ -1,0 +1,414 @@
+﻿@using System.Data;
+@model System.Data.DataSet
+@{ Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/LCD/CSS/StyleSheet.css" rel="stylesheet" />
+    <link rel="icon" href="~/Image/favicon-32x32.png" type="image/x-icon">
+
+    <title>FT TRACTOR ASSEMBLY</title>
+    <style>
+
+        html, body {
+            background-color: white;
+            height: 100%;
+            margin: 0;
+        }
+        .alert {
+            WIDTH: 100%;
+            TEXT-ALIGN: center;
+            BACKGROUND: #ffa2a2;
+            HEIGHT: 35PX;
+            border: 1px solid black;
+            border-radius: 4px;
+            margin: 3px 0 0 0;
+        }
+        h2 {
+            margin: 0 130px 0 130px;
+        }
+
+
+        div.table-title {
+            display: block;
+            margin: auto;
+            max-width: 600px;
+            padding: 5px;
+            width: 100%;
+        }
+
+        .table-title h3 {
+            color: #fafafa;
+            font-size: 30px;
+            font-weight: 400;
+            font-style: normal;
+            font-family: "Roboto", helvetica, arial, sans-serif;
+            text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+            text-transform: uppercase;
+        }
+
+
+        /** Table Styles */
+
+        .table-fill {
+            background: white;
+            border-radius: 3px;
+            border-collapse: collapse;
+            height: 150PX;
+            margin: 0;
+            color: #0a0a0a;
+            padding: 5px;
+            width: 50%;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            animation: float 5s infinite;
+        }
+
+        .th1 {
+            color: #ffffff;
+            background: #065499;
+            border: 2px solid #a3a085;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 5px;
+            text-align: left;
+            text-shadow: 0 1px 1px rgb(0 0 0 / 10%);
+            vertical-align: middle;
+            text-align: center;
+            width: 30%;
+        }
+        .th1:first-child {
+            border-top-left-radius: 3px;
+        }
+
+            .th1:last-child {
+                border-top-right-radius: 3px;
+                
+            }
+
+        .tr1:hover td {
+            background: #4E5066;
+            color: #FFFFFF;
+        }
+
+        .tr1:first-child {
+        }
+
+        .td1 {
+            background: #FFFFFF;
+            text-align: center;
+            font-weight: bold;
+            font-size: 20px;
+            color: black;
+            padding: 5PX;
+        }
+
+
+        .th1.text-left {
+            text-align: center;
+        }
+
+        .th1.text-center {
+            text-align: center;
+        }
+
+        .th1.text-right {
+            text-align: center;
+        }
+
+        .td1.text-left {
+            text-align: center;
+        }
+
+        .td1.text-center {
+            text-align: center;
+        }
+
+        .td1.text-right {
+            text-align: center;
+        }
+
+        table tbody tr td {
+            border: 1px solid black;
+        }
+
+        tr:nth-child(odd) {
+            background-color: rgb(157 228 255);
+        }
+
+        .tr1:nth-child(odd) {
+            background-color: rgb(157 228 255);
+        }
+        .tbody1{
+            height:200PX
+        }
+
+        .leftgrid {
+            float: left;
+            text-align: center;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .tdhide {
+            display: none;
+        }
+
+        .head-header {
+            font-size: 38px;
+            color: #ffffff;
+            float: right;
+            WIDTH: 67%;
+            FONT-FAMILY: fangsong;
+        }
+
+        .setrow {
+            float: left;
+            font-size: 55px;
+            font-weight: bold;
+            width: 50%;
+            background: #065499;
+            border: 2px solid #a3a085;
+            text-align: center;
+            color: white;
+            margin: 5px 0 5px 3px;
+            height: 280PX;
+        }
+        .setrow1 {
+            float: left;
+            font-size: 55px;
+            font-weight: bold;
+            width: 49%;
+            background: #065499;
+            border: 2px solid #a3a085;
+            text-align: center;
+            color: white;
+            margin: 5px 0 0 0;
+            height: 280PX;
+        }
+
+        
+
+        
+        .hr1 {
+            border-top: 3px solid #01f5c7;
+            width: 50%;
+            margin-top: -33px;
+            BACKGROUND-COLOR: brown;
+        }
+
+        .tr2 {
+            color: #ffffff;
+            background: #0c7096;
+            border: 2px solid black;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 5px;
+            text-align: left;
+            text-shadow: 0 1px 1px rgb(0 0 0 / 10%);
+            vertical-align: middle;
+        }
+        tr#special {
+            background-color: #04d0fd;
+        }
+
+        tr:nth-child(even) {
+            background-color: #C4E5FD;
+            /*color: white;*/
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="row">
+            <div class="col-md-12 " style="BACKGROUND: #065499; HEIGHT: 60PX;">
+                <div class="col-md-2">
+                    <img src="~/Image/logo.gif" Height="50" Width="80" style="margin: 5px;" />
+                </div>
+                <div class="col-md-10">
+                    <strong class="head-header" style="margin-top: -50px;">FT TRACTOR ASSEMBLY</strong>
+
+                </div>
+            </div>
+        </div>
+        <div style="width: 100%">
+            <input type="hidden" id="PlantCode" value="@ViewBag.PlantCode" />
+            <div style="width: 100%; color: #fff; background-color: #065499; border-color: #428bca; height: 66px; padding: 0; text-align: center; vertical-align: central;">
+
+                <table style="width: 100%">
+                    <tr id="special" style="font-size: 25px;" class="tr2">
+                        <td align="center" style="width: 25%; height: 52px;">
+                            <label ID="lblDate" Font-Bold="True" Font-Names="Book Antiqua" style="font-size:36px;"></label>
+                            <label ID="lblTime" Font-Bold="True" Font-Names="Book Antiqua" style="font-size:36px;"></label>
+                        </td>
+                        <td align="center" style="width: 23%; height: 52px;">
+                            <label ID="lblSftotDay" Font-Bold="True" Font-Names="Book Antiqua" style="font-size:36px;"></label>
+                        </td>
+                        <td align="center" style="width: 15%; height: 52px;">
+                            <label ID="lblShift" Font-Bold="True" Font-Names="Book Antiqua" style="font-size:36px;"></label>
+                        </td>
+                        <td align="center" style="width: 30%; height: 52px;">
+                            <label ID="lblProductionUnit" runat="server" Font-Bold="True" Font-Names="Book Antiqua" style="font-size:36px; "></label>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="alert" class="alert alert-danger" role="alert">
+                <strong ID="lblError" style="font-size: 27px;"></strong>
+            </div>
+            <div class="row ">
+                <div class="col-md-5 setrow">
+                    <table id="tblBuckleup" class="table-fill css-serial table-hover tbody1" style="width: 100%; height: 50px;">
+                        <thead class="th1">
+                            BUCKLE-UP
+                        </thead>
+                    </table>
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-5 setrow1">
+                    <table id="tblHookup" class="table-fill css-serial table-hover" style="width: 100%; height: 50px;">
+                        <thead class="th1">
+                            HOOK-UP
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="row ">
+                <div class="col-md-5 setrow">
+                    <table id="tblRollDown" class="table-fill css-serial table-hover" style="width: 100%; height: 50px;">
+                        <thead class="th1">
+                            ROLL-DOWN
+                        </thead>
+                    </table>
+                </div>
+                <div class="col-md-2"></div>
+                <div class="col-md-5 setrow1">
+                    <table id="tblPdiOk" class="table-fill css-serial table-hover" style="width: 100%; height: 50px;">
+                        <thead class="th1">
+                            PDI-OK
+                        </thead>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </header>
+</body>
+</html>
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        checkinfo();
+        $("#alert").hide();
+    });
+    var refresh = '@System.Configuration.ConfigurationManager.AppSettings["pagerefresh"].ToString()';
+    window.onload = function () {
+        setInterval(function () {
+     
+            checkinfo();
+        }, refresh*1000);
+    };
+
+    function checkinfo() {
+        var Data = $('#PlantCode').val();
+        if (Data != null && Data != undefined && Data != "") {
+            $.ajax({
+                url: '@Url.Action("getPlanVertical", "FTTractorAssembly")',
+                data: { PLANTCODE: Data },
+                type: "GET",
+                contentType: "application/json;charset=UTF-8",
+                success: function (result) {
+                    Setlblvalue(result);
+                },
+                error: function (errormessage) {
+                    //alert(errormessage.responseText);
+                }
+            });
+        }
+    }
+    function Setlblvalue(data) {
+        if (data.lblError != "")
+            $("#alert").show();
+        else
+            $("#alert").hide();
+
+        if (data.tdError == true) {
+            $("#tdError").show();
+            $("#lblErrordb").text(data.lblErrordb);
+        } else {
+            $("#tdError").hide();
+        }
+
+        $("#lblDate").text(data.lblDate);
+        $("#lblTime").text(data.lblTime);
+        $("#lblShift").text(data.lblShift);
+        $("#lblProductionUnit").text(data.lblProductionUnit);
+        $("#lblPlanQty").text(data.lblPlanQty);
+        $("#lblPending").text(data.lblPending);
+        $("#lblBKTotDay").text(data.lblBKTotDay);
+        $("#lblPlanQty").text(data.lblPlanQty);
+        $("#lblBK").text(data.lblBK);
+        $("#lblError").text(data.lblError);
+        $("#lblPending").text(data.lblPending);
+        $("#lblBKTotDay").text(data.lblBKTotDay);
+        $("#lblSftotDay").text(data.lblSftotDay);
+
+        $('#tblBuckleup tbody').html('');
+        $('#tblHookup tbody').html('');
+        $('#tblRollDown tbody').html('');
+        $('#tblPdiOk tbody').html('');
+
+        for (var i = 0; i < data.BuckleUp.length; i++) {
+
+            var srno = i + 1;
+            var tr = "<tbody id='" + srno + "'>";
+            var row = $(tr);
+            $("#tblBuckleup").append(row);
+            row.append("<tr'><td style='width:50%;'>PLANNED</td><td>" + data.BuckleUp[i].PLANNED + "</td></tr>");
+            row.append("<tr'><td style='width:50%;'>ACTUAL</td><td>" + data.BuckleUp[i].ACTUAL + "</td></tr>");
+            row.append("<tr'><td style='width:50%;'>EFFICIENCY</td><td>" + data.BuckleUp[i].EFFICIENCY + "%" + "</td></tr>");
+        }
+        for (var i = 0; i < data.Hookup.length; i++) {
+
+            var srno = i + 1;
+            var tr = "<tbody id='" + srno + "'>";
+            var row = $(tr);
+            $("#tblHookup").append(row);
+            row.append("<tr><td style='width:50%;'>PLANNED</td><td>" + data.Hookup[i].PLANNED + "</td></tr>");
+            row.append("<tr><td style='width:50%;'>ACTUAL</td><td>" + data.Hookup[i].ACTUAL + "</td></tr>");
+            row.append("<tr><td style='width:50%;'>EFFICIENCY</td><td>" + data.Hookup[i].EFFICIENCY + "%" + "</td></tr>");
+        }
+        for (var i = 0; i < data.RollDown.length; i++) {
+
+            var srno = i + 1;
+            var tr = "<tbody id='" + srno + "'>";
+            var row = $(tr);
+            $("#tblRollDown").append(row);
+            row.append("<tr><td style='width:50%;'>PLANNED</td><td>" + data.RollDown[i].PLANNED + "</td></tr>");
+            row.append("<tr><td style='width:50%;'>ACTUAL</td><td>" + data.RollDown[i].ACTUAL + "</td></tr>");
+            row.append("<tr><td style='width:50%;'>EFFICIENCY</td><td>" + data.RollDown[i].EFFICIENCY + "%" + "</td></tr>");
+        }
+        for (var i = 0; i < data.PdiOk.length; i++) {
+
+            var srno = i + 1;
+            var tr = "<tbody id='" + srno + "'>";
+            var row = $(tr);
+            $("#tblPdiOk").append(row);
+            row.append("<tr><td style='width:50%;'>PLANNED</td><td>" + data.PdiOk[i].PLANNED + "</td></tr>");
+            row.append("<tr><td style='width:50%;'>ACTUAL</td><td>" + data.PdiOk[i].ACTUAL + "</td></tr>");
+            row.append("<tr><td style='width:50%;'>EFFICIENCY</td><td>" + data.PdiOk[i].EFFICIENCY + "%" + "</td></tr>");
+        }
+      
+    }
+
+
+
+</script>
+
+

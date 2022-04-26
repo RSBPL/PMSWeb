@@ -1,0 +1,427 @@
+﻿@using Syncfusion.EJ2;
+@model MVCApp.Models.TracktorSubAssemblyModel
+<style>
+
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .lblStrng {
+        font-size: xx-large;
+        color: white;
+    }
+    .bg-light a{
+        color:white;
+        font-size:medium;
+        font-weight:700;
+    }
+    .nav > li > a:focus, .nav > li > a:hover {
+        background-color: #6fb3e0;
+    }
+    .nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
+        background-color: #285b74;
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Gate Entry</a>
+        </li>
+        <li>
+            <a href="#">MRN- LABLE- PRINTING</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    @*--------Form------------*@
+    <div class="container" style="width:100%!important">
+        <div class="form-horizontal form-group">
+
+
+            <fieldset class="the-fieldset bg-info">
+                <div class="row">
+                    <div id="ddlSH">
+                        <div class="col-md-2">
+                            <label for="NotValidateJob" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            <div class="form-check">
+                                @Html.DropDownListFor(model => model.PLANTCODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.PLANTCODE, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="NotValidateJob" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                            <div class="form-check">
+                                @Html.DropDownListFor(model => model.FAMILYCODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.FAMILYCODE, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="NotValidateJob" class="text-right control-label col-form-label"><strong>Plant Date</strong></label>
+                            @Html.EJS().DatePickerFor(Model => Model.PlantDate).Format("dd-MMM-yyyy").Value(ViewBag.value).Max(ViewBag.maxDate).Render()
+                            <strong>@Html.ValidationMessageFor(model => model.PlantDate, "", new { @class = "text-danger" })</strong>
+
+                        </div>
+                        <div class="col-md-2">
+                            <label for="NotValidateJob" class="text-right control-label col-form-label"><strong>Shift</strong></label>
+                            <div class="form-check">
+                                @Html.DropDownListFor(model => model.ShiftCODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.ShiftCODE, "", new { @class = "text-danger" })</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-1" style="margin: 25px 0 0 15px;">
+                            <button class="btn btn-success btn-sm" type="button" id="Showdata"><i class="ace-icon fa fa-print bigger-110"></i><strong>Show</strong></button>
+                        </div>
+                    </div>
+                    @*<div class="col-md-6" style="background-color: blue; height: 60px;">
+                    <label for="NotValidateJob" class="text-center control-label col-form-label"><strong class="lblStrng">MRN- LABLE- PRINTING</strong></label>
+
+                </div>*@
+                </div>
+                <div class="clearfix" style="padding: 0 0 25px 0;"></div>
+                <div class="row">
+
+                    @*<div id="RePrintDate">
+                    <div class="col-md-2">
+                        <label for="NotValidateJob" class="text-right control-label col-form-label"><strong>MRN Date</strong></label>
+                        @Html.EJS().DatePickerFor(Model => Model.FromDate).Format("dd-MMM-yyyy").Value(ViewBag.value).Max(ViewBag.maxDate).Render()
+                        <strong>@Html.ValidationMessageFor(model => model.FromDate, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-1" style="margin: 25px 0 0 15px;">
+                        <button class="btn btn-success btn-sm" type="button" id="Info"><i class="ace-icon fa fa-info bigger-110"></i><strong>Info</strong></button>
+                    </div>
+                    <div class="col-md-1" style="margin: 25px 0 0 15px;">
+                        <button class="btn btn-success btn-sm" type="button" id="btnOracleUpdate"><i class="ace-icon fa fa-info-circle bigger-110"></i><strong>Oracle update</strong></button>
+                    </div>
+                </div>*@
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="row">
+            <div class="form-horizontal form-group" style="background: #438eb9;">
+                <ul class="nav nav-pills" id="myTab">
+                    <li class="bg-light active"><a data-toggle="tab" href="#Menu1">Print</a></li>
+                    <li class="bg-light"><a data-toggle="tab" href="#Menu2">Reprint</a></li>
+                    <li class="bg-light"><a data-toggle="tab" href="#Menu3">Assign Seriral To</a></li>
+                </ul>
+
+                <fieldset class="the-fieldset bg-info">
+                    <div class="tab-content">
+                        <div id="Menu1" class="tab-pane fade in active">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="Item" class="text-right control-label col-form-label"><strong>ITEM CODE</strong></label>
+                                    @Html.DropDownListFor(model => model.ITEMCODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.ITEMCODE, "", new { @class = "text-danger" })</strong>
+
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="Item" class="text-right control-label col-form-label"><strong>JOB</strong></label>
+                                    @Html.DropDownListFor(model => model.Job, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.Job, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-1">
+                                    <label for="Item" class="text-right control-label col-form-label"><strong>Qty</strong></label>
+                                    @Html.TextBoxFor(Model => Model.QTY, "1", new { @class = "form-control input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.QTY, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="Item" class="text-right control-label col-form-label"><strong>Enter Serial No</strong></label>
+                                    @Html.TextBoxFor(Model => Model.SerialNumber, "1", new { @class = "form-control input-sm" })
+                                </div>
+                                <div class="col-md-3" style="margin:30px 0px 0 0px;">
+                                    <input type="checkbox" id="Print" name="Checkbox" value="Print">
+                                    <label for="Print">Print Description</label>
+                                </div>
+                                <div class="col-md-1"><button class="btn btn-success btn-sm" type="button" id="PrintData" style="margin: 25px -72px 0 -143px;"><i class="ace-icon fa fa-print bigger-110"></i><strong>Print</strong></button></div>
+
+                                <br /><div class="col-md-1" id="Reljob"><label id="RelJoblbl"></label></div>
+                                <div class="col-md-1" id="Printjob"><label id="PrintJoblbl"></label></div>
+                            </div>
+                        </div>
+                        <div id="Menu2" class="tab-pane fade ">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="Item" class="text-right control-label col-form-label"><strong>ITEM CODE</strong></label>
+                                    @Html.DropDownListFor(model => model.SerialCode, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.SerialCode, "", new { @class = "text-danger" })</strong>
+
+                                </div>
+                                <div class="col-md-2"></div>
+                                <div class="col-md-4"><button class="btn btn-success btn-sm" type="button" id="RePrintData" style="margin: 25px -72px 0 -143px;"><i class="ace-icon fa fa-print bigger-110"></i><strong>RePrint</strong></button></div>
+                            </div>
+                        </div>
+                        <div id="Menu3" class="tab-pane fade ">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="Item" class="text-right control-label col-form-label"><strong>ITEM CODE</strong></label>
+                                    @Html.DropDownListFor(model => model.ASSIGNCODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.ASSIGNCODE, "", new { @class = "text-danger" })</strong>
+
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="Item" class="text-right control-label col-form-label"><strong>JOB</strong></label>
+                                    @Html.DropDownListFor(model => model.ASSIGNJob, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.ASSIGNJob, "", new { @class = "text-danger" })</strong>
+
+                                </div>
+                                <div class="col-md-1">
+                                    <label for="Item" class="text-right control-label col-form-label"><strong>Qty</strong></label>
+                                    @Html.TextBoxFor(Model => Model.ASSIGNQTY, null, new { @class = "form-control input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.ASSIGNQTY, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="Item" class="text-right control-label col-form-label"><strong>SRN No</strong></label>
+                                    @Html.DropDownListFor(model => model.ASSIGNSRNNo, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.ASSIGNSRNNo, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3" style="margin:30px 0px 0 0px;">
+                                    <input type="checkbox" id="Print" name="Checkbox" value="Print">
+                                    <label for="Print">Print Description</label>
+                                </div>
+                                <div class="col-md-1"><button class="btn btn-success btn-sm" type="button" id="AssignPrintData" style="margin: 25px -72px 0 -143px;"><i class="ace-icon fa fa-print bigger-110"></i><strong>Print</strong></button></div>
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 25px;">
+                        <div class="col-md-12">
+                            <table id="demoGrid" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>ITEMCODE</th>
+                                    <th>DESCRIPTION</th>
+                                    <th>QTY</th>
+                                    <th>SEQ_NO</th>
+                                    <th>COMPLETED</th>
+                                    <th>PENDING</th>
+                                </tr>
+                            </thead>
+                                <tbody></tbody>
+                            </table>
+
+                            @*<div id="Grid"></div>*@
+
+                        </div>
+                        @*<div class="col-md-5">
+                        <div class="form-horizontal form-group">
+                            <fieldset class="the-fieldset bg-info">
+                                <legend>Print Barcode Before Quality:</legend>
+                                <div class="row" style="border-style:dotted;">
+                                    <div class="col-md-3">
+                                        <label for="NotValidateJob" class="text-right control-label col-form-label"><strong>Barcode Option</strong></label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="radio" id="Print" name="Radio" value="true">
+                                        <label for="Print">Print</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="radio" id="RePrint" name="Radio" value="RePrint">
+                                        <label for="RePrint">RePrint</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="radio" id="Assign" name="Radio" value="Assign">
+                                        <label for="Assign">Assign Serial No</label>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+                        </div>
+
+                    </div>*@
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<link href="~/Scripts/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/DataTable/jquery.dataTables.min.js"></script>
+<link href="~/Scripts/DataTable/Custom.css" rel="stylesheet" />
+<!-- #endregion -->
+<script>
+$("#RePrintDate").hide();
+
+    $(document).ready(function () {
+        $.noConflict();
+        DDLShift();
+        DDLPlant();
+    });
+
+    $("#Showdata").on('click', function () {
+        BindGrid();
+    });
+       function DDLShift() {
+        //$("#divLoader").show();
+        $.ajax({
+            url: '@Url.Action("Bindshift", "TracktorSubAssembly")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#ShiftCODE").append(optionhtml);
+                });
+
+
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+       //Function to bind Plant
+    function DDLPlant() {
+        //$("#divLoader").show();
+        $.ajax({
+            url: '@Url.Action("BindPlant", "TracktorSubAssembly")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#PLANTCODE").append(optionhtml);
+                });
+
+
+                DDLFamilyByPlant();
+                //BindGrid();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        //$("#divLoader").show();
+        var selectedValue = $("#PLANTCODE").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "TracktorSubAssembly")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#FAMILYCODE").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#FAMILYCODE").append(optionhtml);
+                });
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    var table = $('#demoGrid').DataTable();
+
+    function BindGrid() {
+        $('#demoGrid').DataTable().destroy();
+        var dtable = $("#demoGrid").DataTable({
+            "scrollX": true,
+            "autoWidth": false,
+            "lengthChange": true,
+            "pageLength": 20,
+            "ordering": false,
+            "processing": true, // for show progress bar
+            "serverSide": true, // for process server side
+            "filter": true, // this is for disable filter (search box)
+            "orderMulti": false, // for disable multiple column at once
+            language: {
+                search: "SEARCH BY MRN No",
+                searchPlaceholder: "Enter min 3 characters",
+                width: "250PX"
+            },
+            "ajax": {
+                "url": '@Url.Action("Grid","TracktorSubAssembly")',
+                "data": function (obj) {
+                    obj.PLANTCODE = $('#PLANTCODE').val();
+                    obj.FAMILYCODE = $('#FAMILYCODE').val();
+                    obj.PlantDate = $('#PlantDate').val();
+                    obj.ShiftCODE = $('#ShiftCODE').val();
+                },
+                "type": "POST",
+                "datatype": "json"
+            },
+
+
+            "columns": [
+                { "data": "ITEMCODE" },
+                { "data": "DESCRIPTION" },
+                { "data": "QTY" },
+                { "data": "SEQNO" },
+                { "data": "COMPLETED" },
+                { "data": "PENDING" }
+
+            ],
+            "columnDefs": [
+                { "width": "3%", "className": "text-center", "targets": 0 },
+                { "width": "6%", "className": "text-center", "targets": 1 },
+                { "width": "6%", "className": "text-center", "targets": 2 },
+                { "width": "12%", "className": "text-center", "targets": 3 },
+                { "width": "15%", "className": "text-center", "targets": 4 },
+                { "width": "15%", "className": "text-center", "targets": 5 }
+
+            ]
+
+
+        });
+
+        $(".dataTables_filter input")
+            .unbind() // Unbind previous default bindings
+            .bind("input", function (e) { // Bind our desired behavior
+                // If the length is 3 or more characters, or the user pressed ENTER, search
+                if (this.value.length >= 3 || e.keyCode == 13) {
+                    // Call the API search function
+                    dtable.search(this.value).draw();
+                }
+                // Ensure we clear the search if they backspace far enough
+                if (this.value == "") {
+                    dtable.search("").draw();
+                }
+                return;
+            });
+
+    }
+    $("#FAMILYCODE").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#PLANTCODE").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#ShiftCODE").select2({
+        allowClear: true,
+        width: '100%',
+    });
+</script>
+
+

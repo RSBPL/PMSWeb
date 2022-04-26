@@ -1,0 +1,793 @@
+﻿@model MVCApp.Models.HydrualicMaster
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+
+<style>
+    /*.modal-dialog {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 1%;
+    }
+
+    .modal-content {
+        height: auto;
+        min-height: 100%;
+        border-radius: 0;
+    }*/
+
+    /*.modal-header{
+        background-color: darkcyan;
+    }*/
+    /*the container must be positioned relative:*/
+    .ui-autocomplete {
+        position: relative;
+        display: inline-block;
+        height: 250px;
+    }
+    .ui-autocomplete {
+        max-height: 250px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    .m-50 {
+        left: 95px;
+    }
+
+    .ui-autocomplete {
+        height: 250px;
+    }
+    .well {
+        background-color: #bad5e7;
+    }
+    .row-static {
+        margin: 20px 155px 20px 155px;
+    }
+    .inj {
+        width: 42%;
+        margin-top: 7px;
+    }
+    .inj1 {
+        width: 64%;
+        margin: 6px -20px 0 25px;
+    }
+    .col-md-9 {
+        padding:10PX;
+    }
+    .col-md-3 {
+        padding: 10PX;
+    }
+    .m-20 {
+        margin: -20px 0 0 -55px;
+    }
+    .hr1 {
+        margin-top: 2px;
+        margin-bottom: 6px;
+        border-top: 1px solid #0a5180;
+        width: 370px;
+    }
+    .W-100 {
+        width: 883px;
+        left: -106px;
+    }
+    .f-left {
+        float: LEFT;
+    }
+    .frm {
+        padding: 20px;
+    }
+    .C-1 {
+        WIDTH: 70px;
+    }
+   .C-2 {
+        WIDTH: 62%;
+    }
+
+    .w-adj1 {
+        WIDTH: 155px;
+        margin: -3px 10px -12px 0;
+    }
+    .fp {
+        width: 0px;
+        margin: -17px 14px 0 -25px;
+    }
+    input.largerCheckbox {
+        width: 20px;
+        height: 20px;
+    }
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .the-legend{
+        box-shadow: 0px 1px 5px #7f8b8f;
+    }
+    .col1 {
+    margin-right:10px;
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Hydrualic Master</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    <div id="SearchItem" style="background-color: #6fb3e0;margin: 0px 5px 0px 5px;padding: 5px;">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <strong style="font-size: 19px;color:white;">HYDRUALIC MASTER</strong>
+                <hr class="hr1">
+            </div>
+        </div>
+    </div>
+</div>
+@*--------Form------------*@
+<div class="container" style="width: 100% !important; margin-left: 4px;">
+    <div class="form-horizontal form-group">
+        <fieldset class="the-fieldset">
+            <table class="table">
+                <tbody>
+                    <tr class="well">
+                        <td>
+                            <form class="form-horizontal frm">
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="fname" class="col-md-1 text-left control-label col-form-label C-1"><strong>PLANT</strong></label>
+                                        <div class="input-group m-50">
+                                            <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-industry"></i></span>
+                                            @Html.DropDownListFor(model => model.PLANT_CODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                            <strong>@Html.ValidationMessageFor(model => model.PLANT_CODE, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="fname" class="col-md-1 text-left control-label col-form-label C-1 "><strong>FAMILY</strong></label>
+                                        <div class="input-group m-50">
+                                            <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-users"></i></span>
+                                            @Html.DropDownListFor(model => model.FAMILY_CODE, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                                            <strong>@Html.ValidationMessageFor(model => model.FAMILY_CODE, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <div class="col-md-4 w-adj1">
+                                            <label class="control-label col-form-label "><strong>ITEM CODE</strong></label>
+                                        </div>
+                                        <div class="col-md-4 input-group C-2 ">
+                                            <span class="input-group-addon"><i class="fas fa-poll-h"></i></span>
+                                            @Html.TextBoxFor(Model => Model.ITEM_CODE, null, new { placeholder = "SEARCH ITEM CODE", @class = "form-control input-sm autocomplete" })
+                                            <strong>@Html.ValidationMessageFor(model => model.ITEM_CODE, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <div class="col-md-4  w-adj1">
+                                            <label class="control-label col-form-label"><strong>SHORT CODE</strong></label>
+                                        </div>
+                                        <div class="col-md-4 input-group C-2 ">
+                                            <span class="input-group-addon"><i class="fas fa-sort-amount-up"></i></span>
+                                            @Html.TextBoxFor(Model => Model.SHORT_CODE, null, new { placeholder = "SEARCH SHORT CODE", @class = "form-control input-sm autocomplete" })
+                                            <strong>@Html.ValidationMessageFor(model => model.SHORT_CODE, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <div class="col-md-4 w-adj1">
+                                            <label class="control-label col-form-label"><strong>SPOOL VALUE</strong></label>
+                                        </div>
+                                        <div class="col-md-4 input-group C-2 ">
+                                            <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-columns"></i></span>
+                                            @Html.TextBoxFor(Model => Model.SPOOL_VALUE, null, new { placeholder = "SEARCH SPOOL VALUE", @class = "form-control input-sm autocomplete" })
+                                            <strong>@Html.ValidationMessageFor(model => model.SPOOL_VALUE, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <div class="col-md-4  w-adj1">
+                                            <label class="control-label col-form-label"><strong>CYLINDER</strong></label>
+                                        </div>
+                                        <div class="col-md-4 input-group C-2 ">
+                                            <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-database"></i></span>
+                                            @Html.TextBoxFor(Model => Model.CYLINDER, null, new { placeholder = "SEARCH CYLINDER", @class = "form-control input-sm autocomplete" })
+                                            <strong>@Html.ValidationMessageFor(model => model.CYLINDER, "", new { @class = "text-danger" })</strong>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <div class="col-md-4 w-adj1">
+                                            <label class="control-label col-form-label "><strong>PART 1</strong></label>
+                                        </div>
+                                        <div class="col-md-4 input-group C-2 ">
+                                            <span class="input-group-addon" style="max-width: 100%;"><i class="far fa-hand-paper"></i></span>
+                                            @Html.TextBoxFor(Model => Model.PART1, null, new { placeholder = "SEARCH PART1", @class = "form-control input-sm autocomplete" })
+                                            <strong>@Html.ValidationMessageFor(model => model.PART1, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <div class="col-md-4 w-adj1">
+                                            <label class="control-label col-form-label"><strong>PART2</strong></label>
+                                        </div>
+                                        <div class="col-md-4 input-group C-2 ">
+                                            <span class="input-group-addon" style="max-width: 100%;"><i class="fas fa-hand-paper"></i></span>
+                                            @Html.TextBoxFor(Model => Model.PART2, null, new { placeholder = "SEARCH PART2", @class = "form-control input-sm autocomplete" })
+                                            <strong>@Html.ValidationMessageFor(model => model.PART2, "", new { @class = "text-danger" })</strong>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-1 col1">
+                                        <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                                        <button class="btn btn-success btn-sm" type="button" id="Update"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                                    </div>
+                                    <input type="hidden" class="form-control" id="AUTOID" name="AUTOID" placeholder="AUTOID" />
+                                    <div class="col-md-8"></div>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
+    </div>
+</div>
+<div id="Grid"></div>
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<script src="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.js")"></script>
+<script>
+$(document).ready(function () {
+        $.noConflict();
+        DDLPlant();
+        AutoCompleteForItemCode();
+        AutoCompleteForShortCode();
+        AutoCompleteForSpoolValue();
+        AutoCompleteForCylinder();
+        AutoCompleteForPart1();
+        AutoCompleteForPart2();
+        //AutoCompleteForCAMSHAFT();
+        //AutoCompleteForECU();
+        $('#Update').hide();
+
+});
+
+
+    function AutoCompleteForItemCode() {
+        $("#SHORT_CODE").autocomplete({
+            source: function (request, response) {
+            var Data = {
+                PLANT_CODE: $('#PLANT_CODE').val(),
+                FAMILY_CODE: $('#FAMILY_CODE').val(),
+                SHORT_CODE: $('#SHORT_CODE').val()
+            };
+                $.ajax({
+                    url: "@Url.Action("BindShortCode", "HydrualicMaster")",
+                    type: "POST",
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify({ data: Data }),
+                    success: function (data) {
+                        console.log(data.Text);
+                        response($.map(data, function (item) {
+
+                            return { label: item.Text, value: item.Text };
+                        }))
+                    },
+                    error: function (err) {
+                        alert(err);
+                    }
+                });
+            },
+            minLength: 4,
+            response: function (event, ui) {
+                if (!ui.content.length) {
+                    var noResult = { value: "", label: "No results found" };
+                    ui.content.push(noResult);
+
+                } else {
+                    //$("#message").empty();
+                }
+            }
+        });
+    }
+
+    function AutoCompleteForShortCode() {
+        $("#ITEM_CODE").autocomplete({
+            source: function (request, response) {
+            var Data = {
+                PLANT_CODE: $('#PLANT_CODE').val(),
+                FAMILY_CODE: $('#FAMILY_CODE').val(),
+                ITEM_CODE: $('#ITEM_CODE').val()
+            };
+                $.ajax({
+                    url: "@Url.Action("BindItemCode", "HydrualicMaster")",
+                    type: "POST",
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify({ data: Data }),
+                    success: function (data) {
+                        console.log(data.Text);
+                        response($.map(data, function (item) {
+
+                            return { label: item.Text, value: item.Text };
+                        }))
+                    },
+                    error: function (err) {
+                        alert(err);
+                    }
+                });
+            },
+            minLength: 4,
+            response: function (event, ui) {
+                if (!ui.content.length) {
+                    var noResult = { value: "", label: "No results found" };
+                    ui.content.push(noResult);
+
+                } else {
+                    //$("#message").empty();
+                }
+            }
+        });
+    }
+
+    function AutoCompleteForSpoolValue() {
+        $("#SPOOL_VALUE").autocomplete({
+            source: function (request, response) {
+            var Data = {
+                PLANT_CODE: $('#PLANT_CODE').val(),
+                FAMILY_CODE: $('#FAMILY_CODE').val(),
+                SPOOL_VALUE: $('#SPOOL_VALUE').val()
+            };
+                $.ajax({
+                    url: "@Url.Action("BindSpoolValue", "HydrualicMaster")",
+                    type: "POST",
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify({ data: Data }),
+                    success: function (data) {
+                        console.log(data.Text);
+                        response($.map(data, function (item) {
+
+                            return { label: item.Text, value: item.Text };
+                        }))
+                    },
+                    error: function (err) {
+                        alert(err);
+                    }
+                });
+            },
+            minLength: 4,
+            response: function (event, ui) {
+                if (!ui.content.length) {
+                    var noResult = { value: "", label: "No results found" };
+                    ui.content.push(noResult);
+
+                } else {
+                    //$("#message").empty();
+                }
+            }
+        });
+    }
+
+    function AutoCompleteForCylinder() {
+        $("#CYLINDER").autocomplete({
+            source: function (request, response) {
+            var Data = {
+                PLANT_CODE: $('#PLANT_CODE').val(),
+                FAMILY_CODE: $('#FAMILY_CODE').val(),
+                CYLINDER: $('#CYLINDER').val()
+            };
+                $.ajax({
+                    url: "@Url.Action("BindCylinder", "HydrualicMaster")",
+                    type: "POST",
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify({ data: Data }),
+                    success: function (data) {
+                        console.log(data.Text);
+                        response($.map(data, function (item) {
+
+                            return { label: item.Text, value: item.Text };
+                        }))
+                    },
+                    error: function (err) {
+                        alert(err);
+                    }
+                });
+            },
+            minLength: 4,
+            response: function (event, ui) {
+                if (!ui.content.length) {
+                    var noResult = { value: "", label: "No results found" };
+                    ui.content.push(noResult);
+
+                } else {
+                    //$("#message").empty();
+                }
+            }
+        });
+    }
+
+    function AutoCompleteForPart1() {
+        $("#PART1").autocomplete({
+            source: function (request, response) {
+            var Data = {
+                PLANT_CODE: $('#PLANT_CODE').val(),
+                FAMILY_CODE: $('#FAMILY_CODE').val(),
+                PART1: $('#PART1').val()
+            };
+                $.ajax({
+                    url: "@Url.Action("BindPart1", "HydrualicMaster")",
+                    type: "POST",
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify({ data: Data }),
+                    success: function (data) {
+                        console.log(data.Text);
+                        response($.map(data, function (item) {
+
+                            return { label: item.Text, value: item.Text };
+                        }))
+                    },
+                    error: function (err) {
+                        alert(err);
+                    }
+                });
+            },
+            minLength: 4,
+            response: function (event, ui) {
+                if (!ui.content.length) {
+                    var noResult = { value: "", label: "No results found" };
+                    ui.content.push(noResult);
+
+                } else {
+                    //$("#message").empty();
+                }
+            }
+        });
+    }
+
+    function AutoCompleteForPart2() {
+        $("#PART2").autocomplete({
+            source: function (request, response) {
+            var Data = {
+                PLANT_CODE: $('#PLANT_CODE').val(),
+                FAMILY_CODE: $('#FAMILY_CODE').val(),
+                PART2: $('#PART2').val()
+            };
+                $.ajax({
+                    url: "@Url.Action("BindPart2", "HydrualicMaster")",
+                    type: "POST",
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify({ data: Data }),
+                    success: function (data) {
+                        console.log(data.Text);
+                        response($.map(data, function (item) {
+
+                            return { label: item.Text, value: item.Text };
+                        }))
+                    },
+                    error: function (err) {
+                        alert(err);
+                    }
+                });
+            },
+            minLength: 4,
+            response: function (event, ui) {
+                if (!ui.content.length) {
+                    var noResult = { value: "", label: "No results found" };
+                    ui.content.push(noResult);
+
+                } else {
+                    //$("#message").empty();
+                }
+            }
+        });
+    }
+
+
+
+    $("#PLANT_CODE").on("change", function () {
+        DDLFamilyByPlant();
+    });
+    $("#FAMILY_CODE").on("change", function () {
+       BindGrid();
+    });
+
+     //Function to bind Plant
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "HydrualicMaster")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+            $.each(result, function (i) {
+            var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+            $("#PLANT_CODE").append(optionhtml);
+            });
+
+
+            DDLFamilyByPlant();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+
+    //Function to bind Family by Plant
+        function DDLFamilyByPlant() {
+            var selectedValue = $("#PLANT_CODE").val();
+            $.ajax({
+                url: '@Url.Action("BindFamily", "HydrualicMaster")',
+                type: "POST",
+                contentType: "application/json;charset=UTF-8",
+                data: JSON.stringify({ Plant: selectedValue }),
+                success: function (result) {
+                    $("#FAMILY_CODE").html(null);
+                    $.each(result, function (i) {
+                        var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + "</option>";
+
+                        $("#FAMILY_CODE").append(optionhtml);
+                    });
+                    BindGrid();
+                },
+                error: function (errormessage) {
+                    //alert(errormessage.responseText);
+                },
+            });
+        }
+
+        function closeAlert(alert) {
+            $(alert).hide();
+        }
+
+        function BindGrid() {
+            $("#divLoader").show();
+            var Data = {
+                PLANT_CODE: $("#PLANT_CODE").val(),
+                FAMILY_CODE: $("#FAMILY_CODE").val()
+            };
+            $.ajax({
+                url: '@Url.Action("HydrualicMasterGrid", "HydrualicMaster")',
+                data: JSON.stringify(Data),
+                type: "POST",
+                contentType: "application/json;charset=UTF-8",
+                success: function (result) {
+                    $("#Grid").html(null);
+                    $("#Grid").html(result);
+                    $("#divLoader").hide();
+                },
+                error: function (errormessage) {
+                    //alert(errormessage.responseText);
+                },
+            });
+        }
+
+
+    $("#Add").on("click", function () {
+        $("#divLoader").show();
+
+
+        var data = {
+            PLANT_CODE: $('#PLANT_CODE').val(),
+            FAMILY_CODE: $('#FAMILY_CODE').val(),
+
+            ITEM_CODE: $('#ITEM_CODE').val(),
+
+            SHORT_CODE: $("#SHORT_CODE").val(),
+
+            SPOOL_VALUE: $("#SPOOL_VALUE").val(),
+
+            CYLINDER: $("#CYLINDER").val(),
+
+            PART1: $("#PART1").val(),
+
+            PART2: $("#PART2").val()
+         };
+        $.ajax({
+            url: '@Url.Action("SaveHydrualicMaster", "HydrualicMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+
+                $("#divLoader").hide();
+
+                //alert(data.validation);
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    $('#ITEM_CODE').val("");
+                    $('#SHORT_CODE').val(""),
+                    $('#SPOOL_VALUE').val(""),
+                    $('#CYLINDER').val(""),
+                    $('#PART1').val(""),
+                    $('#PART2').val("")
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    BindGrid();
+
+                }
+
+            },
+            error: function (errormessage) {
+
+            }
+            
+        });
+    });
+
+    //Update Data
+      $("#Update").on("click", function () {
+          $("#divLoader").show();
+
+
+          var data = {
+              AUTOID: AUTOID,
+              PLANT_CODE: $('#PLANT_CODE').val(),
+              FAMILY_CODE: $('#FAMILY_CODE').val(),
+
+              ITEM_CODE: $('#ITEM_CODE').val(),
+
+              SHORT_CODE: $("#SHORT_CODE").val(),
+
+              SPOOL_VALUE: $("#SPOOL_VALUE").val(),
+
+              CYLINDER: $("#CYLINDER").val(),
+
+              PART1: $("#PART1").val(),
+
+              PART2: $("#PART2").val()
+          };
+
+        $.ajax({
+            url: '@Url.Action("UpdateHydrualicMaster", "HydrualicMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                //location.reload(true);
+                $("#divLoader").hide();
+
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+
+                    $('#ITEM_CODE').prop('disabled', false);
+                    $('#SHORT_CODE').prop('disabled', false);
+                    $('#SPOOL_VALUE').prop('disabled', false);
+                    $('#CYLINDER').prop('disabled', false);
+                    $('#PART1').prop('disabled', false);
+                    $('#PART2').prop('disabled', false);
+
+                    $('#Add').show();
+                    $('#Update').hide();
+                    $('#PLANT_CODE').prop('disabled', false);
+                    $('#FAMILY_CODE').prop('disabled', false);
+                    BindGrid();
+
+                }
+            },
+            error: function (errormessage)
+            {
+            }
+        });
+    });
+
+    function Delete() {
+        var data = {
+            AUTOID: AUTOID
+            };
+        $.ajax({
+            url: '@Url.Action("DeleteHydrualicMaster", "HydrualicMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    //$('#PLANT_CODE').prop('disabled', false);
+                    //$('#FAMILY_CODE').prop('disabled', false);
+                    //$('#Engine').val("");
+                    //$('#PackingStandard').val("");
+                    //$('#Add').show();
+                    //$('#Update').hide();
+                    BindGrid();
+
+                }
+
+            },
+            error: function (errormessage)
+            {
+            }
+        });
+
+    }
+
+    $("#PLANT_CODE,#FAMILY_CODE").select2({
+        allowClear: true,
+        width: '255px',
+    });
+</script>

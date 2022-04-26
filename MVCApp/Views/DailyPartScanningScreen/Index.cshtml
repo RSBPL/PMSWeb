@@ -1,0 +1,835 @@
+﻿@using Syncfusion.EJ2;
+@using System.Data;
+@model System.Data.DataSet
+@{ Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/LCD/CSS/StyleSheet.css" rel="stylesheet" />
+    <link rel="icon" href="~/Image/favicon-32x32.png" type="image/x-icon">
+    <title>DAILY PART SCANNING EFFICIENCY</title>
+    <style>
+
+        html, body {
+            background-color: white;
+            height: 100%;
+            margin: 0;
+        }
+
+        h2 {
+            margin: 0 130px 0 130px;
+        }
+
+
+        div.table-title {
+            display: block;
+            margin: auto;
+            max-width: 600px;
+            padding: 5px;
+            width: 100%;
+        }
+
+        .table-title h3 {
+            color: #fafafa;
+            font-size: 30px;
+            font-weight: 400;
+            font-style: normal;
+            font-family: "Roboto", helvetica, arial, sans-serif;
+            text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+            text-transform: uppercase;
+        }
+
+
+        /** Table Styles */
+
+        .table-fill {
+            background: white;
+            border-radius: 3px;
+            border-collapse: collapse;
+            height: 150PX;
+            margin: 0;
+            /*max-width: 600px;*/
+            padding: 5px;
+            width: 50%;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            animation: float 5s infinite;
+        }
+
+        .th1 {
+            color: #ffffff;
+            background: #065499;
+            border: 2px solid #a3a085;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 5px;
+            text-align: left;
+            text-shadow: 0 1px 1px rgb(0 0 0 / 10%);
+            vertical-align: middle;
+        }
+
+
+            .th1:first-child {
+                border-top-left-radius: 3px;
+            }
+
+            .th1:last-child {
+                border-top-right-radius: 3px;
+            }
+
+        .tr1:hover td {
+            background: #4E5066;
+            color: #FFFFFF;
+        }
+
+        .tr1:first-child {
+        }
+
+        /*.tr1:last-child {
+                border-bottom: none;
+            }*/
+
+        /*.tr1:nth-child(odd) td {
+                background: #EBEBEB;
+            }
+
+            .tr1:nth-child(odd):hover td {
+                background: #4E5066;
+            }*/
+
+        /* .tr1:last-child td:first-child {
+                border-bottom-left-radius: 3px;
+            }
+
+            .tr1:last-child td:last-child {
+                border-bottom-right-radius: 3px;
+            }*/
+
+        .td1 {
+            background: #FFFFFF;
+            text-align: center;
+            font-weight: bold;
+            font-size: 20px;
+            color: black;
+        }
+
+
+        .th1.text-left {
+            text-align: center;
+        }
+
+        .th1.text-center {
+            text-align: center;
+        }
+
+        .th1.text-right {
+            text-align: center;
+        }
+
+        .td1.text-left {
+            text-align: center;
+        }
+
+        .td1.text-center {
+            text-align: center;
+        }
+
+        .td1.text-right {
+            text-align: center;
+        }
+
+        table tbody tr td {
+            border: 1px solid black;
+        }
+
+        tr:nth-child(odd) {
+            background-color: rgb(157 228 255);
+        }
+
+        .tr1:nth-child(odd) {
+            background-color: rgb(157 228 255);
+        }
+
+
+        /*/ Automatic Serial Number Row /
+        .css-serial {
+            counter-reset: serial-number;
+            / Set the serial number counter to 0 /
+        }
+
+        .css-serial td:first-child:before {
+            counter-increment: serial-number;
+            / Increment the serial number counter / content: counter(serial-number);
+            / Display the counter /
+        }*/
+        .leftgrid {
+            float: left;
+            text-align: center;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .tdhide {
+            display: none;
+        }
+
+        .head-header {
+            font-size: 30px;
+            color: #ffffff;
+            margin-top: -35px;
+            float: right;
+            WIDTH: 70%;
+            FONT-FAMILY: fangsong;
+        }
+
+
+        .hr1 {
+            border-top: 3px solid #01f5c7;
+            width: 50%;
+            margin-top: -33px;
+            BACKGROUND-COLOR: brown;
+        }
+
+        .tr2 {
+            color: #ffffff;
+            background: #0c7096;
+            border: 2px solid black;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 5px;
+            text-align: left;
+            text-shadow: 0 1px 1px rgb(0 0 0 / 10%);
+            vertical-align: middle;
+        }
+
+        .highcharts-figure,
+        .highcharts-data-table table {
+            min-width: 320px;
+            max-width: 800px;
+            margin: 1em auto;
+        }
+
+        .highcharts-data-table table {
+            font-family: Verdana, sans-serif;
+            border-collapse: collapse;
+            border: 1px solid #ebebeb;
+            margin: 10px auto;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .highcharts-data-table caption {
+            padding: 1em 0;
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        .highcharts-data-table th {
+            font-weight: 600;
+            padding: 0.5em;
+        }
+
+        .highcharts-data-table td,
+        .highcharts-data-table th,
+        .highcharts-data-table caption {
+            padding: 0.5em;
+        }
+
+        .highcharts-data-table thead tr,
+        .highcharts-data-table tr:nth-child(even) {
+            background: #f8f8f8;
+        }
+
+        .highcharts-data-table tr:hover {
+            background: #f1f7ff;
+        }
+
+        input[type="number"] {
+            min-width: 50px;
+        }
+
+        .alert {
+            WIDTH: 100%;
+            TEXT-ALIGN: center;
+            BACKGROUND: #ffa2a2;
+            HEIGHT: 35PX;
+            border: 1px solid black;
+            border-radius: 4px;
+            margin: 3px 0 0 0;
+        }
+
+        .lset {
+            text-align: initial;
+            padding: 0 0 0 23px;
+            background: blanchedalmond;
+        }
+
+        .btn-success, .btn-success.focus, .btn-success:focus {
+            background-color: #87B87F !important;
+            border-color: #87B87F;
+        }
+
+        .tltlbl {
+            background-color: #9de4ff;
+            float: inline-start;
+            color: black;
+            BORDER: 2PX SOLID #080808;
+            BORDER-RADIUS: 0PX;
+            WIDTH: 22PX;
+            height: 31px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+    <header>
+
+        <div class="row">
+            <div class="col-md-12 " style="BACKGROUND: #065499; HEIGHT: 60PX;">
+                <div class="col-md-2">
+                    <img src="~/Image/logo.gif" Height="50" Width="80" style="margin: 5px;" />
+                </div>
+                <div class="col-md-10">
+                    <strong class="head-header" style="margin-top: -50px;">DAILY PART SCANNING EFFICIENCY DISPLAY <span id="FTPT"></span></strong>
+
+                </div>
+            </div>
+        </div>
+        @*<div style="color: #fff; background-color: #065499; border-color: #428bca;  padding: 0; text-align: center; vertical-align: central;">
+                <table>
+                    <tbody>
+                        <tr id="special" style="font-size: 30px; font-weight: 600;">
+                            <td align="center">
+                                <img src="/Image/logo.gif" height="50" width="80" style="margin: 5px;">
+                            </td>
+                            <td align="center" style="width: 33%">
+                                <label id="lblDate" font-bold="True" font-names="Book Antiqua" style="font-size: 24px;"></label>
+                            </td>
+
+                            <td align="center" style="width: 33%">
+                                <label font-bold="True" font-names="Book Antiqua" style="font-size: 24px;">DAILY PART SCANNING EFFICIENCY</label>
+                            </td>
+
+                            <td align="center" style="width: 33%">
+                                <label id="lblTime" font-bold="True" font-names="Book Antiqua" style="font-size: 24px;"></label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>*@
+
+
+
+        <div style="width: 100%">
+            <input type="hidden" id="PlantCode" value="@ViewBag.PlantCode" />
+            <div style="width: 100%; color: #fff; background-color: #065499; border-color: #428bca; height: 40px; padding: 0; text-align: center; vertical-align: central;">
+                <table style="width: 100%">
+                    <tr style="font-size: 25px;" class="tr2">
+                        <td align="center" style="width: 33%">
+                            <label ID="lblTtlProd" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                        </td>
+                        <td align="center" style="width: 33%">
+                            <label ID="lblDate" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                        </td>
+                        <td align="center" style="width: 33%">
+                            <label ID="lblTime" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+            <div id="alert" class="alert alert-danger" role="alert">
+                <strong ID="lblError" style="font-size: 27px;"></strong>
+            </div>
+            <div class="row ">
+                <div class="col-md-6" style="float: left; text-align: center; font-size: 20px; font-weight: bold; width: 39%;">
+                    <table class="table-fill css-serial table-hover" style="width: 100%; min-height: 780px;" id="tbldetail">
+                        <thead>
+                            <tr style="height: 50px;">
+                                <th class="text-left th1">SRLNO</th>
+                                <th class="text-left th1">PART NAME</th>
+                                @*<th class="text-left th1">TRACTOR PROD/DAY</th>*@
+                                <th class="text-left th1">PART SCANNED/DAY</th>
+                                <th class="text-left th1">% EFFICIENCY</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="col-md-6" style="float: left; text-align: center; font-size: 20px; font-weight: bold; width: 61%;">
+                    <div class="row">
+                        <div class="lset col-md-2">
+                            <label for="PROD_DATE" class="control-label col-form-label "><strong>SELECT DATE :</strong></label>
+
+                            @Html.EJS().DatePicker("ProdDate").Format("dd-MMM-yyyy").Value(ViewBag.DefaultProdDate).Width(200).Render()
+
+                            <button type="button" id="btnDate" class="btn btn-success" style="background-color: beige;"><i class="fa fa-search" aria-hidden="true"></i><strong> Search</strong></button>
+
+                            <button type="button" id="btnExport" class="btn btn-danger" style="background-color: aquamarine;"><i class="fa-solid fa-download" aria-hidden="true"></i><strong> Export</strong></button>
+
+                            @*<label id="lblTotalProduction" class="tltlbl"></label>*@
+                        </div>
+                        <div style="box-shadow: 0px 9px 8px 0px #88b4bb; margin-bottom: 10px;">
+
+
+
+
+                            <span class="chartType" data-chart-type="bar" data-id="DivChart" data-caller="chart_Available_Stock_caller"><i class="fa fa-bar-chart fa-rotate-90" aria-hidden="true" style="width: 15px; "></i></span>&nbsp;&nbsp;
+                            <span class="chartType" data-chart-type="Column" data-id="DivChart" data-caller="chart_Available_Stock_caller"><i class="fa fa-bar-chart" aria-hidden="true" style="width: 15px; "></i></span>&nbsp;&nbsp;
+                            <span class="chartType selectedChartType" data-chart-type="Pie" data-id="DivChart" data-caller="chart_Available_Stock_caller"><i class="fa fa-pie-chart" aria-hidden="true" style="width:15px;"></i></span>&nbsp;&nbsp;
+                            <span class="chartType" data-chart-type="Area" data-id="DivChart" data-caller="chart_Available_Stock_caller"><i class="fa fa-area-chart" aria-hidden="true" style="width:15px;"></i></span>&nbsp;&nbsp;
+                            <span class="chartType" data-chart-type="Line" data-id="DivChart" data-caller="chart_Available_Stock_caller"><i class="fa fa-line-chart" aria-hidden="true" style="width:15px;"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;
+
+                            <div class="box-content">
+                                <div id="DivChart" style="height: 720px; max-width: 889px; margin: 0px 0px 0px 23px; overflow: hidden;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+</body>
+</html>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<script src="@Url.Content("~/assets/HighChart/highcharts.js")"></script>
+<script src="@Url.Content("~/assets/HighChart/offline-exporting.js")"></script>
+<script src="@Url.Content("~/assets/HighChart/exporting.js")"></script>
+<script src="@Url.Content("~/assets/DashBoardJS/DashBoardJS_Development/DashBoardPopupChartView.js")"></script>
+<!-- dev URL -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+<script type="text/javascript">
+    var chart_element = "DivChart", lblTotalProduction;
+    var chartType = "column";
+    $(document).ready(function () {
+        checkinfo();
+        chart_caller(chart_element);
+        var PLNT = $('#PlantCode').val()
+        var p = "";
+        if (PLNT == "4") {
+
+            p = " FT ";
+        }
+        if (PLNT == "5") {
+            p = " PT ";
+        }
+        //CLEARING THE PREFILLED DATA
+        $("#FTPT").empty();
+        //WRITING THE DATA ON MODEL
+        $("#FTPT").append(p);
+    });
+
+
+
+    var refresh = '@System.Configuration.ConfigurationManager.AppSettings["pagerefresh"].ToString()';
+
+    window.onload = function () {
+        setInterval(function () {
+            checkinfo();
+            chart_caller(chart_element);
+            },
+
+            refresh * 1000
+        );
+    };
+
+
+
+    $('#ExportTable').on('click', function (e) {
+        e.preventDefault();
+        ResultsToTable();
+    });
+
+    function ResultsToTable() {
+        $("#tbldetail").table2excel({
+            exclude: ".noExl",
+            name: "Results"
+        });
+    }
+
+    $("#btnDate").on("click", function () {
+        checkinfo();
+        chart_caller(chart_element);
+    });
+    @*$("#ExportTable").on("click", function () {
+        $("#divLoader").show();
+        var Data = $('#PlantCode').val();
+        var PrpdDate = $('#ProdDate').val();
+        if (Data != null && Data != undefined && Data != "") {
+            $.ajax({
+            url: '@Url.Action("Export", "DailyPartScanningScreen")',
+            data: { PLANTCODE: Data, SelectedDate: PrpdDate },
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+                success: function (result) {
+                    Setlblvalue(result);
+
+                },
+
+
+                error: function (errormessage) {
+                //alert(errormessage.responseText);
+                }
+
+            });
+        }
+        $("#divLoader").hide();
+    });*@
+    function checkinfo() {
+        $("#divLoader").show();
+        var Data = $('#PlantCode').val();
+        var PrpdDate = $('#ProdDate').val();
+        if (Data != null && Data != undefined && Data != "") {
+            $.ajax({
+            url: '@Url.Action("getPlanVertical", "DailyPartScanningScreen")',
+                data: { PLANTCODE: Data, SelectedDate: PrpdDate },
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+                success: function (result) {
+                    Setlblvalue(result);
+                },
+                error: function (errormessage) {
+                //alert(errormessage.responseText);
+                }
+
+            });
+        }
+        $("#divLoader").hide();
+    }
+    function Setlblvalue(data) {
+            if (data.lblError != "") {
+                $("#alert").show();
+            }
+            else {
+                $("#alert").hide();
+            }
+
+            if (data.tdError == true) {
+                $("#tdError").show();
+                $("#lblErrordb").text(data.lblErrordb);
+            }
+            else {
+                $("#tdError").hide();
+            }
+            $("#lblError").text(data.lblError);
+            $("#lblDate").text(data.lblDate);
+            $("#lblTime").text(data.lblTime);
+
+
+
+            $('#tbldetail tbody').html('');
+            for (var i = 0; i < data.gridleft.length; i++) {
+                var rawCode = i;
+                var tr;
+                if (data.gridleft[i].PENDING > 0) {
+                  tr=  "<tr id='" + data.gridleft[i] + "'>";
+                }
+                else {
+                    tr = "<tr ' id='" + data.gridleft[i] + "'>";
+                }
+                var row = $(tr);
+                $("#tbldetail").append(row);
+
+                row.append("<td>" + data.gridleft[i].SRNO + "</td>");
+                row.append("<td><span id='HEAD" + rawCode + "'>" + data.gridleft[i].HEAD + "</span></td>");
+               /* row.append("<td><span id='TOTAL_PROD" + rawCode + "'>" + data.gridleft[i].TOTAL_PROD + "</span></td>");*/
+                row.append("<td><span id='Quantity" + rawCode + "'>" + data.gridleft[i].Quantity + "</span></td>");
+                row.append("<td><span id='EFFICIENCY" + rawCode + "'>" + data.gridleft[i].EFFICIENCY + "</span></td>");
+
+                //alert(data.gridleft[i].TOTAL_PROD);
+                $("#lblTtlProd").text("TOTAL PRODUCTION : " + data.gridleft[i].TOTAL_PROD);
+        }
+
+
+            //debugger;
+            //GetTaskComplete(result);
+        }
+
+    function chart_caller(chart_element) {
+        var Data = $('#PlantCode').val();
+        var PrpdDate = $('#ProdDate').val();
+        if (Data != null && Data != undefined && Data != "") {
+            $.ajax({
+
+                url: '@Url.Action("DisplayChart", "DailyPartScanningScreen")',
+                data: { PLANTCODE: Data, SelectedDate: PrpdDate },
+                type: "GET",
+                contentType: "application/json;charset=UTF-8",
+                success: function (result) {
+
+                    if (result.validation != undefined && result.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    }
+
+                    else {
+                        //CREATED BY SARTHAK FOR TOTAL PRODUCTION LABLEL
+                        $.each(result, function (key, isresult) {
+
+                            lblTotalProduction = 'Total Prod/Day = ' + isresult.TOTAL_PROD;
+                            /*$('#lblTotalProduction').text('Total Prod/Day = ' + isresult.TOTAL_PROD);*/
+                            return false;
+                        });
+                        //END BY SARTHAK
+                        var data = new Array();
+                        var xAxisData = new Array();
+                        var i = 0;
+                        $.each(result, function (key, isresult) {
+                            var series = new Array(isresult.HEAD, isresult.EFFICIENCY);
+                            var xdata = new Array(isresult.HEAD);
+                            data.push(series);
+                            xAxisData.push(xdata);
+                            i++;
+                        });
+
+                        DrawAvilableStock(data, chart_element, chartType, xAxisData, '', 'PARTS NAME',
+                            'EFFICIENCY GRAPH', 'DAILY PART SCANNING EFFICIENCY GRAPH ON ' + PrpdDate + ' & ' + lblTotalProduction);
+                    }
+
+
+                },
+                error: function (result) {
+                    alert(Result);
+                }
+            });
+        }
+    }
+    function DrawAvilableStock(chartdata, chart_element, chartType, xAxisData, ReportText,
+        xTitle, yTitle, PartyText) {
+        //debugger;
+        var chart = new Highcharts.Chart({ // Not Return Series please check it again.
+            chart: {
+                //backgroundColor: '#a3ff9b',
+                renderTo: chart_element,
+                type: chartType.toLowerCase(),
+                reflow: true,
+            },
+            title:
+            {
+                text: '<b>' + ReportText + '</b><br/>' + PartyText,
+                color: 'black',
+                fontSize: '13px'
+            },
+            xAxis: {
+                categories: xAxisData,
+
+                title: {
+                    text: xTitle,
+                    color: 'black',
+                    fontSize: '15px'
+                },
+
+                labels: {
+                    style: {
+                        color: 'black',
+                        fontSize: '15px'
+                    }
+                }
+            },
+            yAxis: {
+                title: {
+                    text: yTitle,
+                    color: 'black',
+                    fontSize: '13px'
+                },
+                min: 0,
+                max: 110,
+                labels: {
+                    style: {
+                        color: 'black',
+                        fontSize: '15px'
+                    },
+                    formatter: function () {
+                        return ' ' + this.value;
+                    }
+                }
+            },
+            legend: {
+                enabled: true,
+                verticalAlign: 'bottom',
+                width: 300,
+                itemWidth: 150,
+                labelFormatter: function () {
+                    var words = this.name.split(/[\s]+/);
+                    var numWordsPerLine = 2;
+                    var str = [];
+
+                    for (var word in words) {
+                        if (word > 0 && word % numWordsPerLine == 0)
+                            str.push('<br>');
+
+                        str.push(words[word]);
+                    }
+
+                    return str.join(' ');
+                }
+            },
+            tooltip: {
+                formatter: function () {
+                    txt = this.point.name;
+                    return '<b>' + this.point.name + '</b>: ' + this.point.y;
+                }
+            },
+
+            credits: {
+                enabled: false
+            },
+            plotOptions: {
+                line: {
+                    marker: {
+                        radius: 4,
+                        lineColor: '#666666',
+                        lineWidth: 1
+                    }
+                },
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        style: {
+                            width: '100px'
+                        },
+                        enabled: true,         /*true*/
+                        format: '<b>{point.name}</b>: ({point.y})'
+
+                    },
+                    showInLegend: true,
+                },
+                series: {
+                    cursor: 'pointer',
+                    point: {
+                        events: {
+                            click: function () {
+
+                            }
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y:.1f}%',
+                        fontSize: '1px'
+                    },
+                    borderWidth: 0,
+                     colorByPoint: true
+                },
+            },
+            series: [{
+                name: 'TRACTOR SUB-ASSEMBLIES',
+                color: 'black',
+                fontSize: '15px',
+                showInLegend: false,
+                data: chartdata
+            }],
+
+            exporting: {
+                menuItemDefinitions: {
+                    // Custom definition
+                    label: {
+                        onclick: function () {
+                            this.renderer.label(
+                                'You just clicked a custom menu item',
+                                100,
+                                100
+                            )
+                                .attr({
+                                    fill: '#a4edba',
+                                    r: 5,
+                                    padding: 10,
+                                    zIndex: 10
+                                })
+                                .css({
+                                    fontSize: '1.5em'
+                                })
+                                .add();
+                        },
+                        text: 'Show label'
+                    }
+                },
+                buttons: {
+                    contextButton: {
+                        menuItems: ['viewFullscreen', 'printChart', 'separator', 'downloadPDF']
+                        //menuItems: ['fullscreen', 'Print chart', 'separator', 'Download PDF document']
+                    }
+                }
+            },
+
+
+
+            navigation: {
+                buttonOptions: {
+                    ssenabled: true
+                },
+
+            },
+        });
+    }
+
+    $("#btnExport").on("click", function () {
+        DataExport();
+    });
+
+    function DataExport() {
+        var PlantCode = $('#PlantCode').val();
+        var PrpdDate = $('#ProdDate').val();
+        $("#divLoader").show();
+            $.ajax({
+                url: '@Url.Action("DataExport", "DailyPartScanningScreen")',
+                data: JSON.stringify({ PLANTCODE: PlantCode, SelectedDate: PrpdDate }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                //dataType: "json",
+                success: function (data) {
+                    if (data.ErrorNo == "1") {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        $('#alert').show();
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        var file = data.ExcelName + ".xlsx";
+                        window.location.href = "@Url.RouteUrl(new{ Controller = "DailyPartScanningScreen", Action = "Download"})/?file=" + file;
+
+                    }
+
+                },
+                complete: function () {
+                    $("#divLoader").hide();
+                },
+                error: function (errormessage) {
+
+                }
+            });
+    }
+
+    function closeAlert(alert) {
+        $(alert).hide();
+    };
+</script>
+
+
+@Html.EJS().ScriptManager()
+@Styles.Render("~/Content/ej2")

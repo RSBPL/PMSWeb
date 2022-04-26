@@ -1,0 +1,334 @@
+﻿@model MVCApp.Models.CraneSetting
+
+<style>
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .the-legend {
+        box-shadow: 0px 1px 5px #7f8b8f;
+    }
+
+    ol, ul {
+        margin: 5px 0px 1px 1px;
+    }
+
+    .tab-content {
+        padding: 6px 0px 0px 0px;
+    }
+    .m-50 {
+        width: 73%;
+        MARGIN: 0 0 0 130px
+    }
+  
+
+</style>
+
+
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Crane Setting</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    <ul class="nav nav-pills">
+        <li class="bg-light active"><a data-toggle="tab" href="#Menu1">Month Code </a></li>
+        <li class="bg-light"><a data-toggle="tab" href="#Menu2">Year Code </a></li>
+
+    </ul>
+    @*--------Form------------*@
+<div class="tab-content">
+    <div id="Menu1" class="tab-pane fade in active">
+        <div class="container" style="width:100%!important">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-horizontal form-group ">
+                    <fieldset class="the-fieldset bg-info">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="Plant" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                                @Html.DropDownListFor(model => model.Plant, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+
+                                <strong>@Html.ValidationMessageFor(model => model.Plant, "", new { @class = "text-danger" })</strong>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="Type" class="text-right control-label col-form-label"><strong>Select Type</strong></label>
+                                @Html.DropDownList("Type", new List<SelectListItem>
+
+                                      {
+                                          new SelectListItem{ Text = "MONTH CODE",Value="CRMONTH" },
+                                          new SelectListItem{ Text = "QR CODE",Value="CRMONTHQR"}
+                                      })
+                            </div>
+                            <div class="col-md-3">
+                                <label for="Month" class="text-right control-label col-form-label"><strong>Month</strong></label>
+                                @Html.DropDownListFor(model => model.Month, (IEnumerable<SelectListItem>)ViewBag.Months, new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.Month, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="Code" class="text-right control-label col-form-label"><strong>Code</strong></label>
+                                @Html.TextBoxFor(Model => Model.Code, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-1" style="padding-top: 23px;">
+                                <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                                <button class="btn btn-success btn-sm" type="button" id="Update"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+                            </div>
+                            <div class="col-md-1" style="padding-top: 23px;">
+                                <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            }
+            <div id="Grid"></div>
+        </div>
+    </div>
+    <div id="Menu2" class="tab-pane fade">
+        <div class="container" style="width:100%!important">
+            <div class="form-horizontal form-group ">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="PlantYear" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            @Html.DropDownListFor(model => model.PlantYear, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+
+                            <strong>@Html.ValidationMessageFor(model => model.PlantYear, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="MonthYear" class="text-right control-label col-form-label"><strong>Year</strong></label>
+
+                            @Html.DropDownListFor(model => model.MonthYear, (IEnumerable<SelectListItem>)ViewBag.Years, new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.MonthYear, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="CodeYear" class="text-right control-label col-form-label"><strong>Code</strong></label>
+                            @Html.TextBoxFor(Model => Model.CodeYear, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.CodeYear, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-success btn-sm" type="button" id="AddYear"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                            <button class="btn btn-success btn-sm" type="button" id="UpdateYear"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-default btn-sm" type="button" id="ClearYear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div id="GridYear"></div>
+        </div>
+    </div>
+</div>
+</div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+
+        DDLPlant();
+        $('#Update').hide();
+        $('#UpdateYear').hide();
+
+    });
+    $("#Plant").on('change', function () {
+        BindGrid();
+    });
+    $("#PlantYear").on('change', function () {
+        BindGridYear();
+    });
+   function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "CraneSetting")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Plant").html(result);
+                BindGrid();
+                $("#PlantYear").html(result);
+                BindGridYear();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+        //Bind Grid
+    function BindGrid() {
+        $("#divLoader").show();
+
+        var Type = $("#Type").val();
+        var Plant = $("#Plant").val();
+        $.ajax({
+            url: '@Url.Action("Grid", "CraneSetting")',
+            data: JSON.stringify({ Type: Type, Plant: Plant}),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Grid").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+
+        //Bind Grid Year
+    function BindGridYear() {
+        $("#divLoader").show();
+        var PlantYear = $("#PlantYear").val();
+        $.ajax({
+            url: '@Url.Action("GridYear", "CraneSetting")',
+            data: JSON.stringify({ PlantYear: PlantYear}),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#GridYear").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+
+    //Save Data
+    $("#Add").on("click", function () {
+        $("#divLoader").show();
+
+            var data = {
+                Plant: $('#Plant').val(),
+                Month: $('#Month').val(),
+                Type: $('#Type').val(),
+                Code: $('#Code').val()
+            };
+            $.ajax({
+                url: '@Url.Action("Save", "CraneSetting")',
+                data: JSON.stringify(data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                        $('#Code').val("");
+                        BindGrid();
+                    }
+                },
+                error: function (errormessage) {
+                }
+            });
+    });
+
+    //Save Data Year
+    $("#AddYear").on("click", function () {
+        $("#divLoader").show();
+
+            var data = {
+                PlantYear: $('#PlantYear').val(),
+                MonthYear: $('#MonthYear').val(),
+                CodeYear: $('#CodeYear').val()
+            };
+            $.ajax({
+                url: '@Url.Action("SaveYear", "CraneSetting")',
+                data: JSON.stringify(data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                        $('#CodeYear').val("");
+                        BindGridYear();
+                    }
+                },
+                error: function (errormessage) {
+                }
+            });
+    });
+
+
+    $("#Clear").on("click", function () {
+        location.reload(true);
+    });
+    $("#ClearYear").on("click", function () {
+        location.reload(true);
+    });
+
+
+    $("#Plant").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#PlantYear").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#Month").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#MonthYear").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#Type").select2({
+        allowClear: true,
+        width: '100%',
+    });
+
+</script>
+
+
+

@@ -1,0 +1,153 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    
+    <div class="table-responsive">
+        @{
+            List<object> commands = new List<object>();
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-delete", cssClass = "delete" } });
+        }
+
+        @(Html.EJS().Grid("Grid1").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                AllowPaging(true).
+                PageSettings(Page => Page.PageSize(10)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+                AllowResizing().
+                Columns(col =>
+                {
+                    col.HeaderText("Action").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Commands(commands).Width("130").Add();
+                    
+                    col.Field("PLANT_CODE").HeaderText("Plant").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("FAMILY_CODE").HeaderText("Family").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("LOCATION_CODE").HeaderText("Location Code").Width("110").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("ITEM_CODE").HeaderText("Item Code").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("ITEM_DESCRIPTION").HeaderText("Description").Width("350").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("CAPACITY").HeaderText("Capacity").Width("105").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("SAFTY_STOCK_QUANTITY").HeaderText("Safty Stock Quantity").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("MAX_INVENTORY").HeaderText("MAX. INVENTORY").Width("125").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("NO_OF_LOC_ALLOCATED").HeaderText("No. Of Locations Allocated").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("PACKAGING_TYPE").HeaderText("Packing Type").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("VERTICAL_STACKING_LEVEL").HeaderText("Vertical Stacking Level").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("BULK_STORAGE_SNP").HeaderText("Bulk Store SNP").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("USAGE_PER_TRACTOR").HeaderText("Usage/Tractor").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("REVISION").HeaderText("Revision").Width("140").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("TEMP_LOC").HeaderText("Temp Loc").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("UNPACKED").HeaderText("UNPACKED").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("CREATED_BY").HeaderText("Created By").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("CREATED_DATE").HeaderText("Created Date").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("UPDATED_BY").HeaderText("Updated By").Width("105").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("UPDATED_DATE").HeaderText("Updated Date").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+
+                }).AllowExcelExport().
+                ToolbarClick("toolbarClick")
+                .Toolbar(new List<string>() { "ExcelExport" })
+                .SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick").//AllowRowDragAndDrop().
+                Render())
+
+        
+        <script>
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("Grid1").ej2_instances[0];
+                gridObj.excelExport();
+            }
+
+            var AutoId, Plant, Family, Location;
+            function commandClick(args) {
+                if (args.rowData != null) {
+                    if (args.target.classList.contains('edit')) {
+                        AutoId = args.rowData["AUTOID"];
+
+                        $("#Plant").val(args.rowData["PLANT_CODE"]);
+                        $("#Family").val(args.rowData["FAMILY_CODE"]);
+
+                        var itmcode = args.rowData["ITEM_CODE"];
+                        var itmdesc = args.rowData["ITEM_DESCRIPTION"];
+                        var codeDesc = itmcode + " # " + itmdesc;
+                        $("#Item").val(codeDesc);
+
+                        $("#Location").val(args.rowData["LOCATION_CODE"]);
+                        $("#Capacity").val(args.rowData["CAPACITY"]);
+                        $("#SftStkQuantity").val(args.rowData["SAFTY_STOCK_QUANTITY"]);
+                        $("#NoOfLocAllocated").val(args.rowData["NO_OF_LOC_ALLOCATED"]);
+                        $("#PackingType").val(args.rowData["PACKAGING_TYPE"]);
+                        $("#VerticalStkLevel").val(args.rowData["VERTICAL_STACKING_LEVEL"]);
+                        $("#BulkStoreSNP").val(args.rowData["BULK_STORAGE_SNP"]);
+                        $("#UsagePerTractor").val(args.rowData["USAGE_PER_TRACTOR"]);
+                        $("#Revision").val(args.rowData["REVISION"]);
+                        $("#MaxInventory").val(args.rowData["MAX_INVENTORY"]);
+                        var res = args.rowData["TEMP_LOC"];
+                        if (res == "Y") {
+                            $("#TempLoc").prop('checked', true)
+                        }
+                        else {
+                            $("#TempLoc").prop('checked', false)
+                        }
+                         var res = args.rowData["UNPACKED"];
+                        if (res == "Y") {
+                            $("#chkUnpck").prop('checked', true)
+                        }
+                        else {
+                            $("#chkUnpck").prop('checked', false)
+                        }
+
+                        $('#Plant').prop('disabled', true);
+                        $('#Family').prop('disabled', true);
+
+
+                        $('#Add').hide();
+                        $('#Update').show();
+                    }
+                    if (args.target.classList.contains('delete')) {
+
+
+                        AutoId = args.rowData["AUTOID"];
+                        Plant = args.rowData["PLANT_CODE"];
+                        Family = args.rowData["FAMILY_CODE"];
+                        Location = args.rowData["LOCATION_CODE"];
+                        deleteItem();
+
+                    }
+                }
+            };
+            function deleteItem() {
+                if (confirm("Are you sure, to delete this Record ?")) {
+                    Delete();
+                }
+                return false;
+            }
+
+        </script>
+    </div>
+</div>
+
+
+@Html.EJS().ScriptManager()
+
+<div class="modal" id="DeleteConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <h4><strong>Are you sure, to delete this Record ?</strong></h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnDeleteCancel" class="btn btn-success btn-sm"><i class="fa fa-arrow-left"></i> Cancel</button>
+
+                <button type="button" id="btnDelete" class="btn btn-danger btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+</div>

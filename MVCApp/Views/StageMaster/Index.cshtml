@@ -1,0 +1,1073 @@
+﻿@model MVCApp.Models.StageMsterModel
+<style>
+
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .le {
+        font-size: 15px;
+        text-align: -webkit-center;
+        font-weight: 700;
+        background: #d1e9ff;
+        border-radius: 5px;
+        border: 1px solid #00b0ff;
+        margin-bottom: 0;
+    }
+    .bg-info {
+        margin-bottom: 6px;
+        background: aliceblue;
+    }
+    .mr-65 {
+        margin-right: -16px;
+    }
+    .mr-24 {
+        margin-left: -30px;
+    }
+    .mr-19 {
+        margin-left: -14px;
+    }
+    .p-adj {
+        width: 311px;
+        margin: 4px 0 0 -68px;
+    }
+
+</style>
+
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Stage Master</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    @*--------Form------------*@
+<div class="container" style="width:100%!important">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal form-group">
+            <fieldset class="the-fieldset bg-info">
+                <legend class="le">STAGE</legend>
+                <div class="row">
+                    <div class="col-md-3 mr-65">
+                        <label for="PLANT_CODE" class="control-label col-form-label"><strong>Plant</strong></label>
+                        @Html.DropDownListFor(model => model.PLANT_CODE, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                        <strong>@Html.ValidationMessageFor(model => model.PLANT_CODE, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-4 mr-65">
+                        <label for="FAMILY_CODE" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                        <div style="width: 350px;">
+                            @Html.DropDownListFor(model => model.FAMILY_CODE, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.FAMILY_CODE, "", new { @class = "text-danger" })</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-1 mr-24">
+                        <label for="STAGE_ID" class="text-right control-label col-form-label"><strong>Stage Id</strong></label>
+                        @Html.DropDownListFor(model => model.STAGE_ID, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                        <strong>@Html.ValidationMessageFor(model => model.STAGE_ID, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-4 mr-19">
+                        <label for="OFFLINEITEMS" class="text-right control-label col-form-label"><strong>Stage</strong></label>
+                        @Html.DropDownListFor(model => model.OFFLINEITEMS, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                        <strong>@Html.ValidationMessageFor(model => model.OFFLINEITEMS, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="PRODUCT_TYPE" class="text-right control-label col-form-label"><strong>Product Type</strong></label>
+                        @Html.TextBoxFor(Model => Model.PRODUCT_TYPE, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.PRODUCT_TYPE, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="STAGE_1_NAME" class="text-right control-label col-form-label"><strong>Stage-1 Name</strong></label>
+                        @Html.TextBoxFor(Model => Model.STAGE_1_NAME, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.STAGE_1_NAME, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="STAGE_2_NAME" class="text-right control-label col-form-label"><strong>Stage-2 Name</strong></label>
+                        @Html.TextBoxFor(Model => Model.STAGE_2_NAME, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.STAGE_2_NAME, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="STAGE_3_NAME" class="text-right control-label col-form-label"><strong>Stage-3 Name</strong></label>
+                        @Html.TextBoxFor(Model => Model.STAGE_3_NAME, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.STAGE_3_NAME, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="STAGE_DESCRIPTION" class="text-right control-label col-form-label"><strong>Description</strong></label>
+                        @Html.TextBoxFor(Model => Model.STAGE_DESCRIPTION, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.STAGE_DESCRIPTION, "", new { @class = "text-danger" })</strong>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="the-fieldset bg-info">
+                <legend class="le">Selection</legend>
+                <div class="row">
+                        <div class="col-md-1">
+                            <label for="START_FIFO" class="text-right control-label col-form-label "><strong>Start FIFO</strong></label>
+                            <div class="form-check ">
+                                @Html.CheckBoxFor(Model => Model.START_FIFO)
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="END_FIFO" class="text-right control-label col-form-label"><strong>End FIFO</strong></label>
+                            <div class="form-check">
+                                @Html.CheckBoxFor(Model => Model.END_FIFO)
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="START_STAGE" class="text-right control-label col-form-label"><strong>Start Stage</strong></label>
+                            <div class="form-check">
+                                @Html.CheckBoxFor(Model => Model.START_STAGE)
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="END_STAGE" class="text-right control-label col-form-label"><strong>End Stage</strong></label>
+                            <div class="form-check">
+                                @Html.CheckBoxFor(Model => Model.END_STAGE)
+                            </div>
+                        </div>
+
+                        <div class="col-md-1">
+                            <label for="ISBIG" class="text-right control-label col-form-label"><strong>Big Label</strong></label>
+                            <div class="form-check">
+                                @Html.CheckBoxFor(Model => Model.ISBIG)
+                            </div>
+                        </div>
+
+                        <div class="col-md-1">
+                            <label for="PRINT_LABEL" class="text-right control-label col-form-label"><strong>Print Label</strong></label>
+                            <div class="form-check">
+                                @Html.CheckBoxFor(Model => Model.PRINT_LABEL)
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="DELAY_TIME" class="text-right control-label col-form-label"><strong>Key Delay</strong></label>
+                            <div class="form-check">
+                                @Html.CheckBoxFor(Model => Model.DELAY_TIME)
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-2">
+                            <label for="MOVE_COMPLETE" class="text-right control-label col-form-label"><strong>Move Complete</strong></label>
+                            <div class="form-check">
+                                @Html.CheckBoxFor(Model => Model.MOVE_COMPLETE)
+                            </div>
+                        </div>
+                        <div class="col-md-3 p-adj">
+                            <label for="ONLINE_SCREEN" class=" col-form-label"><strong>Print MM/YY format in QRCODE (Domestic)</strong></label>
+                            <div class="form-check">
+                                @Html.CheckBoxFor(Model => Model.ONLINE_SCREEN)
+                            </div>
+                        </div>
+                    </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="SHOW_STAGE_FORM" class="text-right control-label col-form-label"><strong>Show Stage Form</strong></label>
+                        <div class="form-check">
+                            @Html.CheckBoxFor(Model => Model.SHOW_STAGE_FORM)
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="PRINT_LABEL_QUANTITY" class="text-right control-label col-form-label"><strong>Quantity</strong></label>
+                        @Html.TextBoxFor(Model => Model.PRINT_LABEL_QUANTITY, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.PRINT_LABEL_QUANTITY, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="IPADDR" class="text-right control-label col-form-label"><strong>Printer IP Address</strong></label>
+                        @Html.TextBoxFor(Model => Model.IPADDR, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.IPADDR, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="IPPORT" class="text-right control-label col-form-label"><strong>Printer IP Port</strong></label>
+                        @Html.TextBoxFor(Model => Model.IPPORT, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.IPPORT, "", new { @class = "text-danger" })</strong>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="AD_PASSWORD" class="text-right control-label col-form-label"><strong>Admin Pass</strong></label>
+                        @Html.TextBoxFor(Model => Model.AD_PASSWORD, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.AD_PASSWORD, "", new { @class = "text-danger" })</strong>
+                        @Html.Label("lblmsg", new { id = "lblmsg" })
+                    </div>
+                    <div class="col-md-2" style="visibility:hidden">
+                        <label for="AD_USER" class="text-right control-label col-form-label"><strong>Admin User</strong></label>
+                        @Html.TextBoxFor(Model => Model.AD_USER, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.AD_USER, "", new { @class = "text-danger" })</strong>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="the-fieldset bg-info">
+                <legend class="le">Strokes</legend>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="SCAN_JOB" class="text-right control-label col-form-label"><strong>Scan Job</strong></label>
+                        <div class="form-check">
+                            @Html.CheckBoxFor(Model => Model.SCAN_JOB)
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="SCAN_JOB_KEY_STOKES" class="text-right control-label col-form-label"><strong>Scan Job Key Strokes</strong></label>
+                        @Html.TextAreaFor(Model => Model.SCAN_JOB_KEY_STOKES, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.SCAN_JOB_KEY_STOKES, "", new { @class = "text-danger" })</strong>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="SCAN_SUB_ASSEMBLY_1" class="text-right control-label col-form-label"><strong>Scan Sub-Assembly1</strong></label>
+                        <div class="form-check">
+                            @Html.CheckBoxFor(Model => Model.SCAN_SUB_ASSEMBLY_1)
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="SCAN_SUB_ASSEMBLY_1_KEY_STOKES" class="text-right control-label col-form-label"><strong>Sub-Assembly 1 Key Strokes</strong></label>
+                        @Html.TextAreaFor(Model => Model.SCAN_SUB_ASSEMBLY_1_KEY_STOKES, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.SCAN_SUB_ASSEMBLY_1_KEY_STOKES, "", new { @class = "text-danger" })</strong>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="SCAN_SUB_ASSEMBLY_2" class="text-right control-label col-form-label"><strong>Scan Sub-Assembly2</strong></label>
+                        <div class="form-check">
+                            @Html.CheckBoxFor(Model => Model.SCAN_SUB_ASSEMBLY_2)
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="SCAN_SUB_ASSEMBLY_2_KEY_STOKES" class="text-right control-label col-form-label"><strong>Sub-Assembly 2 Key Strokes</strong></label>
+                        @Html.TextAreaFor(Model => Model.SCAN_SUB_ASSEMBLY_2_KEY_STOKES, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.SCAN_SUB_ASSEMBLY_2_KEY_STOKES, "", new { @class = "text-danger" })</strong>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="SCAN_SUB_ASSEMBLY_3" class="text-right control-label col-form-label"><strong>Scan Sub-Assembly3</strong></label>
+                        <div class="form-check">
+                            @Html.CheckBoxFor(Model => Model.SCAN_SUB_ASSEMBLY_3)
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="SCAN_SUB_ASSEMBLY_3_KEY_STOKES" class="text-right control-label col-form-label"><strong>Sub-Assembly 3 Key Strokes</strong></label>
+                        @Html.TextAreaFor(Model => Model.SCAN_SUB_ASSEMBLY_3_KEY_STOKES, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.SCAN_SUB_ASSEMBLY_3_KEY_STOKES, "", new { @class = "text-danger" })</strong>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="SCAN_SERIAL" class="text-right control-label col-form-label"><strong>Scan Serial</strong></label>
+                        <div class="form-check">
+                            @Html.CheckBoxFor(Model => Model.SCAN_SERIAL)
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="SCAN_SERIAL_KEY_STOKES" class="text-right control-label col-form-label"><strong>Scan Serial Key Strokes</strong></label>
+                        @Html.TextAreaFor(Model => Model.SCAN_SERIAL_KEY_STOKES, new { @class = "form-control input-sm", @autocomplete = "off" })
+                        <strong>@Html.ValidationMessageFor(model => model.SCAN_SERIAL_KEY_STOKES, "", new { @class = "text-danger" })</strong>
+                    </div>
+                    <div class="col-md-3"></div>
+                    <div class="col-md-1" style="padding-top: 23px;">
+                        <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                        <button class="btn btn-success btn-sm" type="button" id="Update"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+                    </div>
+                    <div class="col-md-1" style="padding-top: 23px;">
+                        <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="modal" id="DeleteConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+
+                    <div class="modal-body">
+                        <h4><strong>Are you sure, to delete this Record ?</strong></h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnDeleteCancel" class="btn btn-success btn-sm"><i class="fa fa-arrow-left"></i> Cancel</button>
+
+                        <button type="button" id="btnDelete" class="btn btn-danger btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+
+    <div id="Grid"></div>
+</div>
+    </div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+<script>
+
+    $(document).ready(function () {
+        DDLPlant();
+        $('#Update').hide();
+
+    });
+
+    $("#btnDeleteCancel").on("click", function () {
+        $('#DeleteConfirm').modal('hide');
+    });
+
+    $("#btnDelete").on("click", function () {
+        $('#DeleteConfirm').modal('hide');
+        $("#divLoader").show();
+        var data = {
+
+            AUTOID: AutoId
+            };
+        $.ajax({
+            url: '@Url.Action("Delete", "StageMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    $('#PRODUCT_TYPE').val("");
+                    $('#STAGE_1_NAME').val("");
+                    $('#STAGE_2_NAME').val("");
+                    $('#STAGE_3_NAME').val("");
+                    $('#STAGE_DESCRIPTION').val("");
+                    //$('#MEDIA').val("");
+                    //$('#DELAY_TIME').val("");
+                    $('#PRINT_LABEL_QUANTITY').val("");
+                    $('#SCAN_JOB_KEY_STOKES').val("");
+                    $('#SCAN_SUB_ASSEMBLY_1_KEY_STOKES').val("");
+                    $('#SCAN_SUB_ASSEMBLY_2_KEY_STOKES').val("");
+                    $('#SCAN_SUB_ASSEMBLY_3_KEY_STOKES').val("");
+                    $('#SCAN_SERIAL_KEY_STOKES').val("");
+                    $('#IPADDR').val("");
+                    $('#IPPORT').val("");
+                    $('#AD_USER').val("");
+                    $('#AD_PASSWORD').val("");
+
+                    if ($("#START_FIFO").prop('checked') == true) {
+                        $("#START_FIFO").prop('checked', false);
+                    }
+                    if ($("#END_FIFO").prop('checked') == true) {
+                        $("#END_FIFO").prop('checked', false);
+                    }
+                    if ($("#START_STAGE").prop('checked') == true) {
+                        $("#START_STAGE").prop('checked', false);
+                    }
+                    if ($("#END_STAGE").prop('checked') == true) {
+                        $("#END_STAGE").prop('checked', false);
+                    }
+                    if ($("#SHOW_STAGE_FORM").prop('checked') == true) {
+                        $("#SHOW_STAGE_FORM").prop('checked', false);
+                    }
+                    if ($("#MOVE_COMPLETE").prop('checked') == true) {
+                        $("#MOVE_COMPLETE").prop('checked', false);
+                    }
+                    if ($("#ONLINE_SCREEN").prop('checked') == true) {
+                        $("#ONLINE_SCREEN").prop('checked', false);
+                    }
+                    if ($("#PRINT_LABEL").prop('checked') == true) {
+                        $("#PRINT_LABEL").prop('checked', false);
+                    }
+                    if ($("#DELAY_TIME").prop('checked') == true) {
+                        $("#DELAY_TIME").prop('checked', false);
+                    }
+                    if ($("#ISBIG").prop('checked') == true) {
+                        $("#ISBIG").prop('checked', false);
+                    }
+                    if ($("#SCAN_JOB").prop('checked') == true) {
+                        $("#SCAN_JOB").prop('checked', false);
+                    }
+                    if ($("#SCAN_SUB_ASSEMBLY_2").prop('checked') == true) {
+                        $("#SCAN_SUB_ASSEMBLY_2").prop('checked', false);
+                    }
+                    if ($("#SCAN_SERIAL").prop('checked') == true) {
+                        $("#SCAN_SERIAL").prop('checked', false);
+                    }
+                    if ($("#SCAN_SUB_ASSEMBLY_1").prop('checked') == true) {
+                        $("#SCAN_SUB_ASSEMBLY_1").prop('checked', false);
+                    }
+                    if ($("#SCAN_SUB_ASSEMBLY_3").prop('checked') == true) {
+                        $("#SCAN_SUB_ASSEMBLY_3").prop('checked', false);
+                    }
+
+                    $('#Add').show();
+                    $('#Update').hide();
+                    $('#PLANT_CODE').prop('disabled', false);
+                    $('#FAMILY_CODE').prop('disabled', false);
+                    $('#OFFLINEITEMS').prop('disabled', false);
+
+                    BindGrid();
+
+                }
+
+            },
+            error: function (errormessage)
+            {
+            }
+        });
+    });
+
+    $("#PLANT_CODE").on("change", function () {
+        DDLFamilyByPlant();
+    });
+
+    $("#FAMILY_CODE").on("change", function () {
+
+        DDLStageIdByFamily();
+        DDLStageByFamily();
+        LabelCompletedStage();
+
+    });
+
+    $("#Clear").on("click", function () {
+        location.reload(true);
+    });
+
+    var START_STAGE1, END_STAGE1, PRINT_LABEL1, DELAY_TIME1, SHOW_STAGE_FORM1, SCAN_JOB1, SCAN_SERIAL1, SCAN_SUB_ASSEMBLY_11,
+        SCAN_SUB_ASSEMBLY_22, SCAN_SUB_ASSEMBLY_33, ONLINE_SCREEN1, START_FIFO1, END_FIFO1, MOVE_COMPLETE1, ISBIG1;
+    //Save Data
+    $("#Add").on("click", function () {
+        $("#divLoader").show();
+        if ($("#START_STAGE").prop('checked') == true) {
+            START_STAGE1 = true;
+        }
+        else {
+            START_STAGE1 = false;
+        }
+
+        if ($("#END_STAGE").prop('checked') == true) {
+            END_STAGE1 = true;
+        }
+        else {
+            END_STAGE1 = false;
+        }
+
+        if ($("#PRINT_LABEL").prop('checked') == true) {
+            PRINT_LABEL1 = true;
+        }
+        else {
+            PRINT_LABEL1 = false;
+        }
+
+        if ($("#DELAY_TIME").prop('checked') == true) {
+            DELAY_TIME1 = true;
+        }
+        else {
+            DELAY_TIME1 = false;
+        }
+
+        if ($("#SHOW_STAGE_FORM").prop('checked') == true) {
+            SHOW_STAGE_FORM1 = true;
+        }
+        else {
+            SHOW_STAGE_FORM1 = false;
+        }
+
+        if ($("#SCAN_JOB").prop('checked') == true) {
+            SCAN_JOB1 = true;
+        }
+        else {
+            SCAN_JOB1 = false;
+        }
+        if ($("#SCAN_SERIAL").prop('checked') == true) {
+            SCAN_SERIAL1 = true;
+        }
+        else {
+            SCAN_SERIAL1 = false;
+        }
+
+        if ($("#SCAN_SUB_ASSEMBLY_1").prop('checked') == true) {
+            SCAN_SUB_ASSEMBLY_11 = true;
+        }
+        else {
+            SCAN_SUB_ASSEMBLY_11 = false;
+        }
+
+        if ($("#SCAN_SUB_ASSEMBLY_2").prop('checked') == true) {
+            SCAN_SUB_ASSEMBLY_22 = true;
+        }
+        else {
+            SCAN_SUB_ASSEMBLY_22 = false;
+        }
+        if ($("#SCAN_SUB_ASSEMBLY_3").prop('checked') == true) {
+            SCAN_SUB_ASSEMBLY_33 = true;
+        }
+        else {
+            SCAN_SUB_ASSEMBLY_33 = false;
+        }
+
+        if ($("#ONLINE_SCREEN").prop('checked') == true) {
+            ONLINE_SCREEN1 = true;
+        }
+        else {
+            ONLINE_SCREEN1 = false;
+        }
+
+        if ($("#START_FIFO").prop('checked') == true) {
+            START_FIFO1 = true;
+        }
+        else {
+            START_FIFO1 = false;
+        }
+        if ($("#END_FIFO").prop('checked') == true) {
+            END_FIFO1 = true;
+        }
+        else {
+            END_FIFO1 = false;
+        }
+        if ($("#MOVE_COMPLETE").prop('checked') == true) {
+            MOVE_COMPLETE1 = true;
+        }
+        else {
+            MOVE_COMPLETE1 = false;
+        }
+
+        if ($("#ISBIG").prop('checked') == true) {
+            ISBIG1 = true;
+        }
+        else {
+            ISBIG1 = false;
+        }
+        var data = {
+            PLANT_CODE: $('#PLANT_CODE').val(),
+            FAMILY_CODE: $('#FAMILY_CODE').val(),
+            STAGE_ID: $('#STAGE_ID').val(),
+            STAGE_DESCRIPTION: $("#STAGE_DESCRIPTION").val(),
+            PRODUCT_TYPE: $("#PRODUCT_TYPE").val(),
+            START_STAGE: START_STAGE1,
+            END_STAGE: END_STAGE1,
+            PRINT_LABEL: PRINT_LABEL1,
+            PRINT_LABEL_QUANTITY: $("#PRINT_LABEL_QUANTITY").val(),
+            SHOW_STAGE_FORM: SHOW_STAGE_FORM1,
+            STAGE_1_NAME: $('#STAGE_1_NAME').val(),
+            STAGE_2_NAME: $('#STAGE_2_NAME').val(),
+            STAGE_3_NAME: $('#STAGE_3_NAME').val(),
+            SCAN_JOB: SCAN_JOB1,
+            SCAN_JOB_KEY_STOKES: $("#SCAN_JOB_KEY_STOKES").val(),
+            SCAN_SERIAL: SCAN_SERIAL1,
+            SCAN_SERIAL_KEY_STOKES: $("#SCAN_SERIAL_KEY_STOKES").val(),
+            SCAN_SUB_ASSEMBLY_1: SCAN_SUB_ASSEMBLY_11,
+            SCAN_SUB_ASSEMBLY_1_KEY_STOKES: $("#SCAN_SUB_ASSEMBLY_1_KEY_STOKES").val(),
+            SCAN_SUB_ASSEMBLY_2: SCAN_SUB_ASSEMBLY_22,
+            SCAN_SUB_ASSEMBLY_2_KEY_STOKES: $('#SCAN_SUB_ASSEMBLY_2_KEY_STOKES').val(),
+            SCAN_SUB_ASSEMBLY_3: SCAN_SUB_ASSEMBLY_33,
+            SCAN_SUB_ASSEMBLY_3_KEY_STOKES: $('#SCAN_SUB_ASSEMBLY_3_KEY_STOKES').val(),
+            ONLINE_SCREEN: ONLINE_SCREEN1,
+            START_FIFO: START_FIFO1,
+            END_FIFO: END_FIFO1,
+            MOVE_COMPLETE: MOVE_COMPLETE1,
+            DELAY_TIME: DELAY_TIME1,
+            ISBIG: ISBIG1,
+            OFFLINEITEMS: $("#OFFLINEITEMS").val(),
+            IPADDR: $("#IPADDR").val(),
+            IPPORT: $("#IPPORT").val(),
+            AD_USER: $("#AD_USER").val(),
+            AD_PASSWORD: $("#AD_PASSWORD").val()
+         };
+        $.ajax({
+            url: '@Url.Action("Save", "StageMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    BindGrid();
+                    $('#PRODUCT_TYPE').val("");
+                    $('#STAGE_1_NAME').val("");
+                    $('#STAGE_2_NAME').val("");
+                    $('#STAGE_3_NAME').val("");
+                    $('#STAGE_DESCRIPTION').val("");
+                    //$('#MEDIA').val("");
+                    //$('#DELAY_TIME').val("");
+                    $('#PRINT_LABEL_QUANTITY').val("");
+                    $('#SCAN_JOB_KEY_STOKES').val("");
+                    $('#SCAN_SUB_ASSEMBLY_1_KEY_STOKES').val("");
+                    $('#SCAN_SUB_ASSEMBLY_2_KEY_STOKES').val("");
+                    $('#SCAN_SUB_ASSEMBLY_3_KEY_STOKES').val("");
+                    $('#SCAN_SERIAL_KEY_STOKES').val("");
+                    $('#IPADDR').val("");
+                    $('#IPPORT').val("");
+                    $('#AD_USER').val("");
+                    $('#AD_PASSWORD').val("");
+
+                    if ($("#START_FIFO").prop('checked') == true) {
+                        $("#START_FIFO").prop('checked', false);
+                    }
+                    if ($("#END_FIFO").prop('checked') == true) {
+                        $("#END_FIFO").prop('checked', false);
+                    }
+                    if ($("#START_STAGE").prop('checked') == true) {
+                        $("#START_STAGE").prop('checked', false);
+                    }
+                    if ($("#END_STAGE").prop('checked') == true) {
+                        $("#END_STAGE").prop('checked', false);
+                    }
+                    if ($("#SHOW_STAGE_FORM").prop('checked') == true) {
+                        $("#SHOW_STAGE_FORM").prop('checked', false);
+                    }
+                    if ($("#MOVE_COMPLETE").prop('checked') == true) {
+                        $("#MOVE_COMPLETE").prop('checked', false);
+                    }
+                    if ($("#ONLINE_SCREEN").prop('checked') == true) {
+                        $("#ONLINE_SCREEN").prop('checked', false);
+                    }
+                    if ($("#PRINT_LABEL").prop('checked') == true) {
+                        $("#PRINT_LABEL").prop('checked', false);
+                    }
+                    if ($("#DELAY_TIME").prop('checked') == true) {
+                        $("#DELAY_TIME").prop('checked', false);
+                    }
+                    if ($("#ISBIG").prop('checked') == true) {
+                        $("#ISBIG").prop('checked', false);
+                    }
+                    if ($("#SCAN_JOB").prop('checked') == true) {
+                        $("#SCAN_JOB").prop('checked', false);
+                    }
+                    if ($("#SCAN_SUB_ASSEMBLY_2").prop('checked') == true) {
+                        $("#SCAN_SUB_ASSEMBLY_2").prop('checked', false);
+                    }
+                    if ($("#SCAN_SERIAL").prop('checked') == true) {
+                        $("#SCAN_SERIAL").prop('checked', false);
+                    }
+                    if ($("#SCAN_SUB_ASSEMBLY_1").prop('checked') == true) {
+                        $("#SCAN_SUB_ASSEMBLY_1").prop('checked', false);
+                    }
+                    if ($("#SCAN_SUB_ASSEMBLY_3").prop('checked') == true) {
+                        $("#SCAN_SUB_ASSEMBLY_3").prop('checked', false);
+                    }
+
+
+                }
+
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    });
+
+
+
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "StageMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#PLANT_CODE").html(result);
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        var selectedValue = $("#PLANT_CODE").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "StageMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#FAMILY_CODE").html(null);
+                $("#FAMILY_CODE").html(result);
+                DDLStageIdByFamily();
+                DDLStageByFamily();
+                LabelCompletedStage();
+
+
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind stageId by family
+    function DDLStageIdByFamily() {
+
+        //var selectedPlantValue = $("#Plant").val();
+        var selectedfamilyValue = $("#FAMILY_CODE").val();
+        $.ajax({
+            url: '@Url.Action("BindStageId", "StageMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Family: selectedfamilyValue }),
+            success: function (result) {
+                $("#STAGE_ID").html(null);
+                $("#STAGE_ID").html(result);
+                //BindGrid();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind stage by family
+     function DDLStageByFamily() {
+
+
+        var selectedfamilyValue = $("#FAMILY_CODE").val();
+
+
+        $.ajax({
+            url: '@Url.Action("BindStage", "StageMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Family: selectedfamilyValue }),
+            success: function (result) {
+
+                $("#OFFLINEITEMS").html(null);
+                $("#OFFLINEITEMS").html(result);
+                BindGrid();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+
+    //Function to display label completed stage by plant & family
+    function LabelCompletedStage() {
+
+
+        var selectedPlantValue = $("#PLANT_CODE").val();
+        var selectedfamilyValue = $("#FAMILY_CODE").val();
+
+
+        $.ajax({
+            url: '@Url.Action("GetCompletedStage", "StageMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ plant: selectedPlantValue, family: selectedfamilyValue }),
+            success: function (result) {
+                $("#lblmsg").text(null);
+                $("#lblmsg").text(result.Msg);
+
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    function BindGrid() {
+        $("#divLoader").show();
+
+        var Data = {
+            PLANT_CODE: $('#PLANT_CODE').val(),
+            FAMILY_CODE: $('#FAMILY_CODE').val()
+            //Stage: $('#Stage').val()
+                };
+        $.ajax({
+            url: '@Url.Action("Grid", "StageMaster")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Grid").html(result);
+                $("#divLoader").hide();
+
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+
+
+    //Update Data
+      $("#Update").on("click", function () {
+          $("#divLoader").show();
+          if ($("#START_STAGE").prop('checked') == true) {
+              START_STAGE1 = true;
+          }
+          else {
+              START_STAGE1 = false;
+          }
+
+          if ($("#END_STAGE").prop('checked') == true) {
+              END_STAGE1 = true;
+          }
+          else {
+              END_STAGE1 = false;
+          }
+
+          if ($("#PRINT_LABEL").prop('checked') == true) {
+              PRINT_LABEL1 = true;
+          }
+          else {
+              PRINT_LABEL1 = false;
+          }
+
+          if ($("#DELAY_TIME").prop('checked') == true) {
+              DELAY_TIME1 = true;
+          }
+          else {
+              DELAY_TIME1 = false;
+          }
+
+          if ($("#SHOW_STAGE_FORM").prop('checked') == true) {
+              SHOW_STAGE_FORM1 = true;
+          }
+          else {
+              SHOW_STAGE_FORM1 = false;
+          }
+
+          if ($("#SCAN_JOB").prop('checked') == true) {
+              SCAN_JOB1 = true;
+          }
+          else {
+              SCAN_JOB1 = false;
+          }
+          if ($("#SCAN_SERIAL").prop('checked') == true) {
+              SCAN_SERIAL1 = true;
+          }
+          else {
+              SCAN_SERIAL1 = false;
+          }
+
+          if ($("#SCAN_SUB_ASSEMBLY_1").prop('checked') == true) {
+              SCAN_SUB_ASSEMBLY_11 = true;
+          }
+          else {
+              SCAN_SUB_ASSEMBLY_11 = false;
+          }
+
+          if ($("#SCAN_SUB_ASSEMBLY_2").prop('checked') == true) {
+              SCAN_SUB_ASSEMBLY_22 = true;
+          }
+          else {
+              SCAN_SUB_ASSEMBLY_22 = false;
+          }
+          if ($("#SCAN_SUB_ASSEMBLY_3").prop('checked') == true) {
+              SCAN_SUB_ASSEMBLY_33 = true;
+          }
+          else {
+              SCAN_SUB_ASSEMBLY_33 = false;
+          }
+
+          if ($("#ONLINE_SCREEN").prop('checked') == true) {
+              ONLINE_SCREEN1 = true;
+          }
+          else {
+              ONLINE_SCREEN1 = false;
+          }
+
+          if ($("#START_FIFO").prop('checked') == true) {
+              START_FIFO1 = true;
+          }
+          else {
+              START_FIFO1 = false;
+          }
+          if ($("#END_FIFO").prop('checked') == true) {
+              END_FIFO1 = true;
+          }
+          else {
+              END_FIFO1 = false;
+          }
+          if ($("#MOVE_COMPLETE").prop('checked') == true) {
+              MOVE_COMPLETE1 = true;
+          }
+          else {
+              MOVE_COMPLETE1 = false;
+          }
+
+          if ($("#ISBIG").prop('checked') == true) {
+              ISBIG1 = true;
+          }
+          else {
+              ISBIG1 = false;
+          }
+          var data = {
+
+              AUTOID: AutoId,
+              PLANT_CODE: $('#PLANT_CODE').val(),
+              FAMILY_CODE: $('#FAMILY_CODE').val(),
+              STAGE_ID: $('#STAGE_ID').val(),
+              STAGE_DESCRIPTION: $("#STAGE_DESCRIPTION").val(),
+              PRODUCT_TYPE: $("#PRODUCT_TYPE").val(),
+              START_STAGE: START_STAGE1,
+              END_STAGE: END_STAGE1,
+              PRINT_LABEL: PRINT_LABEL1,
+              PRINT_LABEL_QUANTITY: $("#PRINT_LABEL_QUANTITY").val(),
+              SHOW_STAGE_FORM: SHOW_STAGE_FORM1,
+              STAGE_1_NAME: $('#STAGE_1_NAME').val(),
+              STAGE_2_NAME: $('#STAGE_2_NAME').val(),
+              STAGE_3_NAME: $('#STAGE_3_NAME').val(),
+              SCAN_JOB: SCAN_JOB1,
+              SCAN_JOB_KEY_STOKES: $("#SCAN_JOB_KEY_STOKES").val(),
+              SCAN_SERIAL: SCAN_SERIAL1,
+              SCAN_SERIAL_KEY_STOKES: $("#SCAN_SERIAL_KEY_STOKES").val(),
+              SCAN_SUB_ASSEMBLY_1: SCAN_SUB_ASSEMBLY_11,
+              SCAN_SUB_ASSEMBLY_1_KEY_STOKES: $("#SCAN_SUB_ASSEMBLY_1_KEY_STOKES").val(),
+              SCAN_SUB_ASSEMBLY_2: SCAN_SUB_ASSEMBLY_22,
+              SCAN_SUB_ASSEMBLY_2_KEY_STOKES: $('#SCAN_SUB_ASSEMBLY_2_KEY_STOKES').val(),
+              SCAN_SUB_ASSEMBLY_3: SCAN_SUB_ASSEMBLY_33,
+              SCAN_SUB_ASSEMBLY_3_KEY_STOKES: $('#SCAN_SUB_ASSEMBLY_3_KEY_STOKES').val(),
+              ONLINE_SCREEN: ONLINE_SCREEN1,
+              START_FIFO: START_FIFO1,
+              END_FIFO: END_FIFO1,
+              MOVE_COMPLETE: MOVE_COMPLETE1,
+              DELAY_TIME: DELAY_TIME1,
+              ISBIG: ISBIG1,
+              OFFLINEITEMS: $("#OFFLINEITEMS").val(),
+              IPADDR: $("#IPADDR").val(),
+              IPPORT: $("#IPPORT").val(),
+              AD_USER: $("#AD_USER").val(),
+              AD_PASSWORD: $("#AD_PASSWORD").val()
+          };
+        $.ajax({
+            url: '@Url.Action("Update", "StageMaster")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+
+                else {
+
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+
+                    $('#PRODUCT_TYPE').val("");
+                    $('#STAGE_1_NAME').val("");
+                    $('#STAGE_2_NAME').val("");
+                    $('#STAGE_3_NAME').val("");
+                    $('#STAGE_DESCRIPTION').val("");
+                    //$('#MEDIA').val("");
+                    //$('#DELAY_TIME').val("");
+                    $('#PRINT_LABEL_QUANTITY').val("");
+                    $('#SCAN_JOB_KEY_STOKES').val("");
+                    $('#SCAN_SUB_ASSEMBLY_1_KEY_STOKES').val("");
+                    $('#SCAN_SUB_ASSEMBLY_2_KEY_STOKES').val("");
+                    $('#SCAN_SUB_ASSEMBLY_3_KEY_STOKES').val("");
+                    $('#SCAN_SERIAL_KEY_STOKES').val("");
+                    $('#IPADDR').val("");
+                    $('#IPPORT').val("");
+                    $('#AD_USER').val("");
+                    $('#AD_PASSWORD').val("");
+
+                    if ($("#START_FIFO").prop('checked') == true) {
+                        $("#START_FIFO").prop('checked', false);
+                    }
+                    if ($("#END_FIFO").prop('checked') == true) {
+                        $("#END_FIFO").prop('checked', false);
+                    }
+                    if ($("#START_STAGE").prop('checked') == true) {
+                        $("#START_STAGE").prop('checked', false);
+                    }
+                    if ($("#END_STAGE").prop('checked') == true) {
+                        $("#END_STAGE").prop('checked', false);
+                    }
+                    if ($("#SHOW_STAGE_FORM").prop('checked') == true) {
+                        $("#SHOW_STAGE_FORM").prop('checked', false);
+                    }
+                    if ($("#MOVE_COMPLETE").prop('checked') == true) {
+                        $("#MOVE_COMPLETE").prop('checked', false);
+                    }
+                    if ($("#ONLINE_SCREEN").prop('checked') == true) {
+                        $("#ONLINE_SCREEN").prop('checked', false);
+                    }
+                    if ($("#PRINT_LABEL").prop('checked') == true) {
+                        $("#PRINT_LABEL").prop('checked', false);
+                    }
+                    if ($("#DELAY_TIME").prop('checked') == true) {
+                        $("#DELAY_TIME").prop('checked', false);
+                    }
+                    if ($("#ISBIG").prop('checked') == true) {
+                        $("#ISBIG").prop('checked', false);
+                    }
+                    if ($("#SCAN_JOB").prop('checked') == true) {
+                        $("#SCAN_JOB").prop('checked', false);
+                    }
+                    if ($("#SCAN_SUB_ASSEMBLY_2").prop('checked') == true) {
+                        $("#SCAN_SUB_ASSEMBLY_2").prop('checked', false);
+                    }
+                    if ($("#SCAN_SERIAL").prop('checked') == true) {
+                        $("#SCAN_SERIAL").prop('checked', false);
+                    }
+                    if ($("#SCAN_SUB_ASSEMBLY_1").prop('checked') == true) {
+                        $("#SCAN_SUB_ASSEMBLY_1").prop('checked', false);
+                    }
+                    if ($("#SCAN_SUB_ASSEMBLY_3").prop('checked') == true) {
+                        $("#SCAN_SUB_ASSEMBLY_3").prop('checked', false);
+                    }
+
+                    $('#Add').show();
+                    $('#Update').hide();
+                    $('#PLANT_CODE').prop('disabled', false);
+                    $('#FAMILY_CODE').prop('disabled', false);
+                    $('#OFFLINEITEMS').prop('disabled', false);
+                    $('#STAGE_ID').prop('disabled', false);
+                    BindGrid();
+                }
+
+            },
+            error: function (errormessage)
+            {
+            }
+        });
+    });
+
+
+    $("#PLANT_CODE,#FAMILY_CODE").select2({
+        allowClear: true,
+        width: '100%',
+    });
+
+</script>
+
+

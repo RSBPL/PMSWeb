@@ -1,0 +1,67 @@
+﻿
+<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bg-primary" style="padding-top:5px; padding-left:5px;">
+                <center>
+                    <label style="color:white;">@ViewBag.heading</label>
+                    <label style="color: white;padding-right: 10px;" class="pull-right"><strong>TOTAL RECORD : @ViewBag.Total </strong></label>
+                </center>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        @(Html.EJS().Grid("GRDStoreReport").DataSource((System.Data.DataTable)ViewBag.DataSource).
+            Height("400").
+            AllowPaging(true).
+            PageSettings(Page => Page.PageSize(20)).
+            AllowSelection(false).
+            AllowResizing().
+            AllowExcelExport().
+            ToolbarClick("toolbarClick").
+            AllowFiltering().
+            AllowGrouping().
+            AllowSorting().
+            //AllowSorting().EnableColumnVirtualization().EnableVirtualization().
+            Columns(col =>
+            {
+                col.Field("SRNO").HeaderText("SRNO").Add();
+                col.Field("MRNNO").HeaderText("MRNNO").Add();
+                col.Field("ITEMCODE").HeaderText("ITEMCODE").Add();
+                col.Field("DESCRIPTION").HeaderText("DESCRIPTION").Add();
+                col.Field("PRINTDATE").HeaderText("PRINTDATE").Add();
+                col.Field("PRINTBY").HeaderText("PRINTBY").Add();
+                col.Field("SCANDATE").HeaderText("SCANDATE").Add();
+                col.Field("SCANBY").HeaderText("SCANBY").Add();
+
+            }).
+            Toolbar(new List<string>() { "ExcelExport" }).
+            Render())
+        <script>
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("GRDStoreReport").ej2_instances[0];
+                gridObj.excelExport();
+            }
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+
+
+
+
+
+

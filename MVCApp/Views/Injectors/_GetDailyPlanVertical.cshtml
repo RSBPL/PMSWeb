@@ -1,0 +1,25 @@
+﻿@using System.Data
+@model System.Data.DataTable
+<style>
+    tr {
+        border-bottom: 1px solid #f7f7f7;
+        text-align:center;
+    }
+</style>
+<table>
+    <tbody>
+        @if (Model != null)
+        {
+        foreach (DataRow dr in Model.Rows)
+            {
+                <tr>
+                    @for (int i = 0; i < Model.Columns.Count; i++)
+                    {
+                        <td>@dr[i].ToString() </td>
+                    }
+                </tr>
+            }
+        }
+    </tbody>
+
+</table>

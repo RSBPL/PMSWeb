@@ -1,0 +1,87 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="table-responsive">
+        @{
+            List<object> commands = new List<object>();
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-delete", cssClass = "delete" } });
+        }
+
+        @(Html.EJS().Grid("Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                AllowPaging(true).
+                PageSettings(Page => Page.PageSize(7)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+                AllowResizing().
+                Columns(col =>
+                {
+                    col.HeaderText("EDIT/DELETE").Commands(commands).Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("FAMILY_CODE").HeaderText("Family Code").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("FAMILY_NAME").HeaderText("Family Name").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("DESCRIPTION").HeaderText("Description").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("NO_OF_STAGES").HeaderText("No Of Stages").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("ORG_ID").HeaderText("ORG Id").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("NOT_VALIDATE_JOB").HeaderText("Validate Job Required?").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CREATED_BY").HeaderText("Created By").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("CREATED_DATE").HeaderText("Created Date").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("UPDATED_BY").HeaderText("Updated By").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("UPDATED_DATE").HeaderText("Updated Date").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+
+                    
+                })
+                .SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick").//AllowRowDragAndDrop().
+                Render())
+
+        <script>
+            var FamilyCode, FamilyName, Description, NoOfStages, ORGId, NotValidateJob;
+            function commandClick(args) {
+                if (args.rowData != null) {
+                    if (args.target.classList.contains('edit')) {
+                        $("#FamilyCode").val(args.rowData["FAMILY_CODE"]);
+                        $("#FamilyName").val(args.rowData["FAMILY_NAME"]);
+                        $("#Description").val(args.rowData["DESCRIPTION"]);
+
+                        $("#NoOfStages").val(args.rowData["NO_OF_STAGES"]);
+                        $("#ORGId").val(args.rowData["ORG_ID"]);
+                        var res = args.rowData["NOT_VALIDATE_JOB"];
+                        if (res == "Y") {
+                            $("#NotValidateJob").prop('checked', true)
+                        }
+                        else {
+                            $("#NotValidateJob").prop('checked', false)
+                        }
+                        FamilyCode = args.rowData["FAMILY_CODE"];
+                        $('#FamilyCode').prop('disabled', true);
+                       
+                         $('#Add').hide();
+                         $('#Update').show();
+                    }
+                    if (args.target.classList.contains('delete')) {
+
+                        FamilyCode = args.rowData["FAMILY_CODE"];
+
+                        $('#DeleteConfirm').modal('show');
+                    }
+                }
+            };
+
+
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+

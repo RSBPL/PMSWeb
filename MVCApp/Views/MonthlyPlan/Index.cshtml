@@ -1,0 +1,508 @@
+﻿@model MVCApp.Models.MonthlyPlanModel
+<style>
+    /*.modal-dialog {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 1%;
+    }
+
+    .modal-content {
+        height: auto;
+        min-height: 100%;
+        border-radius: 0;
+    }*/
+
+    /*.modal-header{
+        background-color: darkcyan;
+    }*/
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Monthly Planning</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#Menu1">Import By Manual</a></li>
+        <li><a data-toggle="tab" href="#Menu2">Import By Excel</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="Menu1" class="tab-pane fade in active">
+
+            @*--------Form------------*@
+            <div class="container" style="width:100%!important">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-horizontal form-group">
+                        <fieldset class="the-fieldset bg-info">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                                    @Html.DropDownListFor(model => model.Plant, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.Plant, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                                    @Html.DropDownListFor(model => model.Family, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.Family, "", new { @class = "text-danger" })</strong>
+                                </div>                              
+                                <div class="col-md-2">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>Month & Year</strong></label>
+                                    @Html.EJS().DatePickerFor(model => model.Date).Value(DateTime.Now).Format("MMM y").Start(Syncfusion.EJ2.Calendars.CalendarView.Year).Depth(Syncfusion.EJ2.Calendars.CalendarView.Year).Change("datepickerChange").Render()
+                                </div>
+                            </div>
+                            <fieldset class="the-fieldset" style="margin-top:8px;padding-top: 0px;">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <label for="fname" class="text-right control-label col-form-label"><strong>Tractor Code</strong></label>
+                                        @Html.DropDownListFor(model => model.ItemCode, Enumerable.Empty<SelectListItem>(), new { @class = "form-control input-sm" })
+                                        <strong>@Html.ValidationMessageFor(model => model.ItemCode, "", new { @class = "text-danger" })</strong>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="fname" class="text-right control-label col-form-label"><strong>Qty</strong></label>
+                                        @Html.TextBoxFor(Model => Model.Qty, null, new { type = "number", min = "1", @class = "form-control input-sm", @autocomplete = "off" })
+                                        <strong>@Html.ValidationMessageFor(model => model.Qty, "", new { @class = "text-danger" })</strong>
+                                    </div>
+                                    <div class="col-md-2 pull-right">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label for="fname" class="text-right control-label col-form-label"><strong class="text-hide">Role Description</strong></label>
+                                            </div>
+                                            <div class="col-md-12 align-right">
+                                                <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Add Monthly Plan</strong></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </fieldset>
+                    </div>
+                }
+                <div id="Grid"></div>
+            </div>
+        </div>
+        <div id="Menu2" class="tab-pane fade">
+
+            @*--------Form------------*@
+            <div class="container" style="width:100%!important">
+                @using (Html.BeginForm("ImportExcelMonthlyPlan", "MonthlyPlan", FormMethod.Post, new { id = "FormExcel", enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-horizontal form-group">
+                        <fieldset class="the-fieldset bg-info">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                                    @Html.DropDownListFor(model => model.PlantExcel, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.PlantExcel, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                                    @Html.DropDownListFor(model => model.FamilyExcel, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.FamilyExcel, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>Month & Year</strong></label>
+                                    @Html.EJS().DatePickerFor(model => model.DateExcel).Value(DateTime.Now).Format("MMM y").Start(Syncfusion.EJ2.Calendars.CalendarView.Year).Depth(Syncfusion.EJ2.Calendars.CalendarView.Year).Render()
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="e-checkbox-left">
+                                        @Html.CheckBoxFor(model => model.IsOverride, new { @class = "form-check-input" })
+                                        @Html.Label("Is Override", new { @class = "form-check-label" })
+
+                                        <a class="pull-right" id="DownloadExcel" style="cursor: pointer;">Downlod Format</a>
+                                    </div>
+                                    <input type="file" class="form-control" id="ExcelFile" style="background-color:#6fb3e0; color:white;">
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong class="text-hide">Role Description</strong></label>
+                                        </div>
+                                        <div class="col-md-12 align-right">
+                                            <button class="btn btn-secondary btn-sm" type="button" id="ClearFile"><i class="fa fa-eraser"></i><strong>&nbsp;Clear File</strong></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="fname" class="text-right control-label col-form-label"><strong class="text-hide">Role Description</strong></label>
+                                        </div>
+                                        <div class="col-md-12 align-right">
+                                            <button class="btn btn-success btn-sm" type="button" id="AddExcel" onclick="ImportExcelFunction()"><i class="fa fa-file-excel-o"></i><strong>&nbsp;Import</strong></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                }
+                <div id="GridExcel"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+@*Script for First Tab*@
+<script>
+    function datepickerChange(args) {       
+        BindGrid();
+    }
+
+    $(document).ready(function () {
+        DDLPlant();       
+    });
+
+    $("#Plant").on("change", function () {
+        DDLFamilyByPlant();
+    });
+
+    $("#Family").on("change", function () {
+        DDLItems();
+    });
+    
+    $("#Add").on("click", function () {
+        AddMonthlyPlanning();
+    });
+
+    //Function to Add DMonthly Planning
+    function AddMonthlyPlanning() {
+        if (!$("#Form").valid()) {
+            return false;
+        }
+        else {
+            $("#divLoader").show();
+            var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                Date: $('#Date').val(),
+                //Year: $('#Year').val(),
+                //Month: $('#Month').val(),
+                ItemCode: $('#ItemCode').val(),
+                Qty: $('#Qty').val()
+                };
+            $.ajax({
+                url: '@Url.Action("AddMonthlyPlan", "MonthlyPlan")',
+                data: JSON.stringify({ MP : Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+                    BindGrid();
+                    if (data.Msg != "" || data.Msg != null ) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function() {$(".alert").alert('close');}, 5000);
+                    }
+                },
+                error: function (errormessage) {
+
+                }
+            });
+        }
+    };
+
+    //Function to bind Plant
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "AddDailyPlan")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Plant").html(result);
+                $("#PlantExcel").html(result);
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        var selectedValue = $("#Plant").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "MonthlyPlan")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#Family").html(result);
+                $("#FamilyExcel").html(result);
+                DDLItems();
+                BindGrid();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Item by Plant, Family
+    function DDLItems() {
+        var Data = {
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val()
+            };
+        $.ajax({
+            url: '@Url.Action("BindItems", "MonthlyPlan")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            success: function (result) {
+                $("#ItemCode").html(null);
+                $("#ItemCode").html(result);
+            },
+            error: function (errormessage) {
+                $('#alert').append('<div class="alert alert-danger"role = "alert"><strong>' + errormessage + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                setTimeout(function () { $(".alert").alert('close'); }, 5000);
+            }
+        });
+    };
+
+    //Function to bind Grid
+    function BindGrid() {
+       $("#divLoader").show();
+        var Data = {
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val(),
+            Date: $('#Date').val()                
+        };
+        $.ajax({
+            url: '@Url.Action("Grid", "MonthlyPlan")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#Grid").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    };
+
+
+    $("#Month").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#MonthExcel").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#Year").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#YearExcel").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#Plant").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#PlantExcel").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#Family").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#FamilyExcel").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#ItemCode").select2({
+        allowClear: true,
+        width: '100%',
+    });
+
+</script>
+
+@*Script for Second Tab*@
+<script>
+    var CountUnmachedItem = 0;
+    $("#ClearFile").on("click", function () {
+        $("#ExcelFile").val(null);
+    });
+
+    $("#DownloadExcel").on("click", function () {
+        DownloadExcel();
+    });
+
+    $('input[type="file"]').change(function () {
+        $("#divLoader").show();
+        var formData = new FormData();
+        var file = document.getElementById("ExcelFile").files[0];
+        formData.append("inputFile", file);
+
+        $.ajax({
+            url: '@Url.Action("ValidateFileExtention", "MonthlyPlan")',
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $("#divLoader").hide();
+
+                if (data.ID.length != 0) {
+                    if (data.ID == "alert-danger") {
+                        $("#ExcelFile").val(null);
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function() {$(".alert").alert('close');}, 5000);
+                    }
+                    else {
+                        ValidateExcelFileShowGridFunction();
+                    }
+
+                }
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    });
+
+    //Function to Validate Item codes and Show Grid Monthly Planning
+    function ValidateExcelFileShowGridFunction() {
+        $("#divLoader").show();
+        var formData = new FormData();
+        var file = document.getElementById("ExcelFile").files[0];
+        formData.append("PlantExcel", $("#PlantExcel").val());
+        formData.append("FamilyExcel", $("#FamilyExcel").val());
+        formData.append("DateExcel", $("#DateExcel").val());
+        formData.append("inputFile", file);
+
+        $.ajax({
+            url: '@Url.Action("CheckItemCodeExistAndGridDisplayMonthlyPlan", "MonthlyPlan")',
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (result) {
+                $("#GridExcel").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+                alert(errormessage);
+            }
+        });
+
+    };
+
+    //Function to Import Monthly Planning a
+    function ImportExcelFunction() {
+        if (!$("#FormExcel").valid()) {
+            return false;
+        }
+        else {
+            $("#divLoader").show();
+
+            var formData = new FormData();
+            var file = document.getElementById("ExcelFile").files[0];
+
+            formData.append("PlantExcel", $("#PlantExcel").val());
+            formData.append("FamilyExcel", $("#FamilyExcel").val());
+            formData.append("DateExcel", $("#DateExcel").val());            
+
+            if($('#IsOverride').prop("checked") == true){
+                formData.append("IsOverride", true);
+            }
+            else if ($('#IsOverride').prop("checked") == false) {
+                formData.append("IsOverride", false);
+            }
+
+            formData.append("inputFile", file);
+
+            $.ajax({
+                url: '@Url.Action("ImportExcelMonthlyPlan", "MonthlyPlan")',
+                type: "POST",
+                data: formData,
+                //dataType: 'json',
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    $("#divLoader").hide();
+                    BindGrid();
+                    if (data.Msg.length != 0) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function() {$(".alert").alert('close');}, 5000);
+                    }
+                },
+                error: function (errormessage) {
+
+                }
+            });
+        }
+    };
+
+    //Function to Download Excel File
+    function DownloadExcel() {
+         var Data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                DateExcel: $('#DateExcel').val()
+        };
+        $("#divLoader").show();
+            $.ajax({
+                url: '@Url.Action("ExportToExcel", "MonthlyPlan")',
+                data: JSON.stringify({ MP : Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                //dataType: "json",
+                success: function (data) {                    
+                    if (data.Msg.length != 0) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    }
+
+                    var file = $('#DateExcel').val() + ".xlsx";
+                    window.location.href = "@Url.RouteUrl(new{ Controller = "MonthlyPlan", Action = "Download"})/?file=" + file;
+                    $("#divLoader").hide();
+                },
+                error: function (errormessage) {
+
+                }
+            });
+    }
+</script>

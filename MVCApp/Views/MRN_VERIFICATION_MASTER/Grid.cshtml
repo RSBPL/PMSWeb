@@ -1,0 +1,1002 @@
+﻿@model MVCApp.Models.GoodsRecivingatStoreModel
+
+<style>
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .e-headercell {
+        background-color: #14567e !important;
+        color: white;
+    }
+
+    .e-summarycell {
+        background-color: #8fbfdc !important;
+    }
+
+    #dropdown {
+        position: relative;
+        height: 22px;
+        width: 10em;
+        text-align: left;
+        background-color: white;
+    }
+
+    .highcontrast .e-grid #dropdown {
+        background-color: black;
+    }
+
+    #DeleteConfirm .modal-body {
+        position: relative;
+        padding: 0px;
+    }
+
+    #BarcodePopUp .modal-lg {
+        max-width: 40% !important;
+    }
+</style>
+<style type="text/css">
+    div.table-title {
+        display: block;
+        margin: auto;
+        max-width: 600px;
+        padding: 5px;
+        width: 100%;
+    }
+
+    /*** Table Styles **/
+
+    .table-fill {
+        background: white;
+        border-radius: 3px;
+        border-collapse: collapse;
+        /*height: 320px;*/
+        margin: auto;
+        max-width: 600px;
+        padding: 5px;
+        width: 100%;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        animation: float 5s infinite;
+        overflow-x: scroll;
+    }
+
+    th {
+        color: #ffffff;
+        background: #1b1e24;
+        border-bottom: 4px solid #9ea7af;
+        border-right: 1px solid #343a45;
+        font-size: 13px;
+        font-weight: bolder;
+        padding: 8px;
+        text-align: left;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+        vertical-align: middle;
+    }
+
+        th:first-child {
+            border-top-left-radius: 3px;
+        }
+
+        th:last-child {
+            border-top-right-radius: 3px;
+            border-right: none;
+        }
+
+    tr {
+        border-top: 1px solid #C1C3D1;
+        border-bottom: 1px solid #C1C3D1;
+        color: #39393c;
+        font-size: 16px;
+        font-weight: normal;
+        text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
+    }
+
+        /*tr:hover td {
+            background: #4E5066;
+            color: #FFFFFF;
+            border-top: 1px solid #22262e;
+        }*/
+
+        tr:first-child {
+            border-top: none;
+        }
+
+        tr:last-child {
+            border-bottom: none;
+        }
+
+            /*tr:nth-child(odd) td {
+            background: #EBEBEB;
+        }*/
+
+            /*tr:nth-child(odd):hover td {
+            background: #4E5066;
+        }*/
+
+            tr:last-child td:first-child {
+                border-bottom-left-radius: 3px;
+            }
+
+            tr:last-child td:last-child {
+                border-bottom-right-radius: 3px;
+            }
+
+    td {
+        text-align: center;
+        /* center checkbox horizontally */
+        vertical-align: middle;
+        /* center checkbox vertically */
+        padding: 7px;
+        text-align: left;
+        font-weight: 300;
+        font-size: 15px;
+        text-shadow: -1px -1px 1px rgb(0 0 0 / 10%);
+        border-right: 1px solid #C1C3D1;
+    }
+
+        td:last-child {
+            border-right: 0px;
+        }
+
+    th.text-center {
+        text-align: center;
+    }
+
+    th.text-center {
+        text-align: center;
+    }
+
+    th.text-right {
+        text-align: right;
+    }
+
+    td.text-center {
+        text-align: center;
+    }
+
+    td.text-center {
+        text-align: center;
+    }
+
+    td.text-right {
+        text-align: right;
+    }
+
+    td input#width {
+        width: 70px;
+    }
+</style>
+
+
+<div style="overflow-x: scroll;">
+    <table class="table-fill table-responsive">
+        <thead>
+            <tr>
+                <th class="text-center"></th>
+                <th class="text-center"></th>
+                <th class="text-center"></th>
+                <th class="text-center"></th>
+                <th class="text-center">RECEIVE</th>
+                <th class="text-center">MRN NO </th>
+                <th class="text-center">ITEM CODE </th>
+                <th class="text-center">
+                    <div style="width: 220px;">DESCRIPTION</div>
+                </th>
+                <th class="text-center">V.CODE </th>
+                <th class="text-center"><div style="width: 220px;">V.NAME</div></th>
+                <th class="text-center">QTY. </th>
+                <th class="text-center">QTY RECEIVED</th>
+                <th class="text-center">CREATED DATE </th>
+                <th class="text-center">CREATED TIME </th>
+                <th class="text-center">STATUS </th>
+                <th class="text-center">TRANSACTION DATE </th>
+            </tr>
+        </thead>
+        <tbody class="">
+            @foreach (var d in ViewBag.DataSource)
+            {
+                if (string.IsNullOrEmpty(d.STORE_VERIFIED))
+                {
+                    <tr style="background-color: #f7b1b8">
+                        @if (ViewBag.BARCODE == null && ViewBag.A4 == null && ViewBag.QUALITY == null)
+                        {
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
+                        }
+                        else if (ViewBag.BARCODE == "BARCODE" && ViewBag.A4 == "A4" && ViewBag.QUALITY == "QUALITY")
+                        {
+                            <td>
+                                <button type="button" class="btn btn-primary gfgselect" style="padding: 0px 8px;height: 40px;" data-toggle="modal" data-target="#gfgmodal"><span class="glyphicon glyphicon-print" aria-hidden="true"><br />PrintSrlno.</span></button>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btnBarcode" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-barcode" aria-hidden="true"><br />Barcode</span></button>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary beforeRec" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-print" aria-hidden="true"><br />Sticker</span> </button>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary disabled" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-print" aria-hidden="true"><br />Quality</span> </button>
+                            </td>
+                        }
+                        else if (ViewBag.BARCODE == "BARCODE" && ViewBag.A4 == "A4" && ViewBag.QUALITY == null)
+                        {
+
+                            <td>
+                                <button type="button" class="btn btn-primary gfgselect" style="padding: 0px 8px;height: 40px;" data-toggle="modal" data-target="#gfgmodal"><span class="glyphicon glyphicon-print" aria-hidden="true"><br />PrintSrlno.</span></button>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btnBarcode" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-barcode" aria-hidden="true"><br />Barcode</span></button>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary beforeRec" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-print" aria-hidden="true"><br />Sticker</span> </button>
+                            </td>
+                            <td></td>
+                        }
+                        else if (ViewBag.BARCODE == "BARCODE" && ViewBag.A4 == null && ViewBag.QUALITY == "QUALITY")
+                        {
+                            <td></td>
+                            <td>
+                                <button class="btn btn-primary btnBarcode" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-barcode" aria-hidden="true"><br />Barcode</span></button>
+                            </td>
+                            <td></td>
+                            <td>
+                                <button class="btn btn-primary disabled" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-print" aria-hidden="true"><br />Quality</span> </button>
+                            </td>
+                        }
+                        else if (ViewBag.BARCODE == "BARCODE" && ViewBag.A4 == null && ViewBag.QUALITY == null)
+                        {
+                            <td></td>
+                            <td>
+                                <button class="btn btn-primary btnBarcode" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-barcode" aria-hidden="true"><br />Barcode</span></button>
+                            </td>
+                            <td></td>
+                            <td></td>
+                        }
+                        else if (ViewBag.BARCODE == null && ViewBag.A4 == "A4" && ViewBag.QUALITY == "QUALITY")
+                        {
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <button class="btn btn-primary beforeRec" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-print" aria-hidden="true"><br />Sticker</span> </button>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary disabled" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-print" aria-hidden="true"><br />Quality</span> </button>
+                            </td>
+                        }
+                        else if (ViewBag.BARCODE == null && ViewBag.A4 == "A4" && ViewBag.QUALITY == null)
+                        {
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <button class="btn btn-primary beforeRec" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-print" aria-hidden="true"><br />Sticker</span> </button>
+                            </td>
+                            <td></td>
+
+                        }
+                        else if (ViewBag.BARCODE == null && ViewBag.A4 == null && ViewBag.QUALITY == "QUALITY")
+                        {
+                            <td></td>
+                            <td>     </td>
+                            <td>    </td>
+                            <td>
+                                <button class="btn btn-primary disabled" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-print" aria-hidden="true"><br />Quality</span> </button>
+                            </td>
+                        }
+                        <td>
+                            <input type="hidden" value="@d.STORE_VERIFIED" class="abc" />
+                            <label id="mrn" style="visibility:hidden">@d.MRN_NO</label>
+                            <div style="width: 90px;">
+                                <input type="checkbox" id="DDLVerification" checked="checked" style="height: 20px;width: 32px; text-align: center;" />
+                            </div>
+                            <label id="id" style="visibility:hidden">@d.AUTOID</label>
+
+                            <label id="plant" style="visibility:hidden">@d.PLANT</label>
+                            <label id="qty" style="visibility:hidden">@d.QUANTITY</label>
+                        </td>
+                        <td>@d.MRN_NO</td>
+                        <td>@d.ITEMCODE</td>
+                        <td>@d.ITEM_DESCRIPTION</td>
+                        <td>@d.VENDOR_CODE</td>
+                        <td>@d.VENDOR_NAME</td>
+                        <td>@d.QUANTITY</td>
+                        <td style="text-align: center;">
+                            <div style="width:55px;">
+                                <input type="text" value="@d.QUANTITY" name="QUANTITY" id="width" autocomplete="off" />
+                            </div>
+                        </td>
+                        <td>@d.CREATEDDATE</td>
+                        <td>@d.CREATEDTIME</td>
+                        <td>@d.STATUS</td>
+                        <td>@d.TRANSACTION_DATE</td>
+
+                    </tr>
+                }
+                else
+                {
+                    <tr style="background-color: #90eca5">
+
+                        @if (ViewBag.BARCODE == null && ViewBag.A4 == null && ViewBag.QUALITY == null)
+                        {
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
+                        }
+                        else if (ViewBag.BARCODE == "BARCODE" && ViewBag.A4 == "A4" && ViewBag.QUALITY == "QUALITY")
+                        {
+                            <td>
+                                <button type="button" class="btn btn-primary gfgselect" style="padding: 0px 8px;height: 40px;" data-toggle="modal" data-target="#gfgmodal"><span class="glyphicon glyphicon-print" aria-hidden="true"><br />PrintSrlno.</span></button>
+                            </td>
+
+                            <td>
+                                <button class="btn btn-primary btnBarcode" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-barcode" aria-hidden="true"><br />Barcode</span></button>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btnSelect" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-print" aria-hidden="true"><br />Sticker</span></button>
+                            </td>
+                            <td>
+                                @if (d.STATUS == "QA")
+                                {
+                                    <button class="btn btn-primary btnQuality" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-print" aria-hidden="true"><br />Quality</span></button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-primary disabled" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-print" aria-hidden="true"><br />Quality</span></button>
+                                }
+
+                            </td>
+                        }
+                        else if (ViewBag.BARCODE == "BARCODE" && ViewBag.A4 == "A4" && ViewBag.QUALITY == null)
+                        {
+                            <td>
+                                <button type="button" class="btn btn-primary gfgselect" style="padding: 0px 8px;height: 40px;" data-toggle="modal" data-target="#gfgmodal"><span class="glyphicon glyphicon-print" aria-hidden="true"><br />PrintSrlno.</span></button>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btnBarcode" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-barcode" aria-hidden="true">Barcode</span></button>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btnSelect" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> Sticker</button>
+                            </td>
+                            <td></td>
+                        }
+                        else if (ViewBag.BARCODE == "BARCODE" && ViewBag.A4 == null && ViewBag.QUALITY == "QUALITY")
+                        {
+                            <td></td>
+                            <td>
+                                <button class="btn btn-primary btnBarcode" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-barcode" aria-hidden="true">Barcode</span></button>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                @if (d.STATUS == "QA")
+                                {
+                                    <button class="btn btn-primary btnQuality" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> Quality</button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-primary disabled" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> Quality</button>
+                                }
+                            </td>
+                        }
+                        else if (ViewBag.BARCODE == "BARCODE" && ViewBag.A4 == null && ViewBag.QUALITY == null)
+                        {
+                            <td></td>
+                            <td>
+                                <button class="btn btn-primary btnBarcode" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-barcode" aria-hidden="true"><br />Barcode</span></button>
+                            </td>
+                            <td></td>
+                            <td></td>
+
+                        }
+                        else if (ViewBag.BARCODE == null && ViewBag.A4 == "A4" && ViewBag.QUALITY == "QUALITY")
+                        {
+                            <td></td>
+                            <td>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btnSelect" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-print" aria-hidden="true"><br />Sticker</span></button>
+                            </td>
+                            <td>
+                                @if (d.STATUS == "QA")
+                                {
+                                    <button class="btn btn-primary btnQuality" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-print" aria-hidden="true"><br />Quality</span></button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-primary disabled" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-print" aria-hidden="true"><br />Quality</span></button>
+                                }
+
+                            </td>
+                        }
+                        else if (ViewBag.BARCODE == null && ViewBag.A4 == "A4" && ViewBag.QUALITY == null)
+                        {
+                            <td></td>
+                            <td>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btnSelect" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-print" aria-hidden="true"><br />Sticker</span></button>
+                            </td>
+                            <td>
+                            </td>
+                        }
+                        else if (ViewBag.BARCODE == null && ViewBag.A4 == null && ViewBag.QUALITY == "QUALITY")
+                        {
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
+                            <td>
+                                @if (d.STATUS == "QA")
+                                {
+                                    <button class="btn btn-primary btnQuality" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-print" aria-hidden="true"><br />Quality</span></button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-primary disabled" style="padding: 0px 8px;height: 40px;"><span class="glyphicon glyphicon-print" aria-hidden="true"><br />Quality</span></button>
+                                }
+                            </td>
+                        }
+
+                        <td>
+
+                            <input type="hidden" value="@d.STORE_VERIFIED" class="abc" />
+                            <label id="mrn" style="visibility:hidden">@d.MRN_NO</label>
+                            <input type="checkbox" id="DDLVerification" checked="checked" style="height: 20px;width: 32px;" />
+                            <label id="id" style="visibility:hidden">@d.AUTOID</label>
+                            <label id="plant" style="visibility:hidden">@d.PLANT</label>
+                            <label id="qty" style="visibility:hidden">@d.QUANTITY</label>
+                        </td>
+                        <td>@d.MRN_NO</td>
+                        <td>@d.ITEMCODE</td>
+                        <td>@d.ITEM_DESCRIPTION</td>
+                        <td>@d.VENDOR_CODE</td>
+                        <td>@d.VENDOR_NAME</td>
+                        <td>@d.QUANTITY</td>
+                        <td>
+                            <input type="text" value="@d.QTY_RECEIVED" name="QUANTITY" id="width" autocomplete="off" />
+                        </td>
+                        <td>@d.CREATEDDATE</td>
+                        <td>@d.CREATEDTIME</td>
+                        <td>@d.STATUS</td>
+                        <td>@d.TRANSACTION_DATE</td>
+
+                    </tr>
+                }
+            }
+
+
+
+        </tbody>
+    </table>
+</div>
+<!-- CREATING BOOTSTRAP MODEL -->
+<div class="modal fade" id="gfgmodal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- MODEL TITLE -->
+                <h2 class="modal-title text-center" id="gfgmodallabel">Print Or Reprint</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <!-- MODEL BODY -->
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Select Print Action :</label>
+                        @Html.DropDownListFor(model => model.PrntRprnt,
+                            new List<SelectListItem> {
+                                new SelectListItem{ Text="---Select Print Action---", Value = "" },
+                                new SelectListItem{ Text="Print", Value = "Print" },
+                                new SelectListItem{ Text="Reprint", Value = "Reprint" },
+                                new SelectListItem{ Text="Reprint Serial Number", Value = "RSN" },
+                            },
+                            new { @class = "form-control  form-select input-sm input-sm" })
+                    </div>
+                    <div class="col-md-4" id="serilNodiv">
+                        <label> Enter Serial Number :</label>
+                        @Html.TextBoxFor(model => model.ReprintSrno, new { @class = "form-control  input-sm" })
+                    </div>
+                    <div class="col-md-4" id="Reprintpswrd">
+                        <label>Stage Admin Password:</label>
+                        @Html.PasswordFor(Model => Model.PSWORD, new { @class = "form-control  input-sm" })
+                    </div>
+                    <div class="col-md-2" style="padding-top: 23px;">
+                        <button id="PrntMrn" class="btn btn-success btn-sm "><i class="ace-icon fa fa-print bigger-110"></i>Print</button>
+                    </div>
+                </div>
+
+                <div class="row" style="visibility:hidden">
+                    <div class="col-md-6">
+                        <div class="GFGclass " id="divGFG"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!-- The close button in the bottom of the modal -->
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    var MRN, ITEMCOD, NoBox, Mode, Desc, Vcode, Vname, QtyRec, Stus, Qty, PrintType, storeVerify;
+    $(document).ready(function () {
+        $("#serilNodiv").hide();
+        $("#Reprintpswrd").hide();
+    });
+   
+    //print sticker after receiving
+    $("#Grid").on("click", '.btnSelect', function () {
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        var currentRow = $(this).closest("tr");
+        MRN = currentRow.find("td:eq(5)").text();
+        ITEMCOD = currentRow.find("td:eq(6)").text();
+
+        var obj = {
+            PLANT: $("#PLANT").val(),
+            FAMILY: $("#FAMILY").val(),
+            MRN_NO: MRN,
+            ITEMCODE: ITEMCOD,
+            QUANTITY: currentRow.find("td:eq(10)").text(),
+            QTY_RECEIVED: currentRow.find("td:eq(11) [type='text']").val(),
+            MODE: "AFTER_REC_WEB"
+
+        };
+        openPopUp(obj);
+
+    });
+
+    //print sticker before receiving
+    $("#Grid").on("click", '.beforeRec', function () {
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        var currentRow = $(this).closest("tr");
+        MRN = currentRow.find("td:eq(5)").text();
+        ITEMCOD = currentRow.find("td:eq(6)").text();
+
+        var obj = {
+            PLANT: $("#PLANT").val(),
+            FAMILY: $("#FAMILY").val(),
+            MRN_NO: MRN,
+            ITEMCODE: ITEMCOD,
+            QUANTITY: currentRow.find("td:eq(10)").text(),
+            MODE: "BEFORE_REC_WEB"
+
+        };
+
+        openPopUp(obj);
+
+    });
+
+    //COMMON FUNCTION TO OPEN POPUP BEFORE AND AFTER RECEIVING ITEMS
+    function openPopUp(obj) {
+         $.ajax({
+             url: '@Url.Action("OpenChoicePopUp", "MRN_VERIFICATION_MASTER")',
+             data: JSON.stringify(obj),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+             success: function (result) {
+
+
+                 if (result.validation !== undefined) {
+                     alert(result.Msg);
+                     return false;
+
+                 }
+                 else {
+                     $("#customStiker").html(null);
+                     $("#customStiker").append('<option selected="selected" value="All">All Boxes</option>');
+                     $.each(result.List, function (i) {
+                         NoBox = result.boxcnt;
+                         Mode = result.Type;
+                         PrintType = result.PrintType;
+
+                         var optionhtml = '<option value="' + result.List[i].Value + '">' + result.List[i].Text + '</option>';
+
+                         $("#customStiker").append(optionhtml);
+                     });
+                     $('#DeleteConfirm').modal('show');
+                 }
+
+
+
+            },
+            error: function (errormessage) {
+                //alert(errormessage.responseText);
+            }
+        });
+    }
+
+    $("#btnDeleteCancel").on("click", function () {
+        $('#DeleteConfirm').modal('hide');
+    });
+    $("#btnCustomPrint").on("click", function () {
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        if (PrintType == "BARCODES") {
+            var obj = {
+                PLANT: $("#PLANT").val(),
+                FAMILY: $("#FAMILY").val(),
+                STIKER: $("#customStiker").val(),
+                MRN_NO: MRN,
+                ITEMCODE: ITEMCOD,
+                TOTALBOX: NoBox,
+                MODE: Mode,
+                PLANT: $("#PLANT").val(),
+                FAMILY: $("#FAMILY").val()
+            };
+            $.ajax({
+                url: '@Url.Action("printBarcodes", "MRN_VERIFICATION_MASTER")',
+                data: JSON.stringify(obj),
+                type: "POST",
+                contentType: "application/json;charset=UTF-8",
+                success: function (data) {
+
+
+                    //$('#DeleteConfirm').modal('show');
+
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+
+                    }
+                },
+                error: function (errormessage) {
+                    //alert(errormessage.responseText);
+                }
+            });
+        }
+
+        else if (PrintType == "PDF") {
+            var Stiker = $("#customStiker").val();
+            ViewPDF(Stiker, MRN, ITEMCOD, NoBox, Mode, PrintType);
+        }
+
+
+    });
+    function ViewPDF(Stiker, MRN, ITEMCOD, NoBox, Mode, PrintType)
+    {
+        var url = '@Url.Action("CrystalReport", "MRN_VERIFICATION_MASTER")?MRN=' + MRN + '&ITEMCOD=' + ITEMCOD + '&Stiker=' + Stiker + '&NoBox=' + NoBox + '&Mode=' + Mode + '&PrintType=' + PrintType;
+        //window.location.href = url;
+        window.open(url,'_blank');
+    }
+
+    $("#Grid").on("click", '.btnBarcode', function () {
+
+        var currentRow = $(this).closest("tr");
+        MRN = currentRow.find("td:eq(5)").text();
+        ITEMCOD = currentRow.find("td:eq(6)").text();
+        Desc = currentRow.find("td:eq(7)").text();
+        Vcode = currentRow.find("td:eq(8)").text();
+        Vname = currentRow.find("td:eq(9)").text();
+        Qty = currentRow.find("td:eq(10)").text();
+        QtyRec = currentRow.find("td:eq(11) [type='text']").val();
+        Stus = currentRow.find("td:eq(14)").text();
+        storeVerify = currentRow.find("td:eq(4) [type='hidden']").val();
+        $("#ORDERBY").val("");
+        $("#PACKING_STANDARD").val("");
+        $('#BarcodePopUp').modal('show');
+
+    });
+    $("#btnBarcodePrint").on("click", function () {
+
+        var ordrBy = $.trim($("#ORDERBY").val());
+        var pkgStd = $.trim($("#PACKING_STANDARD").val());
+        if (ordrBy === null || ordrBy === "") {
+            $("#ORDERBY").focus();
+            return false;
+        }
+        else if (pkgStd === null || pkgStd === "") {
+            $("#PACKING_STANDARD").focus();
+            return false;
+        }
+
+        var obj = {
+            PLANT: $("#PLANT").val(),
+            FAMILY: $("#FAMILY").val(),
+            MRN_NO: MRN,
+            ITEMCODE: ITEMCOD,
+            ITEM_DESCRIPTION: Desc,
+            VENDOR_CODE: Vcode,
+            VENDOR_NAME: Vname,
+            QUANTITY: Qty,
+            QTY_RECEIVED: QtyRec,
+            STATUS: Stus,
+            PACKING_STANDARD: pkgStd,
+            ORDERBY: ordrBy,
+            STORE_VERIFIED: storeVerify
+        };
+         $.ajax({
+             url: '@Url.Action("printBarcode", "MRN_VERIFICATION_MASTER")',
+             data: JSON.stringify(obj),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+             success: function (data) {
+
+                 $("#ORDERBY").val("");
+                 $("#PACKING_STANDARD").val("");
+                 $('#BarcodePopUp').modal('hide');
+
+                 if (data.validation.includes("error")) {
+                     $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                     /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                     setTimeout(function () {
+                         $.each($('.alert'), function () {
+                             closeAlert(this);
+                         });
+                     }, 5000);
+                 }
+                 else {
+                     $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                     setTimeout(function () {
+                         $.each($('.alert'), function () {
+                             closeAlert(this);
+                         });
+                     }, 5000);
+
+                 }
+            },
+            error: function (errormessage) {
+                //alert(errormessage.responseText);
+            }
+        });
+
+
+    });
+
+    $("#Grid").on("click", '.btnQuality', function (event) {
+        //Having a.class selector for Event handler will result in bubbling of click event(sometimes to Parent element, sometimes to Children elements in DOM).
+
+        //event.StopPropagation() method ensures that event doesn't bubble to Parent elements, while event.StopImmediatePropagation()method ensures that event doesn't bubble to Children elements of desired class selector.
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        var currentRow = $(this).closest("tr");
+        MRN = currentRow.find("td:eq(5)").text();
+        ITEMCOD = currentRow.find("td:eq(6)").text();
+
+        var obj = {
+            PLANT: $("#PLANT").val(),
+            FAMILY: $("#FAMILY").val(),
+            MRN_NO: MRN,
+            ITEMCODE: ITEMCOD,
+            QUANTITY: currentRow.find("td:eq(10)").text(),
+            QTY_RECEIVED: currentRow.find("td:eq(11) [type='text']").val()
+
+        };
+         $.ajax({
+             url: '@Url.Action("QualitySticker", "MRN_VERIFICATION_MASTER")',
+             data: JSON.stringify(obj),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+             success: function (data) {
+
+                 if (data.validation.includes("error")) {
+                     $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                     /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                     setTimeout(function () {
+                         $.each($('.alert'), function () {
+                             closeAlert(this);
+                         });
+                     }, 5000);
+                 }
+                 else {
+                     $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                     setTimeout(function () {
+                         $.each($('.alert'), function () {
+                             closeAlert(this);
+                         });
+                     }, 5000);
+                 }
+
+            },
+            error: function (errormessage) {
+                //alert(errormessage.responseText);
+            }
+        });
+
+    });
+
+     var p = "";
+    $(function () {
+        $(".gfgselect").click(function () {
+
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+            var currentRow = $(this).closest("tr");
+            PLANT: $("#PLANT").val();
+            FAMILY: $("#FAMILY").val();
+            MRN = currentRow.find("td:eq(5)").text();
+            ITEMCOD = currentRow.find("td:eq(6)").text();
+            ITEM_DESCRIPTION = currentRow.find("td:eq(7)").text();
+            TRANSACTION_DATE = currentRow.find("td:eq(15)").text();
+            Qty = currentRow.find("td:eq(10)").text();
+
+            // CREATING DATA TO SHOW ON MODEL
+            var p = "";
+            p += "<p id='a' name='MRN' >MRN: " + MRN + " </p>";
+            p += "<p id='c' name='ITEMCOD'>ITEMCOD: " + ITEMCOD + "</p>";
+            p += "<p id='d' name='ITEM_DESCRIPTION' >ITEM_DESCRIPTION: " + ITEM_DESCRIPTION + " </p>";
+            p += "<p id='e' name='TRANSACTION_DATE' >TRANSACTION_DATE: " + TRANSACTION_DATE + " </p>";
+            p += "<p id='f' name='Qty' >Qty: " + Qty + " </p>";
+
+
+            //CLEARING THE PREFILLED DATA
+            $("#divGFG").empty();
+            //WRITING THE DATA ON MODEL
+            $("#divGFG").append(p);
+            $('#gfgmodal').modal('show');
+
+        });
+    });
+
+    $("#PrntRprnt").on("change", function () {
+        if ($("#PrntRprnt").val() == "") {
+            $("#serilNodiv").hide();
+            $("#Reprintpswrd").hide();
+        }
+        if ($("#PrntRprnt").val() == "Print") {
+            $("#serilNodiv").hide();
+            $("#Reprintpswrd").hide();
+        }
+        if ($("#PrntRprnt").val() == "Reprint") {
+            $("#serilNodiv").hide();
+            $("#Reprintpswrd").show();
+        }
+        if ($("#PrntRprnt").val() == "RSN") {
+            $("#serilNodiv").show();
+            $("#Reprintpswrd").hide();
+        }
+    });
+
+
+    $("#PrntMrn").on("click", function () {
+        $("#divLoader").show();
+        var obj = {
+            PLANT: $("#PLANT").val(),
+            FAMILY : $("#FAMILY").val(),
+            MRN_NO : MRN,
+            ITEMCODE : ITEMCOD,
+            ITEM_DESCRIPTION : ITEM_DESCRIPTION,
+            TRANSACTION_DATE : TRANSACTION_DATE,
+            QUANTITY: Qty,
+            ReprintSrno: $("#ReprintSrno").val(),
+            PrntRprnt: $("#PrntRprnt").val(),
+            PSWORD: $("#PSWORD").val()
+        };
+        $.ajax({
+             url: '@Url.Action("MRNSrlnoPrint", "MRN_VERIFICATION_MASTER")',
+             data: JSON.stringify(obj),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+             success: function (data) {
+                 if (data.validation.includes("error")) {
+                     $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                     /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                     setTimeout(function () {
+                         $.each($('.alert'), function () {
+                             closeAlert(this);
+                         });
+                     }, 5000);
+                     $("#divLoader").hide();
+                 }
+                 else {
+                     $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                     setTimeout(function () {
+                         $.each($('.alert'), function () {
+                             closeAlert(this);
+                         });
+                     }, 5000);
+                     $("#divLoader").hide();
+                 }
+                 $("#divLoader").hide();
+                 $('#gfgmodal').modal('hide');
+            },
+
+            error: function (errormessage) {
+                //alert(errormessage.responseText);
+            }
+        });
+    });
+
+    function closeAlert(alert) {
+
+        $(alert).hide();
+    };
+</script>
+<div class="modal" id="DeleteConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <h4 class="center"><strong>Print Stickers</strong></h4>
+
+
+                <div class="col-md-6">
+                    <label for="fname" class="text-right control-label col-form-label"><strong>Select</strong></label>
+                    @Html.DropDownListFor(model => model.customStiker, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+
+                </div>
+                <div class="col-md-6" style="top:26PX">
+                    <div class="col-md-3" style="margin-right: 15px;">
+                        <button type="button" id="btnCustomPrint" class="btn btn-warning btn-sm"><i class="fa fa-arrow-left"></i>Print</button>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" id="btnDeleteCancel" class="btn btn-secondary btn-sm"><i class="fa fa-arrow-left"></i> Cancel</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="BarcodePopUp" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Barcode Printing</h4>
+                @*<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>*@
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="ORDERBY" class="col-form-label">Order By</label>
+                            @Html.TextBoxFor(Model => Model.ORDERBY, null, new { @class = "form-control", @autocomplete = "off" })
+                        </div>
+                        <div class="col-md-4">
+                            <label for="PACKING_STANDARD" class="col-form-label">Packing Std.</label>
+                            @Html.TextBoxFor(Model => Model.PACKING_STANDARD, null, new { @class = "form-control", @autocomplete = "off" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnBarcodePrint" class="btn btn-primary">Print</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,362 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="table-responsive">
+        @{
+            List<object> commands = new List<object>();
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-delete", cssClass = "delete" } });
+        }
+
+        @if (ViewBag.GridType != null)
+        {
+            if (ViewBag.GridType == "TR04")
+            {
+                @(Html.EJS().Grid("Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                //AllowPaging(true).
+                //PageSettings(Page => Page.PageSize(7)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+
+                Columns(col =>
+                {
+                    col.HeaderText("ACTION").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Commands(commands).Add();
+                    col.Field("ITEM_CODE").HeaderText("ITEM CODE").Width("150").IsPrimaryKey(true).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("DESCRIPTION").HeaderText("DESCRIPTION").Width("200").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("SHORT_DESC").HeaderText("SHORT CODE").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("TYRE_MAKE").HeaderText("TYRE MAKE").Width("160").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("MODEL").HeaderText("MODEL").Width("110").Add();
+                    col.Field("PLANNED_QTY").HeaderText("PLANNED QTY").Width("150").IsPrimaryKey(true).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("QTY_CANBEMADE").HeaderText("QTY TO BE MADE").Width("180").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("AVL_REARAXLE").HeaderText("REAR AXLE").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("AVL_TRANSMISSION").HeaderText("TRANSMISSION").Width("160").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("AVL_ENGINE").HeaderText("ENGINE").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("AVL_HYDROLIC").HeaderText("HYDRAULIC").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("SEQUENCE_NO").HeaderText("SEQUENCE NO").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+
+                })
+                .Aggregates(agg =>
+                {
+                    agg.Columns(new List<Syncfusion.EJ2.Grids.GridAggregateColumn>() {
+                    new Syncfusion.EJ2.Grids.GridAggregateColumn() { Field = "PLANNED_QTY", Type = "Sum" },
+                    new Syncfusion.EJ2.Grids.GridAggregateColumn() { Field = "QTY_CANBEMADE", Type = "Sum" },
+                    new Syncfusion.EJ2.Grids.GridAggregateColumn() { Field = "AVL_REARAXLE", Type = "Sum" },
+                    new Syncfusion.EJ2.Grids.GridAggregateColumn() { Field = "AVL_TRANSMISSION", Type = "Sum" },
+                    new Syncfusion.EJ2.Grids.GridAggregateColumn() { Field = "AVL_ENGINE", Type = "Sum" },
+                    new Syncfusion.EJ2.Grids.GridAggregateColumn() { Field = "AVL_HYDROLIC", Type = "Sum" },
+                    }).Add();
+                })
+                .SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick").//AllowRowDragAndDrop().
+                Render())
+            }
+            if (ViewBag.GridType == "TR05")
+            {
+                @(Html.EJS().Grid("Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                //AllowPaging(true).
+                //PageSettings(Page => Page.PageSize(7)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+                Columns(col =>
+                {
+                    col.Field("ITEM_CODE").HeaderText("Item Code").IsPrimaryKey(true).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("100").Add();
+                    col.Field("DESCRIPTION").HeaderText("Description").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("SHORT_DESC").HeaderText("Short Code").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("100").Add();
+                    col.Field("TYRE_MAKE").HeaderText("Tyre Make").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("100").Add();
+                    col.Field("MODEL").HeaderText("Model").Width("100").Add();
+                    col.Field("PLANNED_QTY").HeaderText("Planned Qty").IsPrimaryKey(true).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Width("100").Add();
+                    col.Field("QTY_CANBEMADE").HeaderText("Qty to be made").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Width("100").Add();
+                    col.Field("AVL_BACKEND").HeaderText("Backend").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Width("100").Add();
+                    col.Field("AVL_ENGINE").HeaderText("Engine").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Width("100").Add();
+                    col.Field("SEQUENCE_NO").HeaderText("Sequence No").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Width("100").Add();
+                    col.HeaderText("").Width("120").Commands(commands).Add();
+                })
+                .Aggregates(agg =>
+                {
+                    agg.Columns(new List<Syncfusion.EJ2.Grids.GridAggregateColumn>() {
+                    new Syncfusion.EJ2.Grids.GridAggregateColumn() { Field = "PLANNED_QTY", Type = "Sum" },
+                    new Syncfusion.EJ2.Grids.GridAggregateColumn() { Field = "QTY_CANBEMADE", Type = "Sum" },
+                    new Syncfusion.EJ2.Grids.GridAggregateColumn() { Field = "AVL_BACKEND", Type = "Sum" },
+                    new Syncfusion.EJ2.Grids.GridAggregateColumn() { Field = "AVL_ENGINE", Type = "Sum" },
+                    }).Add();
+                })
+                .SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick").//AllowRowDragAndDrop().
+                Render())
+            }
+            if (ViewBag.GridType == "BK04")
+            {
+                @(Html.EJS().Grid("Grid").DataSource((System.Data.DataTable)ViewBag.DataSource).
+                //AllowPaging(true).
+                //PageSettings(Page => Page.PageSize(7)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+                Columns(col =>
+                {
+                    col.Field("ITEM_CODE").HeaderText("Item Code").IsPrimaryKey(true).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("100").Add();
+                    col.Field("DESCRIPTION").HeaderText("Description").Width("150").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                    col.Field("TYRE_MAKE").HeaderText("Tyre Make").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Width("100").Add();
+                    col.Field("MODEL").HeaderText("Model").Width("100").Add();
+                    col.Field("PLANNED_QTY").HeaderText("Planned Qty").IsPrimaryKey(true).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Width("100").Add();
+                    col.Field("QTY_CANBEMADE").HeaderText("Qty to be made").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Width("100").Add();
+                    col.Field("AVL_REARAXLE").HeaderText("Rear Axle").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Width("100").Add();
+                    col.Field("AVL_TRANSMISSION").HeaderText("Transmission").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Width("100").Add();
+                    col.Field("AVL_HYDROLIC").HeaderText("Hydrolic").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Width("100").Add();
+                    col.Field("SEQUENCE_NO").HeaderText("Sequence No").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Width("100").Add();
+                    col.HeaderText("").Width("120").Commands(commands).Add();
+                })
+                 .Aggregates(agg =>
+                 {
+                     agg.Columns(new List<Syncfusion.EJ2.Grids.GridAggregateColumn>() {
+                     new Syncfusion.EJ2.Grids.GridAggregateColumn() { Field = "PLANNED_QTY", Type = "Sum" },
+                     new Syncfusion.EJ2.Grids.GridAggregateColumn() { Field = "QTY_CANBEMADE", Type = "Sum" },
+                     new Syncfusion.EJ2.Grids.GridAggregateColumn() { Field = "AVL_REARAXLE", Type = "Sum" },
+                     new Syncfusion.EJ2.Grids.GridAggregateColumn() { Field = "AVL_TRANSMISSION", Type = "Sum" },
+                     new Syncfusion.EJ2.Grids.GridAggregateColumn() { Field = "AVL_HYDROLIC", Type = "Sum" },
+                     }).Add();
+                 })
+                .SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick").//AllowRowDragAndDrop().
+                Render())
+            }
+        }
+
+        <script>
+
+
+            var ID, PlanID, Seqn, Item_Code;
+            function commandClick(args) {
+                if (args.rowData != null) {
+                    if (args.target.classList.contains('edit')) {
+                        $('#exampleModal').modal('show');
+                        $('#EditQty').val(args.rowData["QTY_CANBEMADE"]);
+                        $('#EditSqn').val(args.rowData["SEQUENCE_NO"]);
+                        ID = args.rowData["AUTOID"];
+                        PlanID = args.rowData["PLAN_ID"];
+                        Seqn = args.rowData["SEQUENCE_NO"];
+                    }
+                    if (args.target.classList.contains('delete')) {
+                        $('#DeleteConfirm').modal('show');
+                        ID = args.rowData["AUTOID"];
+                        PlanID = args.rowData["PLAN_ID"];
+                        Seqn = args.rowData["SEQUENCE_NO"];
+                        Item_Code = args.rowData["ITEM_CODE"];
+                    }
+                }
+            };
+
+            $("#btnEditSeq").on("click", function () {
+                EditSeq();
+            });
+
+            $("#btnDelete").on("click", function () {
+                DeleteSeq();
+            });
+
+            $("#btnDeletePlaning").on("click", function () {
+                DeletePlanning();
+            });
+
+            //Function to edit Tractor Planning
+            function EditSeq() {
+                $("#divLoader").show();
+                var Data = {
+                    AutoId: ID,
+                    PlanId: PlanID,
+                    Seq: Seqn,
+                    Plant: $('#Plant').val(),
+                    Family: $('#Family').val(),
+                    Shift: $('#Shift').val(),
+                    Date: $('#Date').val(),
+                    ItemCode: $('#ItemCode').val(),
+                    Qty: $('#EditQty').val(),
+                    TargetSeq: $('#EditSqn').val()
+                };
+                $('#exampleModal').modal('hide');
+                $.ajax({
+                    url: '@Url.Action("EditPlan", "AddDailyPlan")',
+                    data: JSON.stringify({ data: Data }),
+                    type: "POST",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        BindGrid();
+                         $("#divLoader").hide();
+                        $('#Qty').val("");
+                        if (data.Msg != "" || data.Msg != null ) {
+                            $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            setTimeout(function() {$(".alert").alert('close');}, 5000);
+                        }
+                    },
+                    error: function (errormessage) {
+                        $("#divLoader").hide();
+                        $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function() {$(".alert").alert('close');}, 5000);
+                    }
+                });
+            };
+
+            //Function to delete item Tractor Planning
+            function DeleteSeq() {
+                //$("#divLoader").show();
+                var Data = {
+                    AutoId: ID,
+                    Seq: Seqn,
+                    PlanId: PlanID,
+                    ItemCode: Item_Code,
+                    Plant: $('#Plant').val(),
+                    Family: $('#Family').val(),
+                    Shift: $('#Shift').val(),
+                    Date: $('#Date').val()
+                };
+                $('#DeleteConfirm').modal('hide');
+                $.ajax({
+                    url: '@Url.Action("DeletePlanItem", "AddDailyPlan")',
+                    data: JSON.stringify({ data: Data }),
+                    type: "POST",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        //$("#divLoader").hide();
+                        BindGrid();
+                        $('#Qty').val("");
+                        if (data.Msg != "" || data.Msg != null ) {
+                            $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            setTimeout(function() {$(".alert").alert('close');}, 5000);
+                        }
+                    },
+                    error: function (errormessage) {
+                        $("#divLoader").hide();
+                        $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function() {$(".alert").alert('close');}, 5000);
+                    }
+                });
+            };
+
+            //Function to delete Tractor Planning
+            function DeletePlanning() {
+                 var Data = {
+                    Plant: $('#Plant').val(),
+                    Family: $('#Family').val(),
+                    Shift: $('#Shift').val(),
+                    Date: $('#Date').val()
+                };
+                $('#DeletePlanConfirm').modal('hide');
+                //$("#divLoader").show();
+                $.ajax({
+                    url: '@Url.Action("DeletePlan", "AddDailyPlan")',
+                    data: JSON.stringify({ data: Data }),
+                    type: "POST",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        //$("#divLoader").hide();
+                        BindGrid();
+                        $('#Qty').val("");
+                        if (data.Msg != "" || data.Msg != null ) {
+                            $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            setTimeout(function() {$(".alert").alert('close');}, 5000);
+                        }
+                    },
+                    error: function (errormessage) {
+                        $("#divLoader").hide();
+                        $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function() {$(".alert").alert('close');}, 5000);
+                    }
+                });
+            }
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+
+@*Model for Edit*@
+<div class="modal fade bd-example-modal-sm" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <strong class="modal-title" id="exampleModalLabel" style="font-size:25px;"><i class="fa fa-exclamation-circle" style="font-size:35px;" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<strong>Confirmation..!</strong></strong>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Quantity can be make</label>
+                        <input type="number" class="form-control" id="EditQty" required="Required" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Sequence No.</label>
+                        <input type="number" class="form-control" id="EditSqn" required="Required" min="1">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Back</button>
+                <button type="button" class="btn btn-success btn-sm" id="btnEditSeq">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Model for Delete Plan Item*@
+<div class="modal" id="DeleteConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <strong class="modal-title" id="exampleModalLabel" style="font-size:25px;"><i class="fa fa-exclamation-circle" style="font-size:35px;" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<strong>Confirmation..!</strong></strong>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4><strong>Are you sure, to delete this item of this plan..?</strong></h4>
+            </div>
+            <div class="modal-footer">
+                @*<a href="@Url.Action("", "")" class="btn btn-success btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Go Back</a>*@
+                <button type="button" data-dismiss="modal" class="btn btn-warning btn-sm"><i class="ace-icon fa fa-arrow-left"></i> Go Back</button>
+                <button type="button" id="btnDelete" class="btn btn-danger btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Model for Delete Plan*@
+<div class="modal" id="DeletePlanConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <strong class="modal-title" id="exampleModalLabel" style="font-size:25px;"><i class="fa fa-exclamation-circle" style="font-size:35px;" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<strong>Confirmation..!</strong></strong>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4><strong>Are you sure, to delete planning of this date..?</strong></h4>
+            </div>
+            <div class="modal-footer">
+                @*<a href="@Url.Action("", "")" class="btn btn-success btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Go Back</a>*@
+                <button type="button" data-dismiss="modal" class="btn btn-warning btn-sm"><i class="ace-icon fa fa-arrow-left"></i> Go Back</button>
+                <button type="button" id="btnDeletePlaning" class="btn btn-danger btn-sm"><i class="ace-icon fa fa-check bigger-110"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
