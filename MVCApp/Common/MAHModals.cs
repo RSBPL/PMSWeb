@@ -105,6 +105,16 @@ namespace MVCApp.Common
         public string KANBAN { get; set; }
 
     }
+    public class SUPERMKTQTYUPDATE
+    {
+        public string ITEMCODE { get; set; }
+        public string QUANTITY { get; set; }
+        public string UPDATEQUANTITY { get; set; }
+        public string UPDATEDBY { get; set; }
+        public string FIRSTLOCATION { get; set; }
+        public string SECONDLOCATION { get; set; }
+
+    }
     public class COMMONDATA
     {
         public string PLANT { get; set; }
