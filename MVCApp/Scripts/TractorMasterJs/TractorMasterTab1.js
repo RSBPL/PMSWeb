@@ -82,7 +82,7 @@ $(document).ready(function () {
     AC_STEERING_WHEEL();
     AC_REAR_HOOD_WIRING_HARNESS();
     AC_SEAT();
-   /* BindT3Plant();*/
+    /* BindT3Plant();*/
 });
 
 
@@ -1136,7 +1136,8 @@ $("#Add").on("click", function () {
 
 $("#Update").on("click", function () {
     localStorage.setItem("IsTabChange", true);
-    Update();
+    $("#Password").focus();
+   /* Update();*/
     //$('#ItemCode').val("");
     //$('#TransmissionChk').prop("checked", false);
     //$('#Transmission').val("");
@@ -1665,7 +1666,7 @@ function Update() {
                             closeAlert(this);
                         });
                     }, 5000);
-                    
+
 
                 }
                 else {
@@ -1816,7 +1817,7 @@ function Clear() {
 };
 
 function gleSearch_EditValueChanged() {
-    
+
     var Data = {
         gleSearch: $('#gleSearch').val(),
         Plant: $('#Plant').val(),
@@ -1989,20 +1990,18 @@ function gleSearch_EditValueChanged() {
                 $("#AlternatorChk").prop('checked', data.Result.AlternatorChk);
                 $("#EnableCarButtonChk").prop('checked', data.Result.EnableCarButtonChk);
                 $("#GenerateSerialNoChk").prop('checked', data.Result.GenerateSerialNoChk);
-                $("#Seq_Not_RequireChk").prop('checked', data.Result.Seq_Not_RequireChk);              
+                $("#Seq_Not_RequireChk").prop('checked', data.Result.Seq_Not_RequireChk);
                 if ($("#ElectricMotorChk").prop('checked', data.Result.ElectricMotorChk)) {
-                    if (data.Result.ElectricMotorChk == true)
-                    {
+                    if (data.Result.ElectricMotorChk == true) {
                         $('.lblMotor').html("Motor");
-                       
-                       
-                    } else
-                    {
+
+
+                    } else {
                         $('.lblMotor').html("Engine");
-                       
-                    } 
+
+                    }
                 }
-                
+
                 $('[name="DomesticExport"]').removeAttr('checked');
                 if (data.Result.DomesticExport !== "" && data.Result.DomesticExport != null) {
                     if ("Domestic" == data.Result.DomesticExport) {
@@ -2010,11 +2009,11 @@ function gleSearch_EditValueChanged() {
                     }
                     else if ("Export" == data.Result.DomesticExport) {
                         $('#Exp').prop('checked', true);
-                        
+
                     }
-                    
+
                 }
-                
+
 
                 /*$("#DomesticExprt").prop('checked',data.Result.DomesticExport);*/
                 $("#RearAxelChk").prop('checked', data.Result.RearAxelChk);
@@ -2048,8 +2047,53 @@ function gleSearch_EditValueChanged() {
 
         }
     });
-    
+
 };
+
+$("#PawordSubmit").on("click", function () {
+   /* localStorage.setItem("IsTabChange", true);*/
+    ChkPassword();
+});
+
+function ChkPassword() {
+    $("#divLoader").show();
+    var data = {
+        Plant: $('#Plant').val(),
+        Family: $('#Family').val(),
+        Password: $('#Password').val()
+    };
+    $.ajax({
+        url: SubmitPass,
+        data: JSON.stringify(data),
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            $("#PawordPopUp").hide();
+            $(".modal-backdrop").hide();
+            $(".modal-backdrop").addClass("important");
+            $("#divLoader").hide(); $(".modal-backdrop").addClass("important");
+            if (data.Msg == "Valid Password") {
+                var chk = confirm("Are you sure you want to Update this?");
+                if (chk == true) {
+                    Update();
+                }
+            } else {
+                $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                setTimeout(function () {
+                    $.each($('.alert'), function () {
+                        closeAlert(this);
+                    });
+                }, 5000);
+            }
+        },
+        error: function (errormessage) {
+
+        }
+    });
+
+};
+
 
 jQuery("#gleSearch").select2(
     //allowClear : true,

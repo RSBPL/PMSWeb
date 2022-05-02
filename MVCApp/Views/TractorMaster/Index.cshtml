@@ -52,6 +52,12 @@
         margin-left: 13px;
         width: 240px;
     }
+    #PawordPopUp .modal-lg {
+        max-width: 30% !important;
+    }
+    .important {
+     opacity:-0.5;
+    }
 </style>
 <div id="divLoader" style="display:none;">
     <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:10%; margin-left:38%" />
@@ -498,6 +504,7 @@
                                             @Html.TextBoxFor(Model => Model.SEAT, null, new { @class = "form-control input-sm" })
                                         </div>
                                     </div>
+                                   
                                     @*  *@
                                     <div class="row">
                                         <div class="col-md-6 align-right" style="padding: 5px 12px 5px 12px !important;">
@@ -509,7 +516,7 @@
                                         <div class="col-md-2 align-right" style="padding: 5px 12px 5px 12px !important;">
 
                                             <button class="btn btn-success btn-sm" type="button" id="Add"><strong>Submit</strong></button>
-                                            <button class="btn btn-success btn-sm" type="button" id="Update"><strong>Update</strong></button>
+                                            <button class="btn btn-success btn-sm" type="button" id="Update" data-toggle="modal" data-target="#PawordPopUp"><strong>Update</strong></button>
 
                                         </div>
 
@@ -882,7 +889,33 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="PawordPopUp"  role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Enter Password</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="ORDERBY" class="col-form-label">Password</label>
+                            @Html.TextBoxFor(Model => Model.Password, null, new { @class = "form-control input-sm" })
 
+                            @*@Html.TextBoxFor(Model => Model.Password, null, new { @class = "form-control", @autocomplete = "off" })*@
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="PawordSubmit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
 <script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
 @*<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>*@
 <script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
@@ -990,7 +1023,14 @@
     var FRBRH = '@Url.Action("FillFRB_RH", "TractorMaster")';
     var FRBLH = '@Url.Action("FillFRB_LH", "TractorMaster")';
     var FRASRB = '@Url.Action("FillFR_AS_RB", "TractorMaster")';
+    var SubmitPass = '@Url.Action("PasswordPopup", "TractorMaster")';
      //-------------------Add New Jquery End---------------------------
 
+    //$("#Update").on("click", function () {
+
+    //    localStorage.setItem("IsTabChange", true);
+    //    $("#PawordPopUp").modal('show');
+      
+    //});
 
 </script>

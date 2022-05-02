@@ -391,7 +391,7 @@ namespace MVCApp.Models
 					sc.CommandType = CommandType.StoredProcedure;
 					sc.Parameters.Add("p_PLANT_CODE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = string.IsNullOrEmpty(KM.PLANT_CODE) == true ? null : KM.PLANT_CODE.ToUpper().Trim();
 					sc.Parameters.Add("p_FAMILY_CODE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = string.IsNullOrEmpty(KM.FAMILY_CODE) == true ? null : KM.FAMILY_CODE.ToUpper().Trim();
-					sc.Parameters.Add("p_TRANSACTION_DATE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = string.IsNullOrEmpty(KM.TRANSACTION_DATE) == true ? null : KM.TRANSACTION_DATE.ToUpper().Trim();
+					sc.Parameters.Add("p_TRANSACTION_DATE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = string.IsNullOrEmpty(KM.TRANSACTION_DATE) == true ? null : Convert.ToDateTime(KM.TRANSACTION_DATE).ToString("dd-MMM-yyyy");
 					sc.Parameters.Add("p_MRN_NO", OracleDbType.NVarchar2, ParameterDirection.Input).Value = string.IsNullOrEmpty(KM.MRN_NO) == true ? null : KM.MRN_NO.ToUpper().Trim();
 					sc.Parameters.Add("p_VENDOR_CODE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = string.IsNullOrEmpty(KM.VENDOR_CODE) == true ? null : KM.VENDOR_CODE.ToUpper().Trim();
 					sc.Parameters.Add("p_ITEMCODE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = string.IsNullOrEmpty(KM.ITEMCODE) == true ? null : KM.ITEMCODE.ToUpper().Trim();
