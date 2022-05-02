@@ -1020,5 +1020,113 @@ namespace MVCApp.Controllers.Masters
             var result = new { Msg = msg, ID = mstType };
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+
+        //******************************************Generate Tractor Master Password********************************//
+
+        [HttpGet]
+        public JsonResult BindPlantPwd()
+        {
+            return Json(fun.Fill_Unit_Name(), JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult BindFamilyPwd(string PlantPwd)
+        {
+            List<DDLTextValue> result = new List<DDLTextValue>();
+            if (!string.IsNullOrEmpty(PlantPwd))
+            {
+                result = fun.Fill_All_Family(PlantPwd);
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult SavePassword(OtherSuffix data)
+        {
+            string msg = string.Empty, mstType = string.Empty, status = string.Empty;
+            try
+            {
+
+                if (string.IsNullOrEmpty(data.Password))
+                {
+                    msg = "Please Enter Password..";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(resul, JsonRequestBehavior.AllowGet);
+                }
+                query = string.Format(@"SELECT COUNT(*) FROM XXES_SFT_SETTINGS WHERE PARAMVALUE='{0}' AND PLANT_CODE='{1}'
+                         AND FAMILY_CODE='{2}' AND PARAMETERINFO='{3}'", data.Password.Trim(), data.PlantPwd.Trim().ToUpper(), 
+                         data.FamilyPwd.Trim().ToUpper() , data.TypePwd.Trim().ToUpper());
+                if(fun.CheckExits(query))
+                {
+                    msg = "Password Already Exist..";
+                    mstType = "alert-danger";
+                    status = "Error";
+                    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(resul, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    query = string.Format(@"INSERT INTO XXES_SFT_SETTINGS(PLANT_CODE,FAMILY_CODE,PARAMETERINFO,PARAMVALUE,CREATED_BY,CREATED_DATE)
+                            VALUES('{0}','{1}','{2}','{3}','{4}',SYSDATE)", data.PlantPwd.Trim().ToUpper(), data.FamilyPwd.Trim().ToUpper(),
+                            data.TypePwd.Trim().ToUpper(), data.Password.Trim().ToUpper(), HttpContext.Session["Login_User"].ToString().ToUpper().Trim());
+                    if (fun.EXEC_QUERY(query))
+                    {
+                        msg = "Data Saved successfully...";
+                        mstType = "alert-success";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+
+            }
+            finally { }
+            var result = new { Msg = msg, ID = mstType, validation = status };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public PartialViewResult GridPassword(OtherSuffix data)
+        {
+            DataTable dt = new DataTable();
+
+            try
+            {
+                query = string.Format(@"SELECT XSS.AUTOID, XSS.PLANT_CODE,XSS.FAMILY_CODE,XSS.PARAMETERINFO,XSS.PARAMVALUE,XSS.CREATED_BY,
+                         TO_CHAR(XSS.CREATED_DATE,'DD-MM-YYYY HH24:MI:SS') AS CREATED_DATE FROM XXES_SFT_SETTINGS xss WHERE XSS.PLANT_CODE='{0}'
+                         AND XSS.FAMILY_CODE='{1}' AND XSS.PARAMETERINFO='{2}' ORDER BY CREATED_DATE DESC", data.PlantPwd, data.FamilyPwd,data.TypePwd);
+                dt = fun.returnDataTable(query);
+            }
+
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+            }
+            ViewBag.DataSourcePwd = dt;
+            return PartialView();
+        }
+
+        public JsonResult DeletePwd(OtherSuffix data)
+        {
+
+            string msg = string.Empty, mstType = string.Empty, status = string.Empty;
+            try
+            {
+                query = string.Format(@"delete from XXES_SFT_SETTINGS where AUTOID ='{0}'",data.AutoId);
+                if (fun.EXEC_QUERY(query))
+                {
+                    msg = "Record deleted successfully ..";
+                    mstType = "alert-danger";
+                    var resul = new { Msg = msg, ID = mstType };
+                    return Json(resul, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+            }
+            finally { }
+            var result = new { Msg = msg, ID = mstType };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
     }
 }

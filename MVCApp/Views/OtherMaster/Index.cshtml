@@ -65,6 +65,7 @@
         <li class="bg-light"><a data-toggle="tab" href="#Menu6">Dummy Battery DCode</a></li>
         <li class="bg-light"><a data-toggle="tab" href="#Menu7">Dummy Battery SerialNo</a></li>
         <li class="bg-light"><a data-toggle="tab" href="#Menu8">FCode Tyres</a></li>
+        <li class="bg-light"><a data-toggle="tab" href="#Menu9">Generate Password</a></li>
 
     </ul>
     @*--------Form------------*@
@@ -349,6 +350,46 @@
         </div>
     </div>
 
+    <div id="Menu9" class="tab-pane fade">
+        <div class="container" style="width:100%!important">
+            <div class="form-horizontal form-group ">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="PlantPwd" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            @Html.DropDownListFor(model => model.PlantPwd, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.PlantPwd, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="FamilyPwd" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                            @Html.DropDownListFor(model => model.FamilyPwd, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.FamilyPwd, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="TypePwd" class="text-right control-label col-form-label"><strong>Type</strong></label>
+                            @Html.DropDownList("TypePwd", new List<SelectListItem>
+
+                                  {
+                                      new SelectListItem{ Text = "TRACTOR MASTER",Value="TRACTOR_MASTER_PASSWORD" }
+                                  })
+                        </div>
+                        <div class="col-md-3">
+                            <label for="Password" class="text-right control-label col-form-label"><strong>Password</strong></label>
+                            @Html.TextBoxFor(Model => Model.Password, null, new { @class = "form-control input-sm", @autocomplete = "off" , Type = "number" })
+                            <strong>@Html.ValidationMessageFor(model => model.Password,  "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-success btn-sm" type="button" id="AddPwd"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 23px;">
+                            <button class="btn btn-default btn-sm" type="button" id="ClearPwd"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div id="GridPassword"></div>
+        </div>
+    </div>
 </div>
 </div>
 
@@ -366,6 +407,7 @@
         DDLPlantBattery();
         DDLPlantSrl();
         DDLPlantFCode();
+        DDLPlantPwd();
         $('#Update').hide();
         $('#UpdateExport').hide();
         $('#UpdateTyre').hide();
@@ -389,15 +431,20 @@
     $("#PlantFcode").on('change', function () {
         //$('#AddFCode').show();
         //$('#UpdateFCode').hide();
-       
+
         DDLFamilyByPlant();
-      
+
     });
     $("#FamilyFcode").on('change', function () {
         DdlDcodeByPlantFamily();
         BindFCodeTyreGrid();
     });
-
+    $("#PlantPwd").on('change', function () {
+        DDLFamilyPwd();
+    });
+    $("#FamilyPwd").on('change', function () {
+        BindGridPassword();
+    });
     function DDLPlant() {
         $.ajax({
             url: '@Url.Action("BindPlant", "OtherMaster")',
@@ -559,6 +606,48 @@
         });
     };
 
+     // Bind Plant Password
+    function DDLPlantPwd() {
+        $.ajax({
+            url: '@Url.Action("BindPlantPwd", "OtherMaster")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#PlantPwd").append(optionhtml);
+                });
+                DDLFamilyPwd();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+     // Bind Plant Password
+    function DDLFamilyPwd() {
+        var selectedValue = $("#PlantPwd").val();
+        $.ajax({
+            url: '@Url.Action("BindFamilyPwd", "OtherMaster")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ PlantPwd: selectedValue }),
+            success: function (result) {
+                $("#FamilyPwd").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#FamilyPwd").append(optionhtml);
+                });
+                BindGridPassword();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
     // Bind FCode Tyre Grid
      function BindFCodeTyreGrid() {
         $("#divLoader").show();
@@ -583,7 +672,7 @@
         });
     };
 
-    
+
 
 
     // Bind DDLBatterySrl
@@ -739,6 +828,29 @@
         });
     };
 
+     // Bind Grid Password
+     function BindGridPassword() {
+        $("#divLoader").show();
+        var Data = {
+            PlantPwd: $('#PlantPwd').val(),
+            FamilyPwd: $('#FamilyPwd').val(),
+            TypePwd: $('#TypePwd').val()
+                };
+        $.ajax({
+            url: '@Url.Action("GridPassword", "OtherMaster")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#GridPassword").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
 
     $("#Clear").on("click", function () {
         location.reload(true);
@@ -762,6 +874,9 @@
         location.reload(true);
     });
     $("#ClearFCode").on("click", function () {
+        location.reload(true);
+    });
+    $("#ClearPwd").on("click", function () {
         location.reload(true);
     });
 
@@ -1064,11 +1179,62 @@
 
     });
 
+    // Save Password Data
+    $("#AddPwd").on("click", function () {
+        var pass = $('#Password').val();
+        if (pass.length < 3) {
+            $("#divLoader").hide();
+            $('#alert').append('<div class="alert  "role = "alert"><strong>Password Must Be 4 digits </strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            setTimeout(function () { $(".alert").alert('close'); }, 5000);
+            return;
+        }
+        else if (pass.length > 10) {
+            $("#divLoader").hide();
+            $('#alert').append('<div class="alert  "role = "alert"><strong>Password Does not Greater than 10 digits </strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            setTimeout(function () { $(".alert").alert('close'); }, 5000);
+            return;
+        }
+        $("#divLoader").show();
+            var data = {
+                PlantPwd: $('#PlantPwd').val(),
+                FamilyPwd: $('#FamilyPwd').val(),
+                TypePwd: $('#TypePwd').val(),
+                Password: $('#Password').val()
+        };
+            $.ajax({
+                url: '@Url.Action("SavePassword", "OtherMaster")',
+                data: JSON.stringify(data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () { $(".alert").alert('close'); }, 5000);
+
+                        BindGridPassword();
+                    }
+
+                },
+                error: function (errormessage) {
+
+                }
+            });
+
+    });
+
      // Update Data Fcode Tyre
     $("#UpdateFCode").on("click", function () {
         $("#divLoader").show();
         var data = {
-              
+
                 PlantFcode: $('#PlantFcode').val(),
                 FamilyFcode: $('#FamilyFcode').val(),
                 Fcode: $('#Fcode').val(),
@@ -1152,9 +1318,19 @@
         allowClear: true,
         width: '100%',
     });
-    
 
-
+    $("#PlantPwd").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#FamilyPwd").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#TypePwd").select2({
+        allowClear: true,
+        width: '100%',
+    });
 
 </script>
 

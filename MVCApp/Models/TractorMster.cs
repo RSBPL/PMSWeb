@@ -226,6 +226,9 @@ namespace MVCApp.Models
         public string FR_AS_RB { get; set; }
         public string FR_AS_RB_DESC { get; set; }
 
+        //-------------------------------Pasword--------------------------------------------//
+
+        public string Password { get; set; }
 
     }
 }

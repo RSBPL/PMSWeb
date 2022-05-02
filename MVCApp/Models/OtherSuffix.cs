@@ -52,8 +52,14 @@ namespace MVCApp.Models
         public string FamilyFcode { get; set; }
         public string Fcode { get; set; }
         public string Tyre { get; set; }
-
-
+        //[Required(ErrorMessage = "Age is required")]
+        //[Range(typeof(int), "3", "10", ErrorMessage = "Age can only be between 18 and 40")]
+        public string Password { get; set; }
+   
+        public string PlantPwd { get; set; }
+        public string FamilyPwd { get; set; }
+        public string TypePwd { get; set; }
+       
 
     }
 }
