@@ -1203,6 +1203,7 @@
     <Content Include="Views\SubAssembly\Index.cshtml" />
     <Content Include="Views\TracktorSubAssembly\Index.cshtml" />
     <Content Include="Views\BackendPartModification\Index.cshtml" />
+    <Content Include="Views\OtherMaster\GridPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

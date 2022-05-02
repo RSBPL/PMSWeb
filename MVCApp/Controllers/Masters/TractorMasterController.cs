@@ -4757,5 +4757,38 @@ namespace MVCApp.Controllers
             }
             return Json(_FRASRB, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        public JsonResult PasswordPopup(TractorMster data)
+        {
+            string msg = string.Empty; string mstType = string.Empty; string status = string.Empty;
+            try
+            {
+                query = string.Format(@"SELECT COUNT(*) FROM XXES_SFT_SETTINGS xss WHERE XSS.PARAMVALUE='{0}' AND XSS.PLANT_CODE='{1}'
+                       AND XSS.FAMILY_CODE='{2}' AND XSS.PARAMETERINFO='TRACTOR_MASTER_PASSWORD'", data.Password.Trim(),
+                       data.Plant.Trim().ToUpper(), data.Family.Trim().ToUpper());
+                if(fun.CheckExits(query))
+                {
+                    msg = "Valid Password";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var reult = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(reult, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    msg = "Invalid Password..!!";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var reult = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(reult, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+            }
+            return Json(msg, JsonRequestBehavior.AllowGet);
+        }
     }
 }
