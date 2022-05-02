@@ -1629,7 +1629,6 @@ namespace MVCApp.Controllers
                     ViewBag.DataSource = dtMain;
                     return PartialView("GrdPDI_AUDIT");
                 }
-
                 else if (Convert.ToString(data.ReportType) == "KIT_SCANNING")
                 {
 
@@ -1663,6 +1662,45 @@ namespace MVCApp.Controllers
                     return PartialView("GrdKIT_SCANNING");
                 }
 
+                //Created BY NAUSHAD
+                else if (Convert.ToString(data.ReportType) == "SHORT METERIAL DAILY")
+                {
+                    //string SHORT_BULK = data.SHORT_BULK;
+                    if (string.IsNullOrEmpty(data.SHORT_BULK))
+                    {
+                        ViewBag.msg = "NUMBER OF Repeats NOT FOUND.....";
+                        return PartialView("RecordNotFoundGrid");
+                    }
+
+                    ViewBag.heading = "MATERIAL SHORT  Daily";
+
+                    DA = new OracleDataAdapter("USP_REPORTMASTER", fun.Connection());
+                    DA.SelectCommand.CommandType = CommandType.StoredProcedure;
+                    DA.SelectCommand.Parameters.Add("pREPORT_TYPE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.ReportType;
+                    DA.SelectCommand.Parameters.Add("pPLANT", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.Plant;
+                    DA.SelectCommand.Parameters.Add("pFAMILY", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.Family;
+                    DA.SelectCommand.Parameters.Add("pFROM_DATE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.FromDate;
+                    DA.SelectCommand.Parameters.Add("pTO_DATE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.ToDate;
+                    DA.SelectCommand.Parameters.Add("pSCHEMA", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pCHECK_JOB", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pGLE_JOBS", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pORG_ID", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.SHORT_BULK;
+
+                    DA.SelectCommand.Parameters.Add("pPlanDate", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pShiftValue", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pStartTime", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pEndTime", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+
+                    DA.SelectCommand.Parameters.Add("pChkShowLess", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pFilterBy", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+
+                    DA.SelectCommand.Parameters.Add("RES", OracleDbType.RefCursor, ParameterDirection.Output);
+                    DA.Fill(dtMain);
+                    ViewBag.Total = dtMain.Rows.Count;
+                    ViewBag.Date = "("+data.FromDate + " Between " + data.ToDate+")";
+                    ViewBag.DataSource = dtMain;
+                    return PartialView("GrdMaterialShortDaily");
+                }
 
                 //CREATED BY RAJ ON 08-DEC-2021
                 else if (Convert.ToString(data.ReportType) == "DAILY_PART_SCANNING_EFFICIENCY")
