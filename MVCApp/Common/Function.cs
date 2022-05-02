@@ -92,6 +92,8 @@ namespace MVCApp.CommonFunction
         public DataTable returnDataTable(string SqlQuery)
         {
             OracleConnection ConOrcl = new OracleConnection(orConnstring);
+            OracleConfiguration.TraceFileLocation = @"D:\traces";
+            OracleConfiguration.TraceLevel = 7;
             DataTable dt = new DataTable();
             try
             {

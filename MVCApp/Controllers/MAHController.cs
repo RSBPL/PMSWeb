@@ -201,7 +201,7 @@ WHERE SMS.LOCATION_CODE='{0}'", Location);
             try
             {
 
-                
+
                 query = string.Format(@"SELECT NVL(SUM(xm.QUANTITY),0) QUANTITY 
                   FROM XXES_MRNINFO xm
                   inner join item_receipt_detials ir
@@ -267,7 +267,7 @@ WHERE SMS.LOCATION_CODE='{0}'", Location);
                                 ON M.PLANT_CODE = B.PLANT_CODE AND M.FAMILY_CODE = B.FAMILY_CODE AND M.ITEMCODE = B.ITEM_CODE
                                 WHERE M.MRN_NO = '{0}' AND M.ITEMCODE = '{1}'
                                 and m.plant_code='{2}' and m.family_code='{3}'",
-                                MRN.Trim(), ITEMCODE.Trim(),PLANT.Trim(), FAMILY.Trim());
+                                MRN.Trim(), ITEMCODE.Trim(), PLANT.Trim(), FAMILY.Trim());
                 return fun.returnDataTable(query);
 
 
@@ -283,7 +283,7 @@ WHERE SMS.LOCATION_CODE='{0}'", Location);
         {
             if (Convert.ToString(ConfigurationManager.AppSettings["PRINT_MRN_BULKITEM"]) != "Y")
                 return;
-            string line = fun.getPrinterIp("QUALITY", cOMMONDATA.PLANT.ToUpper().Trim(), 
+            string line = fun.getPrinterIp("QUALITY", cOMMONDATA.PLANT.ToUpper().Trim(),
                 cOMMONDATA.FAMILY.ToUpper().Trim());
             if (string.IsNullOrEmpty(line))
             {
@@ -303,18 +303,18 @@ WHERE SMS.LOCATION_CODE='{0}'", Location);
             {
                 //221001013048
                 query = string.Format(@"select distinct M.ITEMCODE from XXES_MRNINFO M where m.mrn_no='{0}' 
-                and m.plant_code='{1}' and m.family_code='{2}'", MRN_NO,cOMMONDATA.PLANT,cOMMONDATA.FAMILY);
+                and m.plant_code='{1}' and m.family_code='{2}'", MRN_NO, cOMMONDATA.PLANT, cOMMONDATA.FAMILY);
                 using (DataTable dataTable = fun.returnDataTable(query))
                 {
                     if (dataTable.Rows.Count > 0)
                     {
                         foreach (DataRow dataRow in dataTable.Rows)
                         {
-                            
+
                             dt = GetITEMDETAILS(MRN_NO, Convert.ToString(dataRow["ITEMCODE"]).Trim(), cOMMONDATA.PLANT, cOMMONDATA.FAMILY);
                             if (dt.Rows.Count > 0)
                             {
-                               
+
                                 if (string.IsNullOrEmpty(Convert.ToString(dt.Rows[0]["PACKING_STANDARD"])) ||
                                     Convert.ToString(dt.Rows[0]["PACKING_STANDARD"]) == "0")
                                     return;
@@ -460,35 +460,35 @@ WHERE SMS.LOCATION_CODE='{0}'", Location);
                             }
 
 
-                            List<BARCODEPRINT> barcodeList  = (from DataRow dr in dt.Rows
-                                           select new BARCODEPRINT()
-                                           {
-                                               PLANT = Convert.ToString(dr["PLANT_CODE"]),
-                                               FAMILY = Convert.ToString(dr["FAMILY_CODE"]),
-                                               MRN_NO = Convert.ToString(dr["MRN_NO"]),
-                                               ITEMCODE = Convert.ToString(dr["ITEM_CODE"]),
-                                               ITEM_DESC = Convert.ToString(dr["ITEM_DESC"]),
-                                               SUPP_NAME = Convert.ToString(dr["SUPP_NAME"]),
-                                               QTY_ORD = Convert.ToString(dr["QTY_ORD"]),
-                                               PKG_STD = Convert.ToString(dr["PACKING_STANDARD"]),
-                                               CURRENT_DATE = Convert.ToString(dr["CURRENT_DATE"]),
-                                               PUNAME = Convert.ToString(dr["PUNAME"]),
-                                               TRANSACTION_DATE = Convert.ToString(dr["TRANSACTION_DATE"]),
-                                               QTY_DLV = Convert.ToString(dr["QTY_DLV"]),
-                                               BULK_LOC = Convert.ToString(dr["BULK_LOC"]),
-                                               BPACKAGING = Convert.ToString(dr["BPACKAGING"]),
-                                               BULK_SNP = Convert.ToString(dr["BULK_SNP"]),
-                                               BOX_NO = Convert.ToString(dr["BOX_NO"]),
-                                               QR_CODE = Convert.ToString(dr["QR_CODE"]),
-                                               UNPACKED = Convert.ToString(dr["UNPACKED"])
-                                           }).ToList();
+                            List<BARCODEPRINT> barcodeList = (from DataRow dr in dt.Rows
+                                                              select new BARCODEPRINT()
+                                                              {
+                                                                  PLANT = Convert.ToString(dr["PLANT_CODE"]),
+                                                                  FAMILY = Convert.ToString(dr["FAMILY_CODE"]),
+                                                                  MRN_NO = Convert.ToString(dr["MRN_NO"]),
+                                                                  ITEMCODE = Convert.ToString(dr["ITEM_CODE"]),
+                                                                  ITEM_DESC = Convert.ToString(dr["ITEM_DESC"]),
+                                                                  SUPP_NAME = Convert.ToString(dr["SUPP_NAME"]),
+                                                                  QTY_ORD = Convert.ToString(dr["QTY_ORD"]),
+                                                                  PKG_STD = Convert.ToString(dr["PACKING_STANDARD"]),
+                                                                  CURRENT_DATE = Convert.ToString(dr["CURRENT_DATE"]),
+                                                                  PUNAME = Convert.ToString(dr["PUNAME"]),
+                                                                  TRANSACTION_DATE = Convert.ToString(dr["TRANSACTION_DATE"]),
+                                                                  QTY_DLV = Convert.ToString(dr["QTY_DLV"]),
+                                                                  BULK_LOC = Convert.ToString(dr["BULK_LOC"]),
+                                                                  BPACKAGING = Convert.ToString(dr["BPACKAGING"]),
+                                                                  BULK_SNP = Convert.ToString(dr["BULK_SNP"]),
+                                                                  BOX_NO = Convert.ToString(dr["BOX_NO"]),
+                                                                  QR_CODE = Convert.ToString(dr["QR_CODE"]),
+                                                                  UNPACKED = Convert.ToString(dr["UNPACKED"])
+                                                              }).ToList();
                             mainbarcodeList.AddRange(barcodeList);
                         }
                     }
                 }
                 PrintAssemblyBarcodes barcodes = new PrintAssemblyBarcodes();
                 if (InsertIntoRECEIPTBARCODES(mainbarcodeList) == true)
-                {                
+                {
                     if (barcodes.PrintBoxs(mainbarcodeList))
                     {
                         //msg = "Barcode Printing Successfully";
@@ -507,7 +507,7 @@ WHERE SMS.LOCATION_CODE='{0}'", Location);
                      cOMMONDATA.FAMILY.ToUpper().Trim()
                      ))
                 {
-                        barcodes.PrintMRNQualityBarcodes(bOXBARCODEs);
+                    barcodes.PrintMRNQualityBarcodes(bOXBARCODEs);
                 }
             }
             catch (Exception ex)
@@ -531,12 +531,12 @@ WHERE SMS.LOCATION_CODE='{0}'", Location);
                     {
                         string query = string.Format(@"Insert into XXES_RECEIPTBARCODES(PLANT_CODE,FAMILY_CODE,MRN_NO,ITEMCODE,QR_CODE,CREATEDBY,CREATEDDATE,Qty,BOX_NO)
                                                     values('{0}','{1}','{2}','{3}','{4}','',sysdate,'{5}','{6}')", item.PLANT.Trim().ToUpper(), item.FAMILY.Trim().ToUpper(), item.MRN_NO.Trim().ToUpper(), fun.replaceApostophi(item.ITEMCODE.Trim().ToUpper()), item.QR_CODE, item.QTY_ORD.Trim(), item.BOX_NO.Trim());
-                                                    fun.EXEC_QUERY(query);
-                                                    errModule = "";
+                        fun.EXEC_QUERY(query);
+                        errModule = "";
                     }
 
                 }
-                
+
             }
             catch
             {
@@ -546,6 +546,46 @@ WHERE SMS.LOCATION_CODE='{0}'", Location);
             return true;
         }
 
+
+        [HttpPost]
+
+        public HttpResponseMessage UpdateSuperMktQtyLocation(SUPERMKTQTYUPDATE sUPERMKTQTYUPDATE)
+        {
+            string response = string.Empty;
+            DataTable dataTable = new DataTable();
+            try
+            {
+
+                string ItemlocCheckexits = string.Format(@"SELECT count(*) FROM XXES_SUMMKTSTOCK WHERE ITEMCODE='{0}' And LOCATION_CODE='{1}'",
+               sUPERMKTQTYUPDATE.ITEMCODE, sUPERMKTQTYUPDATE.SECONDLOCATION);
+                if (!CheckExitsOra(ItemlocCheckexits))
+                {
+                    response = "Location Or Item Not Found In Super Market";
+                }
+                else
+                {
+                    string upateqtylocby = string.Format(@"UPDATE XXES_SUMMKTSTOCK SET QUANTITY = (QUANTITY + "+ sUPERMKTQTYUPDATE .UPDATEQUANTITY + ") WHERE LOCATION_CODE = '{0}' And ITEMCODE='{1}'",
+                        sUPERMKTQTYUPDATE.SECONDLOCATION, sUPERMKTQTYUPDATE.ITEMCODE);
+                    fun.EXEC_QUERY(upateqtylocby);
+                    string minqtyloc = string.Format(@"UPDATE XXES_SUMMKTSTOCK SET QUANTITY = (QUANTITY - " + sUPERMKTQTYUPDATE.UPDATEQUANTITY + ") WHERE LOCATION_CODE = '{0}' And ITEMCODE='{1}'",
+                        sUPERMKTQTYUPDATE.FIRSTLOCATION, sUPERMKTQTYUPDATE.ITEMCODE);
+                    fun.EXEC_QUERY(minqtyloc);
+                }
+            }
+            catch (Exception ex)
+            {
+                response = ex.Message;
+                return new HttpResponseMessage()
+                {
+                    Content = new StringContent(response, System.Text.Encoding.UTF8, "application/json")
+                };
+
+            }
+            return new HttpResponseMessage()
+            {
+                Content = new StringContent(response, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
         [HttpPost]
 
         public HttpResponseMessage UpdateSuperMktLocationNew(SUPERMKTSTORGAE sUPERMKTSTORGAE)
@@ -1444,7 +1484,7 @@ WHERE SMS.LOCATION_CODE='{0}'", Location);
             };
         }
 
-      
+
         private DataTable errorTable(string response)
         {
             DataTable dataTable = new DataTable();
@@ -1658,7 +1698,7 @@ AND FAMILY_CODE='{5}')
             string response = string.Empty;
             try
             {
-                string totqty = string.Empty, boxcount = string.Empty, boxno = string.Empty, newQR = string.Empty, oldBarcode =  string.Empty;
+                string totqty = string.Empty, boxcount = string.Empty, boxno = string.Empty, newQR = string.Empty, oldBarcode = string.Empty;
                 if (fun == null)
                     fun = new Function();
                 if (!bOXBARCODE.BOX.Contains('/'))
@@ -1729,12 +1769,12 @@ AND FAMILY_CODE='{5}')
                 else
                 {
                     SplitItemBarcode splitItemBarcode = SplitItemQrcode(bOXBARCODE.QRCODE.Trim().ToUpper());
-                    
+
                     string AddMrnWithQR = Convert.ToString(splitItemBarcode.PLANT + "$" + splitItemBarcode.PO + "$" + splitItemBarcode.ITEMCODE + "$" + splitItemBarcode.PKGQTY + "$" + splitItemBarcode.BULKLOC + "$" + splitItemBarcode.POLINE + "$" + splitItemBarcode.SUPPLIER + "$" + splitItemBarcode.IF + "$" + splitItemBarcode.DATE + "$" + splitItemBarcode.BOX + "$" + bOXBARCODE.MRN);
-                    
+
                     bOXBARCODE.QRCODE = AddMrnWithQR;
                 }
-                
+
 
                 //check item is already scanned from web(partial update boxes)
                 query = string.Format(@"select REC_MODE from XXES_MRNINFO where plant_code='{0}' and family_code='{1}' and mrn_no='{2}' and  itemcode='{3}'",
@@ -1744,10 +1784,10 @@ AND FAMILY_CODE='{5}')
                 {
                     return "ERROR: ITEM CODE IS ALREADY RECEIVED FROM WEB";
                 }
-                    
-                
-                    
-                
+
+
+
+
                 using (OracleConnection oracleConnection = new OracleConnection(orConnstring))
                 {
                     OracleCommand oracleCommand;
@@ -1770,7 +1810,7 @@ AND FAMILY_CODE='{5}')
                     oracleCommand.Parameters["RETURN_MESSAGE"].Direction = ParameterDirection.Output;
                     oracleCommand.ExecuteNonQuery();
                     response = Convert.ToString(oracleCommand.Parameters["RETURN_MESSAGE"].Value);
-                    oracleConnection.Close();                                     
+                    oracleConnection.Close();
                 }
                 //query = string.Format(@"INSERT INTO XXES_VERIFYSTOREMRN(PLANT_CODE,FAMILY_CODE,MRN,ITEMCODE,QUANTITY,BOXCOUNT,BOXNO,BARCODE,CREATEDBY,CREATEDDATE)
                 //    values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}',sysdate)", bOXBARCODE.PLANT, bOXBARCODE.FAMILY, bOXBARCODE.MRN, bOXBARCODE.ITEMCODE,
@@ -2854,7 +2894,7 @@ AND FAMILY_CODE='{5}')
                 DataTable dt = new DataTable();
                 if (Stage == "FAULTY_SUMKT")
                 {
-                    
+
                     //    query = string.Format(@"
                     //SELECT COUNT(*) FROM xxes_summktstock SMI
                     //INNER JOIN XXES_SUPERMKT_LOCATIONS SML
@@ -2874,16 +2914,16 @@ AND FAMILY_CODE='{5}')
                 }
                 else if (Stage == "FAULTY_BLK")
                 {
-                //    query = string.Format(@"
-                //SELECT BLI.LOCATION_CODE LOCATION,BLI.ITEMCODE,BLI.QUANTITY FROM XXES_BULKSTOCK BLI
-                //INNER JOIN XXES_BULK_STORAGE BS
-                //ON BLI.PLANT_CODE = BS.PLANT_CODE AND BLI.FAMILY_CODE = BS.FAMILY_CODE AND BLI.LOCATION_CODE = BS.LOCATION_CODE
-                // WHERE BLI.PLANT_CODE = '{0}' AND BLI.FAMILY_CODE = '{1}' AND BLI.LOCATION_CODE = '{2}' ", Plant, Family, Location);
+                    //    query = string.Format(@"
+                    //SELECT BLI.LOCATION_CODE LOCATION,BLI.ITEMCODE,BLI.QUANTITY FROM XXES_BULKSTOCK BLI
+                    //INNER JOIN XXES_BULK_STORAGE BS
+                    //ON BLI.PLANT_CODE = BS.PLANT_CODE AND BLI.FAMILY_CODE = BS.FAMILY_CODE AND BLI.LOCATION_CODE = BS.LOCATION_CODE
+                    // WHERE BLI.PLANT_CODE = '{0}' AND BLI.FAMILY_CODE = '{1}' AND BLI.LOCATION_CODE = '{2}' ", Plant, Family, Location);
 
-                //    if (!CheckExitsOra(query))
-                //    {
-                //        return JsonConvert.SerializeObject("ERROR: INVALID LOCATION");
-                //    }
+                    //    if (!CheckExitsOra(query))
+                    //    {
+                    //        return JsonConvert.SerializeObject("ERROR: INVALID LOCATION");
+                    //    }
                     query = string.Format(@"
                 SELECT BLI.LOCATION_CODE LOCATION,BLI.ITEMCODE,BLI.QUANTITY FROM XXES_BULKSTOCK BLI
                 INNER JOIN XXES_BULK_STORAGE BS

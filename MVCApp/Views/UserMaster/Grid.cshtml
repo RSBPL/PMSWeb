@@ -53,6 +53,10 @@
                  Toolbar(new List<string>() { "ExcelExport" }).Render())
       
         <script>
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("Grid").ej2_instances[0];
+                gridObj.excelExport();
+            }
             var USRNAME;
             $("#PUNAME,#STAGEID,#Level_Name").select2({
                 //allowClear: true,

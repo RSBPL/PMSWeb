@@ -33,7 +33,7 @@
     }
 </style>
 <div id="divLoader" style="display:none;">
-    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:15%; margin-left:50%" />
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:10%; margin-left:38%" />
 </div>
 
 <div class="breadcrumbs ace-save-state" id="breadcrumbs">
@@ -343,7 +343,7 @@
 
                     $("#FAMILY_CODE").append(optionhtml);
                 });
-                BindGrid();
+                //BindGrid();
         },
             error: function (errormessage) {
             //alert(errormessage.responseText);
@@ -353,8 +353,6 @@
      //Function to bind Grid
 
     function BindGrid() {
-
-        $("#divLoader").show();
         $('#myTable').DataTable().destroy();
 
 
@@ -365,13 +363,13 @@
             "lengthChange": false,
             "pageLength": 20,
             "ordering": false,
-            "processing": true, 
-            "serverSide": true, 
-            "filter": false, 
+            "processing": true,
+            "serverSide": true,
+            "filter": false,
             "orderMulti": false,
             "language":
             {
-                "processing": "<img style='width:50px; height:50px;margin: -26px 0 0 0;' src='/Image/Loader.gif' />"
+                "processing": "<img style='width:50px; height:50px;margin: -26px 0 0 0;' src='/ekidev/Image/Loader.gif' />"
             },
             "ajax": {
 
@@ -570,15 +568,15 @@
                             $(td).css('color', 'white'),
                             $(td).css('font-size', '14px'),
                             $(td).css('text-align', 'center')
-                            
-                            
+
+
                     }
                 }
-                
-                
+
+
             ]
-            
-           
+
+
             //"columnDefs": [
             //    { "width": "3%", "targets": 0, "className": "text-center"},
             //    { "width": "6%", "targets": 1, "className": "text-center" },
@@ -599,11 +597,10 @@
 
             //]
 
-        }); 
+        });
+
 
         $("#divLoader").hide();
-
-       
     }
 
     $('#myTable tbody').on('click', '.btnSave', function () {
@@ -667,7 +664,7 @@
          };
         AddMRNQC(obj);
      });
-    
+
     function AddMRNQC(Data) {
         $("#divLoader").show();
          $.ajax({

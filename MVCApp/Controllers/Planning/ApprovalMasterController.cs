@@ -8,7 +8,7 @@ using MVCApp.CommonFunction;
 using MVCApp.Models;
 using Oracle.ManagedDataAccess;
 using Oracle.ManagedDataAccess.Client;
-using Oracle.Web;
+
 using System.Data;
 using Newtonsoft.Json;
 using EncodeDecode;
