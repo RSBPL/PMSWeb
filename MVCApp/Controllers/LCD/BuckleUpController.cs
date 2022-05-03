@@ -267,7 +267,7 @@ namespace MVCApp.Controllers
                             }
 
                             result.lblSftotDay = "TOTAL PLAN: " + Convert.ToString(dt.Compute("Sum(PLAN)", ""));
-                            result.lblBK = "TOTAL BUCKLE-UP: " + Convert.ToString(dt.Compute("Sum(BUCKLEUP)", "")); ;
+                            result.lblBK = "TOTAL BUCKLE-UP: " + Convert.ToString(dt.Compute("Sum(BUCKLEUP)", "")); 
                             
                             result.lblPending = "TOTAL PENDING: " + Convert.ToString(dt.Compute("Sum(PENDING)", ""));
 

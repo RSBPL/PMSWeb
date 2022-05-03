@@ -214,35 +214,67 @@
                 </div>
                 <div class="col-md-10">
                     <strong class="head-header" style="margin-top: -50px;">FRONT AXEL SUB ASSEMBLY</strong>
-
                 </div>
             </div>
         </div>
 
         <div style="width: 100%">
             <input type="hidden" id="PlantCode" value="@ViewBag.PlantCode" />
+            @*<div style="width: 100%; color: #fff; background-color: #065499; border-color: #428bca; height: 75px; padding: 0; text-align: center; vertical-align: central;">
+            <table style="width: 100%">
+                <tr style="font-size: 25px;" class="tr2">
+                    <td align="center">
+                        <label ID="lblDate" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                    </td>
+                    <td align="center">
+                        <label ID="lblTime" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                    </td>
+                    <td align="center">
+                        <label ID="lblShift" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                    </td>
+                    <td align="center">
+                        <label ID="lblProductionUnit" runat="server" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                    </td>
+                </tr>
+                <tr style="font-size: 25px;" class="tr2">
+                    <td align="center">
+                        <label ID="lblPlanQty" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                    </td>
+                    <td align="center">
+                        <label ID="lblSftotDay" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                    </td>
+                    <td align="center">
+                        <label ID="lblPending" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                    </td>
+                    <td align="center">
+                        <label ID="lblBKTotDay" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                    </td>
+                </tr>
+            </table>
+        </div>*@
             <div style="width: 100%; color: #fff; background-color: #065499; border-color: #428bca; height: 75px; padding: 0; text-align: center; vertical-align: central;">
                 <table style="width: 100%">
                     <tr style="font-size: 25px;" class="tr2">
                         <td align="center">
                             <label ID="lblDate" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                            <label ID="lblTime" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
                         </td>
                         <td align="center">
-                            <label ID="lblTime" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                            <label ID="lblSftotDay" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
                         </td>
                         <td align="center">
                             <label ID="lblShift" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
                         </td>
-                        <td align="center">
-                            <label ID="lblProductionUnit" runat="server" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
-                        </td>
+                        @*<td align="center" ">
+                        <label ID="lblProductionUnit" runat="server" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                    </td>*@
                     </tr>
                     <tr style="font-size: 25px;" class="tr2">
+                        @*<td align="center">
+                        <label ID="lblPlanQty" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                    </td>*@
                         <td align="center">
-                            <label ID="lblPlanQty" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
-                        </td>
-                        <td align="center">
-                            <label ID="lblSftotDay" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
+                            <label ID="lblBK" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
                         </td>
                         <td align="center">
                             <label ID="lblPending" Font-Bold="True" Font-Size="Larger" Font-Names="Book Antiqua"></label>
@@ -254,9 +286,8 @@
                 </table>
 
             </div>
-
             @*<div id="lblError" style="padding-left: 40px; width: 96%" visible="false" class="alert-box error">
-                </div>*@
+        </div>*@
 
             <div class="row ">
                 <div class="col-md-12" style="float: left; text-align: center; font-size: 20px; font-weight: bold; width: 100%;">
@@ -336,6 +367,7 @@
             $("#lblShift").text(data.lblShift);
             $("#lblProductionUnit").text(data.lblProductionUnit);
             $("#lblPlanQty").text(data.lblPlanQty);
+             $("#lblBK").text(data.lblBK);
             $("#lblPending").text(data.lblPending);
             $("#lblBKTotDay").text(data.lblBKTotDay);
             $("#lblPlanQty").text(data.lblPlanQty);
