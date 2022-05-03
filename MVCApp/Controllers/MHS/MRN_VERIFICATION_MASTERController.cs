@@ -1785,11 +1785,11 @@ namespace MVCApp.Controllers
                     }
 
                     query = string.Format(@"INSERT INTO XXES_REPRINT_LABEL(PLANT_CODE,FAMILY_CODE,STAGE,LOGIN_USER,PRINT_DATE,
-                                        ITEM_CODE,MRN,TRANSACTION_TYPE,PACKING_STD,QUANTITY)
-                                            VALUES('{0}','{1}','{2}','{3}',SYSDATE,'{4}','{5}','{6}','{7}','{8}')",
+                                        ITEM_CODE,MRN,TRANSACTION_TYPE,PACKING_STD,QUANTITY,ORDER_BY)
+                                            VALUES('{0}','{1}','{2}','{3}',SYSDATE,'{4}','{5}','{6}','{7}','{8}','{9}')",
                                             OBJ.PLANT.Trim(), OBJ.FAMILY.Trim(), Convert.ToString(Session["LoginStageCode"]),
                                             Convert.ToString(Session["Login_User"]), OBJ.ITEMCODE.Trim(), OBJ.MRN_NO.Trim(),
-                                            TransactionType, OBJ.PACKING_STANDARD.Trim(), qty);
+                                            TransactionType, OBJ.PACKING_STANDARD.Trim(), qty,OBJ.ORDERBY);
                     fun.EXEC_QUERY(query);
 
                     msg = "Printing Successfully";

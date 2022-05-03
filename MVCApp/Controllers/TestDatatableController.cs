@@ -7,7 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
+using System.Web.Script.Serialization;
 
 namespace MVCApp.Controllers
 {
@@ -28,7 +28,8 @@ namespace MVCApp.Controllers
         Function fun = new Function();
         public ActionResult Index()
         {
-            var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            //var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
             TestData t = new TestData();
             List<columnsinfo> _col = new List<columnsinfo>();
 
