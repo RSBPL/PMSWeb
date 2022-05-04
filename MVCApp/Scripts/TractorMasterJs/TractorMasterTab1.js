@@ -1667,7 +1667,6 @@ function Update() {
                         });
                     }, 5000);
 
-
                 }
                 else {
                     $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + data + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -2072,10 +2071,12 @@ function ChkPassword() {
             $("#PawordPopUp").hide();
             $(".modal-backdrop").hide();
             $(".modal-backdrop").addClass("important");
-            $("#divLoader").hide(); $(".modal-backdrop").addClass("important");
+            $("#divLoader").hide(); 
             if (data.Msg == "Valid Password") {
                 var chk = confirm("Are you sure you want to Update this?");
                 if (chk == true) {
+                    $('body').addClass("test");
+                    $(window).scrollTop(0);
                     Update();
                 }
             } else {
@@ -2085,6 +2086,8 @@ function ChkPassword() {
                         closeAlert(this);
                     });
                 }, 5000);
+                $('body').addClass("test");
+                $(window).scrollTop(0);
             }
         },
         error: function (errormessage) {
