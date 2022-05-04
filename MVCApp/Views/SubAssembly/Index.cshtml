@@ -257,12 +257,10 @@
 <script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
 <link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
 <script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
-@*<link href="~/Scripts/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Scripts/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
     <script src="~/Scripts/DataTable/jquery.dataTables.min.js"></script>
-    <link href="~/Scripts/DataTable/Custom.css" rel="stylesheet" />*@
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script>
+    <link href="~/Scripts/DataTable/Custom.css" rel="stylesheet" />
+    <script>
     $(document).ready(function () {
         $.noConflict();
         DDLShift();
@@ -308,7 +306,10 @@
             }
         });
     };
-
+        $("#ITEMCODE").on("change", function () {
+            DDLjobforPrint();
+            labelforPrint();
+        });
       function DDLFamilyByPlant() {
         //$("#divLoader").show();
         var selectedValue = $("#PLANTCODE").val();
@@ -323,7 +324,7 @@
                     var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
                     $("#FAMILYCODE").append(optionhtml);
                 });
-                //DDLSrno();
+                DDLSrno();
         },
             error: function (errormessage) {
             //alert(errormessage.responseText);
@@ -336,98 +337,181 @@
     });
     function BindGrid() {
         $("#divLoader").show();
-        $('#myTable').empty();
-
-        var dtable = $("#myTable").DataTable({
-           /* "scrollX": true,*/
-
-            "autoWidth": true,
-            "lengthChange": false,
-            "pageLength": 20,
-            "ordering": false,
-            "processing": true,
-            "serverSide": true,
-            "filter": false,
-            "orderMulti": false,
-            "language":
-            {
-                "processing": "<img style='width:50px; height:50px;margin: -26px 0 0 0;' src='/Image/Loader.gif' />"
+        $('#myTable').DataTable({
+            "bDestroy": true,
+              "ajax": {
+                  "url": '../SubAssembly/Gridtest?PLANT_CODE=' + $('#PLANTCODE').val() + '&FAMILY_CODE=' + $('#FAMILYCODE').val() + '&PlantDate=' + $('#PlantDate').val() + '&ShiftCODE=' + $('#ShiftCODE').val(),
+                  "type": "POST",
+                  "datatype": "json"
             },
-            "ajax": {
-
-
-                "url": '@Url.Action("Grid", "SubAssembly")',
-                "data": function (obj) {
-                    obj.PLANT_CODE = $('#PLANT_CODE').val();
-                    obj.FAMILY_CODE = $('#FAMILY_CODE').val();
-                    obj.PlantDate = $('#PlantDate').val();
-                    obj.ShiftCODE = $('#ShiftCODE').val();
-
-                },
-                "type": "POST",
-                "datatype": "json"
-            },
-
-
-
-            "columns": [
-                { "data": "ITEMCODE" },
-                { "data": "DESCRIPTION"},
-                { "data": "QTY"},
-                { "data": "SEQ_NO"},
-                { "data": "COMPLETED"},
-                { "data": "PENDING"}
-
-            ],
-            columnDefs: [
-                {
-                    "targets": [1,2,3,4,5,6],
-                    "createdCell": function (td, cellData, rowData, row, col) {
-                        $(td).css('background-color', '#87B87F'),
-                            $(td).css('color', 'white'),
-                            $(td).css('font-size', '14px'),
-                            $(td).css('text-align', 'center')
-
-
-                    }
-                }
-
-
+            "aoColumns": [
+                 { "data": "ITEMCODE" },
+                { "data": "DESCRIPTION" },
+                { "data": "QTY" },
+                { "data": "SEQ_NO" },
+                { "data": "COMPLETED" },
+                { "data": "PENDING" }
             ]
-
-
-            //"columnDefs": [
-            //    { "width": "3%", "targets": 0, "className": "text-center"},
-            //    { "width": "6%", "targets": 1, "className": "text-center" },
-            //    { "width": "12%", "targets": 2, "className": "text-center" },
-            //    { "width": "5%", "targets": 3, "className": "text-center" },
-            //    { "width": "10%", "targets": 4, "className": "text-center", "visible": false },
-            //    { "width": "20%", "targets": 5, "className": "text-center" },
-            //    { "width": "20%", "targets": 6, "className": "text-center" },
-            //    { "width": "20%", "targets": 7, "className": "text-center" },
-            //    { "width": "20%", "targets": 8, "className": "text-center" },
-            //    { "width": "20%", "targets": 9, "className": "text-center" },
-            //    { "width": "20%", "targets": 10, "className": "text-center" },
-            //    { "width": "20%", "targets": 11, "className": "text-center" },
-            //    { "width": "20%", "targets": 12, "className": "text-center"},
-            //    { "width": "20%", "targets": 13, "className": "text-center" },
-            //    { "width": "20%", "targets": 14, "className": "text-center" }
-
-
-            //]
-
         });
-
         $("#divLoader").hide();
+        DDLitem();
 
+        }
+        function DDLitem() {
+            //$("#divLoader").show();
+            var PLANTCODE = $("#PLANTCODE").val();
+            var FAMILYCODE = $("#FAMILYCODE").val();
+            var ShiftCODE = $("#ShiftCODE").val();
+            var PlantDate = $("#PlantDate").val();
+            $.ajax({
+                url: '../SubAssembly/BindItemCode?PLANTCODE=' + PLANTCODE + '&optAsPerPlanning=true&FAMILYCODE=' + FAMILYCODE + '&ShiftCODE=' + ShiftCODE + '&PlantDate=' + PlantDate,
+                type: "GET",
+                contentType: "application/json;charset=UTF-8",
+                //data: JSON.stringify({ PLANTCODE: PLANTCODE, optAsPerPlanning: true, FAMILYCODE: FAMILYCODE }),
+                success: function (result) {
+                    $("#ITEMCODE").html(null);
+                    $("#ASSIGNITEMCODE").html(null);
+                    $.each(result, function (i) {
+                        var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                        $("#ITEMCODE").append(optionhtml);
+                    });
+                    $.each(result, function (i) {
+                        var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                        $("#ASSIGNITEMCODE").append(optionhtml);
+                    });
+                    DDLjobforPrint();
+                    labelforPrint();
+                },
+                error: function (errormessage) {
+                    //alert(errormessage.responseText);
+                }
+            });
+        };
+        function DDLjobforPrint() {
+            //$("#divLoader").show();
+            var ITEMCODE = $("#ITEMCODE").val();
+            var FAMILYCODE = $("#FAMILYCODE").val();
+            if (ITEMCODE != "" && ITEMCODE != null && ITEMCODE != "0") {
+                $.ajax({
+                    url: '../SubAssembly/FillJobsForDropdown?FAMILYCODE=' + FAMILYCODE + '&ITEMCODE=' + ITEMCODE,
+                    type: "GET",
+                    contentType: "application/json;charset=UTF-8",
+                    data: JSON.stringify({ PLANTCODE: PLANTCODE, optAsPerPlanning: true, FAMILYCODE: FAMILYCODE }),
+                    success: function (result) {
+                        $("#Job").html(null);
+                        $("#ASSIGNJob").html(null);
+                        $.each(result, function (i) {
+                            var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                            $("#Job").append(optionhtml);
+                        });
+                        $.each(result, function (i) {
+                            var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                            $("#ASSIGNJob").append(optionhtml);
+                        });
+                    },
+                    error: function (errormessage) {
+                        //alert(errormessage.responseText);
+                    }
+                });
 
-    }
-    $("#FAMILYCODE").select2({
-        allowClear: true,
-        width: '100%',
-    });
-    $("#PLANTCODE").select2({
-        allowClear: true,
-        width: '100%',
-    });
-</script>
+            }
+        };
+        function labelforPrint() {
+            //$("#divLoader").show();
+            var ITEMCODE = $("#ITEMCODE").val();
+            var FAMILYCODE = $("#FAMILYCODE").val();
+            var PLANTCODE = $("#PLANTCODE").val();
+            if (ITEMCODE != "" && ITEMCODE != null && ITEMCODE != "0") {
+                $.ajax({
+                    url: '../SubAssembly/FillJobIDs?FAMILYCODE=' + FAMILYCODE + '&PLANTCODE=' + PLANTCODE + '&ITEMCODE=' + ITEMCODE,
+                    type: "GET",
+                    contentType: "application/json;charset=UTF-8",
+                    data: JSON.stringify({ PLANTCODE: PLANTCODE, optAsPerPlanning: true, FAMILYCODE: FAMILYCODE }),
+                    success: function (result) {
+                        // $("#Job").html(null);
+                        if (result.lblRelJobVisible == true) {
+                            $("#Reljob").show();
+                            $("#RelJoblbl").text(result.lblRelJob);
+                        }
+                        if (result.lblPendingVisible == true) {
+                            $("#Printjob").show();
+                            $("#PrintJoblbl").text(result.lblPending);
+                        }
+                    },
+                    error: function (errormessage) {
+                        //alert(errormessage.responseText);
+                    }
+                });
+
+            }
+
+        };
+        function DDLSrno() {
+            //$("#divLoader").show();
+            var PLANTCODE = $("#PLANTCODE").val();
+            var FAMILYCODE = $("#FAMILYCODE").val();
+            $.ajax({
+                url: '../SubAssembly/bindReprintSrno?PLANTCODE=' + PLANTCODE + '&FAMILYCODE=' + FAMILYCODE,
+                type: "GET",
+                contentType: "application/json;charset=UTF-8",
+                //data: JSON.stringify({ PLANTCODE: PLANTCODE, optAsPerPlanning: true, FAMILYCODE: FAMILYCODE }),
+                success: function (result) {
+                    $("#SerialITEMCODE").html(null);
+                    $("#ASSIGNSRNNo").html(null);
+                    $.each(result, function (i) {
+                        var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                        $("#SerialITEMCODE").append(optionhtml);
+                    });
+                    $.each(result, function (i) {
+                        var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                        $("#ASSIGNSRNNo").append(optionhtml);
+                    });
+                },
+                error: function (errormessage) {
+                    //alert(errormessage.responseText);
+                }
+            });
+        };
+
+        //$("#Reljob").hide();
+        $("#FAMILYCODE").select2({
+            allowClear: true,
+            width: '100%',
+        });
+        $("#PLANTCODE").select2({
+            allowClear: true,
+            width: '100%',
+        });
+        $("#ITEMCODE").select2({
+            allowClear: true,
+            width: '100%',
+        });
+        $("#Job").select2({
+            allowClear: true,
+            width: '100%',
+        });
+        $("#ASSIGNJob").select2({
+            allowClear: true,
+            width: '100%',
+        });
+        $("#Job").select2({
+            allowClear: true,
+            width: '100%',
+        });
+        $("#SerialITEMCODE").select2({
+            allowClear: true,
+            width: '100%',
+        });
+        $("#ASSIGNITEMCODE").select2({
+            allowClear: true,
+            width: '100%',
+        });
+        $("#ASSIGNSRNNo").select2({
+            allowClear: true,
+            width: '100%',
+        });
+        $("#ASSIGNJob").select2({
+            allowClear: true,
+            width: '100%',
+        });
+    </script>

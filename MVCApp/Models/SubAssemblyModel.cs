@@ -148,35 +148,35 @@ namespace MVCApp.Models
             }
             return false;
         }
-        public string GetPlanId(SubAssemblyModel subAssemblyModel)
+        public string GetPlanId(string PLANT_CODE, string FAMILY_CODE, DateTime PlantDate, string ShiftCODE)
         {
             try
             {
                 DateTime dateTime = new DateTime();
                 if (Convert.ToString(HttpContext.Current.Session["Login_Level"]) != "TP")
                 {
-                    dateTime = subAssemblyModel.PlantDate.AddDays(Getdays(subAssemblyModel.PLANTCODE, subAssemblyModel.FAMILYCODE));
-                    while (isWeeklyOff(dateTime,subAssemblyModel.PLANTCODE))
+                    dateTime = Convert.ToDateTime(PlantDate).AddDays(Getdays(PLANT_CODE, FAMILY_CODE));
+                    while (isWeeklyOff(dateTime, PLANT_CODE))
                         dateTime = dateTime.AddDays(1);
-                    while (isHolidayExists(dateTime, subAssemblyModel.PLANTCODE))
+                    while (isHolidayExists(dateTime, PLANT_CODE))
                         dateTime = dateTime.AddDays(1);
-                    subAssemblyModel.PlantDate = dateTime;
+                    PlantDate = dateTime;
                     //subAssemblyModel.PlantDate = false;
                 }
                 else
                 {
-                    dateTime = subAssemblyModel.PlantDate;
+                    dateTime = PlantDate;
                 }
-                setFamily(subAssemblyModel.PLANTCODE);
-                return fun.get_Col_Value(
+                setFamily(PLANT_CODE);
+               return fun.get_Col_Value(
                     string.Format(
                     @"select p.PLAN_ID from XXES_DAILY_PLAN_MASTER p , XXES_SUBASEMBLY_APPROVEDPLAN s
                 where p.plant_code=s.plant_code and p.family_code=s.family_code and p.plan_id=s.plan_id
                 and to_char(p.PLAN_DATE,'dd-Mon-yyyy')='{0}' and p.SHIFTCODE='{1}' and  p.plant_code='{2}' 
                 and p.family_code='{3}' and s.status='APPROVED'"
-                , dateTime.Date.ToString("dd-MMM-yyyy"), Convert.ToString(subAssemblyModel.ShiftCODE),
-                Convert.ToString(subAssemblyModel.PLANTCODE).Trim().ToUpper(),
-                Convert.ToString(subAssemblyModel.FAMILYCODE).Trim().ToUpper())
+                , dateTime.Date.ToString("dd-MMM-yyyy"), Convert.ToString(ShiftCODE),
+                Convert.ToString(PLANT_CODE).Trim().ToUpper(),
+                Convert.ToString(FAMILY_CODE).Trim().ToUpper())
                 );
             }
             catch (Exception)

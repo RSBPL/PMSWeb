@@ -40,14 +40,12 @@ namespace MVCApp.Controllers.Masters
                 return View();
             }
         }
-
-        [HttpPost]
-        public ActionResult Grid(SubAssemblyModel obj)
+        public ActionResult Gridtest(string PLANT_CODE,string FAMILY_CODE, DateTime PlantDate,string ShiftCODE)
         {
+            SubAssemblyModel obj = new SubAssemblyModel();
             int recordsTotal = 0; string avlqury = string.Empty; string planid = string.Empty;
-            planid = SubAssFun.GetPlanId(obj);
-            obj.P_Search = Request.Form.GetValues("search[value]").FirstOrDefault();
-            planid = SubAssFun.GetPlanId(obj);
+            planid = SubAssFun.GetPlanId(PLANT_CODE, FAMILY_CODE, PlantDate, ShiftCODE);
+            planid = SubAssFun.GetPlanId(PLANT_CODE, FAMILY_CODE, PlantDate, ShiftCODE);
             if (string.IsNullOrEmpty(planid))
             {
                 return Json(new
@@ -55,11 +53,11 @@ namespace MVCApp.Controllers.Masters
                     draw = obj.draw
                 }, JsonRequestBehavior.AllowGet);
             }
-            string keycode = SubAssFun.GetOfflineCode(Convert.ToString(obj.FAMILYCODE));
-            string field = SubAssFun.getSrnoField(Convert.ToString(obj.FAMILYCODE));
+            string keycode = SubAssFun.GetOfflineCode(Convert.ToString(FAMILY_CODE));
+            string field = SubAssFun.getSrnoField(Convert.ToString(FAMILY_CODE));
             avlqury = @" (select count(*) from XXES_PRINT_SERIALS WHERE QCOK = 'Y' AND OFFLINE_KEYCODE = '" + keycode + "' " +
-                " AND PLANT_CODE = '" + Convert.ToString(obj.PLANTCODE) + "' AND DCODE = a.ITEMCODE " +
-                            "AND SRNO NOT IN(SELECT " + field + " FROM XXES_JOB_STATUS WHERE PLANT_CODE = '" + Convert.ToString(obj.PLANTCODE) + "' AND FAMILY_CODE = '" + Convert.ToString(obj.FAMILYCODE) + "' AND " + field + " IS NOT NULL) ) AS AVAILABLE";
+                " AND PLANT_CODE = '" + Convert.ToString(PLANT_CODE) + "' AND DCODE = a.ITEMCODE " +
+                            "AND SRNO NOT IN(SELECT " + field + " FROM XXES_JOB_STATUS WHERE PLANT_CODE = '" + Convert.ToString(PLANT_CODE) + "' AND FAMILY_CODE = '" + Convert.ToString(FAMILY_CODE) + "' AND " + field + " IS NOT NULL) ) AS AVAILABLE";
             //notqry = @" (select count(*) from XXES_PRINT_SERIALS WHERE (QCOK <> 'Y' or QCOK IS NULL) AND OFFLINE_KEYCODE = '" + keycode + "' " +
             //   " AND PLANT_CODE = '" + Convert.ToString(cmbPlant.SelectedValue) + "' AND DCODE = a.ITEMCODE " +
             //               "AND SRNO NOT IN(SELECT " + field + " FROM XXES_JOB_STATUS WHERE PLANT_CODE = '" + Convert.ToString(cmbPlant.SelectedValue) + "' AND FAMILY_CODE = '" + Convert.ToString(cmbFamily.SelectedValue) + "' AND " + field + " IS NOT NULL) ) AS QCNOTOK";
@@ -71,7 +69,7 @@ namespace MVCApp.Controllers.Masters
                 and family_code=a.family_code and SUBASSEMBLY_ID=a.AUTOID) PENDING
                 FROM xxes_daily_plan_assembly A
                 WHERE a.PLANT_CODE='{0}' AND a.FAMILY_CODE='{1}' AND plan_id='{2}'  order by a.SEQ_NO ",
-            Convert.ToString(obj.PLANTCODE), Convert.ToString(obj.FAMILYCODE),
+            Convert.ToString(PLANT_CODE), Convert.ToString(FAMILY_CODE),
             planid, avlqury);
             List<SubAssemblyModel> subAssemblies = new List<SubAssemblyModel>();
             DataTable dataTable = fun.returnDataTable(query);
@@ -94,7 +92,9 @@ namespace MVCApp.Controllers.Masters
                 }
             }
             return Json(new { draw = obj.draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = subAssemblies }, JsonRequestBehavior.AllowGet);
+       
         }
+       
 
         [HttpGet]
         public JsonResult BindPlant()
@@ -134,7 +134,7 @@ namespace MVCApp.Controllers.Masters
                 data.FAMILYCODE = FAMILYCODE;
                 data.ShiftCODE = ShiftCODE;
                 data.PlantDate = PlantDate;
-                string plantID = SubAssFun.GetPlanId(data);
+                string plantID = SubAssFun.GetPlanId(PLANTCODE, FAMILYCODE, PlantDate, ShiftCODE);
                 family = Convert.ToString(FAMILYCODE).Trim();
                 if (string.IsNullOrEmpty(plantID) || string.IsNullOrEmpty(family))
                 {
