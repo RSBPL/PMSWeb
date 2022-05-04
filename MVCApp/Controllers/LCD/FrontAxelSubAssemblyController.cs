@@ -99,7 +99,8 @@ namespace MVCApp.Controllers
                     ShiftTlt = get_Col_Value(query).Trim();
                     query = "select to_char(EXPECTED_qty) from XXES_DAILY_PLAN_MASTER  where to_char(PLAN_DATE,'dd-Mon-yyyy')='" + Plandate.ToString("dd-MMM-yyyy") + "' and XXES_DAILY_PLAN_MASTER.SHIFTCODE='" + Shiftcode.Trim().ToUpper() + "' and plant_code='" + plant.Trim().ToUpper() + "' and family_code='" + family + "'";
                     expqty = get_Col_Value(query).Trim();
-                    result.lblDate = "DATE: " + Plandate.ToString("dd MMM yyyy");
+                    result.lblDate = Plandate.ToString("dd MMM yyyy");
+                    result.lblTime = fun.ServerDate.ToString("HH:mm:ss");
                     result.lblShift = "SHIFT: " + Shiftcode;
                     result.lblProductionUnit = "PRODUCTION PLAN: " + (expqty.Trim() == "" ? "0" : expqty.Trim());
                     //+ "SHIFT: " + Shiftcode + "         " + " PRODUCTION PLAN: " + (expqty.Trim() == "" ? "0" : expqty.Trim());
@@ -261,11 +262,12 @@ namespace MVCApp.Controllers
 
 
                             result.lblPlanQty = "PLANNED: " + Convert.ToString(dt.Compute("Sum(PLAN)", ""));
-                            result.lblBK = "DONE: " + Convert.ToString(dt.Compute("Sum(DONE)", ""));
-                            result.lblPending = "PENDING: " + Convert.ToString(dt.Compute("Sum(PENDING)", ""));
+                            //result.lblBK = "TOTAL BUCKLE-UP: " + Convert.ToString(dt.Compute("Sum(BUCKLEUP)", ""));
+                            result.lblPending = "TOTAL PENDING: " + Convert.ToString(dt.Compute("Sum(PENDING)", ""));
                             expqty = get_Col_Value("select count(*) from XXES_JOB_STATUS where FCODE_ID in (select autoid from XXES_DAILY_PLAN_TRAN where PLAN_ID in (select plan_id from XXES_DAILY_PLAN_MASTER where plant_code='" + plant.Trim() + "' and family_code='" + family + "' and to_char(PLAN_DATE,'dd-Mon-yyyy')='" + Plandate.ToString("dd-MMM-yyyy") + "'))");
                             result.lblBKTotDay = "DAY TOTAL: " + (expqty.Trim() == "" ? "0" : expqty.Trim());
-                            result.lblSftotDay = "SHIFT TOTAL: " + (ShiftTlt.Trim() == "" ? "0" : ShiftTlt.Trim());
+                            result.lblSftotDay = "TOTAL PLAN: " + Convert.ToString(dt.Compute("Sum(PLAN)", ""));
+                            result.lblBK = "TOTAL BUCKLE-UP: " + Convert.ToString(dt.Compute("Sum(DONE)", ""));
 
 
                         }
@@ -301,7 +303,7 @@ namespace MVCApp.Controllers
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             finally { }
-            result.lblTime = "Time: " + fun.ServerDate.ToString("HH:mm:ss");
+            
             result.PTtabls = pTtabls;
             //result.PtTableRight = PtTableRight;
             return Json(result, JsonRequestBehavior.AllowGet);
