@@ -344,8 +344,8 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Kanban.rpt</DependentUpon>
-      <SubType>Component</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="CrystalReports\kitting.cs">
       <AutoGen>True</AutoGen>
@@ -1236,6 +1236,7 @@
     <Content Include="Views\SubAssembly\Index.cshtml" />
     <Content Include="Views\TracktorSubAssembly\Index.cshtml" />
     <Content Include="Views\BackendPartModification\Index.cshtml" />
+    <Content Include="Views\Report\GrdCRITICIAL_VENDOR_MRN.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

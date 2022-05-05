@@ -150,7 +150,8 @@ namespace MVCApp
                           new ReportCode(){Code="AVG",Text="AVERAGE TIME IN A DAY"},
                           new ReportCode(){Code="MRNITEM",Text="ITEM WISE MRN DETAIL"},
                           new ReportCode(){Code="REPRINT_LABEL",Text="REPRINT LABEL"},
-                          new ReportCode(){Code="STORE_REPORT",Text="STORE REPORT"}
+                          new ReportCode(){Code="STORE_REPORT",Text="STORE REPORT"},
+                          new ReportCode(){Code="CRITICIAL_VENDOR_MRN",Text="CRITICIAL VENDOR MRN REPORT"}
                      };
                 return al;
             }
