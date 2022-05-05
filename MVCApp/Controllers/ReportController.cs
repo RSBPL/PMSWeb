@@ -297,9 +297,9 @@ namespace MVCApp.Controllers
                         dtMain.Columns.Add("PDI TACK TIME", typeof(string));
                         foreach (DataRow row in dtMain.Rows)
                         {
-                            if (!string.IsNullOrEmpty(Convert.ToString(row["ROLL OUT DATE"])) && !string.IsNullOrEmpty(Convert.ToString(row["CAREBUTTONOIL"])))
+                            if (!string.IsNullOrEmpty(Convert.ToString(row["ROLL OUT DATE"])) && !string.IsNullOrEmpty(Convert.ToString(row["PDI OK DATE"])))
                             {
-                                TimeSpan span = Convert.ToDateTime(row["ROLL OUT DATE"]) - Convert.ToDateTime(row["CAREBUTTONOIL"]);
+                                TimeSpan span = Convert.ToDateTime(row["ROLL OUT DATE"]) - Convert.ToDateTime(row["PDI OK DATE"]);
                                 span = new TimeSpan(Math.Abs(span.Ticks));
                                 avgHours = (int)span.TotalHours + span.ToString(@"\:mm\:ss");
                                 row["PDI TACK TIME"] = avgHours;
