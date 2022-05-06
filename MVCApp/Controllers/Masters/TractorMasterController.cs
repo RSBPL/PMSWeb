@@ -4790,5 +4790,80 @@ namespace MVCApp.Controllers
             }
             return Json(msg, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        public JsonResult PasswordPopupTab2(TractorMster data)
+        {
+            string msg = string.Empty; string mstType = string.Empty; string status = string.Empty;
+            try
+            {
+                query = string.Format(@"SELECT COUNT(*) FROM XXES_SFT_SETTINGS xss WHERE XSS.PARAMVALUE='{0}' AND XSS.PLANT_CODE='{1}'
+                       AND XSS.FAMILY_CODE='{2}' AND XSS.PARAMETERINFO='TRACTOR_MASTER_PASSWORD'", data.PasswordTab2.Trim(),
+                       data.T4_Plant.Trim().ToUpper(), data.T4_Family.Trim().ToUpper());
+                if (fun.CheckExits(query))
+                {
+                    msg = "Valid Password";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var reult = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(reult, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    msg = "Invalid Password..!!";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var reult = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(reult, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+            }
+            return Json(msg, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult NewTractorCode(TractorMster data)
+        {
+            
+            string msg = string.Empty; string mstType = string.Empty; string status = string.Empty;
+            try
+            {
+                string[] item = StringSpliter(data.ItemCode);
+                data.ItemCode = item[0].Trim();
+                data.ItemCode_Desc = replaceApostophi(item[1].Trim());
+                //if (string.IsNullOrEmpty(data.ItemCode))
+                //{   
+                //    msg = "Select item to continue.";
+                //    return Json(msg, JsonRequestBehavior.AllowGet);
+                //}
+                //else
+                //{
+                //    string[] item = StringSpliter(data.ItemCode);
+                //    data.ItemCode = item[0].Trim();
+                //    data.ItemCode_Desc = replaceApostophi(item[1].Trim());
+                //}
+                query = string.Format(@"SELECT COUNT(*) FROM XXES_ITEM_MASTER xim WHERE xim.PLANT_CODE='{0}' AND xim.FAMILY_CODE='{1}' 
+                        AND xim.ITEM_CODE='{2}'", data.Plant, data.Family, data.ItemCode);
+                if (!fun.CheckExits(query))
+                {
+                    data.Prefix1 = "T05";
+                    string Prefix1 = data.Prefix1;
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var err = new { Msg = Prefix1, ID = mstType, validation = status };
+                    return Json(err, JsonRequestBehavior.AllowGet);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+            }
+            var result = new { Msg = msg, ID = mstType, validation = status };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
     }
 }

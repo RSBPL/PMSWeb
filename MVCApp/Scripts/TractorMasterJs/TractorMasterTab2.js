@@ -1703,4 +1703,53 @@ function FillSearchItemS() {
     });
 };
 
+$("#PawordSubmitS").on("click", function () {
+    /* localStorage.setItem("IsTabChange", true);*/
+    ChkPassword();
+});
+
+
+function ChkPassword() {
+    $("#divLoader").show();
+    var data = {
+        T4_Plant: $('#T4_Plant').val(),
+        T4_Family: $('#T4_Family').val(),
+        PasswordTab2: $('#PasswordTab2').val()
+    };
+    $.ajax({
+        url: SubmitPassTab2,
+        data: JSON.stringify(data),
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            $("#PasswordPopUp").hide();
+            $(".modal-backdrop").hide();
+            $(".modal-backdrop").addClass("important");
+            $("#divLoader").hide();
+            if (data.Msg == "Valid Password") {
+                var chk = confirm("Are you sure you want to Update this?");
+                if (chk == true) {
+                    $('body').addClass("test");
+                    $(window).scrollTop(0);
+                    UpdateS();
+                }
+            } else {
+                $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                setTimeout(function () {
+                    $.each($('.alert'), function () {
+                        closeAlert(this);
+                    });
+                }, 5000);
+                $('body').addClass("test");
+                $(window).scrollTop(0);
+            }
+        },
+        error: function (errormessage) {
+
+        }
+    });
+
+};
+
 
