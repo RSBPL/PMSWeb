@@ -1055,7 +1055,8 @@ $("#ElectricMotorChk").change(function () {
     }
 });
 
-$("#ItemCode").change(function () {
+$('#ItemCode').on("change", function () {
+    gleSearch_EditValueChanged();
     NewTractorCode();
 });
 
@@ -1067,19 +1068,10 @@ $("#T3_Family").on("change", function () {
     Fill_T3_ItemMaster();
 });
 $("#gleSearch").on("change", function () {
-
+    $("#ItemCode").val(null);
     Clear();
-
     gleSearch_EditValueChanged();
-
 });
-
-//$('#ItemCode').on("change", function () {
-//    Clear();
-//    gleSearch_EditValueChanged();
-//});
-
-
 
 $("#Add").on("click", function () {
     localStorage.setItem("IsTabChange", true);
@@ -1834,13 +1826,24 @@ function Clear() {
 
 
 function gleSearch_EditValueChanged() {
-
-    var Data = {   
-        gleSearch: $('#gleSearch').val(),
-        Plant: $('#Plant').val(),
-        Family: $('#Family').val()
-
-    };
+   
+    if ($('#ItemCode').val() != "") {
+        var itemCode = $('#ItemCode').val();
+        const myArray = itemCode.split("#");
+        var Data = {
+            gleSearch: myArray[0],
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val()
+        };
+    } else {
+       
+        var Data = {
+            gleSearch: $('#gleSearch').val(),
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val()
+        };
+    }
+   
     $.ajax({
         url: EditValueChanged,
         data: JSON.stringify({ obj: Data }),
@@ -2131,12 +2134,6 @@ function NewTractorCode() {
         contentType: "application/json;charset=utf-8",
         dataType: "json",
         success: function (data) {
-            //$('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-            //setTimeout(function () {
-            //    $.each($('.alert'), function () {
-            //        closeAlert(this);
-            //    });
-            //}, 5000);
             $("#Prefix1").val(data.Msg);
             if (data.Msg == "") {
                 $('#GenerateSerialNoChk').prop("checked", false);
@@ -2144,8 +2141,6 @@ function NewTractorCode() {
             else {
                 $('#GenerateSerialNoChk').prop("checked", true);
             }
-            
-
         },
         error: function (errormessage) {
 

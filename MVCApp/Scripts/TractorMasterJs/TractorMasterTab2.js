@@ -1156,6 +1156,7 @@ $("#T4_Plant").on("change", function () {
 });
 
 $("#gleSearch").on("change", function () {
+    $("#T4_ItemCode").val(null);
     ClearS();
     gleSearch_EditValueChangedTab2();
 });
@@ -1493,11 +1494,23 @@ function ClearS() {
 
 
 function gleSearch_EditValueChangedTab2() {
-    var Data = {
-        gleSearch: $('#gleSearch').val(),
-        Plant: $('#T4_Plant').val(),
-        Family: $('#T4_Family').val()
-    };
+    if ($('#T4_ItemCode').val() != "") {
+        var T4_ItemCode = $('#T4_ItemCode').val();
+        const myArray = T4_ItemCode.split("#");
+        var Data = {
+            gleSearch: myArray[0],
+            Plant: $('#T4_Plant').val(),
+            Family: $('#T4_Family').val()
+        };
+    }
+    else {
+        var Data = {
+            gleSearch: $('#gleSearch').val(),
+            Plant: $('#T4_Plant').val(),
+            Family: $('#T4_Family').val()
+        };
+    }
+    
     $.ajax({
         url: EditValueChangedTab2,
         data: JSON.stringify({ obj: Data }),
@@ -1695,6 +1708,7 @@ function FillSearchItemS() {
         type: "POST",
         contentType: "application/json;charset=utf-8",
         success: function (result) {
+            $("#gleSearch").html(null);
             $("#gleSearch").html(result);
         },
         error: function (errormessage) {
@@ -1705,11 +1719,14 @@ function FillSearchItemS() {
 
 $("#PawordSubmitS").on("click", function () {
     /* localStorage.setItem("IsTabChange", true);*/
-    ChkPassword();
+    ChkPasswordTab2();
+});
+$('#T4_ItemCode').on("change", function () {
+    gleSearch_EditValueChangedTab2();
 });
 
 
-function ChkPassword() {
+function ChkPasswordTab2() {
     $("#divLoader").show();
     var data = {
         T4_Plant: $('#T4_Plant').val(),
@@ -1723,7 +1740,7 @@ function ChkPassword() {
         contentType: "application/json;charset=utf-8",
         dataType: "json",
         success: function (data) {
-            $("#PasswordPopUp").hide();
+            $("#PawordPopUpTab2").hide();
             $(".modal-backdrop").hide();
             $(".modal-backdrop").addClass("important");
             $("#divLoader").hide();

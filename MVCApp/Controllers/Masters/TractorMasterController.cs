@@ -1617,6 +1617,7 @@ namespace MVCApp.Controllers
             TractorMster tm = new TractorMster();
             try
             {
+
                 if (!string.IsNullOrEmpty(obj.gleSearch) && !string.IsNullOrEmpty(obj.Plant) && !string.IsNullOrEmpty(obj.Family))
                 {
                     query = @"select * from XXES_ITEM_MASTER where ITEM_CODE='" + obj.gleSearch.ToString().Trim() + "' and Plant_code='" + Convert.ToString(obj.Plant).Trim() + "'  and Family_code='" + Convert.ToString(obj.Family).Trim() + "'  order by FAMILY_CODE";
@@ -1891,7 +1892,7 @@ namespace MVCApp.Controllers
                 }
                 else
                 {
-                    msg = "Item Not Found";
+                    //msg = "Item Not Found";
                 }
             }
             catch (Exception ex)
@@ -4272,7 +4273,7 @@ namespace MVCApp.Controllers
             string msg = string.Empty;
             TractorMster tm = new TractorMster();
             try
-            {
+                {
                 if (!string.IsNullOrEmpty(obj.gleSearch) && !string.IsNullOrEmpty(obj.Plant) && !string.IsNullOrEmpty(obj.Family))
                 {
                     query = @"select * from XXES_ITEM_MASTER where ITEM_CODE='" + obj.gleSearch.ToString().Trim() + "' and Plant_code='" + Convert.ToString(obj.Plant).Trim() + "'  and Family_code='" + Convert.ToString(obj.Family).Trim() + "'  order by FAMILY_CODE";
@@ -4833,18 +4834,7 @@ namespace MVCApp.Controllers
             {
                 string[] item = StringSpliter(data.ItemCode);
                 data.ItemCode = item[0].Trim();
-                data.ItemCode_Desc = replaceApostophi(item[1].Trim());
-                //if (string.IsNullOrEmpty(data.ItemCode))
-                //{   
-                //    msg = "Select item to continue.";
-                //    return Json(msg, JsonRequestBehavior.AllowGet);
-                //}
-                //else
-                //{
-                //    string[] item = StringSpliter(data.ItemCode);
-                //    data.ItemCode = item[0].Trim();
-                //    data.ItemCode_Desc = replaceApostophi(item[1].Trim());
-                //}
+                data.ItemCode_Desc = replaceApostophi(item[1].Trim());               
                 query = string.Format(@"SELECT COUNT(*) FROM XXES_ITEM_MASTER xim WHERE xim.PLANT_CODE='{0}' AND xim.FAMILY_CODE='{1}' 
                         AND xim.ITEM_CODE='{2}'", data.Plant, data.Family, data.ItemCode);
                 if (!fun.CheckExits(query))
