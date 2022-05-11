@@ -265,6 +265,7 @@
     <Compile Include="Controllers\Admin\SettingController.cs" />
     <Compile Include="Controllers\Admin\UserMasterController.cs" />
     <Compile Include="Controllers\Assembly\BackendPartModificationController.cs" />
+    <Compile Include="Controllers\Assembly\RollDownController.cs" />
     <Compile Include="Controllers\Assembly\HookUpAndDownController.cs" />
     <Compile Include="Controllers\Assembly\ImportExportController.cs" />
     <Compile Include="Controllers\Assembly\JobFinalController.cs" />
@@ -388,6 +389,7 @@
     <Compile Include="Models\EngineAssembly.cs" />
     <Compile Include="Models\EngineModel.cs" />
     <Compile Include="Models\FIPModel.cs" />
+    <Compile Include="Models\RollDown.cs" />
     <Compile Include="Models\TracktorSubAssemblyModel.cs" />
     <Compile Include="Models\SubAssemblyModel.cs" />
     <Compile Include="Models\GateEntryModel.cs" />
@@ -1237,6 +1239,8 @@
     <Content Include="Views\TracktorSubAssembly\Index.cshtml" />
     <Content Include="Views\BackendPartModification\Index.cshtml" />
     <Content Include="Views\Report\GrdCRITICIAL_VENDOR_MRN.cshtml" />
+    <Content Include="Views\RollDown\Grid.cshtml" />
+    <Content Include="Views\RollDown\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
