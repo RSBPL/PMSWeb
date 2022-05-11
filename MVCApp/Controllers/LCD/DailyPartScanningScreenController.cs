@@ -422,7 +422,7 @@ namespace MVCApp.Controllers.LCD
                                 sc.Parameters.Add("PRC", OracleDbType.RefCursor, ParameterDirection.Output);
                                 OracleDataAdapter dr = new OracleDataAdapter(sc);
                                 dr.Fill(dt);
-                                fun.ConClose();
+                                //fun.ConClose();
                             }
                         }
                         catch (Exception ex)
@@ -814,7 +814,13 @@ namespace MVCApp.Controllers.LCD
 
                     fun.LogWrite(ex);
                 }
+                finally
+                {
+
+                    fun.ConClose();
+                }
             }
+            
 
             return CM;
 
@@ -1113,6 +1119,11 @@ namespace MVCApp.Controllers.LCD
                 errorNo = "1";
                 var resul = new { Msg = msg, ID = mstType, ErrorNo = errorNo };
                 return Json(resul, JsonRequestBehavior.AllowGet);
+            }
+            finally
+            {
+
+                fun.ConClose();
             }
             var result = new { Msg = msg, ID = mstType, ExcelName = excelName };
             return Json(result, JsonRequestBehavior.AllowGet);

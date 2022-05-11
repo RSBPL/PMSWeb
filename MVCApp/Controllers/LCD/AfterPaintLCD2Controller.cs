@@ -123,7 +123,7 @@ namespace MVCApp.Controllers
                                 sc.Parameters.Add("PRC", OracleDbType.RefCursor, ParameterDirection.Output);
                                 OracleDataAdapter dr = new OracleDataAdapter(sc);
                                 dr.Fill(dt);
-                                fun.ConClose();
+                                //fun.ConClose();
                             }
                         }
                         catch (Exception ex)

@@ -630,7 +630,7 @@ namespace MVCApp.Controllers
                     command.Parameters["return_message"].Direction = ParameterDirection.Output;
                     command.ExecuteNonQuery();
                     response = Convert.ToString(command.Parameters["return_message"].Value);
-                    fun.ConClose();
+                    //fun.ConClose();
 
                 }
 
@@ -641,7 +641,11 @@ namespace MVCApp.Controllers
                 response = ex.Message;
                 fun.LogWrite(ex);
             }
+            finally
+            {
 
+                fun.ConClose();
+            }
             return response;
         }
 
@@ -672,7 +676,7 @@ namespace MVCApp.Controllers
                     command.Parameters["return_message"].Direction = ParameterDirection.Output;
                     command.ExecuteNonQuery();
                     response = Convert.ToString(command.Parameters["return_message"].Value);
-                    fun.ConClose();
+                    //fun.ConClose();
 
                 }
 
@@ -683,7 +687,11 @@ namespace MVCApp.Controllers
                 response = ex.Message;
                 fun.LogWrite(ex);
             }
+            finally
+            {
 
+                fun.ConClose();
+            }
             return response;
         }
 
@@ -842,7 +850,7 @@ namespace MVCApp.Controllers
                     command.Parameters["return_message"].Direction = ParameterDirection.Output;
                     command.ExecuteNonQuery();
                     response = Convert.ToString(command.Parameters["return_message"].Value);
-                    fun.ConClose();
+                    //fun.ConClose();
                 }
 
 
@@ -852,7 +860,11 @@ namespace MVCApp.Controllers
                 response = ex.Message;
                 fun.LogWrite(ex);
             }
+            finally
+            {
 
+                fun.ConClose();
+            }
             return response;
         }
 

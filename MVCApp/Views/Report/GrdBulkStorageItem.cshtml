@@ -36,10 +36,11 @@
                 col.Field("ITEMCODE").HeaderText("ITEM_CODE").Width("130").Add();
                 col.Field("ITEM_DESCRIPTION").HeaderText("ITEM_DESCRIPTION").Width("330").Add();
                 col.Field("QUANTITY").HeaderText("QTY").Width("100").Add();
+                col.Field("QUANTITY_PER_TRACTOR").HeaderText("Quantity Per Tractor").Width("140").Add();
+                col.Field("USAGE_PER_TRACTOR").HeaderText("Usage/Tractor").Width("140").Add();
                 col.Field("LOCATION_CODE").HeaderText("LOCATION").Width("120").Add();
                 //col.Field("CREATEDBY").HeaderText("CREATEDBY").Width("130").Add();
                 //col.Field("CREATEDDATE").HeaderText("CREATEDDATE").Add();
-
             }).
             Toolbar(new List<string>() { "ExcelExport" }).
             Render())
@@ -48,6 +49,7 @@
                 var gridObj = document.getElementById("GrdBulkStorageItem").ej2_instances[0];
                 gridObj.excelExport();
             }
+           
         </script>
     </div>
 </div>

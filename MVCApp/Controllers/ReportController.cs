@@ -1020,7 +1020,7 @@ namespace MVCApp.Controllers
                     DA.SelectCommand.Parameters.Add("pSCHEMA", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
                     DA.SelectCommand.Parameters.Add("pCHECK_JOB", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
                     DA.SelectCommand.Parameters.Add("pGLE_JOBS", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
-                    DA.SelectCommand.Parameters.Add("pORG_ID", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pORG_ID", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.SHORT_BULK;
 
                     DA.SelectCommand.Parameters.Add("pPlanDate", OracleDbType.NVarchar2, ParameterDirection.Input).Value = null;
                     DA.SelectCommand.Parameters.Add("pShiftValue", OracleDbType.NVarchar2, ParameterDirection.Input).Value = null;
@@ -1052,7 +1052,7 @@ namespace MVCApp.Controllers
                     DA.SelectCommand.Parameters.Add("pSCHEMA", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
                     DA.SelectCommand.Parameters.Add("pCHECK_JOB", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
                     DA.SelectCommand.Parameters.Add("pGLE_JOBS", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
-                    DA.SelectCommand.Parameters.Add("pORG_ID", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pORG_ID", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.SHORT_BULK;
 
                     DA.SelectCommand.Parameters.Add("pPlanDate", OracleDbType.NVarchar2, ParameterDirection.Input).Value = null;
                     DA.SelectCommand.Parameters.Add("pShiftValue", OracleDbType.NVarchar2, ParameterDirection.Input).Value = null;

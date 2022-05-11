@@ -449,7 +449,8 @@ namespace MVCApp.Common
 
             try
             {
-
+                if (funtion == null)
+                    funtion = new Function();
                 if (!DuplicateCheck(Convert.ToString(dataRow["FCODE_SRLNO"]), "FCODE_SRLNO"))
                 {
                     using (OracleCommand sc = new OracleCommand("UDSP_JOB_STATUS", funtion.Connection()))
@@ -536,7 +537,7 @@ namespace MVCApp.Common
                         sc.Parameters["return_message"].Direction = ParameterDirection.Output;
                         sc.ExecuteNonQuery();
                         string response = Convert.ToString(sc.Parameters["return_message"].Value);
-                        funtion.ConClose();
+                      
                         result = true;
                     }
                 }
@@ -545,6 +546,10 @@ namespace MVCApp.Common
             {
                 funtion.LogWrite(ex);
                 throw;
+            }
+            finally
+            {
+                funtion.ConClose();
             }
             return result;
         }

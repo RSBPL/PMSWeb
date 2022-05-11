@@ -140,7 +140,11 @@ namespace MVCApp.Controllers
                 var resul = new { Msg = msg, ID = mstType };
                 return Json(resul, JsonRequestBehavior.AllowGet);
             }
-            finally { }
+            finally
+            {
+
+                fun.ConClose();
+            }
             var result = new { Msg = msg, ID = mstType };
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -316,6 +320,11 @@ namespace MVCApp.Controllers
                 mstType = "alert-danger";
                 var result = new { Msg = msg, ID = mstType };
                 return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            finally
+            {
+
+                fun.ConClose();
             }
             msg = "";
             mstType = "";
@@ -959,7 +968,11 @@ namespace MVCApp.Controllers
                 var resul = new { Msg = msg, ID = mstType };
                 return Json(resul, JsonRequestBehavior.AllowGet);
             }
-            finally { }
+            finally
+            {
+
+                fun.ConClose();
+            }
             mstType = "alert-success";
             var result = new { Msg = msg, ID = mstType };
             return Json(result, JsonRequestBehavior.AllowGet);

@@ -92,8 +92,8 @@ namespace MVCApp.CommonFunction
         public DataTable returnDataTable(string SqlQuery)
         {
             OracleConnection ConOrcl = new OracleConnection(orConnstring);
-            OracleConfiguration.TraceFileLocation = @"D:\traces";
-            OracleConfiguration.TraceLevel = 7;
+            //OracleConfiguration.TraceFileLocation = @"D:\traces";
+            //OracleConfiguration.TraceLevel = 7;
             DataTable dt = new DataTable();
             try
             {
@@ -114,7 +114,7 @@ namespace MVCApp.CommonFunction
 
         public Boolean CheckExits(string SqlQuery)
         {
-            WriteLog(SqlQuery);
+            //WriteLog(SqlQuery);
 
             string ORACLE_CONNECTION_STRING = ConfigurationManager.ConnectionStrings["CON"].ConnectionString;
             Boolean returnValue = false;
@@ -185,7 +185,7 @@ namespace MVCApp.CommonFunction
 
         public string get_Col_Value(string command)
         {
-            WriteLog(command);
+            //WriteLog(command);
             string returnValue = "";
             string ORACLE_CONNECTION_STRING = ConfigurationManager.ConnectionStrings["CON"].ConnectionString;
             OracleConnection ConOrcl = new OracleConnection(ORACLE_CONNECTION_STRING);
@@ -215,7 +215,7 @@ namespace MVCApp.CommonFunction
         public bool EXEC_QUERY(string command)
         {
             string ORACLE_CONNECTION_STRING = ConfigurationManager.ConnectionStrings["CON"].ConnectionString;
-            WriteLog(command);
+            //WriteLog(command);
             bool returnValue = false;
             OracleConnection ConOrcl = new OracleConnection(ORACLE_CONNECTION_STRING);
             try
@@ -290,7 +290,7 @@ namespace MVCApp.CommonFunction
                 throw;
             }
         }
-        public bool UpdatePrintSerialNo(SubAssemblyModel subAssembly)
+        public bool UpdatePrintSerialNo(SubAssembly subAssembly)
         {
 
             try
@@ -305,7 +305,7 @@ namespace MVCApp.CommonFunction
             }
         }
      
-        public bool UpdateFamilySerials(SubAssemblyModel subAssembly)
+        public bool UpdateFamilySerials(SubAssembly subAssembly)
         {
             string query = "";
             using (OracleConnection connection = new OracleConnection(orCnstr))
@@ -405,6 +405,10 @@ namespace MVCApp.CommonFunction
                     throw;
 
                 }
+                finally
+                {
+                    connection.Close();
+                }
             }
         }
         //TO GET UNITS
@@ -456,13 +460,16 @@ namespace MVCApp.CommonFunction
                         });
                     }
                 }
-                ConClose();
                 return unit;
             }
             catch (Exception ex)
             {
                 LogWrite(ex);
                 throw;
+            }
+            finally
+            {
+                ConClose();
             }
         }
 
@@ -488,13 +495,16 @@ namespace MVCApp.CommonFunction
                         });
                     }
                 }
-                ConClose();
                 return unit;
             }
             catch (Exception ex)
             {
                 LogWrite(ex);
                 throw;
+            }
+            finally
+            {
+                ConClose();
             }
         }
 
@@ -520,7 +530,6 @@ namespace MVCApp.CommonFunction
                         });
                     }
                 }
-                ConClose();
                 return Role;
             }
             catch (Exception ex)
@@ -563,6 +572,10 @@ namespace MVCApp.CommonFunction
             {
                 LogWrite(ex);
                 throw;
+            }
+            finally
+            {
+                ConClose();
             }
         }
 
@@ -3071,13 +3084,17 @@ namespace MVCApp.CommonFunction
 
                     OracleDataAdapter oda = new OracleDataAdapter(oc);
                     oda.Fill(dt);
-
+                    con.Close();
                 }
             }
             catch (Exception ex)
             {
 
                 LogWrite(ex);
+            }
+            finally
+            {
+                
             }
             return dt;
         }
@@ -3101,7 +3118,7 @@ namespace MVCApp.CommonFunction
                     oc.Parameters.Add("s_calltype", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "InsertShiftMaster";
                     oc.Parameters.Add("s_res", OracleDbType.RefCursor, ParameterDirection.Output);
                     oc.ExecuteNonQuery();
-                    con.Close();
+                   
                     result = true;
                 }
 
@@ -3110,7 +3127,7 @@ namespace MVCApp.CommonFunction
             {
                 LogWrite(ex);
             }
-            finally { }
+            finally { con.Close(); }
             return result;
         }
 
@@ -3133,7 +3150,7 @@ namespace MVCApp.CommonFunction
                     oc.Parameters.Add("s_calltype", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "DeleteShiftMaster";
                     oc.Parameters.Add("s_res", OracleDbType.RefCursor, ParameterDirection.Output);
                     oc.ExecuteNonQuery();
-                    con.Close();
+                    //con.Close();
                     result = true;
 
                 }
@@ -3143,7 +3160,7 @@ namespace MVCApp.CommonFunction
 
                 LogWrite(ex);
             }
-            finally { }
+            finally { con.Close(); }
             return result;
         }
 
@@ -5639,7 +5656,7 @@ namespace MVCApp.CommonFunction
                     oc.Parameters.Add("C_UPDATED_BY", OracleDbType.NVarchar2, ParameterDirection.Input).Value = null;
                     oc.Parameters.Add("C_CALLTYPE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "GridControllerData";
                     oc.Parameters.Add("C_RES", OracleDbType.RefCursor, ParameterDirection.Output);
-                    ConClose();
+                    //ConClose();
                     OracleDataAdapter oda = new OracleDataAdapter(oc);
                     oda.Fill(dt);
                 }
@@ -5650,7 +5667,7 @@ namespace MVCApp.CommonFunction
             }
             finally
             {
-
+                ConClose();
             }
             return dt;
         }
@@ -5681,7 +5698,7 @@ namespace MVCApp.CommonFunction
                     oc.Parameters.Add("C_CALLTYPE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "InsertControllerData";
                     oc.Parameters.Add("C_RES", OracleDbType.RefCursor, ParameterDirection.Output);
                     oc.ExecuteNonQuery();
-                    ConClose();
+                    //ConClose();
                     result = true;
                 }
             }
@@ -5721,7 +5738,7 @@ namespace MVCApp.CommonFunction
                     oc.Parameters.Add("C_CALLTYPE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "DeleteControllerData";
                     oc.Parameters.Add("C_RES", OracleDbType.RefCursor, ParameterDirection.Output);
                     oc.ExecuteNonQuery();
-                    ConClose();
+                   //ConClose();
                     result = true;
                 }
             }
@@ -5880,7 +5897,7 @@ namespace MVCApp.CommonFunction
                     oc.Parameters.Add("K_CALLTYPE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "InsertKanbanData";
                     oc.Parameters.Add("K_RES", OracleDbType.RefCursor, ParameterDirection.Output);
                     oc.ExecuteNonQuery();
-                    ConClose();
+                    //ConClose();
                     result = true;
 
                 }
@@ -5890,7 +5907,10 @@ namespace MVCApp.CommonFunction
                 LogWrite(ex);
                 //throw;
             }
-            finally { }
+            finally
+            {
+                ConClose();
+            }
             return result;
         }
         public bool UpdatekanbanMaster(KanbanMaster kanban)
@@ -5919,7 +5939,7 @@ namespace MVCApp.CommonFunction
                     oc.Parameters.Add("K_CALLTYPE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "UpdateKanbanData";
                     oc.Parameters.Add("K_RES", OracleDbType.RefCursor, ParameterDirection.Output);
                     oc.ExecuteNonQuery();
-                    ConClose();
+                    //ConClose();
                     result = true;
                 }
             }
@@ -5928,7 +5948,10 @@ namespace MVCApp.CommonFunction
                 LogWrite(ex);
                 // throw;
             }
-            finally { }
+            finally
+            {
+                ConClose();
+            }
             return result;
         }
         public bool DeletekanbanMaster(KanbanMaster kanban)
@@ -5957,7 +5980,7 @@ namespace MVCApp.CommonFunction
                     oc.Parameters.Add("K_CALLTYPE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "DeleteKanbanData";
                     oc.Parameters.Add("K_RES", OracleDbType.RefCursor, ParameterDirection.Output);
                     oc.ExecuteNonQuery();
-                    ConClose();
+                    //ConClose();
                     result = true;
                 }
             }
@@ -5966,7 +5989,10 @@ namespace MVCApp.CommonFunction
                 LogWrite(ex);
                 throw;
             }
-            finally { }
+            finally
+            {
+                ConClose();
+            }
             return result;
         }
 
@@ -6345,7 +6371,7 @@ namespace MVCApp.CommonFunction
                     sc.Parameters.Add("P_CALLTYPE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "InsertTractorMaster";
                     sc.Parameters.Add("P_RES", OracleDbType.RefCursor, ParameterDirection.Output);
                     sc.ExecuteNonQuery();
-                    ConClose();
+                    //ConClose();
                     result = true;
                 }
             }
@@ -6673,6 +6699,10 @@ namespace MVCApp.CommonFunction
 
                 LogWrite(ex);
             }
+            finally
+            {
+                con.Close();
+            }
             return CM;
 
         }
@@ -6805,7 +6835,7 @@ namespace MVCApp.CommonFunction
                     comm.Parameters.Add("InjectorSr4", Injector4);
                     comm.Parameters.Add("Status", status);
                     comm.ExecuteNonQuery();
-                    ConClose();
+                    //ConClose();
                     result = true;
 
                 }
@@ -6813,6 +6843,10 @@ namespace MVCApp.CommonFunction
             catch (Exception ex)
             {
                 LogWrite(ex);
+            }
+            finally
+            {
+                ConClose();
             }
             return result;
         }
@@ -6854,13 +6888,17 @@ namespace MVCApp.CommonFunction
                     comm.Parameters.Add("Remarks1", Remark1);
                     comm.Parameters.Add("BarcodeData", BarcodeData);
                     comm.ExecuteNonQuery();
-                    ConClose();
+                    //ConClose();
                 }
             }
             catch (Exception ex)
             {
                 LogWrite(ex);
 
+            }
+            finally
+            {
+                ConClose();
             }
         }
 
@@ -7188,7 +7226,7 @@ namespace MVCApp.CommonFunction
                     sc.Parameters.Add("P_CALLTYPE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "UpdateTractorMaster";
                     sc.Parameters.Add("P_RES", OracleDbType.RefCursor, ParameterDirection.Output);
                     sc.ExecuteNonQuery();
-                    ConClose();
+                    //ConClose();
                     result = true;
                 }
             }
@@ -7296,7 +7334,7 @@ namespace MVCApp.CommonFunction
                     sc.Parameters.Add("P_CALLTYPE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "InsertTractorMasterTab2";
                     sc.Parameters.Add("P_RES", OracleDbType.RefCursor, ParameterDirection.Output);
                     sc.ExecuteNonQuery();
-                    ConClose();
+                    //ConClose();
                     result = true;
                 }
             }
@@ -7405,7 +7443,7 @@ namespace MVCApp.CommonFunction
                     sc.Parameters.Add("P_CALLTYPE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "UpdateTractorMasterTab2";
                     sc.Parameters.Add("P_RES", OracleDbType.RefCursor, ParameterDirection.Output);
                     sc.ExecuteNonQuery();
-                    ConClose();
+                    //ConClose();
                     result = true;
                 }
             }
