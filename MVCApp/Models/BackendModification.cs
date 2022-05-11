@@ -21,8 +21,19 @@ namespace MVCApp.Models
         public string RearAxle { get; set; }
         public string Hydraulic { get; set; }
         public string FCODE_ID { get; set; }
+        public string IPADDR { get; set; }
+        public string IPPORT { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
+
+        /*-----------------------------------Reprint---------------------------------------------*/
+
+        public string RPlant { get; set; }
+        public string RFamily { get; set; }
+        public string RBackend { get; set; }
+        public string RRearAxleSrno { get; set; }
+        public string RTransmissionSrno { get; set; }
+        public string RHydraulicSrno { get; set; }
 
 
     }

@@ -92,22 +92,21 @@
                                     <strong>@Html.ValidationMessageFor(model => model.JobId, "", new { @class = "text-danger" })</strong>
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="RearAxle" class="text-right control-label col-form-label"><strong>RearAxle</strong></label>
-                                    @Html.TextBoxFor(Model => Model.RearAxle, null, new { @class = "form-control input-sm", @autocomplete = "off" })
-                                    <strong>@Html.ValidationMessageFor(model => model.RearAxle, "", new { @class = "text-danger" })</strong>
+                                    <label for="RearAxleSrno" class="text-right control-label col-form-label"><strong>RearAxle</strong></label>
+                                    @Html.TextBoxFor(Model => Model.RearAxleSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.RearAxleSrno, "", new { @class = "text-danger" })</strong>
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="Transmission" class="text-right control-label col-form-label"><strong>Transmission</strong></label>
-                                    @Html.TextBoxFor(Model => Model.Transmission, null, new { @class = "form-control input-sm", @autocomplete = "off" })
-                                    <strong>@Html.ValidationMessageFor(model => model.Transmission, "", new { @class = "text-danger" })</strong>
+                                    <label for="TransmissionSrno" class="text-right control-label col-form-label"><strong>Transmission</strong></label>
+                                    @Html.TextBoxFor(Model => Model.TransmissionSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                    <strong>@Html.ValidationMessageFor(model => model.TransmissionSrno, "", new { @class = "text-danger" })</strong>
                                 </div>
                                 <div class="col-md-1" style="padding-top: 23px;">
                                     <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
-                                    <button class="btn btn-success btn-sm" type="button" id="Update"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
                                 </div>
                                 <div class="col-md-1" style="padding-top: 23px;">
                                     <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
-                                </div>
+                                </div>                                
                             </div>
                         </fieldset>
                     </div>
@@ -117,44 +116,56 @@
                 @*<div id="Grid"></div>*@
             </div>
         </div>
-        @*<div id="Menu2" class="tab-pane fade">
+        <div id="Menu2" class="tab-pane fade">
             <div class="container" style="width:100%!important">
                 <div class="form-horizontal form-group ">
                     <fieldset class="the-fieldset bg-info">
                         <div class="row">
                             <div class="col-md-3">
-                                <label for="PlantExport" class="text-right control-label col-form-label"><strong>Plant</strong></label>
-                                @Html.DropDownListFor(model => model.PlantExport, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
-
-                                <strong>@Html.ValidationMessageFor(model => model.PlantExport, "", new { @class = "text-danger" })</strong>
+                                <label for="RPlant" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                                @Html.DropDownListFor(model => model.RPlant, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.RPlant, "", new { @class = "text-danger" })</strong>
                             </div>
                             <div class="col-md-3">
-                                <label for="MonthYear" class="text-right control-label col-form-label"><strong>Month</strong></label>
-
-                                @Html.DropDownListFor(model => model.MonthYearExport, (IEnumerable<SelectListItem>)ViewBag.Months, new { @class = "form-control  input-sm" })
-                                <strong>@Html.ValidationMessageFor(model => model.MonthYearExport, "", new { @class = "text-danger" })</strong>
+                                <label for="RFamily" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                                @Html.DropDownListFor(model => model.RFamily, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.RFamily, "", new { @class = "text-danger" })</strong>
                             </div>
                             <div class="col-md-3">
-                                <label for="MyCode" class="text-right control-label col-form-label"><strong>Suffix</strong></label>
-                                @Html.TextBoxFor(Model => Model.MyCodeExport, null, new { @class = "form-control input-sm", @autocomplete = "off" })
-                                <strong>@Html.ValidationMessageFor(model => model.MyCodeExport, "", new { @class = "text-danger" })</strong>
+                                <label for="RBackend" class="text-right control-label col-form-label"><strong>Backend</strong></label>
+                                @Html.TextBoxFor(Model => Model.RBackend, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.RBackend, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="RRearAxleSrno" class="text-right control-label col-form-label"><strong>RearAxle</strong></label>
+                                @Html.TextBoxFor(Model => Model.RRearAxleSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.RRearAxleSrno, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="RTransmissionSrno" class="text-right control-label col-form-label"><strong>Transmission</strong></label>
+                                @Html.TextBoxFor(Model => Model.RTransmissionSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.RTransmissionSrno, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="RHydraulicSrno" class="text-right control-label col-form-label"><strong>Hydraulic</strong></label>
+                                @Html.TextBoxFor(Model => Model.RHydraulicSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.RHydraulicSrno, "", new { @class = "text-danger" })</strong>
                             </div>
                             <div class="col-md-1" style="padding-top: 23px;">
-                                <button class="btn btn-success btn-sm" type="button" id="AddExport"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
-                                <button class="btn btn-success btn-sm" type="button" id="UpdateExport"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+                                <button class="btn btn-success btn-sm" type="button" id="AddReprint"><i class="ace-icon fa fa-print bigger-110"></i><strong>RePrint</strong></button>
                             </div>
                             <div class="col-md-1" style="padding-top: 23px;">
-                                <button class="btn btn-default btn-sm" type="button" id="ClearExport"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                                <button class="btn btn-default btn-sm" type="button" id="ClearReprint"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
                             </div>
                         </div>
                     </fieldset>
                 </div>
 
-                <div id="GridExport"></div>
+                @*<div id="GridExport"></div>*@
             </div>
         </div>
 
-        <div id="Menu3" class="tab-pane fade">
+        @*<div id="Menu3" class="tab-pane fade">
             <div class="container" style="width:100%!important">
                 <div class="form-horizontal form-group ">
                     <fieldset class="the-fieldset bg-info">
@@ -191,8 +202,7 @@
 
     $(document).ready(function () {
         DDLPlant();
-       /* DDLBindJob();*/
-        $('#Update').hide();
+        DDLReprintPlant();
     });
     $("#Plant").on("change", function () {
         DDLFamilyByPlant();
@@ -201,7 +211,7 @@
         DDLBackendbyFamilyPlant();
         /*DDLBindJob();*/
     });
-    $("#Backend").on("change", function () {    
+    $("#Backend").on("change", function () {
         DDLBindJob();
     });
           //Function to bind Plant
@@ -291,26 +301,55 @@
             }
         });
     };
-    @*function DDLBackendbyFamilyPlant() {
-        var obj = {
-            PLANT_CODE: $("#PLANT_CODE").val(),
-            FAMILY_CODE: $("#FAMILY_CODE").val()
-        }
-        $.ajax({
-            url: '@Url.Action("BindBackend", "BackendMapping")',
-            type: "POST",
-            contentType: "application/json;charset=UTF-8",
-            data: JSON.stringify( obj ),
-            success: function (result) {
-                $("#BACKEND").html(null);
-                $("#BACKEND").html(result);
-                DDLHydraulicbyFamilyPlant();
-            },
-            error: function (errormessage) {
-            //alert(errormessage.responseText);
-            }
-        });
-    };*@
+
+    $("#Add").on("click", function () {
+            $("#divLoader").show();
+            var data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                Backend: $('#Backend').val(),
+                JobId: $("#JobId").val(),
+                RearAxleSrno: $("#RearAxleSrno").val(),
+                TransmissionSrno: $("#TransmissionSrno").val()
+            };
+            $.ajax({
+                url: '@Url.Action("Save", "BackendPartModification")',
+                data: JSON.stringify(data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        //$('#RearAxleSrno').val("");
+                        //$('#TransmissionSrno').val("");
+                    }
+
+                },
+                error: function (errormessage) {
+
+                }
+            });
+
+    });
+
     $("#Plant").select2({
         allowClear: true,
         width: '315px',
@@ -329,6 +368,64 @@
     });
 
     $("#Clear").on("click", function () {
+        location.reload(true);
+    });
+
+    /**************************************reprint********************************************/
+
+
+    $("#RPlant").on("change", function () {
+        DDLReprintFamilyByPlant();
+    });
+         //Function to bind Plant
+    function DDLReprintPlant() {
+        $.ajax({
+            url: '@Url.Action("BindReprintPlant", "BackendPartModification")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#RPlant").append(optionhtml);
+                });
+                DDLReprintFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+      //Function to bind Family by Plant
+    function DDLReprintFamilyByPlant() {
+        var selectedValue = $("#RPlant").val();
+        $.ajax({
+            url: '@Url.Action("BindReprinFamily", "BackendPartModification")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ RPlant: selectedValue }),
+            success: function (result) {
+                $("#RFamily").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#RFamily").append(optionhtml);
+                });
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    $("#RPlant").select2({
+        allowClear: true,
+        width: '315px',
+    });
+    $("#RFamily").select2({
+        allowClear: true,
+        width: '315px',
+    });
+    $("#ClearReprint").on("click", function () {
         location.reload(true);
     });
 </script>
