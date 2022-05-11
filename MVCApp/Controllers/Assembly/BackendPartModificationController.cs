@@ -456,21 +456,16 @@ namespace MVCApp.Controllers.Assembly
                         command.CommandText = query;
                         command.ExecuteNonQuery();
                     }
-                    //else if(isUpdate)
-                    //{
-
-                    //}
-                    
-                    
-                    
                     transaction.Commit();
                     result = true;
                 }
-                
-
                 catch (Exception ex)
                 {
                     fun.LogWrite(ex);
+                }
+                finally
+                {
+                    connection.Close();
                 }
             }
             
@@ -550,9 +545,13 @@ namespace MVCApp.Controllers.Assembly
                 {
                     throw new Exception("Print File Not Found");
                 }
-                return true;
+                return status;
             }
-            catch { throw; }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+                throw;
+            }
             finally { }
         }
 
@@ -610,6 +609,369 @@ namespace MVCApp.Controllers.Assembly
             {
                 result = fun.Fill_All_Family(RPlant);
             }
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult GetSerialNo(BackendModification data)
+        {
+            string msg = string.Empty; string mstType = string.Empty; string status = string.Empty;
+            try
+            {
+                if(string.IsNullOrEmpty(data.RBackendSrno))
+                {
+                    msg = "Please Enter Backend Serial No.";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(resul, JsonRequestBehavior.AllowGet);
+                }
+                query = string.Format(@"SELECT COUNT(*) FROM XXES_BACKEND_STATUS xbs WHERE xbs.PLANT_CODE='{0}' AND xbs.FAMILY_CODE='{1}' 
+                       AND xbs.BACKEND_SRLNO='{2}'", data.RPlant.Trim().ToUpper(), data.RFamily.Trim().ToUpper(), data.RBackendSrno.Trim().ToUpper());
+                dt = fun.returnDataTable(query);
+                if(dt.Rows.Count == 0)
+                {
+                    msg = "Invalid Backend Serial No.";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(resul, JsonRequestBehavior.AllowGet);
+                }
+                query = string.Format(@"select m.TRANSMISSION || '#' || m.REARAXEL || '#' || m.BACKEND_DESC || '#' || s.BACKEND_SRLNO || '#' || m.BACKEND
+                        || '#' || TRANSMISSION_SRLNO || '#'  || REARAXEL_SRLNO || '#' || HYDRAULIC_SRLNO || '#' ||
+                        (select fcode from xxes_daily_plan_tran where autoid=s.fcode_id) || '#' || m.HYDRAULIC 
+                        from XXES_BACKEND_MASTER m ,XXES_BACKEND_STATUS s where m.backend=s.backend and m.plant_code=s.plant_code
+                        and m.family_code=s.family_code  and  trim(BACKEND_SRLNO)='{0}'", data.RBackendSrno.Trim());
+                string line = fun.get_Col_Value(query);
+                if(!string.IsNullOrEmpty(line))
+                {
+                    string trans = line.Split('#')[0].Trim().ToUpper();
+                    string Rear = line.Split('#')[1].Trim().ToUpper();
+                    string BackDesc = line.Split('#')[2].Trim().ToUpper();
+                    data.backend_desc = BackDesc;
+                    data.RBackendSrno = line.Split('#')[3].Trim().ToUpper();
+                    data.BackendSrno = data.RBackendSrno;
+                    string BackD = line.Split('#')[4].Trim().ToUpper();
+                    data.Backend = BackD;
+                    data.RTransmissionSrno = line.Split('#')[5].Trim().ToUpper();
+                    data.RRearAxleSrno = line.Split('#')[6].Trim().ToUpper();
+                    data.RHydraulicSrno = line.Split('#')[7].Trim().ToUpper();
+                    string hydra = line.Split('#')[8].Trim().ToUpper();
+                }
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+            }
+            var myResult = new
+            {
+                Result = data,
+                Msg = msg
+            };
+            return Json(myResult, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult Reprint(BackendModification data)
+        {
+            string msg = string.Empty; string mstType = string.Empty; string status = string.Empty;
+            try
+            {
+                if (string.IsNullOrEmpty(data.RBackendSrno))
+                {
+                    msg = "Please Enter Backend Serial No.";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(resul, JsonRequestBehavior.AllowGet);
+                }
+                query = string.Format(@"SELECT JOBID FROM XXES_BACKEND_STATUS  WHERE PLANT_CODE='{0}' AND FAMILY_CODE='{1}' 
+                        AND BACKEND_SRLNO='{2}'", data.RPlant.Trim(), data.RFamily.Trim(), data.RBackendSrno.Trim());
+                data.JobId = fun.get_Col_Value(query);
+                GetSerialNo(data);
+                if (PrintBackendFT(data, 1))
+                {
+                    msg = "Backend Reprinted !!";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                }
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+                msg = ex.Message;
+            }
+            var result = new { Msg = msg, ID = mstType, validation = status };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        /******************************************PartModify*************************************************/
+
+        [HttpGet]
+        public JsonResult BindModifyPlant()
+        {
+            return Json(fun.Fill_Unit_Name(), JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult BindModifyFamily(string MPlant)
+        {
+            List<DDLTextValue> result = new List<DDLTextValue>();
+            if (!string.IsNullOrEmpty(MPlant))
+            {
+                result = fun.Fill_All_Family(MPlant);
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult GetModifySerialNo(BackendModification data)
+        {
+            string msg = string.Empty; string mstType = string.Empty; string status = string.Empty;
+            try
+            {
+                if (string.IsNullOrEmpty(data.MBackendSrno))
+                {
+                    msg = "Please Enter Backend Serial No.";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(resul, JsonRequestBehavior.AllowGet);
+                }
+                query = string.Format(@"SELECT COUNT(*) FROM XXES_BACKEND_STATUS xbs WHERE xbs.PLANT_CODE='{0}' AND xbs.FAMILY_CODE='{1}' 
+                       AND xbs.BACKEND_SRLNO='{2}'", data.MPlant.Trim().ToUpper(), data.MFamily.Trim().ToUpper(), data.MBackendSrno.Trim().ToUpper());
+                dt = fun.returnDataTable(query);
+                if (dt.Rows.Count == 0)
+                {
+                    msg = "Invalid Backend Serial No.";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(resul, JsonRequestBehavior.AllowGet);
+                }
+                query = string.Format(@"select m.TRANSMISSION || '#' || m.REARAXEL || '#' || m.BACKEND_DESC || '#' || s.BACKEND_SRLNO || '#' || m.BACKEND
+                        || '#' || TRANSMISSION_SRLNO || '#'  || REARAXEL_SRLNO || '#' || HYDRAULIC_SRLNO || '#' ||
+                        (select fcode from xxes_daily_plan_tran where autoid=s.fcode_id) || '#' || m.HYDRAULIC 
+                        from XXES_BACKEND_MASTER m ,XXES_BACKEND_STATUS s where m.backend=s.backend and m.plant_code=s.plant_code
+                        and m.family_code=s.family_code  and  trim(BACKEND_SRLNO)='{0}'", data.MBackendSrno.Trim());
+                string line = fun.get_Col_Value(query);
+                if (!string.IsNullOrEmpty(line))
+                {
+                    string trans = line.Split('#')[0].Trim().ToUpper();
+                    string Rear = line.Split('#')[1].Trim().ToUpper();
+                    string BackDesc = line.Split('#')[2].Trim().ToUpper();
+                    data.backend_desc = BackDesc;
+                    data.MBackendSrno = line.Split('#')[3].Trim().ToUpper();
+                    data.BackendSrno = data.RBackendSrno;
+                    string BackD = line.Split('#')[4].Trim().ToUpper();
+                    data.Backend = BackD;
+                    data.MTransmissionSrno = line.Split('#')[5].Trim().ToUpper();
+                    data.MRearAxleSrno = line.Split('#')[6].Trim().ToUpper();
+                    data.MHydraulicSrno = line.Split('#')[7].Trim().ToUpper();
+                    string hydra = line.Split('#')[8].Trim().ToUpper();
+                }
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+            }
+            var myResult = new
+            {
+                Result = data,
+                Msg = msg
+            };
+            return Json(myResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult SaveModify(BackendModification data)
+        {
+            bool printStatus = false; string response = string.Empty , backendplant = string.Empty , backendfamily = string.Empty, Backend = string.Empty;
+            string msg = string.Empty; string mstType = string.Empty; string status = string.Empty;
+            string RearAxle = string.Empty, Transmission = string.Empty, Hydraulic = string.Empty, ActualTrans = string.Empty, ActualAxle = string.Empty,
+            ActualHydrualic = string.Empty, Backenddesc = string.Empty, runningSrlno = string.Empty, BackendSrlno = string.Empty , jobid = string.Empty;
+            try
+            {
+                if (string.IsNullOrEmpty(data.MBackendSrno))
+                {
+                    msg = "Please Enter Backend Serial No.";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(resul, JsonRequestBehavior.AllowGet);
+                }
+                if (string.IsNullOrEmpty(data.MRearAxleSrno))
+                {
+                    msg = "Please Enter RearAxle Serial No.";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(resul, JsonRequestBehavior.AllowGet);
+                }
+                if (string.IsNullOrEmpty(data.MTransmissionSrno))
+                {
+                    msg = "Please Enter Transmission Serial No.";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(resul, JsonRequestBehavior.AllowGet);
+                }
+                if (string.IsNullOrEmpty(data.MHydraulicSrno))
+                {
+                    msg = "Please Enter Hydraulic Serial No.";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(resul, JsonRequestBehavior.AllowGet);
+                }
+                //query = string.Format(@"SELECT PLANT_CODE || '#' || FAMILY_CODE || '#' || BACKEND FROM
+                //XXES_BACKEND_STATUS WHERE BACKEND_SRLNO='{0}'", data.MBackendSrno);
+                //string line = fun.get_Col_Value(query);
+                //if (line.Contains('#'))
+                //{
+                //    backendplant = line.Split('#')[0].Trim().ToUpper();
+                //    backendfamily = line.Split('#')[1].Trim().ToUpper();
+                //    Backend = line.Split('#')[2].Trim().ToUpper();
+                //}
+                //if (backendplant == "T04")
+                //{
+                //    orgid = "149";
+                //    backendfamily = "BACK END FTD";
+                //}
+                //else
+                //{
+                //    orgid = "150";
+                //    backendfamily = "BACK END TD";
+                //}
+                query = string.Format(@"select count(*) from XXES_BACKEND_STATUS where  REARAXEL_SRLNO='{0}' and BACKEND_SRLNO<>'{1}'", data.MRearAxleSrno,data.MBackendSrno);
+                if (Convert.ToInt32(fun.get_Col_Value(query)) > 0)
+                {
+                    msg = "RearAxle Serial No. Aleardy Exist..!";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var err = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(err, JsonRequestBehavior.AllowGet);
+                }
+                query = string.Format(@"select count(*) from XXES_BACKEND_STATUS where  TRANSMISSION_SRLNO='{0}'  and BACKEND_SRLNO<>'{1}'", data.MTransmissionSrno,data.MBackendSrno);
+                if (Convert.ToInt32(fun.get_Col_Value(query)) > 0)
+                {
+                    msg = "Transmission Serial No. Aleardy Exist..!";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var err = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(err, JsonRequestBehavior.AllowGet);
+                }
+                query = string.Format(@"select count(*) from XXES_BACKEND_STATUS where  HYDRAULIC_SRLNO='{0}'  and BACKEND_SRLNO<>'{1}'", data.MHydraulicSrno, data.MBackendSrno);
+                if (Convert.ToInt32(fun.get_Col_Value(query)) > 0)
+                {
+                    msg = "Hydraulic Serial No. Aleardy Exist..!";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var err = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(err, JsonRequestBehavior.AllowGet);
+                }
+                query = string.Format(@"select ITEM_CODE from PRINT_SERIAL_NUMBER where SERIAL_NUMBER='{0}'", data.MRearAxleSrno.Trim().ToUpper());
+                RearAxle = fun.get_Col_Value(query);
+                if (string.IsNullOrEmpty(RearAxle))
+                {
+                    msg = "REARAXEL NOT FOUND";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var err = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(err, JsonRequestBehavior.AllowGet);
+                }
+                query = string.Format(@"select ITEM_CODE from PRINT_SERIAL_NUMBER where SERIAL_NUMBER='{0}'", data.MTransmissionSrno.Trim().ToUpper());
+                Transmission = fun.get_Col_Value(query);
+                if (string.IsNullOrEmpty(Transmission))
+                {
+                    msg = "TRANSMISSION NOT FOUND";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var err = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(err, JsonRequestBehavior.AllowGet);
+                }
+                if(!string.IsNullOrEmpty(data.MHydraulicSrno))
+                {
+                    query = string.Format(@"select DCODE from XXES_PRINT_SERIALS where SRNO='{0}'", data.MHydraulicSrno.Trim().ToUpper());
+                    Hydraulic = fun.get_Col_Value(query);
+                    if(string.IsNullOrEmpty(Hydraulic))
+                    {
+                        msg = "HYDRAULIC NOT FOUND";
+                        mstType = Validation.str1;
+                        status = Validation.str2;
+                        var err = new { Msg = msg, ID = mstType, validation = status };
+                        return Json(err, JsonRequestBehavior.AllowGet);
+                    }
+                }
+                query = string.Format(@"select m.TRANSMISSION || '#' || m.REARAXEL || '#' | |m.HYDRAULIC || '#' || m.BACKEND_DESC || '#' ||
+                        S.JOBID from XXES_BACKEND_MASTER m , XXES_BACKEND_STATUS s  WHERE trim(m.BACKEND) = '{0}' and m.PLANT_CODE = '{1}' 
+                        and m.family_code = '{2}' AND S.BACKEND_SRLNO = '{3}'",Backend, data.MPlant.Trim().ToUpper(), 
+                        data.MFamily.Trim().ToUpper(),data.MBackendSrno.Trim());
+                string line1 = fun.get_Col_Value(query);
+                if(!string.IsNullOrEmpty(line1))
+                {
+                    ActualTrans = line.Split('#')[0].Trim().ToUpper();
+                    ActualAxle = line.Split('#')[1].Trim().ToUpper();
+                    ActualHydrualic = line.Split('#')[2].Trim().ToUpper();
+                    Backenddesc = line.Split('#')[3].Trim().ToUpper();
+                    jobid = line.Split('#')[4].Trim().ToUpper();
+
+                    if (string.IsNullOrEmpty(ActualAxle))
+                    {
+                        msg = "REARAXLE ITEMCODE NOT FOUND IN MES";
+                        mstType = Validation.str1;
+                        status = Validation.str2;
+                        var resul = new { Msg = msg, ID = mstType, validation = status };
+                        return Json(resul, JsonRequestBehavior.AllowGet);
+                    }
+                    else if (RearAxle.Trim().ToUpper() != ActualAxle.Trim().ToUpper())
+                    {
+                        msg = "REARAXLE MISMATCH ACTUAL REARAXLE : " + ActualAxle;
+                        mstType = Validation.str1;
+                        status = Validation.str2;
+                        var resul = new { Msg = msg, ID = mstType, validation = status };
+                        return Json(resul, JsonRequestBehavior.AllowGet);
+                    }
+                    if (string.IsNullOrEmpty(ActualTrans))
+                    {
+                        msg = "TRANSMISSION ITEMCODE NOT FOUND IN MES";
+                        mstType = Validation.str1;
+                        status = Validation.str2;
+                        var resul = new { Msg = msg, ID = mstType, validation = status };
+                        return Json(resul, JsonRequestBehavior.AllowGet);
+                    }
+                    else if (Transmission.Trim().ToUpper() != ActualTrans.Trim().ToUpper())
+                    {
+                        msg = "TRANSMISSION MISMATCH ACTUAL TRANSMISSION : " + ActualTrans;
+                        mstType = Validation.str1;
+                        status = Validation.str2;
+                        var resul = new { Msg = msg, ID = mstType, validation = status };
+                        return Json(resul, JsonRequestBehavior.AllowGet);
+                    }
+                    if(!string.IsNullOrEmpty(Hydraulic))
+                    {
+                        if (Hydraulic.Trim().ToUpper() != ActualHydrualic.Trim().ToUpper())
+                        {
+                            msg = "HYDRAULIC MISMATCH ACTUAL HYDRAULIC : " + ActualHydrualic;
+                            mstType = Validation.str1;
+                            status = Validation.str2;
+                            var resul = new { Msg = msg, ID = mstType, validation = status };
+                            return Json(resul, JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                }
+                else
+                {
+                    msg = "DCODE NOT FOUND IN PLANT : " + Backend;
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(resul, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+            }
+            var result = new { Msg = msg, ID = mstType, validation = status };
             return Json(result, JsonRequestBehavior.AllowGet);
         }
     }
