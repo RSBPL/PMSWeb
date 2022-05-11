@@ -134,6 +134,7 @@ namespace MVCApp.Controllers
                         finally
                         {
                             fun.ConClose();
+                            fun.Connection().Dispose();
                         }
                         //return ;
 
@@ -211,7 +212,7 @@ namespace MVCApp.Controllers
                         mr.lblError = mr.lblError + "\n" + ex.Message.ToString();
                         mr.lblErrorTF = true;
                     }
-                    finally { }
+                    finally { fun.ConClose(); }
                     //CheckInfo(plant, family);
                 }
             }
@@ -220,7 +221,7 @@ namespace MVCApp.Controllers
                 mr.lblError = mr.lblError + "\n" + ex.Message.ToString();
                 mr.lblErrorTF = true;
             }
-            finally { }
+            finally { fun.ConClose(); }
             ViewBag.lblInfoTF = mr.lblInfoTF;
             ViewBag.lblInfo = mr.lblInfo;
             ViewBag.lblInfodbTF = mr.lblInfodbTF;

@@ -10,6 +10,7 @@ using Oracle.ManagedDataAccess.Client;
 using MVCApp.CommonFunction;
 using System.Configuration;
 using System.IO;
+using System.Threading;
 
 namespace MVCApp.CommonFunction
 {
@@ -38,7 +39,7 @@ namespace MVCApp.CommonFunction
         OracleCommand cmd;
         OracleDataAdapter da;
         BaseEncDec bed = new BaseEncDec();
-
+        private static ReaderWriterLockSlim _readWriteLock = new ReaderWriterLockSlim();
         public OracleConnection Connection()
         {
 
@@ -199,6 +200,7 @@ namespace MVCApp.CommonFunction
                 cmd.CommandType = CommandType.Text;
                 returnValue = Convert.ToString(cmd.ExecuteScalar());
                 return returnValue;
+               
             }
             catch (Exception ex)
             {
@@ -955,15 +957,8 @@ namespace MVCApp.CommonFunction
         {
             try
             {
-                ConOpen();
-                OracleCommand cmd = new OracleCommand();
-                cmd.CommandText = "SELECT TO_CHAR(SYSDATE, 'DD-MM-YYYY HH24:MI:SS') FROM DUAL";
-                cmd.CommandType = CommandType.Text;
-                cmd.Connection = Connection();
-                OracleDataReader dr = cmd.ExecuteReader();
-                dr.Read();
-                //ConClose();
-                return Convert.ToDateTime(dr.GetString(0));
+                string query = "SELECT TO_CHAR(SYSDATE, 'DD-MM-YYYY HH24:MI:SS') FROM DUAL";
+                return Convert.ToDateTime(get_Col_Value(query));                 
             }
             catch (Exception ex)
             {
@@ -1102,6 +1097,7 @@ namespace MVCApp.CommonFunction
 
         public void WriteLog(string Message, string directoryname = null)
         {
+            _readWriteLock.EnterWriteLock();
             StreamWriter sw = null;
 
             try
@@ -1134,11 +1130,13 @@ namespace MVCApp.CommonFunction
             }
             finally
             {
+
                 if (sw != null)
                 {
                     sw.Dispose();
                     sw.Close();
                 }
+                _readWriteLock.ExitWriteLock();
             }
 
         }
@@ -2178,6 +2176,7 @@ namespace MVCApp.CommonFunction
         {
             try
             {
+                _readWriteLock.EnterWriteLock();
                 if (ex.Message != "Thread was being aborted." || ex.Message != "The ConnectionString property has not been initialized.")
                 {
                     string DirectoryPath = HttpContext.Current.Server.MapPath("~/LogFiles/");
@@ -2201,6 +2200,10 @@ namespace MVCApp.CommonFunction
             }
             catch
             {
+            }
+            finally
+            {
+                _readWriteLock.ExitWriteLock();
             }
         }
 
