@@ -55,6 +55,9 @@
     #PawordPopUp .modal-lg {
         max-width: 30% !important;
     }
+    #PawordPopUpTab2 .modal-lg {
+        max-width: 30% !important;
+    }
     .important {
      opacity:-0.5;
     }
@@ -756,7 +759,7 @@
 
                                 <div class="col-md-1 align-right" style="padding: 5px 12px 5px 12px !important;">
                                     <button class="btn btn-success btn-sm" type="button" id="AddS"><strong>Submit</strong></button>
-                                    <button class="btn btn-success btn-sm" type="button" id="UpdateS"><strong>Update</strong></button>
+                                    <button class="btn btn-success btn-sm" type="button" id="UpdateS"  data-toggle="modal" data-target="#PawordPopUpTab2"><strong>Update</strong></button>
                                 </div>
 
                                 <div class="col-md-1 align-right" style="padding: 5px 12px 5px 12px !important;">
@@ -903,7 +906,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <label for="ORDERBY" class="col-form-label">Password</label>
-                            @Html.TextBoxFor(Model => Model.Password, null, new { @class = "form-control input-sm" })
+                            @Html.TextBoxFor(Model => Model.Password, null, new { @class = "form-control input-sm", type = "password" })
 
                             @*@Html.TextBoxFor(Model => Model.Password, null, new { @class = "form-control", @autocomplete = "off" })*@
                         </div>
@@ -913,6 +916,32 @@
             </div>
             <div class="modal-footer">
                 <button type="button" id="PawordSubmit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="PawordPopUpTab2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Enter Password</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="Password" class="col-form-label">Password</label>
+                            @Html.TextBoxFor(Model => Model.PasswordTab2, null, new { @class = "form-control input-sm", type = "password" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="PawordSubmitS" class="btn btn-primary">Submit</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
 
@@ -1027,6 +1056,8 @@
     var FRBLH = '@Url.Action("FillFRB_LH", "TractorMaster")';
     var FRASRB = '@Url.Action("FillFR_AS_RB", "TractorMaster")';
     var SubmitPass = '@Url.Action("PasswordPopup", "TractorMaster")';
+    var SubmitPassTab2 = '@Url.Action("PasswordPopupTab2", "TractorMaster")';
+    var NewTCode = '@Url.Action("NewTractorCode", "TractorMaster")';
      //-------------------Add New Jquery End---------------------------
 
     //$("#Update").on("click", function () {

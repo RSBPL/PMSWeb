@@ -229,6 +229,8 @@ namespace MVCApp.Models
         //-------------------------------Pasword--------------------------------------------//
 
         public string Password { get; set; }
+        public string PasswordTab2 { get; set; }
+
 
     }
 }

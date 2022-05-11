@@ -187,10 +187,11 @@ namespace MVCApp.Controllers.Assembly
         public JsonResult Save(BackendModification data)
         {
             string msg = string.Empty; string mstType = string.Empty; string status = string.Empty;
-            string RearDCode = string.Empty, TransDCode = string.Empty;
+            string RearAxle = string.Empty, Transmission = string.Empty, ActualTrans = string.Empty, ActualAxle = string.Empty,
+            ActualHydrualic = string.Empty, Backenddesc = string.Empty, runningSrlno = string.Empty, BackendSrlno = string.Empty; 
             try
             {
-                if(string.IsNullOrEmpty(data.RearAxle))
+                if(string.IsNullOrEmpty(data.RearAxleSrno))
                 {
                     msg = "Please Enter RearAxle Serial No.";
                     mstType = Validation.str1;
@@ -198,7 +199,7 @@ namespace MVCApp.Controllers.Assembly
                     var resul = new { Msg = msg, ID = mstType, validation = status };
                     return Json(resul, JsonRequestBehavior.AllowGet);
                 }
-                if (string.IsNullOrEmpty(data.Transmission))
+                if (string.IsNullOrEmpty(data.TransmissionSrno))
                 {
                     msg = "Please Enter Transmission Serial No.";
                     mstType = Validation.str1;
@@ -206,7 +207,7 @@ namespace MVCApp.Controllers.Assembly
                     var resul = new { Msg = msg, ID = mstType, validation = status };
                     return Json(resul, JsonRequestBehavior.AllowGet);
                 }
-                query = string.Format(@"select count(*) from XXES_BACKEND_STATUS where  REARAXEL_SRLNO='{0}'",data.RearAxle.Trim().ToUpper());
+                query = string.Format(@"select count(*) from XXES_BACKEND_STATUS where  REARAXEL_SRLNO='{0}'",data.RearAxleSrno.Trim().ToUpper());
                 if (Convert.ToInt32(fun.get_Col_Value(query)) > 0)
                 {
                     msg = "RearAxle Serial No. Aleardy Exist..!";
@@ -215,7 +216,7 @@ namespace MVCApp.Controllers.Assembly
                     var err = new { Msg = msg, ID = mstType, validation = status };
                     return Json(err, JsonRequestBehavior.AllowGet);
                 }
-                query = string.Format(@"select count(*) from XXES_BACKEND_STATUS where  TRANSMISSION_SRLNO='{0}'", data.Transmission.Trim().ToUpper());
+                query = string.Format(@"select count(*) from XXES_BACKEND_STATUS where  TRANSMISSION_SRLNO='{0}'", data.TransmissionSrno.Trim().ToUpper());
                 if(Convert.ToInt32(fun.get_Col_Value(query)) > 0)
                 {
                     msg = "Transmission Serial No. Aleardy Exist..!";
@@ -225,9 +226,9 @@ namespace MVCApp.Controllers.Assembly
                     return Json(err, JsonRequestBehavior.AllowGet);
                 }
 
-                query = string.Format(@"select ITEM_CODE from PRINT_SERIAL_NUMBER where SERIAL_NUMBER='{0}'", data.RearAxle.Trim().ToUpper());
-                RearDCode =Convert.ToString(fun.CheckExits(query));
-                if(string.IsNullOrEmpty(RearDCode))
+                query = string.Format(@"select ITEM_CODE from PRINT_SERIAL_NUMBER where SERIAL_NUMBER='{0}'", data.RearAxleSrno.Trim().ToUpper());
+                RearAxle = Convert.ToString(fun.CheckExits(query));
+                if(string.IsNullOrEmpty(RearAxle))
                 {
                     msg = "REARAXEL NOT FOUND";
                     mstType = Validation.str1;
@@ -235,15 +236,75 @@ namespace MVCApp.Controllers.Assembly
                     var err = new { Msg = msg, ID = mstType, validation = status };
                     return Json(err, JsonRequestBehavior.AllowGet);
                 }
-                query = string.Format(@"select ITEM_CODE from PRINT_SERIAL_NUMBER where SERIAL_NUMBER='{0}'", data.Transmission.Trim().ToUpper());
-                TransDCode = Convert.ToString(fun.CheckExits(query));
-                if(string.IsNullOrEmpty(TransDCode))
+                query = string.Format(@"select ITEM_CODE from PRINT_SERIAL_NUMBER where SERIAL_NUMBER='{0}'", data.TransmissionSrno.Trim().ToUpper());
+                Transmission = Convert.ToString(fun.CheckExits(query));
+                if(string.IsNullOrEmpty(Transmission))
                 {
                     msg = "TRANSMISSION NOT FOUND";
                     mstType = Validation.str1;
                     status = Validation.str2;
                     var err = new { Msg = msg, ID = mstType, validation = status };
                     return Json(err, JsonRequestBehavior.AllowGet);
+                }
+                query = string.Format(@"SELECT TRANSMISSION || '#' || REARAXEL || '#' ||HYDRAULIC|| '#' || BACKEND_DESC from XXES_BACKEND_MASTER where trim(BACKEND)='{0}' 
+                        and PLANT_CODE='{1}' and FAMILY_CODE='{2}'", data.Backend, data.Plant.Trim().ToUpper(), data.Family.Trim().ToUpper());
+                string line = fun.get_Col_Value(query);
+                if (!string.IsNullOrEmpty(line))
+                {
+                    ActualTrans = line.Split('#')[0].Trim().ToUpper();
+                    ActualAxle = line.Split('#')[1].Trim().ToUpper();
+                    ActualHydrualic = line.Split('#')[2].Trim().ToUpper();
+                    Backenddesc = line.Split('#')[3].Trim().ToUpper();
+
+                    if (string.IsNullOrEmpty(ActualAxle))
+                    {
+                        msg = "REARAXLE ITEMCODE NOT FOUND IN MES";
+                        mstType = Validation.str1;
+                        status = Validation.str2;
+                        var resul = new { Msg = msg, ID = mstType, validation = status };
+                        return Json(resul, JsonRequestBehavior.AllowGet);
+                    }
+                    else if (RearAxle.Trim().ToUpper() != ActualAxle.Trim().ToUpper())
+                    {
+                        msg = "REARAXLE MISMATCH ACTUAL REARAXLE : " + ActualAxle;
+                        mstType = Validation.str1;
+                        status = Validation.str2;
+                        var resul = new { Msg = msg, ID = mstType, validation = status };
+                        return Json(resul, JsonRequestBehavior.AllowGet);
+                    }
+                    if (string.IsNullOrEmpty(ActualTrans))
+                    {
+                        msg = "REARAXLE ITEMCODE NOT FOUND IN MES";
+                        mstType = Validation.str1;
+                        status = Validation.str2;
+                        var resul = new { Msg = msg, ID = mstType, validation = status };
+                        return Json(resul, JsonRequestBehavior.AllowGet);
+                    }
+                    else if (Transmission.Trim().ToUpper() != ActualTrans.Trim().ToUpper())
+                    {
+                        msg = "REARAXLE MISMATCH ACTUAL REARAXLE : " + ActualTrans;
+                        mstType = Validation.str1;
+                        status = Validation.str2;
+                        var resul = new { Msg = msg, ID = mstType, validation = status };
+                        return Json(resul, JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    msg = "DCODE NOT FOUND IN PLANT : " + data.Backend;
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(resul, JsonRequestBehavior.AllowGet);
+                }
+                getSeries(data.Plant.Trim(), data.Family.Trim(), "BAB", out runningSrlno, out BackendSrlno);
+                if(string.IsNullOrEmpty(BackendSrlno))
+                {
+                    msg = "KINDLY CHECK FAMILY SERIES . UNABLE TO GENERATE BACKEND SERIAL NO";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(resul, JsonRequestBehavior.AllowGet);
                 }
             }
             catch (Exception ex)
@@ -252,6 +313,139 @@ namespace MVCApp.Controllers.Assembly
             }
             var result = new { Msg = msg, ID = mstType, validation = status };
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public void getSeries(string unit, string family, string stage, out string runningSrlno, out string BackendSrlno)
+        {
+            int Start_serial_number, Current_Serial_number, End_serial_Number;
+            runningSrlno = "";
+            BackendSrlno = "";
+            DataTable dt = new DataTable();
+            try
+            {
+                string Prefix = "", toReturn = ""; Current_Serial_number = Start_serial_number = End_serial_Number = 0;
+                query = string.Format(@"select Start_serial_number, Current_Serial_number,End_serial_Number,Barcode_prefix from XXES_FAMILY_SERIAL 
+                        where plant_code='{0}' and family_code='{1}' and offline_keycode='{2}'", unit.Trim().ToUpper(), family.Trim().ToUpper(), stage.Trim());
+                dt = fun.returnDataTable(query);
+                if(dt.Rows.Count > 0)
+                {
+                    Prefix = Convert.ToString(dt.Rows[0]["Barcode_prefix"]).Trim();
+                    if (Convert.ToString(dt.Rows[0]["Current_Serial_number"]).Trim() == "")
+                        Current_Serial_number = Convert.ToInt32(Convert.ToString(dt.Rows[0]["Current_Serial_number"]).Trim()) + 1;
+                    if (Convert.ToString(dt.Rows[0]["Current_Serial_number"]).Trim() != "")
+                        Current_Serial_number = Convert.ToInt32(Convert.ToString(dt.Rows[0]["Current_Serial_number"]).Trim()) + 1;
+                    if(Current_Serial_number > Convert.ToInt32(Convert.ToString(dt.Rows[0]["End_serial_Number"]).Trim()))
+                    {
+                        Current_Serial_number = -99; //series full
+                        Prefix = "";
+                        throw new Exception("BACKEND SERIAL NOS SERIES REACHED ITS MAXIMUM LEVEL FOR PLANT " + unit + " FAMILY " + family);
+                    }
+                    toReturn = Convert.ToString(Current_Serial_number);
+                    while(toReturn.Trim().Length < Convert.ToString(dt.Rows[0]["Current_Serial_number"]).Length)
+                    {
+                        toReturn = "0" + toReturn;
+                    }
+                    runningSrlno = toReturn;
+                    BackendSrlno = Prefix.Trim() + toReturn.Trim();
+                    if(string.IsNullOrEmpty(runningSrlno))
+                    {
+                        throw new Exception("UNABLE TO GET BACKEND RUNNING NO. CHECK FAMILY SERIAL");
+                    }
+                    if(string.IsNullOrEmpty(BackendSrlno))
+                    {
+                        throw new Exception("UNABLE TO GENERATE BACKEND SERIAL NO. CHECK FAMILY SERIAL");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+            }
+        }
+
+        public bool UpdateBackend(BackendModification data , bool isUpdate)
+        {
+            string stage = "BAB";
+            bool result = false;
+            string orgid = fun.getOrgId(data.Plant, data.Family);
+            string connectionString = ConfigurationManager.ConnectionStrings["CON"].ConnectionString;
+            using(OracleConnection connection = new OracleConnection(connectionString))
+            {
+                if(connection.State == ConnectionState.Closed)
+                {
+                    connection.Open();
+                }
+                OracleCommand command = connection.CreateCommand();
+                OracleTransaction transaction;
+
+                transaction = connection.BeginTransaction();
+                command.Connection = connection;
+                command.Transaction = transaction;
+                try
+                {
+                    if (!string.IsNullOrEmpty(data.runningSrlno) && !isUpdate)
+                    {
+                        query = string.Format(@"update XXES_FAMILY_SERIAL set Current_Serial_number='{0}',LAST_PRINTED_LABEL_DATE_TI=SYSDATE WHERE
+                            plant_code='{1}' and family_code='{2}' and offline_keycode='{3}'", data.runningSrlno.Trim(), data.Plant.Trim(), data.Family.Trim(), stage);
+                        command.CommandText = query;
+                        command.ExecuteNonQuery();
+                        //Insert into integration table
+                        #region Integration
+                        string IsExists = fun.get_Col_Value(@"select count(*) from XXES_SFT_SETTINGS where PARAMETERINFO='PRINT_SERIAL_NUMBER' and STATUS='Y'");
+                        if (!string.IsNullOrEmpty(IsExists) && Convert.ToInt16(IsExists) > 0 && !string.IsNullOrEmpty(data.runningSrlno))
+                        {
+
+                            query = string.Format(@"select count(*) from PRINT_SERIAL_NUMBER where Plant_CODE='{0}' and  
+                            SERIAL_NUMBER='{1}' and ORGANIZATION_ID='150'", data.Plant.Trim(), data.runningSrlno.Trim());
+                            if (!fun.CheckExits(query))
+                            {
+                                query = string.Format(@"insert into PRINT_SERIAL_NUMBER(Plant_CODE,ITEM_CODE,SERIAL_NUMBER,ORGANIZATION_ID,
+                            CREATION_DATE,BIG_LABEL_PRINTED,JOB_ID) values('{0}','{1}','{2}','{3}',SYSDATE,-1,'{4}')", data.Plant.Trim().ToUpper(),
+                                data.Backend.Trim().ToUpper(), data.BackendSrno.Trim().ToUpper(), orgid, data.JobId.Trim());
+                                command.CommandText = query;
+                                command.ExecuteNonQuery();
+                            }
+                        }
+                        #endregion Integration
+                        query = string.Format(@"select count(*) from XXES_PRINT_SERIALS where PLANT_CODE='{0}' and  FAMILY_CODE='{1}' and offline_keycode='{2}'
+                             and DCODE='{3}' and SRNO='{4}'", data.Plant.Trim(), data.Family.Trim(), stage, data.Backend.Trim(), data.BackendSrno.Trim());
+                        if (!fun.CheckExits(query) && !string.IsNullOrEmpty(data.BackendSrno.Trim()))
+                        {
+                            query = string.Format(@"insert into XXES_PRINT_SERIALS(PLANT_CODE,FAMILY_CODE,STAGE_ID,DCODE,SRNO,PRINTDATE,OFFLINE_KEYCODE,TYRE_DCODE,RIM_DCODE,MISC1,FCODE,JOBID)
+                                values('{0}','{1}','{2}','{3}','{4}', SYSDATE,'{5}','','','','{6}','{7}')", data.Plant.Trim(), data.Family.Trim(), stage, data.Backend.Trim(),
+                                    data.BackendSrno.Trim(), stage, data.Backend.Trim(), data.JobId);
+                            command.CommandText = query;
+                            command.ExecuteNonQuery();
+                        }
+                        query = string.Format(@"Insert into XXES_SCAN_TIME(PLANT_CODE,FAMILY_CODE,ITEM_CODE,JOBID,STAGE,SCAN_DATE,SCANNED_BY) 
+                           values('{0}','{1}','{2}','{3}','{4}',SYSDATE,'{5}')", data.Plant.Trim(), data.Family.Trim(), data.Backend.Trim(),
+                               data.JobId.Trim(), stage, Convert.ToString(Session["Login_User"]).Trim());
+                        command.CommandText = query;
+                        command.ExecuteNonQuery();
+
+                        query = string.Format(@"insert into XXES_BACKEND_STATUS(PLANT_CODE,FAMILY_CODE,BACKEND,BACKEND_DESC,TRANSMISSION,TRANSMISSION_SRLNO,REARAXEL, REARAXEL_SRLNO, HYDRAULIC,
+                            HYDRAULIC_SRLNO,BACKEND_SRLNO,CREATEDBY,FCODE_ID,CREATEDDATE,JOBID) values('{0}','{1}','{2}','{3}' ,'{4}' ,'{5}' ,'{6}','{7}','{8}','{9}','{10}','{11}','{12}',sysdate,'{13}')",
+                                data.Plant.Trim(), data.Family.Trim(), data.Backend.Trim(), data.backend_desc, data.Transmission, data.TransmissionSrno, data.RearAxle, data.RearAxle, data.Hydraulic,
+                                data.HydraulicSrno, data.BackendSrno, Convert.ToString(Session["Login_User"]).Trim(), data.FCODE_ID, data.JobId);
+                        command.CommandText = query;
+                        command.ExecuteNonQuery();
+                    }
+                    else if(isUpdate)
+                    {
+
+                    }
+                    transaction.Commit();
+                    result = true;
+                }
+                
+
+                catch (Exception ex)
+                {
+                    fun.LogWrite(ex);
+                }
+            }
+            
+            return result;
         }
     }
 }

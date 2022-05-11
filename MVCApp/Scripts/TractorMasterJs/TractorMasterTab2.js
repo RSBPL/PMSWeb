@@ -1156,6 +1156,7 @@ $("#T4_Plant").on("change", function () {
 });
 
 $("#gleSearch").on("change", function () {
+    $("#T4_ItemCode").val(null);
     ClearS();
     gleSearch_EditValueChangedTab2();
 });
@@ -1493,11 +1494,23 @@ function ClearS() {
 
 
 function gleSearch_EditValueChangedTab2() {
-    var Data = {
-        gleSearch: $('#gleSearch').val(),
-        Plant: $('#T4_Plant').val(),
-        Family: $('#T4_Family').val()
-    };
+    if ($('#T4_ItemCode').val() != "") {
+        var T4_ItemCode = $('#T4_ItemCode').val();
+        const myArray = T4_ItemCode.split("#");
+        var Data = {
+            gleSearch: myArray[0],
+            Plant: $('#T4_Plant').val(),
+            Family: $('#T4_Family').val()
+        };
+    }
+    else {
+        var Data = {
+            gleSearch: $('#gleSearch').val(),
+            Plant: $('#T4_Plant').val(),
+            Family: $('#T4_Family').val()
+        };
+    }
+    
     $.ajax({
         url: EditValueChangedTab2,
         data: JSON.stringify({ obj: Data }),
@@ -1695,12 +1708,65 @@ function FillSearchItemS() {
         type: "POST",
         contentType: "application/json;charset=utf-8",
         success: function (result) {
+            $("#gleSearch").html(null);
             $("#gleSearch").html(result);
         },
         error: function (errormessage) {
 
         }
     });
+};
+
+$("#PawordSubmitS").on("click", function () {
+    /* localStorage.setItem("IsTabChange", true);*/
+    ChkPasswordTab2();
+});
+$('#T4_ItemCode').on("change", function () {
+    gleSearch_EditValueChangedTab2();
+});
+
+
+function ChkPasswordTab2() {
+    $("#divLoader").show();
+    var data = {
+        T4_Plant: $('#T4_Plant').val(),
+        T4_Family: $('#T4_Family').val(),
+        PasswordTab2: $('#PasswordTab2').val()
+    };
+    $.ajax({
+        url: SubmitPassTab2,
+        data: JSON.stringify(data),
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            $("#PawordPopUpTab2").hide();
+            $(".modal-backdrop").hide();
+            $(".modal-backdrop").addClass("important");
+            $("#divLoader").hide();
+            if (data.Msg == "Valid Password") {
+                var chk = confirm("Are you sure you want to Update this?");
+                if (chk == true) {
+                    $('body').addClass("test");
+                    $(window).scrollTop(0);
+                    UpdateS();
+                }
+            } else {
+                $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                setTimeout(function () {
+                    $.each($('.alert'), function () {
+                        closeAlert(this);
+                    });
+                }, 5000);
+                $('body').addClass("test");
+                $(window).scrollTop(0);
+            }
+        },
+        error: function (errormessage) {
+
+        }
+    });
+
 };
 
 

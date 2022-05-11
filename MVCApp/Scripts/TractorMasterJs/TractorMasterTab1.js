@@ -107,10 +107,13 @@ function AC_ItemCode() {
                         return { label: item.Text, value: item.Text };
                     }))
                 },
+                
                 error: function (err) {
                     alert(err);
                 }
+                
             });
+
         },
 
         minLength: 4
@@ -1046,10 +1049,17 @@ function ChangeLable() {
 $("#ElectricMotorChk").change(function () {
     if (this.checked) {
         $('.lblMotor').html("Motor");
+
     } else {
         $('.lblMotor').html("Engine");
     }
 });
+
+$('#ItemCode').on("change", function () {
+    gleSearch_EditValueChanged();
+    NewTractorCode();
+});
+
 
 $("#T3_Plant").on("change", function () {
     DDLT3_FamilyByT3_Plant();
@@ -1058,10 +1068,9 @@ $("#T3_Family").on("change", function () {
     Fill_T3_ItemMaster();
 });
 $("#gleSearch").on("change", function () {
-
+    $("#ItemCode").val(null);
     Clear();
     gleSearch_EditValueChanged();
-
 });
 
 $("#Add").on("click", function () {
@@ -1230,7 +1239,7 @@ function FillSearchItem() {
         type: "POST",
         contentType: "application/json;charset=utf-8",
         success: function (result) {
-            $("#gleSearch").html(result);
+            $("#gleSearch").html(result);           
             //$('#Add').show();
             //$('#Update').hide();
         },
@@ -1815,13 +1824,26 @@ function Clear() {
     $("#NoOfBoltsTRANSAXELToruqe2").val("");
 };
 
-function gleSearch_EditValueChanged() {
 
-    var Data = {
-        gleSearch: $('#gleSearch').val(),
-        Plant: $('#Plant').val(),
-        Family: $('#Family').val()
-    };
+function gleSearch_EditValueChanged() {
+   
+    if ($('#ItemCode').val() != "") {
+        var itemCode = $('#ItemCode').val();
+        const myArray = itemCode.split("#");
+        var Data = {
+            gleSearch: myArray[0],
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val()
+        };
+    } else {
+       
+        var Data = {
+            gleSearch: $('#gleSearch').val(),
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val()
+        };
+    }
+   
     $.ajax({
         url: EditValueChanged,
         data: JSON.stringify({ obj: Data }),
@@ -2054,6 +2076,7 @@ $("#PawordSubmit").on("click", function () {
     ChkPassword();
 });
 
+
 function ChkPassword() {
     $("#divLoader").show();
     var data = {
@@ -2097,7 +2120,34 @@ function ChkPassword() {
 
 };
 
+function NewTractorCode() {
+    var data = {
+        Plant: $('#Plant').val(),
+        Family: $('#Family').val(),
+        ItemCode: $('#ItemCode').val(),
 
+    };
+    $.ajax({
+        url: NewTCode,
+        data: JSON.stringify(data),
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            $("#Prefix1").val(data.Msg);
+            if (data.Msg == "") {
+                $('#GenerateSerialNoChk').prop("checked", false);
+            }
+            else {
+                $('#GenerateSerialNoChk').prop("checked", true);
+            }
+        },
+        error: function (errormessage) {
+
+        }
+    });
+
+};
 jQuery("#gleSearch").select2(
     //allowClear : true,
     //width: '100%',
