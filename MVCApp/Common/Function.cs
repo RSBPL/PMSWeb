@@ -10,11 +10,13 @@ using Oracle.ManagedDataAccess.Client;
 using MVCApp.CommonFunction;
 using System.Configuration;
 using System.IO;
+using System.Threading;
 
 namespace MVCApp.CommonFunction
 {
     static class stringExtention
     {
+        
         public static void SetPropertiesToDefaultValues<T>(this T obj)
         {
             var props = obj.GetType().GetProperties();
@@ -38,6 +40,7 @@ namespace MVCApp.CommonFunction
         OracleCommand cmd;
         OracleDataAdapter da;
         BaseEncDec bed = new BaseEncDec();
+        private static ReaderWriterLockSlim _readWriteLock = new ReaderWriterLockSlim();
 
         public OracleConnection Connection()
         {
@@ -1102,6 +1105,7 @@ namespace MVCApp.CommonFunction
 
         public void WriteLog(string Message, string directoryname = null)
         {
+            _readWriteLock.EnterWriteLock();
             StreamWriter sw = null;
 
             try
@@ -1134,11 +1138,13 @@ namespace MVCApp.CommonFunction
             }
             finally
             {
+                
                 if (sw != null)
                 {
                     sw.Dispose();
                     sw.Close();
                 }
+                _readWriteLock.ExitWriteLock();
             }
 
         }
@@ -2176,6 +2182,7 @@ namespace MVCApp.CommonFunction
 
         public void LogWrite(Exception ex)
         {
+            _readWriteLock.EnterWriteLock();
             try
             {
                 if (ex.Message != "Thread was being aborted." || ex.Message != "The ConnectionString property has not been initialized.")
@@ -2201,6 +2208,10 @@ namespace MVCApp.CommonFunction
             }
             catch
             {
+            }
+            finally
+            {
+                _readWriteLock.EnterWriteLock();
             }
         }
 
