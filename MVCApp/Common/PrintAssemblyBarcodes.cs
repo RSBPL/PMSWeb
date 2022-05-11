@@ -106,6 +106,135 @@ namespace MVCApp.Common
             }
             return true;
         }
+
+
+        public bool PrintFamilySerial(SubAssembly subAssembly, int copies, string QC = null)
+        {
+            bool status = false;
+            try
+            {
+                //PrintDialog pd = new PrintDialog();
+                string prnfilename = GetPrnCode(Convert.ToString(subAssembly.Family).Trim().ToUpper());
+                string query = string.Empty, itemname1 = "", itemname2 = "", barcode = string.Empty;
+                getNameSubAssembly(subAssembly.Description.Trim().ToUpper(), ref itemname1, ref itemname2);
+                for (int i = 1; i <= copies; i++)
+                {
+                    //if (QC == "1")
+                    //{
+                    //    query = ReadFile("QC.prn");
+                    //}
+                    //else
+                    //{
+                    if (string.IsNullOrEmpty(subAssembly.Prefix1))
+                        query = ReadFile(prnfilename + ".prn");
+                    else
+                        query = ReadFile("ECEL.prn");
+                    //}
+                    if (string.IsNullOrEmpty(query))
+                    {
+                        throw new Exception("Print File Not Found");
+                    }
+                    if (!string.IsNullOrEmpty(query))
+                    {
+
+                        query = query.Replace("JOBID", subAssembly.Job);
+                        query = query.Replace("ITEM_CODE", subAssembly.Itemcode.Trim().ToUpper());
+                        query = query.Replace("SERIAL_NO", subAssembly.Prefix1 + subAssembly.SerialNumber.Trim().ToUpper());
+                        if (subAssembly.PrintDesc)
+                        {
+                            query = query.Replace("ITEM_NAME1", itemname1);
+                            query = query.Replace("ITEM_NAME2", itemname2);
+                        }
+                        else
+                        {
+                            query = query.Replace("ITEM_NAME1", "");
+                            query = query.Replace("ITEM_NAME2", "");
+                        }
+                        if (subAssembly.IsQuality)
+                        {
+                            query = query.Replace("QUALITY_STATUS", "QC");
+                        }
+                        else
+                            query = query.Replace("QUALITY_STATUS", "");
+                        barcode = barcode + query;
+                    }
+                }
+                if (subAssembly.PrintMode.Equals("LOCAL"))
+                {
+                    //WriteDataToLabelFile(barcode);
+                    //if (SendtoPrinter.SendFileToPrinter(pd.PrinterSettings.PrinterName, Application.StartupPath.ToString() + "\\Label"))
+                    //{
+                    //    status = true;
+                    //}
+                }
+                else
+                {
+                    string result = GetPrintterIPAddress(subAssembly.Stage);
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                       string PRINTER_IP = result.Split('#')[0].Trim();
+                        string PRINTER_PORT = result.Split('#')[1].Trim();
+                        if (string.IsNullOrEmpty(PRINTER_IP) || string.IsNullOrEmpty(PRINTER_PORT))
+                        {
+                            throw new Exception("Printer Ip address not define for this stage");
+                        }
+                        if (PrintLabelViaNetwork(barcode, "", PRINTER_IP, Convert.ToInt16(PRINTER_PORT)))
+                        {
+                            status = true;
+                        }
+                    }
+                    else
+                        throw new Exception("Printer Ip address not define for this stage");
+                }
+
+
+                return status;
+            }
+            catch { throw; }
+            finally { }
+        }
+
+     public bool PrintLabelViaNetwork(string cmd1, string cmd2, string ip, int port)
+        {
+            System.Net.Sockets.TcpClient tc;
+            try
+            {
+                System.Net.Sockets.NetworkStream myStream;
+                tc = new System.Net.Sockets.TcpClient();
+                tc.Connect(ip, Convert.ToInt32(port)); // IP address of the printer
+                // convert the string command to bytes
+                myStream = tc.GetStream();
+                if (myStream.CanWrite)
+                {
+                    Byte[] myFP = System.Text.Encoding.ASCII.GetBytes(cmd1.Trim() + cmd2.Trim());
+                    myStream.Write(myFP, 0, myFP.Length);
+                    myStream.Flush();
+                }
+                tc.Close();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally { }
+        }
+
+        public string GetPrintterIPAddress(string stage)
+        {
+            try
+            {
+                return fun.get_Col_Value("select ipaddr || '#' || ipport  from xxes_stage_master where offline_keycode='" + stage + "'");
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+
         string query = string.Empty;
         public bool PrintStandardLabel(string cmd1, string stage, string plant, string family)
         {
@@ -1477,7 +1606,7 @@ namespace MVCApp.Common
                 //PrintDialog pd = new PrintDialog();
                 string prnfilename = GetPrnCode(Convert.ToString(subAssembly.Family).Trim().ToUpper());
                 string query = string.Empty, itemname1 = "", itemname2 = "", barcode = string.Empty;
-                getNameSubAssembly(subAssembly.Description.Trim().ToUpper(), ref itemname1, ref itemname2);
+                getNameSubAssembly(subAssembly.DESCRIPTION.Trim().ToUpper(), ref itemname1, ref itemname2);
                 for (int i = 1; i <= copies; i++)
                 {
                     //if (QC == "1")
@@ -1499,7 +1628,7 @@ namespace MVCApp.Common
                     {
 
                         query = query.Replace("JOBID", subAssembly.Job);
-                        query = query.Replace("ITEM_CODE", subAssembly.Itemcode.Trim().ToUpper());
+                        query = query.Replace("ITEM_CODE", subAssembly.ITEMCODE.Trim().ToUpper());
                         query = query.Replace("SERIAL_NO", subAssembly.Prefix1 + subAssembly.SerialNumber.Trim().ToUpper());
                         if (subAssembly.PrintDesc)
                         {

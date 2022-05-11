@@ -327,10 +327,10 @@
         DDLPrevillege();
         $('#Update').hide();
         $("#form-row").hide();
-       
+
 
     });
-    
+
     $("#U_CODE").on("change", function () {
         DDLFamilyByPlant();
         BindGrid();
@@ -343,7 +343,7 @@
 
     //});
     $("#FAMILY_CODE").on("change", function () {
-       
+
         fam = $("#FAMILY_CODE").val();
         HIDESHOWDIV(fam);
         DDLSTAGEID();
@@ -392,7 +392,7 @@
             contentType: "application/json;charset=UTF-8",
             data: JSON.stringify({ Plant: selectedValue }),
             success: function (result) {
-               
+
                 //if (result != null && result != 'undefined') {
                 //    HIDESHOWDIV();
                 //    DDLSTAGEID();
@@ -613,7 +613,7 @@
                 else {
                     $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                     setTimeout(function () { $(".alert").alert('close'); }, 5000);
-                    
+
                     //$('#USRNAME').val("");
                     //$('#PSWORD').val("");
                     //$('#U_CODE').val("");
@@ -816,26 +816,223 @@
             }
         });
       });
+        function toolbarClick(args) {
+                var gridObj = document.getElementById("Grid").ej2_instances[0];
+                gridObj.excelExport();
+            }
+            var USRNAME;
+            $("#PUNAME,#STAGEID,#Level_Name").select2({
+                //allowClear: true,
+               //width: '300px',
+            });
+
+            function commandClick(args) {
+                if (args.rowData != null) {
+                    if (args.target.classList.contains('edit')) {
+                        USRNAME = args.rowData["USRNAME"];
+                        $("#USRNAME").val(args.rowData["USRNAME"]);
+                        $("#USRNAME").val(args.rowData["USRNAME"]).trigger("change");
+
+                        $("#PSWORD").val(args.rowData["PSWORD"]);
+                        $("#PSWORD").val(args.rowData["PSWORD"]).trigger("change");
+
+                        //var splitlevel = args.rowData["LEVEL_NAME"];
+
+                        //var res = splitlevel.split('#');
+                        //console.log(res[0]);
+                        //alert(args.rowData["LEVEL_NAME"]);
+                        $("#Level_Name").val(args.rowData["LEVEL_NAME"]);
+                        $("#Level_Name").val(args.rowData["LEVEL_NAME"]).trigger("change");
+
+
+
+                        //var splitlevel = args.rowData["UNIT_NAME"];
+                        //var res1 = splitlevel.split('#');
+                        //console.log(res[0]);
+                        //alert(args.rowData["U_CODE"]);
+
+                        $("#U_CODE").val(args.rowData["U_CODE"]);
+                        $("#U_CODE").val(args.rowData["U_CODE"]).trigger("change");
+
+                        $("#U_NAME").val(args.rowData["U_NAME"]);
+                        $("#U_NAME").val(args.rowData["U_NAME"]).trigger("change");
+
+
+                        $("#FAMILY_CODE").val(args.rowData["FAMILYCODE"]);
+                        //alert(args.rowData["FAMILYCODE"]);
+                        $("#FAMILY_CODE").val(args.rowData["FAMILYCODE"]).trigger("change");
+
+
+                        if (args.rowData["STAGEID"] != undefined) {
+                            var splitSTAGEID = args.rowData["STAGEID"];
+                            var res1 = splitSTAGEID.split('#');
+                            console.log(res1[0]);
+                            $("#STAGEID").val(res1[0]);
+                            $("#STAGEID").val(res1[0]).trigger("change");
+                            $("#STAGEID").change(res1[0]);
+                            $('#dropDownId :selected').text(res1[0]);
+                        }
+
+                        if(args.rowData["PUNAME"] == null)
+                        {
+                            args.rowData["PUNAME"] = "---SELECT---"
+                        }
+
+                        $("#PUNAME").val(args.rowData["PUNAME"]);
+                        $("#PUNAME").val(args.rowData["PUNAME"]).trigger("change");
+
+
+
+                        var res = args.rowData["ISACTIVE"];
+                        if (res == "1") {
+                            $("#ISACTIVE").prop('checked', true)
+                        }
+                        else {
+                            $("#ISACTIVE").prop('checked', false)
+                        }
+
+                        var res = args.rowData["STOREBYPASS"];
+                        if (res == "Y") {
+                            $("#STOREBYPASS").prop('checked', true)
+                        }
+                        else {
+                            $("#STOREBYPASS").prop('checked', false)
+                        }
+                        var res = args.rowData["PDIUSER"];
+                        if (res == "Y") {
+                            $("#PDIUSER").prop('checked', true)
+                        }
+                        else {
+                            $("#PDIUSER").prop('checked', false)
+                        }
+
+                        var res = args.rowData["MRNSAVE"];
+                        if (res == "Y") {
+                            $("#MRNSAVE").prop('checked', true)
+                        }
+                        else {
+                            $("#MRNSAVE").prop('checked', false)
+                        }
+
+                        var res = args.rowData["ShowSave"];
+                        if (res == "1") {
+                            $("#ShowSave").prop('checked', true)
+                        }
+                        else {
+                            $("#ShowSave").prop('checked', false)
+                        }
+
+                        var res = args.rowData["ShowDelete"];
+                        if (res == "1") {
+                            $("#ShowDelete").prop('checked', true)
+                        }
+                        else {
+                            $("#ShowDelete").prop('checked', false)
+                        }
+
+                        var res = args.rowData["ShowPrint"];
+                        if (res == "1") {
+                            $("#ShowPrint").prop('checked', true)
+                        }
+                        else {
+                            $("#ShowPrint").prop('checked', false)
+                        }
+
+                        var res = args.rowData["MannualMapping"];
+                        if (res == "1") {
+                            $("#MannualMapping").prop('checked', true)
+                        }
+                        else {
+                            $("#MannualMapping").prop('checked', false)
+                        }
+
+                        var res = args.rowData["SaveButton"];
+                        if (res == "1") {
+                            $("#SaveButton").prop('checked', true)
+                        }
+                        else {
+                            $("#SaveButton").prop('checked', false)
+                        }
+
+                        var res = args.rowData["AllowROPS"];
+                        if (res == "1") {
+                            $("#AllowROPS").prop('checked', true)
+                        }
+                        else {
+                            $("#AllowROPS").prop('checked', false)
+                        }
+
+                        //$('#USRNAME').prop('disabled', true);
+                        //$('#USRNAME').prop('disabled', true);
+                        $("#USRNAME").prop("disabled", true);
+                        //$("#USRNAME").prop('disabled', true);
+                        //$('#PLANT_CODE').prop('disabled', true);
+                        //$('#PSWORD').prop('disabled', true);
+
+                        $('#Add').hide();
+                        $('#Update').show();
+                    }
+                    //Edit();
+                }
+                if (args.target.classList.contains('delete')) {
+                    $('.modal').show();
+                    USRNAME = args.rowData["USRNAME"];
+                }
+                    $("#btnDelete").on("click", function () {
+                    DeleteEngine();
+                });
+
+                //Function to delete User
+                function DeleteEngine() {
+                var Data = {
+                    USRNAME: USRNAME
+                };
+                $('.modal').hide();
+                $("#divLoader").show();
+                $.ajax({
+                    url: '@Url.Action("Delete", "UserMaster")',
+                    data: JSON.stringify(Data),
+                    type: "POST",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        $("#divLoader").hide();
+                        BindGrid();
+                        if (data.Msg != "" || data.Msg != null ) {
+                            $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            setTimeout(function() {$(".alert").alert('close');}, 5000);
+                        }
+                    }
+                });
+            }
+            };
+
+            $("#modelclose").on("click", function () {
+                $('.modal').hide();
+            });
+            $("#modelclose1").on("click", function () {
+                $('.modal').hide();
+            });
 
     $("#U_CODE").select2({
         allowClear: true,
         width: '280px',
     });
 
-    //$("#Level_Name").select2({
-    //    allowClear: true,
-    //    width: '330px',
-    //});
+    $("#Level_Name").select2({
+        allowClear: true,
+        width: '330px',
+    });
 
-    //$("#PUNAME").select2({
-    //    allowClear: true,
-    //    width: '330px',
-    //});
+    $("#PUNAME").select2({
+        allowClear: true,
+        width: '330px',
+    });
 
-    //$("#STAGEID").select2({
-    //    allowClear: true,
-    //    width: '330px',
-    //});
+    $("#STAGEID").select2({
+        allowClear: true,
+        width: '330px',
+    });
 
     $("#FAMILY_CODE").select2({
         allowClear: true,

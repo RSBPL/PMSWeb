@@ -32,6 +32,7 @@
         background-color: #285b74;
     }
 </style>
+
 <div id="divLoader" style="display:none;">
     <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:10%; margin-left:38%" />
 </div>
@@ -121,6 +122,7 @@
                     <li class="bg-light active"><a data-toggle="tab" href="#Menu1">Print</a></li>
                     <li class="bg-light"><a data-toggle="tab" href="#Menu2">Reprint</a></li>
                     <li class="bg-light"><a data-toggle="tab" href="#Menu3">Assign Seriral To</a></li>
+                    <li class="bg-light"><a data-toggle="tab" href="#Menu4">Print Barcode After Quality</a></li>
                 </ul>
 
                 <fieldset class="the-fieldset bg-info">
@@ -148,7 +150,7 @@
                                     @Html.TextBoxFor(Model => Model.SerialNumber, "1", new { @class = "form-control input-sm" })
                                 </div>
                                 <div class="col-md-3" style="margin:30px 0px 0 0px;">
-                                    <input type="checkbox" id="Print" name="Checkbox" value="Print">
+                                    <input type="checkbox" id="Print" name="Checkbox" value="true">
                                     <label for="Print">Print Description</label>
                                 </div>
                                 <div class="col-md-1"><button class="btn btn-success btn-sm" type="button" id="PrintData" style="margin: 25px -72px 0 -143px;"><i class="ace-icon fa fa-print bigger-110"></i><strong>Print</strong></button></div>
@@ -198,6 +200,33 @@
                                     <label for="Print">Print Description</label>
                                 </div>
                                 <div class="col-md-1"><button class="btn btn-success btn-sm" type="button" id="AssignPrintData" style="margin: 25px -72px 0 -143px;"><i class="ace-icon fa fa-print bigger-110"></i><strong>Print</strong></button></div>
+                                <br />
+                            </div>
+                        </div>
+                        <div id="Menu4" class="tab-pane fade ">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label for="NotValidateJob" class="text-right control-label col-form-label"><strong>Date</strong></label>
+                                    @Html.EJS().DatePickerFor(Model => Model.QualityDate).Format("dd-MMM-yyyy").Value(ViewBag.value).Max(ViewBag.maxDate).Render()
+                                    <strong>@Html.ValidationMessageFor(model => model.QualityDate, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-2" style="margin: 30px 0 0 0;">
+                                    <button lass="btn btn-success btn-sm" type="button" id="getQualityItemCode"><i class="ace-icon fa fa-info-circle bigger-110"></i><strong>Get Quantity SrNos</strong></button>
+
+                                </div>
+                                <div class="col-md-4" style="margin: 5px 0 0 0;">
+                                    <label for="Item" class="text-right control-label col-form-label"><strong>Quantity Serial No</strong></label>
+                                    @Html.DropDownListFor(model => model.QualityItemCode, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.QualityItemCode, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-2" style="margin:30px 0px 0 0px;">
+                                    <button class="btn btn-success btn-sm" type="button" id="PrintQuality">
+                                        <i class="ace-icon fa fa-print bigger-110"></i><strong>Print</strong>
+                                    </button>
+                                    <button class="btn btn-success btn-sm" type="button" id="RePrintQuality">
+                                        <i class="ace-icon fa fa-print bigger-110"></i><strong>Re-Print</strong>
+                                    </button>
+                                </div>
                                 <br />
                             </div>
                         </div>
@@ -258,14 +287,26 @@
 <link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
 <script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
 <link href="~/Scripts/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
-    <script src="~/Scripts/DataTable/jquery.dataTables.min.js"></script>
-    <link href="~/Scripts/DataTable/Custom.css" rel="stylesheet" />
-    <script>
+<script src="~/Scripts/DataTable/jquery.dataTables.min.js"></script>
+<link href="~/Scripts/DataTable/Custom.css" rel="stylesheet" />
+<script type="text/javascript">
     $(document).ready(function () {
         $.noConflict();
         DDLShift();
         DDLPlant();
     });
+        $("#ITEMCODE").on("change", function () {
+            DDLjobforPrint();
+            labelforPrint();
+        });
+
+
+    $("#PLANTCODE").on("change", function () {
+        DDLFamilyByPlant();
+        });
+
+
+
       function DDLShift() {
         //$("#divLoader").show();
         $.ajax({
@@ -286,6 +327,7 @@
             }
         });
     };
+
       function DDLPlant() {
         //$("#divLoader").show();
         $.ajax({
@@ -306,10 +348,7 @@
             }
         });
     };
-        $("#ITEMCODE").on("change", function () {
-            DDLjobforPrint();
-            labelforPrint();
-        });
+
       function DDLFamilyByPlant() {
         //$("#divLoader").show();
         var selectedValue = $("#PLANTCODE").val();
@@ -331,6 +370,18 @@
             }
         });
     };
+    $("#PrintData").click(function () {
+        //$.noConflict();
+        PrintDatafun();
+    });
+
+
+
+
+
+
+
+
     $("#Show").click(function () {
         //$.noConflict();
         BindGrid();
@@ -357,6 +408,36 @@
         DDLitem();
 
         }
+
+    $("#getQualityItemCode").click(function () {
+        //$.noConflict();
+        getQualityItemCodes();
+    });
+    function getQualityItemCodes() {
+        var PLANTCODE = $("#PLANTCODE").val();
+        var FAMILYCODE = $("#FAMILYCODE").val();
+        var QualityDate = $("#QualityDate").val();
+        $.ajax({
+            url: '../SubAssembly/BindQualityItemCode?PLANTCODE=' + PLANTCODE + '&FAMILYCODE=' + FAMILYCODE + '&QualityDate=' + QualityDate,
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            //data: JSON.stringify({ PLANTCODE: PLANTCODE, optAsPerPlanning: true, FAMILYCODE: FAMILYCODE }),
+            success: function (result) {
+                $("#QualityItemCode").html(null);
+                if (result.length < 1) {
+                    $('#alert').append('<div class="alert alert-danger role = "alert"><strong>No Data Found</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#QualityItemCode").append(optionhtml);
+                });
+            },
+            error: function (errormessage) {
+                //alert(errormessage.responseText);
+            }
+        });
+    }
         function DDLitem() {
             //$("#divLoader").show();
             var PLANTCODE = $("#PLANTCODE").val();
@@ -387,13 +468,15 @@
                 }
             });
         };
+
         function DDLjobforPrint() {
             //$("#divLoader").show();
+            var PLANTCODE = $("#PLANTCODE").val();
             var ITEMCODE = $("#ITEMCODE").val();
             var FAMILYCODE = $("#FAMILYCODE").val();
             if (ITEMCODE != "" && ITEMCODE != null && ITEMCODE != "0") {
                 $.ajax({
-                    url: '../SubAssembly/FillJobsForDropdown?FAMILYCODE=' + FAMILYCODE + '&ITEMCODE=' + ITEMCODE,
+                    url: '../SubAssembly/FillJobsForDropdown?FAMILYCODE=' + FAMILYCODE + '&ITEMCODE=' + ITEMCODE + '&PLANTCODE' + PLANTCODE,
                     type: "GET",
                     contentType: "application/json;charset=UTF-8",
                     data: JSON.stringify({ PLANTCODE: PLANTCODE, optAsPerPlanning: true, FAMILYCODE: FAMILYCODE }),
@@ -416,6 +499,7 @@
 
             }
         };
+
         function labelforPrint() {
             //$("#divLoader").show();
             var ITEMCODE = $("#ITEMCODE").val();
@@ -446,6 +530,7 @@
             }
 
         };
+
         function DDLSrno() {
             //$("#divLoader").show();
             var PLANTCODE = $("#PLANTCODE").val();
@@ -473,7 +558,89 @@
             });
         };
 
-        //$("#Reljob").hide();
+    function PrintDatafun() {
+        var PrintDes = false;
+        if ($("#Print").prop('checked') == true) {
+            PrintDes = true;
+        }
+        else {
+            PrintDes = false;
+        }
+        var Data = {
+            PLANTCODE: $("#PLANTCODE").val(),
+            FAMILYCODE: $("#FAMILYCODE").val(),
+            ITEMCODE: $("#ITEMCODE").val(),
+            Item: $("#ITEMCODE").text(),
+            Job: $("#Job").val(),
+            QTY: $("#QTY").val(),
+            SerialNumber: $("#SerialNumber").val(),
+            OptFreeSrno: false,
+            pnlSerialNo: false,
+            PrintDesc: PrintDes
+            };
+        $.ajax({
+            url: '@Url.Action("Printdata", "SubAssembly")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                if (result.includes("Error")) {
+                    $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + result + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+                else {
+                    $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + result + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    $("#PrintQuality").click(function () {
+        //$.noConflict();
+        PrintQualityfun();
+    });
+
+    function PrintQualityfun() {
+      
+        var Data = {
+            PLANTCODE: $("#PLANTCODE").val(),
+            FAMILYCODE: $("#FAMILYCODE").val(),
+            ITEMCODE: $("#ITEMCODE").val(),
+            Item: $("#ITEMCODE").text(),
+            Job: $("#Job").val(),
+            QTY: $("#QTY").val(),
+            SerialNumber: $("#SerialNumber").val(),
+            OptFreeSrno: false,
+            pnlSerialNo: false,
+            PrintDesc: PrintDes
+            };
+        $.ajax({
+            url: '@Url.Action("PrintQuality", "SubAssembly")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                if (result.includes("Error")) {
+                    $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + result + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+                else {
+                    $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + result + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                }
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+        $("#Reljob").hide();
         $("#FAMILYCODE").select2({
             allowClear: true,
             width: '100%',
@@ -514,4 +681,8 @@
             allowClear: true,
             width: '100%',
         });
-    </script>
+    $("#QualityItemCode").select2({
+        allowClear: true,
+        width: '100%',
+    });
+</script>

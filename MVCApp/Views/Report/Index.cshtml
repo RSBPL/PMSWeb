@@ -99,7 +99,7 @@
                             <label for="fname" class="text-right control-label col-form-label"><strong>Job History</strong></label>
                             @Html.TextBoxFor(Model => Model.gleJobs, null, new { @class = "form-control input-sm" })
                             @*@Html.DropDownListFor(model => model.gleJobs, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
-            <strong>@Html.ValidationMessageFor(model => model.gleJobs, "", new { @class = "text-danger" })</strong>*@
+                                <strong>@Html.ValidationMessageFor(model => model.gleJobs, "", new { @class = "text-danger" })</strong>*@
                         </div>
                         <div class="col-md-3" id="PNLJobExistance">
                             <label for="fname" class="text-right control-label col-form-label"><strong>Job No</strong></label>
@@ -129,7 +129,7 @@
                             <strong>@Html.ValidationMessageFor(model => model.STFilterBy, "", new { @class = "text-danger" })</strong>
                         </div>
                         <div class="col-md-2" id="PNLReportType">
-                            <label for="fname" class="text-right control-label col-form-label" ><strong id="lbltext">Tracktor NOS.</strong></label>
+                            <label for="fname" class="text-right control-label col-form-label"><strong id="lbltext">Tracktor NOS.</strong></label>
                             @Html.TextBoxFor(model => model.SHORT_BULK, new { @Value = "100", @class = "form-control  input-sm" })
                             <strong>@Html.ValidationMessageFor(model => model.SHORT_BULK, "", new { @class = "text-danger" })</strong>
                         </div>
@@ -145,10 +145,10 @@
                         </div>
 
                     </div>
-                   
-                    
+
+
                 </fieldset>
-                
+
             </div>
         }
     </div>
@@ -174,7 +174,7 @@
         $('#PNLShiftDetail').hide();
         $('#PNLSTFILTERBY').hide();
         $('#PNLReportType').hide();
-        
+
 
         DDLPlant();
         DDLShift();
@@ -338,6 +338,26 @@
             $('#PNLShiftDetail').hide();
             $('#PNLReportType').show();
             $('#lbltext').text("REPEAT NO");
+        } else if ($('#ReportType').val() == 'BULK_STORAGE_ITEMS') {
+            $('#PNLTotalTractorsManufactured').hide();
+            $('#PNLJobHistory').hide();
+            $('#PNLJobExistance').hide();
+            $('#PNLProductionReport').hide();
+            $('#hideshowdate').show();
+            $('#PNLQCOKPRINTON').hide();
+            $('#PNLShiftDetail').hide();
+            $('#PNLReportType').show();
+            $('#lbltext').text("Tractor Usage");
+        } else if ($('#ReportType').val() == 'SUPER_MARKET_ITEMS') {
+            $('#PNLTotalTractorsManufactured').hide();
+            $('#PNLJobHistory').hide();
+            $('#PNLJobExistance').hide();
+            $('#PNLProductionReport').hide();
+            $('#hideshowdate').show();
+            $('#PNLQCOKPRINTON').hide();
+            $('#PNLShiftDetail').hide();
+            $('#PNLReportType').show();
+            $('#lbltext').text("Tractor Usage");
         }
         else {
             $('#PNLTotalTractorsManufactured').hide();
@@ -348,9 +368,9 @@
             $('#hideshowdate').show();
             $('#PNLShiftDetail').hide();
             $('#PNLSTFILTERBY').hide();
-            
+            $('#PNLReportType').hide();
         }
-        
+
     }
 
     //Function to bind Plant
@@ -472,7 +492,7 @@
             STFilterBy: $('#STFilterBy').val(),
             SHORT_BULK: $('#SHORT_BULK').val(),
         };
-        
+
             $.ajax({
                 url: '@Url.Action("Grid", "Report")',
                 data: JSON.stringify(Data),
@@ -486,7 +506,7 @@
                     //alert(errormessage.responseText);
                 }
             });
-        
+
     };
 
     //Function to Visible Tyer Modal
@@ -583,7 +603,14 @@
         });
     };
 
+    function rowDataBound(args) {
 
+
+        if (args.data.QUANTITY_PER_TRACTOR < 0) {
+            args.row.css("backgroundColor", "#F3C3C3");/*custom css applied to the row */
+
+        }
+    }
     $("#Plant").select2({
         allowClear: true,
         width: '100%',

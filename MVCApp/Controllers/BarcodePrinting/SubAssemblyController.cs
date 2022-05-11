@@ -23,8 +23,10 @@ namespace MVCApp.Controllers.Masters
         Function fun = new Function();
         DataTable dtPrint = new DataTable();
         funsubAssembly SubAssFun = new funsubAssembly();
+        DataTable dtQuality = new DataTable();
+        PrintAssemblyBarcodes printAssemblyBarcodes = new PrintAssemblyBarcodes();
         string query = "", prevQty = ""; DataTable dtJob; string ORGID = "", LoginStageCode = "", Login_User="";
-        string plantCode = "";string FamilyCode = ""; string NOT_VALIDATE_JOB = string.Empty;
+        string plantCode = "";string FamilyCode = ""; string  prefix1 = string.Empty, selectedJob = string.Empty, orgid = string.Empty, stage = string.Empty, printqty = string.Empty, NOT_VALIDATE_JOB = string.Empty;
         // GET: FamilyMaster
 
         [HttpGet]
@@ -144,7 +146,7 @@ namespace MVCApp.Controllers.Masters
                 if (optAsPerPlanning==true)
                     query = string.Format(@"SELECT  a.SEQ_NO,a.ITEMCODE,a.QTY,
                     a.DESCRIPTION || ' # ' || a.itemcode   ITEM,
-                    a.ITEMCODE || '#' || a.TRAN_ID || '#' || a.AUTOID  ITEMVALUE
+                    a.ITEMCODE || '#' || a.TRAN_ID || '#' || a.AUTOID  || '#' || a.QTY ITEMVALUE
                     FROM xxes_daily_plan_assembly A
                     WHERE a.PLANT_CODE='{0}' AND a.FAMILY_CODE='{1}' AND plan_id='{2}' and (A.status is null or A.status='APPROVED')  and
                     a.qty>(select count(*) from XXES_PRINT_SERIALS where plant_code='{0}' and family_code='{1}'
@@ -182,9 +184,59 @@ namespace MVCApp.Controllers.Masters
             }
             return Json(Item, JsonRequestBehavior.AllowGet);
         }
+        [HttpGet]
+        public JsonResult BindQualityItemCode(string PLANTCODE, string FAMILYCODE, DateTime QualityDate)
+        {
+            string query = string.Empty; string orgid = string.Empty; string plant = string.Empty; string family = string.Empty;
+            plantCode = "";
+            FamilyCode = "";
+            List<DDLTextValue> Item = new List<DDLTextValue>();
+            try
+            {
+                string schema = Convert.ToString(ConfigurationSettings.AppSettings["Schema"]);
+                DataTable dt = new DataTable();
+                SubAssemblyModel data = new SubAssemblyModel();
+                data.PLANTCODE = PLANTCODE;
+                data.FAMILYCODE = FAMILYCODE;
+                data.PlantDate = QualityDate;
+                plant = Convert.ToString(PLANTCODE).Trim();
+                family = Convert.ToString(FAMILYCODE).Trim();
+                orgid = fun.GetOrgId(plant);
+                query = @"select s.SERIAL_NUMBER , 
+                p.FCODE || '(' || ' ITEMCODE: ' || p.DCODE ||  ')' || ' SERIAL: ' || s.SERIAL_NUMBER || ' JOB-' || p.jobid || ' DESCRIPTION=' || p.DESCRIPTION ITEM_CODE
+                from " + Convert.ToString(ConfigurationSettings.AppSettings["ITEMS_USER"]) + ".mtl_serial_numbers s, xxes_print_serials p where s.serial_number=p.srno  and s.current_organization_id=" + orgid + " and s.current_status<>1 and s.current_status is not null  and QCOK is null and p.plant_code='" + plant + "' and p.family_code='" + family + "' " +
+                " and trunc(completion_date)>='" + QualityDate.ToString("dd-MMM-yyyy") + "'";
+                using (DataTable dataTable = fun.returnDataTable(query))
+                {
+                    if (dataTable.Rows.Count > 0)
+                    {
+                        dtQuality = new DataTable();
+                        dtQuality = dataTable;
+                        foreach (DataRow dr in dataTable.AsEnumerable())
+                        {
+                            Item.Add(new DDLTextValue
+                            {
+                                Text = dr["ITEM_CODE"].ToString(),
+                                Value = dr["SERIAL_NUMBER"].ToString(),
+                            });
+                        }
+                    }
+                }
+
+                
+
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+                throw;
+
+            }
+            return Json(Item, JsonRequestBehavior.AllowGet);
+        }
 
         [HttpGet]
-        public JsonResult FillJobsForDropdown(string FAMILYCODE,string ITEMCODE)
+        public JsonResult FillJobsForDropdown(string FAMILYCODE,string ITEMCODE,string PLANTCODE)
         {
             string query = string.Empty;
             List<DDLTextValue> Item = new List<DDLTextValue>();
@@ -214,6 +266,8 @@ namespace MVCApp.Controllers.Masters
                         });
                     }
                 }
+                prefix1 = SubAssFun.getEnginePrefix(Convert.ToString(PLANTCODE), Convert.ToString(FAMILYCODE)
+                       , Convert.ToString(ITEMCODE));
 
             }
             catch (Exception ex)
@@ -306,6 +360,380 @@ namespace MVCApp.Controllers.Masters
             return Json(subAssemblyModel, JsonRequestBehavior.AllowGet);
         }
 
-    
+        [HttpPost]
+        public JsonResult Printdata(SubAssemblyModel data)
+        {
+            try
+            {
+                int counter = 0;
+                string result = string.Empty, Itemname = string.Empty, ItemCode = string.Empty,
+                Tranid = string.Empty, SubAssembly_Id = string.Empty, srno = string.Empty;
+                int qty = 0, tobePrintQty = 0;
+                string plant = Convert.ToString(data.PLANTCODE).Trim();
+                string family = Convert.ToString(data.FAMILYCODE).Trim();
+                if (string.IsNullOrEmpty(plant))
+                {
+                    return Json("Select plant");
+                }
+                else if (string.IsNullOrEmpty(family))
+                {
+                    return Json("Select family");
+                }
+                else if (string.IsNullOrEmpty(Convert.ToString(data.ITEMCODE)))
+                {
+                    return Json("Select ITEM");
+                }
+                string desc = (!string.IsNullOrEmpty(data.Item) ? data.Item.Trim().Split('#')[0].Trim() : "");
+                if (!string.IsNullOrEmpty(desc))
+                    desc = desc.Trim().ToUpper();
+
+                if (data.OptFreeSrno==false && data.pnlSerialNo==false) // if directly entering srno with getting print
+                {
+                    query = string.Format(@"select count(*) from xxes_sft_settings where plant_code='{0}' and 
+                    family_code='{1}' and parameterinfo='{2}' and status='SRNO'",
+                        plant, family, Convert.ToString(data.ITEMCODE).Split('#')[0].Trim());
+                    if (fun.CheckExits(query))
+                    {
+                        srno =data.SerialNumber;
+                        if (string.IsNullOrEmpty(srno))
+                        {
+                            return Json("Invalid Serial No");
+                        }
+                        if (SubAssFun.isNoalreadyExists(srno, plant, family,
+                            Convert.ToString(data.ITEMCODE).Split('#')[0].Trim()))
+                        {
+                            return Json("Serial No already exists");
+                        }
+
+                        data.QTY = "1";
+                        //txtQty.Enabled = false;
+                    }
+                    else
+                        srno = string.Empty;
+                }
+                if (data.OptFreeSrno==true && data.pnlSerialNo==true)
+                {
+                    if (string.IsNullOrEmpty(Convert.ToString(data.SerialITEMCODE)))
+                    {
+                        return Json("Select valid serial no");
+                    }
+                    data.QTY= "1";
+                    //txtQty.Enabled = false;
+                }
+                if (!int.TryParse(data.QTY, out qty))
+                {
+                    return Json("Invalid Quantity");
+                }
+
+                string lineqty = Convert.ToString(data.ITEMCODE).Split('#')[3].Trim();
+                if ((string.IsNullOrEmpty(NOT_VALIDATE_JOB) || NOT_VALIDATE_JOB == "N") && !desc.Contains("MOTOR"))
+                {
+                    if (string.IsNullOrEmpty(Convert.ToString(data.Job)))
+                    {
+                        return Json("Select Valid Job");
+                    }
+                    else
+                    {
+                        printqty = Convert.ToString(data.Job).Split('-')[1].Trim();   //Convert.ToString(ddlJobs.EditValue).Split(':')[1].Split(')')[0].Trim();
+                        if (!int.TryParse(printqty, out tobePrintQty))
+                        {
+                            return Json("Invalid To Be Print Job Quantity");
+                        }
+                        if (qty > Convert.ToInt32(lineqty) || qty > tobePrintQty)
+                        {
+                            return Json("Quantity should not be greater than selected quantity " + lineqty + " and not more than Selected job Quantity " + tobePrintQty);
+                           
+                        }
+                    }
+                }
+                else
+                {
+                    if (qty > Convert.ToInt32(lineqty))
+                    {
+                        return Json("Quantity should not be greater than selected quantity" + lineqty + "");
+                    }
+                }
+
+                //int index = cmbItem.Properties.GetIndexByKeyValue(cmbItem.EditValue);
+                int index = 1;
+                if (index != 0)
+                {
+                    return Json("Itemcode can be select in sequence");
+                }
+
+                selectedJob = Convert.ToString(data.Job);// Convert.ToString(ddlJobs.EditValue).Split('(')[0].Trim();
+
+
+                ItemCode = Convert.ToString(data.ITEMCODE).Split('#')[0].Trim();
+                Tranid = Convert.ToString(data.ITEMCODE).Split('#')[1].Trim();
+                SubAssembly_Id = Convert.ToString(data.ITEMCODE).Split('#')[2].Trim();
+
+                orgid = fun.GetOrgId(plant);
+
+                query = string.Format(@"select count(*) from XXES_PRINT_SERIALS where plant_code='{0}'
+                and family_code='{1}' and SubAssembly_Id='{2}' and dcode='{3}'", plant, family, SubAssembly_Id, ItemCode);
+                string alreayprint = fun.get_Col_Value(query);
+                if (!string.IsNullOrEmpty(alreayprint))
+                {
+                    alreayprint = (Convert.ToInt32(alreayprint) + Convert.ToInt32(qty)).ToString();
+                }
+                else
+                    alreayprint = "0";
+                if (Convert.ToInt32(alreayprint) > Convert.ToInt32(lineqty))
+                {
+                    return Json("Quantity should not exceed the total quanity of selected line");
+                }
+                if (string.IsNullOrEmpty(NOT_VALIDATE_JOB) || NOT_VALIDATE_JOB == "N")
+                {
+                    if (dtPrint.Rows.Count > 0)
+                    {
+                        DataRow[] foundRows = dtPrint.Select("JOB='" + selectedJob + "'");
+                        if (foundRows.Length > 0)
+                        {
+                            foreach (DataRow dr in foundRows)
+                            {
+                                if ((Convert.ToInt32(dr[2]) + Convert.ToInt32(data.QTY)) > Convert.ToInt32(dr[1]))
+                                {
+                                    return Json("Quantity should not exceed the total quanity of job");
+
+                                }
+                            }
+                        }
+                    }
+                }
+
+                string tmpNumber = string.Empty, stage = SubAssFun.GetOfflineCode(Convert.ToString(data.FAMILYCODE).Trim().ToUpper());
+                if (string.IsNullOrEmpty(stage))
+                {
+                    return Json("Stage code not found");
+                }
+                SubAssembly subAssembly = null;
+                //PB.Visible = true;
+                //PB.Maximum = qty;
+                //PB.Minimum = 0;
+                //PB.Value = 0;
+                for (int i = 0; i < qty; i++)
+                {
+                    if (data.OptFreeSrno ==true && data.pnlSerialNo == true)
+                    {
+                        tmpNumber = Convert.ToString(data.SerialNumber);
+                        srno = tmpNumber;
+                    }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(srno))
+                            tmpNumber = srno;
+                        else
+                            tmpNumber = fun.getSeries(Convert.ToString(data.PLANTCODE).Trim().ToUpper(), Convert.ToString(data.FAMILYCODE).Trim().ToUpper(), stage);
+                    }
+                    if (!string.IsNullOrEmpty(tmpNumber))
+                    {
+                        if (subAssembly == null)
+                            subAssembly = new SubAssembly();
+
+                        subAssembly.Plant = plant;
+                        subAssembly.Family = family;
+                        subAssembly.Description = desc;
+                        subAssembly.Itemcode = ItemCode;
+                        subAssembly.SerialNumber = tmpNumber.Replace("#", "").Trim().ToUpper();
+
+                        if (tmpNumber.Contains("#"))
+                            subAssembly.Series = tmpNumber.Split('#')[1].Trim().ToUpper();
+                        else
+                            subAssembly.Series = string.Empty;
+                        if (string.IsNullOrEmpty(srno))
+                        {
+                            if (string.IsNullOrEmpty(subAssembly.SerialNumber) ||
+                                string.IsNullOrEmpty(subAssembly.Series))
+                            {
+                                return Json("Unable to generate serial no");
+                            }
+                        }
+                        if (data.OptFreeSrno==true && data.pnlSerialNo==true)
+                        {
+                            if (SubAssFun.isNoalreadyExists(subAssembly.SerialNumber, plant, family))
+                            {
+                                subAssembly.DuplicateFlag = "D";
+                            }
+                            else
+                            {
+                                subAssembly.DuplicateFlag = "";
+                            }
+                        }
+                        //else
+                        //{
+                        //    if (isNoalreadyExists(subAssembly.SerialNumber, plant, family))
+                        //    {
+                        //        pbf.DisplayMsg(pnlMsg, lblMsg, "Duplicate serial no found " + subAssembly.SerialNumber, "E");
+                        //        return;
+                        //    }
+                        //}
+                        subAssembly.Job = selectedJob;
+                        subAssembly.Stage = stage;
+                        subAssembly.PrintDesc = (data.PrintDesc ? true : false);
+                        subAssembly.IsQuality = false;
+                        subAssembly.Orgid = orgid;
+                        subAssembly.PrintMode = "LOCAL";
+                        subAssembly.Stage = stage;
+                        subAssembly.TranId = Tranid;
+                        subAssembly.SubAssembly_Id = SubAssembly_Id;
+                        subAssembly.Prefix1 = prefix1.Trim();
+                        if (data.OptFreeSrno==true && data.pnlSerialNo==true)
+                        {
+                            if (printAssemblyBarcodes.PrintFamilySerial(subAssembly, 2))
+                            {
+                                subAssembly.Series = "FREE_SRNO";
+                                fun.UpdateFamilySerials(subAssembly);
+                                counter++;
+                            }
+                        }
+                        else
+                        {
+                            if (string.IsNullOrEmpty(srno))
+                            {
+                                if (printAssemblyBarcodes.PrintFamilySerial(subAssembly, 2))
+                                {
+                                    //pbf.UpdateFamilySerials(tmpNumber.Replace("#", "").Trim().ToUpper(), tmpNumber.Split('#')[1].Trim().ToUpper(), selectedJob,
+                                    //    Convert.ToString(cmbItem.EditValue).Trim(), plant.Trim(), family.Trim(), orgid, stage);
+                                    fun.UpdateFamilySerials(subAssembly);
+                                    counter++;
+                                }
+                            }
+                            else
+                            {
+                                if (printAssemblyBarcodes.PrintFamilySerial(subAssembly, 2))
+                                {
+                                    subAssembly.Series = "NA";
+                                    fun.UpdateFamilySerials(subAssembly);
+                                    counter++;
+                                }
+                            }
+                        }
+                    }
+                    //PB.Value += 1;
+                    //Application.DoEvents();
+                }
+            }
+            catch
+            {
+
+            }
+            return Json("", JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PrintQuality(SubAssemblyModel data)
+        {
+            string result = string.Empty;
+            try
+            {  
+                string Itemname = string.Empty, ItemCode = string.Empty, Tranid = string.Empty, desc = string.Empty;
+               string plant = Convert.ToString(data.PLANTCODE).Trim();
+                string family = Convert.ToString(data.FAMILYCODE).Trim();
+                if (string.IsNullOrEmpty(Convert.ToString(data.QualityItemCode)))
+                {
+                    result= "Select Valid Serial No";
+                    return Json(result,JsonRequestBehavior.AllowGet);
+                }
+                string tmpNumber = string.Empty;
+                SubAssembly subAssembly = null;
+                if (Convert.ToString(data.QualityItemCode).Equals("ALL SERIALS"))
+                {
+                    int i = 0;
+                    foreach (DataRow dr in dtQuality.Rows)
+                    {
+                        if (Convert.ToString(dr["ITEM_CODE"]).Equals("ALL SERIALS"))
+                        {
+                            continue;
+                        }
+                        selectedJob = Convert.ToString(dr["ITEM_CODE"]).Split('-')[1].Trim();
+                        int pos = selectedJob.IndexOf("DESCRIPTION") - 1;
+                        selectedJob = selectedJob.Substring(0, pos).Trim();
+
+                        desc = Convert.ToString(dr["ITEM_CODE"]).Split('=')[1].Trim();
+                        ItemCode = Convert.ToString(dr["ITEM_CODE"]).Split(':')[1].Split(')')[0].Trim();
+                        tmpNumber = Convert.ToString(dr["SERIAL_NUMBER"]).Trim();
+                        orgid = fun.GetOrgId(plant);
+                        stage = SubAssFun.GetOfflineCode(Convert.ToString(data.FAMILYCODE).Trim().ToUpper());
+                        if (!string.IsNullOrEmpty(tmpNumber))
+                        {
+                            if (subAssembly == null)
+                                subAssembly = new SubAssembly();
+                            subAssembly.Plant = plant;
+                            subAssembly.Family = family;
+                            subAssembly.Description = desc;
+                            subAssembly.Itemcode = ItemCode;
+                            subAssembly.SerialNumber = tmpNumber.Replace("#", "").Trim().ToUpper();
+                            subAssembly.Series = tmpNumber.Split('#')[1].Trim().ToUpper();
+                            subAssembly.Job = selectedJob;
+                            subAssembly.Stage = stage;
+                            subAssembly.PrintDesc = (data.PrintDesc ? true : false);
+                            subAssembly.IsQuality = true;
+                            subAssembly.Orgid = orgid;
+                            subAssembly.PrintMode = ("NETWORK");
+                            subAssembly.Stage = stage;
+                            subAssembly.TranId = Tranid;
+                            subAssembly.Prefix1 = SubAssFun.getEnginePrefix(plant, family, ItemCode);
+                            if (printAssemblyBarcodes.PrintFamilySerial(subAssembly, 1, "1"))
+                            {
+                                fun.UpdatePrintSerialNo(subAssembly);
+
+                                result = "Printed Quantity: " + (i + 1).ToString();
+                                return Json(result, JsonRequestBehavior.AllowGet);
+                            }
+
+                        }
+                        i++;
+                    }
+                    BindQualityItemCode(data.PLANTCODE, data.FAMILYCODE, data.QualityDate);
+                }
+                else
+                {
+                    if (subAssembly == null)
+                        subAssembly = new SubAssembly();
+                    selectedJob = Convert.ToString(data.QualityItemCode).Split('-')[1].Trim();
+                    int pos = selectedJob.IndexOf("DESCRIPTION") - 1;
+                    selectedJob = selectedJob.Substring(0, pos).Trim();
+                    desc = Convert.ToString(data.QualityItem).Split('=')[1].Trim();
+                    ItemCode = Convert.ToString(data.QualityItem).Split(':')[1].Split(')')[0].Trim();
+                    tmpNumber = Convert.ToString(data.QualityItemCode).Trim();
+                    orgid = fun.GetOrgId(plant);
+                    stage = SubAssFun.GetOfflineCode(Convert.ToString(data.FAMILYCODE).Trim().ToUpper());
+                    if (!string.IsNullOrEmpty(tmpNumber))
+                    {
+                        subAssembly.Plant = plant;
+                        subAssembly.Family = family;
+                        subAssembly.Description = desc;
+                        subAssembly.Itemcode = ItemCode;
+                        subAssembly.SerialNumber = tmpNumber.Replace("#", "").Trim().ToUpper();
+                        //subAssembly.Series = tmpNumber.Split('#')[1].Trim().ToUpper();
+                        subAssembly.Job = selectedJob;
+                        subAssembly.Stage = stage;
+                        subAssembly.PrintDesc = (data.PrintDesc ? true : false);
+                        subAssembly.IsQuality = true;
+                        subAssembly.Orgid = orgid;
+                        subAssembly.PrintMode = ("NETWORK");
+                        subAssembly.Stage = stage;
+                        subAssembly.TranId = Tranid;
+                        if (printAssemblyBarcodes.PrintFamilySerial(subAssembly, 1))
+                        {
+                            fun.UpdatePrintSerialNo(subAssembly);
+                            BindQualityItemCode(data.PLANTCODE, data.FAMILYCODE, data.QualityDate);
+
+                            result = "Printed Successfully !! ";
+                            return Json(result, JsonRequestBehavior.AllowGet);
+                        }
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

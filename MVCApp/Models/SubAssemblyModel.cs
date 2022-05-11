@@ -12,8 +12,11 @@ namespace MVCApp.Models
     public class SubAssemblyModel
     {
         public DateTime PlantDate { get; set; }
+        public DateTime QualityDate { get; set; }
         public String PLANTCODE { get; set; }
         public String FAMILYCODE { get; set; }
+        public String QualityItemCode { get; set; }
+        public String QualityItem { get; set; }
         public String ShiftCODE { get; set; }
         public string lblRelJob { get; set; }
         public string lblNext { get; set; }
@@ -29,6 +32,7 @@ namespace MVCApp.Models
         public string ITEMCODE { get; set; }
         public int ITEMCODEIndex { get; set; }
         public bool OptFreeSrno { get; set; }
+        public bool pnlSerialNo { get; set; }
         public string ASSIGNITEMCODE { get; set; }
         public string ASSIGNSRNNo { get; set; }
         public string SerialITEMCODE { get; set; }
@@ -59,10 +63,29 @@ namespace MVCApp.Models
         public string P_Search { get; set; }
         public int TOTALCOUNT { get; set; }
         public int length { get; set; }
-        public string Description { get; set; }
-        public string Itemcode { get; set; }
         public string DuplicateFlag { get; set; }
 
+    }
+
+    public class SubAssembly
+    {
+        public string Plant { get; set; }
+        public string Family { get; set; }
+        public string Orgid { get; set; }
+        public string Itemcode { get; set; }
+        public string Description { get; set; }
+        public string SerialNumber { get; set; }
+        public string Series { get; set; }
+        public string Stage { get; set; }
+        public string Job { get; set; }
+        public string TranId { get; set; }
+        public string SubAssembly_Id { get; set; }
+        public bool PrintDesc { get; set; }
+        public bool IsQuality { get; set; }
+        public string PrintMode { get; set; }
+        public string Prefix1 { get; set; }
+
+        public string DuplicateFlag { get; set; }
     }
     public class funsubAssembly
     {
@@ -70,8 +93,13 @@ namespace MVCApp.Models
         string query = string.Empty;
         string TractorFamily = string.Empty;
 
-      
 
+        public string getEnginePrefix(string plant, string family, string dcode)
+        {
+            query = string.Format(@"select PREFIX_1 from xxes_engine_master where plant_code='{0}' and family_code='{1}'
+            and item_code='{2}'", plant.Trim(), family.Trim(), dcode.Trim().Split('#')[0].Trim());
+            return Convert.ToString(fun.get_Col_Value(query));
+        }
 
         private int Getdays(string Plant,string family)
         {
@@ -93,6 +121,65 @@ namespace MVCApp.Models
                 throw;
             }
             return days;
+        }
+        public string GetPrnCode(string family)
+        {
+            string code = string.Empty;
+            try
+            {
+                family = family.Trim().ToUpper();
+                if (family.Equals("REARAXLE FTD") || family.Equals("REAR AXEL FTD"))
+                    code = "REAR";
+                else if (family.Equals("ENGINE FTD"))
+                    code = "ENF";
+                else if (family.Equals("ENGINE TD"))
+                    code = "ENP";
+                else if (family.Equals("TRANSMISSION FTD"))
+                    code = "TRANS";
+                else if (family.Equals("BACK END TD") || family.Equals("BACKEND TD"))
+                    code = "BACK";
+                else if (family.Equals("HYDRAULIC FTD"))
+                    code = "HYD";
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return code;
+        }
+     
+
+        public void getNameSubAssembly(string fcode_desc, ref string itemname1, ref string itemname2)
+        {
+            try
+            {
+                itemname2 = "";
+                itemname1 = fcode_desc;
+                if (itemname1.Length > 50)
+                {
+                    itemname1 = itemname1.Trim().Substring(0, 22);
+                    itemname2 = fcode_desc.Trim().Substring(22, fcode_desc.Trim().ToUpper().Length - 22);
+                    if (itemname2.Trim().Length > 23)
+                    {
+                        itemname2 = itemname2.Substring(0, 22);
+                    }
+                }
+                else if (itemname1.Length > 25)
+                {
+                    itemname1 = itemname1.Trim().Substring(0, 22).Trim();
+                    itemname2 = fcode_desc.Trim().ToUpper().Substring(22, fcode_desc.Trim().Length - 22).Trim();
+                }
+            }
+
+            catch (Exception ex)
+            { 
+            
+            }
+            finally
+            { }
+
         }
         private bool isHolidayExists(DateTime dateTime,string plant)
         {
