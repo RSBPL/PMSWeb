@@ -390,9 +390,9 @@ namespace MVCApp.Controllers.Assembly
             string stage = "BAB";
             bool result = false;
             string orgid = fun.getOrgId(data.Plant, data.Family);
-            string Backend = data.Backend.Split('#')[0].Trim();
-            string FCODE_ID = data.Backend.Split('#')[1].Trim();
-            string JobId = data.JobId.Split('#')[0].Trim();
+            //string Backend = data.Backend.Split('#')[0].Trim();
+            //string FCODE_ID = data.Backend.Split('#')[1].Trim();
+            //string JobId = data.JobId.Split('#')[0].Trim();
             string connectionString = ConfigurationManager.ConnectionStrings["CON"].ConnectionString;
             using(OracleConnection connection = new OracleConnection(connectionString))
             {
@@ -411,6 +411,9 @@ namespace MVCApp.Controllers.Assembly
                     
                     if (!string.IsNullOrEmpty(data.runningSrlno))
                     {
+                        string Backend = data.Backend.Split('#')[0].Trim();
+                        string FCODE_ID = data.Backend.Split('#')[1].Trim();
+                        string JobId = data.JobId.Split('#')[0].Trim();
                         query = string.Format(@"update XXES_FAMILY_SERIAL set Current_Serial_number='{0}',LAST_PRINTED_LABEL_DATE_TI=SYSDATE WHERE
                             plant_code='{1}' and family_code='{2}' and offline_keycode='{3}'", data.runningSrlno.Trim(), data.Plant.Trim(), data.Family.Trim(), stage);
                         command.CommandText = query;
@@ -453,6 +456,13 @@ namespace MVCApp.Controllers.Assembly
                             HYDRAULIC_SRLNO,BACKEND_SRLNO,CREATEDBY,FCODE_ID,CREATEDDATE,JOBID) values('{0}','{1}','{2}','{3}' ,'{4}' ,'{5}' ,'{6}','{7}','{8}','{9}','{10}','{11}','{12}',sysdate,'{13}')",
                                 data.Plant.Trim(), data.Family.Trim(), Backend.Trim(), data.backend_desc, data.Transmission, data.TransmissionSrno, data.RearAxle, data.RearAxleSrno, data.Hydraulic,
                                 data.HydraulicSrno, data.BackendSrno, Convert.ToString(Session["Login_User"]).Trim(), FCODE_ID, JobId);
+                        command.CommandText = query;
+                        command.ExecuteNonQuery();
+                    }
+                    else
+                    {
+                        query = string.Format(@"update XXES_BACKEND_STATUS set TRANSMISSION_SRLNO='{0}' ,REARAXEL_SRLNO='{1}', HYDRAULIC_SRLNO='{2}' where  BACKEND_SRLNO='{3}'"
+                               , data.TransmissionSrno, data.RearAxleSrno, data.HydraulicSrno, data.BackendSrno);
                         command.CommandText = query;
                         command.ExecuteNonQuery();
                     }
@@ -761,7 +771,7 @@ namespace MVCApp.Controllers.Assembly
                     string BackDesc = line.Split('#')[2].Trim().ToUpper();
                     data.backend_desc = BackDesc;
                     data.MBackendSrno = line.Split('#')[3].Trim().ToUpper();
-                    data.BackendSrno = data.RBackendSrno;
+                    data.BackendSrno = data.MBackendSrno;
                     string BackD = line.Split('#')[4].Trim().ToUpper();
                     data.Backend = BackD;
                     data.MTransmissionSrno = line.Split('#')[5].Trim().ToUpper();
@@ -785,7 +795,7 @@ namespace MVCApp.Controllers.Assembly
         public JsonResult SaveModify(BackendModification data)
         {
             bool printStatus = false; string response = string.Empty , backendplant = string.Empty , backendfamily = string.Empty, Backend = string.Empty;
-            string msg = string.Empty; string mstType = string.Empty; string status = string.Empty;
+            string msg = string.Empty; string mstType = string.Empty; string status = string.Empty , orgid = string.Empty;
             string RearAxle = string.Empty, Transmission = string.Empty, Hydraulic = string.Empty, ActualTrans = string.Empty, ActualAxle = string.Empty,
             ActualHydrualic = string.Empty, Backenddesc = string.Empty, runningSrlno = string.Empty, BackendSrlno = string.Empty , jobid = string.Empty;
             try
@@ -814,33 +824,33 @@ namespace MVCApp.Controllers.Assembly
                     var resul = new { Msg = msg, ID = mstType, validation = status };
                     return Json(resul, JsonRequestBehavior.AllowGet);
                 }
-                if (string.IsNullOrEmpty(data.MHydraulicSrno))
+                //if (string.IsNullOrEmpty(data.MHydraulicSrno))
+                //{
+                //    msg = "Please Enter Hydraulic Serial No.";
+                //    mstType = Validation.str1;
+                //    status = Validation.str2;
+                //    var resul = new { Msg = msg, ID = mstType, validation = status };
+                //    return Json(resul, JsonRequestBehavior.AllowGet);
+                //}
+                query = string.Format(@"SELECT PLANT_CODE || '#' || FAMILY_CODE || '#' || BACKEND FROM
+                XXES_BACKEND_STATUS WHERE BACKEND_SRLNO='{0}'", data.MBackendSrno.Trim());
+                string line = fun.get_Col_Value(query);
+                if (line.Contains('#'))
                 {
-                    msg = "Please Enter Hydraulic Serial No.";
-                    mstType = Validation.str1;
-                    status = Validation.str2;
-                    var resul = new { Msg = msg, ID = mstType, validation = status };
-                    return Json(resul, JsonRequestBehavior.AllowGet);
+                    backendplant = line.Split('#')[0].Trim().ToUpper();
+                    backendfamily = line.Split('#')[1].Trim().ToUpper();
+                    Backend = line.Split('#')[2].Trim().ToUpper();
                 }
-                //query = string.Format(@"SELECT PLANT_CODE || '#' || FAMILY_CODE || '#' || BACKEND FROM
-                //XXES_BACKEND_STATUS WHERE BACKEND_SRLNO='{0}'", data.MBackendSrno);
-                //string line = fun.get_Col_Value(query);
-                //if (line.Contains('#'))
-                //{
-                //    backendplant = line.Split('#')[0].Trim().ToUpper();
-                //    backendfamily = line.Split('#')[1].Trim().ToUpper();
-                //    Backend = line.Split('#')[2].Trim().ToUpper();
-                //}
-                //if (backendplant == "T04")
-                //{
-                //    orgid = "149";
-                //    backendfamily = "BACK END FTD";
-                //}
-                //else
-                //{
-                //    orgid = "150";
-                //    backendfamily = "BACK END TD";
-                //}
+                if (backendplant == "T04")
+                {
+                    orgid = "149";
+                    backendfamily = "BACK END FTD";
+                }
+                else
+                {
+                    orgid = "150";
+                    backendfamily = "BACK END TD";
+                }
                 query = string.Format(@"select count(*) from XXES_BACKEND_STATUS where  REARAXEL_SRLNO='{0}' and BACKEND_SRLNO<>'{1}'", data.MRearAxleSrno,data.MBackendSrno);
                 if (Convert.ToInt32(fun.get_Col_Value(query)) > 0)
                 {
@@ -903,16 +913,16 @@ namespace MVCApp.Controllers.Assembly
                 }
                 query = string.Format(@"select m.TRANSMISSION || '#' || m.REARAXEL || '#' | |m.HYDRAULIC || '#' || m.BACKEND_DESC || '#' ||
                         S.JOBID from XXES_BACKEND_MASTER m , XXES_BACKEND_STATUS s  WHERE trim(m.BACKEND) = '{0}' and m.PLANT_CODE = '{1}' 
-                        and m.family_code = '{2}' AND S.BACKEND_SRLNO = '{3}'",Backend, data.MPlant.Trim().ToUpper(), 
-                        data.MFamily.Trim().ToUpper(),data.MBackendSrno.Trim());
+                        and m.family_code = '{2}' AND S.BACKEND_SRLNO = '{3}'",Backend, backendplant.Trim().ToUpper(),
+                        backendfamily.Trim().ToUpper(),data.MBackendSrno.Trim());
                 string line1 = fun.get_Col_Value(query);
                 if(!string.IsNullOrEmpty(line1))
                 {
-                    ActualTrans = line.Split('#')[0].Trim().ToUpper();
-                    ActualAxle = line.Split('#')[1].Trim().ToUpper();
-                    ActualHydrualic = line.Split('#')[2].Trim().ToUpper();
-                    Backenddesc = line.Split('#')[3].Trim().ToUpper();
-                    jobid = line.Split('#')[4].Trim().ToUpper();
+                    ActualTrans = line1.Split('#')[0].Trim().ToUpper();
+                    ActualAxle = line1.Split('#')[1].Trim().ToUpper();
+                    ActualHydrualic = line1.Split('#')[2].Trim().ToUpper();
+                    Backenddesc = line1.Split('#')[3].Trim().ToUpper();
+                    jobid = line1.Split('#')[4].Trim().ToUpper();
 
                     if (string.IsNullOrEmpty(ActualAxle))
                     {
@@ -966,13 +976,75 @@ namespace MVCApp.Controllers.Assembly
                     var resul = new { Msg = msg, ID = mstType, validation = status };
                     return Json(resul, JsonRequestBehavior.AllowGet);
                 }
+                data.Plant = backendplant;
+                data.Family = backendfamily;
+                data.runningSrlno = runningSrlno;               
+                data.backend_desc = Backenddesc;
+                data.Transmission = ActualTrans;
+                data.RearAxle = ActualAxle;
+                data.BackendSrno = data.MBackendSrno;
+                data.RearAxleSrno = data.MRearAxleSrno;
+                data.TransmissionSrno = data.MTransmissionSrno;
+                data.HydraulicSrno = data.MHydraulicSrno;
+                data.Backend = Backend;
+                data.JobId = jobid;
+                if (UpdateBackend(data))
+                {
+                    if (PrintBackendFT(data, 1))
+                    {
+                        msg = "Updated and printed successfully !!";
+                        mstType = Validation.str1;
+                        status = Validation.str2;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+                msg = ex.Message;
+            }
+            var myResult = new
+            {
+                Result = data,
+                Msg = msg,
+                validation = status
+            };
+            //var result = new { Msg = msg, ID = mstType, validation = status };
+            //return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(myResult, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PasswordPopup(BackendModification data)
+        {
+            string msg = string.Empty; string mstType = string.Empty; string status = string.Empty;
+            try
+            {
+                query = string.Format(@"SELECT COUNT(*) FROM XXES_STAGE_MASTER xsm WHERE xsm.PLANT_CODE='{0}' AND xsm.FAMILY_CODE='{1}' AND xsm.OFFLINE_KEYCODE='BAB' 
+                        AND xsm.AD_PASSWORD='{2}'", data.MPlant.Trim().ToUpper(),data.MFamily.Trim().ToUpper(),data.Password.Trim());
+                if (fun.CheckExits(query))
+                {
+                    msg = "Valid Password";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var reult = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(reult, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    msg = "Invalid Password..!!";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var reult = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(reult, JsonRequestBehavior.AllowGet);
+                }
             }
             catch (Exception ex)
             {
                 fun.LogWrite(ex);
             }
-            var result = new { Msg = msg, ID = mstType, validation = status };
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(msg, JsonRequestBehavior.AllowGet);
         }
+
     }
 }

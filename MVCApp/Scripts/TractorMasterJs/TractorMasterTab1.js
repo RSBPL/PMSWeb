@@ -2141,6 +2141,9 @@ function NewTractorCode() {
             else {
                 $('#GenerateSerialNoChk').prop("checked", true);
             }
+
+            $('#Add').show();
+            $('#Update').hide();
         },
         error: function (errormessage) {
 

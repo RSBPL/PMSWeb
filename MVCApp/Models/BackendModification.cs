@@ -43,6 +43,7 @@ namespace MVCApp.Models
         public string MRearAxleSrno { get; set; }
         public string MTransmissionSrno { get; set; }
         public string MHydraulicSrno { get; set; }
+        public string Password { get; set; }
 
 
     }

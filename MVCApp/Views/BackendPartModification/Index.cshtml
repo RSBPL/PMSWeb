@@ -34,6 +34,15 @@
         MIN-WIDTH: 130px !important;
         MAX-HEIGHT: 30px !important;
     }
+    #PasswordPopUp .modal-lg {
+        max-width: 30% !important;
+    }
+    .important {
+        opacity: -0.5;
+    }
+    .test {
+        overflow: auto
+    }
 
 </style>
 
@@ -180,23 +189,23 @@
                                 @Html.TextBoxFor(Model => Model.MBackendSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
                                 <strong>@Html.ValidationMessageFor(model => model.MBackendSrno, "", new { @class = "text-danger" })</strong>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-3" >
                                 <label for="MRearAxleSrno" class="text-right control-label col-form-label"><strong>RearAxle</strong></label>
                                 @Html.TextBoxFor(Model => Model.MRearAxleSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
                                 <strong>@Html.ValidationMessageFor(model => model.MRearAxleSrno, "", new { @class = "text-danger" })</strong>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-3" >
                                 <label for="MTransmissionSrno" class="text-right control-label col-form-label"><strong>Transmission</strong></label>
                                 @Html.TextBoxFor(Model => Model.MTransmissionSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
                                 <strong>@Html.ValidationMessageFor(model => model.MTransmissionSrno, "", new { @class = "text-danger" })</strong>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-3" >
                                 <label for="MHydraulicSrno" class="text-right control-label col-form-label"><strong>Hydraulic</strong></label>
                                 @Html.TextBoxFor(Model => Model.MHydraulicSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
                                 <strong>@Html.ValidationMessageFor(model => model.MHydraulicSrno, "", new { @class = "text-danger" })</strong>
                             </div>
                             <div class="col-md-1" style="padding-top: 23px;">
-                                <button class="btn btn-success btn-sm" type="button" id="Modify"><i class="ace-icon fa fa-print bigger-110"></i><strong>Modify</strong></button>
+                                <button class="btn btn-success btn-sm" type="button" id="AddModify" data-toggle="modal" data-target="#PasswordPopUp"><i class="ace-icon fa fa-print bigger-110"></i><strong>Modify</strong></button>
                             </div>
                             <div class="col-md-1" style="padding-top: 23px;">
                                 <button class="btn btn-default btn-sm" type="button" id="ClearModify"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
@@ -207,6 +216,32 @@
             </div>
         </div>
 
+    </div>
+</div>
+
+<div class="modal fade" id="PasswordPopUp"  role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Enter Password</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="ORDERBY" class="col-form-label">Password</label>
+                            @Html.TextBoxFor(Model => Model.Password, null, new { @class = "form-control input-sm", type = "password" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="PasswordSubmit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
     </div>
 </div>
 
@@ -634,6 +669,10 @@
                     if (data.Result.MHydraulicSrno != "" && data.Result.MHydraulicSrno != null) {
                         $("#MHydraulicSrno").val(data.Result.MHydraulicSrno);
                     }
+                    //var ele = document.querySelectorAll('[id="abc"]');
+                    //for (i = 0; i < ele.length; i++) {
+                    //    ele[i].disabled = true;
+                    //}
                     /*$('#MBackendSrno').prop('disabled', true);*/
                     //$('#MRearAxleSrno').prop('disabled', true);
                     //$('#MTransmissionSrno').prop('disabled', true);
@@ -648,6 +687,103 @@
 
     };
 
+    function AddModify() {
+    /*$("#AddModify").on("click", function () {*/
+            $("#divLoader").show();
+            var data = {
+                MPlant: $('#MPlant').val(),
+                MFamily: $('#MFamily').val(),
+                MBackendSrno: $('#MBackendSrno').val(),
+                MRearAxleSrno: $("#MRearAxleSrno").val(),
+                MTransmissionSrno: $("#MTransmissionSrno").val(),
+                MHydraulicSrno: $("#MHydraulicSrno").val()
+            };
+            $.ajax({
+                url: '@Url.Action("SaveModify", "BackendPartModification")',
+                data: JSON.stringify(data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+
+                        //$('#RearAxleSrno').val("");
+                        //$('#TransmissionSrno').val("");
+                    }
+
+                },
+                error: function (errormessage) {
+
+                }
+            });
+
+    }
+
+    $("#PasswordSubmit").on("click", function () {
+        ChkPassword();
+    });
+
+
+    function ChkPassword() {
+        $("#divLoader").show();
+        var data = {
+            MPlant: $('#MPlant').val(),
+            MFamily: $('#MFamily').val(),
+            Password: $('#Password').val()
+        };
+        $.ajax({
+            url: '@Url.Action("PasswordPopup", "BackendPartModification")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#PasswordPopUp").hide();
+                $(".modal-backdrop").hide();
+                $(".modal-backdrop").addClass("important");
+                $("#divLoader").hide();
+                if (data.Msg == "Valid Password") {
+                    var chk = confirm("Are you sure you want to Update this?");
+                    if (chk == true) {
+                        $('body').addClass("test");
+                        $(window).scrollTop(0);
+                        AddModify();
+                    }
+                } else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    $('body').addClass("test");
+                    $(window).scrollTop(0);
+                }
+            },
+            error: function (errormessage) {
+
+            }
+        });
+
+    };
 
     $("#MPlant").select2({
         allowClear: true,
