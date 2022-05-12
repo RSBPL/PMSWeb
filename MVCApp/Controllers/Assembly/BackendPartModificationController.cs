@@ -16,7 +16,7 @@ namespace MVCApp.Controllers.Assembly
     {
         // GET: BackendPartModification
         OracleCommand cmd;
-        OracleDataAdapter DA;
+        OracleDataAdapter DA; 
         OracleDataReader dr;
         DataTable dt;
         Function fun = new Function();

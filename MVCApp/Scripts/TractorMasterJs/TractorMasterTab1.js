@@ -2135,15 +2135,20 @@ function NewTractorCode() {
         dataType: "json",
         success: function (data) {
             $("#Prefix1").val(data.Msg);
-            if (data.Msg == "") {
-                $('#GenerateSerialNoChk').prop("checked", false);
+            if (data.Msg != "") {
+                $('#GenerateSerialNoChk').prop("checked", true);
+                $('#Add').show();
+                $('#Update').hide();
+               
             }
             else {
-                $('#GenerateSerialNoChk').prop("checked", true);
+                $("#Prefix1").val("T05");
+                // $('#GenerateSerialNoChk').prop("checked", false);
+                $('#Add').hide();
+                $('#Update').show();
             }
 
-            $('#Add').show();
-            $('#Update').hide();
+           
         },
         error: function (errormessage) {
 
