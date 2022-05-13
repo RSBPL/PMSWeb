@@ -325,7 +325,13 @@ namespace MVCApp.Controllers.Assembly
                     if (PrintBackendFT(data,1))
                     {
                         msg = "Backend Srno generated and printed successfully !!";
-                        mstType = Validation.str1;
+                        mstType = "alert-success";
+                        status = Validation.str2;
+                    }
+                    else
+                    {
+                        msg = "Print File Not Found";
+                        mstType = "alert-danger";
                         status = Validation.str2;
                     }
                 }
@@ -335,11 +341,14 @@ namespace MVCApp.Controllers.Assembly
             {
                 fun.LogWrite(ex);
                 msg = ex.Message;
+                mstType = Validation.str1;
+                status = Validation.str2;
             }
             var myResult = new
             {
                 Result = data,
                 Msg = msg,
+                ID = mstType,
                 validation = status
             };
             //var result = new { Msg = msg, ID = mstType, validation = status };
@@ -722,7 +731,13 @@ namespace MVCApp.Controllers.Assembly
                 if (PrintBackendFT(data, 1))
                 {
                     msg = "Backend Reprinted !!";
-                    mstType = Validation.str1;
+                    mstType = "alert-success";
+                    status = Validation.str2;
+                }
+                else
+                {
+                    msg = "Print File Not Found";
+                    mstType = "alert-danger";
                     status = Validation.str2;
                 }
             }
@@ -730,11 +745,14 @@ namespace MVCApp.Controllers.Assembly
             {
                 fun.LogWrite(ex);
                 msg = ex.Message;
+                mstType = Validation.str1;
+                status = Validation.str2;
             }
             var myResult = new
             {
                 Result = data,
                 Msg = msg,
+                ID = mstType,
                 validation = status
             };
             //var result = new { Msg = msg, ID = mstType, validation = status };
@@ -1020,7 +1038,13 @@ namespace MVCApp.Controllers.Assembly
                     if (PrintBackendFT(data, 1))
                     {
                         msg = "Updated and printed successfully !!";
-                        mstType = Validation.str1;
+                        mstType = "alert-success";
+                        status = Validation.str2;
+                    }
+                    else
+                    {
+                        msg = "Print File Not Found";
+                        mstType = "alert-danger";
                         status = Validation.str2;
                     }
                 }
@@ -1029,11 +1053,14 @@ namespace MVCApp.Controllers.Assembly
             {
                 fun.LogWrite(ex);
                 msg = ex.Message;
+                mstType = Validation.str1;
+                status = Validation.str2;
             }
             var myResult = new
             {
                 Result = data,
                 Msg = msg,
+                ID = mstType,
                 validation = status
             };
             //var result = new { Msg = msg, ID = mstType, validation = status };
@@ -1052,7 +1079,7 @@ namespace MVCApp.Controllers.Assembly
                 if (fun.CheckExits(query))
                 {
                     msg = "Valid Password";
-                    mstType = Validation.str1;
+                    mstType = "alert-success";
                     status = Validation.str2;
                     var reult = new { Msg = msg, ID = mstType, validation = status };
                     return Json(reult, JsonRequestBehavior.AllowGet);
