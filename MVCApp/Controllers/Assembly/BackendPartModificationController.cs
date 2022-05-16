@@ -12,6 +12,7 @@ using System.Web.Mvc;
 
 namespace MVCApp.Controllers.Assembly
 {
+    [Authorize]
     public class BackendPartModificationController : Controller
     {
         // GET: BackendPartModification
@@ -736,7 +737,7 @@ namespace MVCApp.Controllers.Assembly
                 }
                 else
                 {
-                    msg = "Print File Not Found";
+                    msg = "Matched but not Reprinted successfully";
                     mstType = "alert-danger";
                     status = Validation.str2;
                 }
@@ -1043,7 +1044,7 @@ namespace MVCApp.Controllers.Assembly
                     }
                     else
                     {
-                        msg = "Print File Not Found";
+                        msg = "Updated but not printed successfully";
                         mstType = "alert-danger";
                         status = Validation.str2;
                     }
