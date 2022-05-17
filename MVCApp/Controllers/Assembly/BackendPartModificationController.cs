@@ -728,7 +728,7 @@ namespace MVCApp.Controllers.Assembly
                 query = string.Format(@"SELECT JOBID FROM XXES_BACKEND_STATUS  WHERE PLANT_CODE='{0}' AND FAMILY_CODE='{1}' 
                         AND BACKEND_SRLNO='{2}'", data.RPlant.Trim(), data.RFamily.Trim(), data.RBackendSrno.Trim());
                 data.JobId = fun.get_Col_Value(query);
-                GetSerialNo(data);
+                //GetSerialNo(data);
                 if (PrintBackendFT(data, 1))
                 {
                     msg = "Backend Reprinted !!";
