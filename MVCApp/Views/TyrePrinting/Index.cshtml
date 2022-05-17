@@ -107,7 +107,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="fname" class="text-right control-label col-form-label"><strong>Front Tyre RH</strong></label>
-                                    <div class="row">                                     
+                                    <div class="row">
                                         <div class="col-md-1">
                                             @Html.CheckBoxFor(model => model.chkFTRH, new { @class = "form-control  input-sm", @checked = "checked" })
                                         </div>
@@ -126,9 +126,12 @@
                                             @Html.TextBoxFor(Model => Model.FTLH, null, new { @class = "form-control input-sm" })
                                         </div>
                                     </div>
-                                </div>                              
+                                </div>
                                 <div class="col-md-1" style="padding-top: 23px;">
-                                    <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                                    <button class="btn btn-success btn-sm" type="button" id="Reprint"><i class="ace-icon fa fa-print bigger-110"></i><strong>Print</strong></button>
+                                </div>
+                                <div class="col-md-1" style="padding-top: 23px;">
+                                    <button class="btn btn-success btn-sm" type="button" id="Reprint"><i class="ace-icon fa fa-print bigger-110"></i><strong>Reprint</strong></button>
                                 </div>
                                 <div class="col-md-1" style="padding-top: 23px;">
                                     <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>

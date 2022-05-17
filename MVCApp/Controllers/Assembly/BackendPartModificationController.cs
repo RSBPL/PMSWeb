@@ -698,6 +698,14 @@ namespace MVCApp.Controllers.Assembly
                     data.Plant = data.RPlant;
                     data.Family = data.RFamily;
                 }
+                else
+                {
+                    msg = "Data Not Found.";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(resul, JsonRequestBehavior.AllowGet);
+                }
             }
             catch (Exception ex)
             {
@@ -728,7 +736,7 @@ namespace MVCApp.Controllers.Assembly
                 query = string.Format(@"SELECT JOBID FROM XXES_BACKEND_STATUS  WHERE PLANT_CODE='{0}' AND FAMILY_CODE='{1}' 
                         AND BACKEND_SRLNO='{2}'", data.RPlant.Trim(), data.RFamily.Trim(), data.RBackendSrno.Trim());
                 data.JobId = fun.get_Col_Value(query);
-                //GetSerialNo(data);
+                GetSerialNo(data);
                 if (PrintBackendFT(data, 1))
                 {
                     msg = "Backend Reprinted !!";
@@ -737,7 +745,7 @@ namespace MVCApp.Controllers.Assembly
                 }
                 else
                 {
-                    msg = "Matched but not Reprinted successfully";
+                    msg = "Print File Not Found";
                     mstType = "alert-danger";
                     status = Validation.str2;
                 }
@@ -824,6 +832,14 @@ namespace MVCApp.Controllers.Assembly
                     data.MRearAxleSrno = line.Split('#')[6].Trim().ToUpper();
                     data.MHydraulicSrno = line.Split('#')[7].Trim().ToUpper();
                     string hydra = line.Split('#')[8].Trim().ToUpper();
+                }
+                else
+                {
+                    msg = "Data Not Found.";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(resul, JsonRequestBehavior.AllowGet);
                 }
             }
             catch (Exception ex)

@@ -1,4 +1,5 @@
-﻿using MVCApp.CommonFunction;
+﻿using MVCApp.Common;
+using MVCApp.CommonFunction;
 using MVCApp.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
@@ -21,6 +22,8 @@ namespace MVCApp.Controllers.Assembly
         DataTable dt;
         Function fun = new Function();
         string query = "", prevQty = ""; DataTable dtJob; string ORGID = "";
+        List<LabelPrinting> labelPrinting = null; int qty;
+        string tyreinfo = string.Empty; Assemblyfunctions assemblyfunctions = null;
         public ActionResult Index()
         {
             if (string.IsNullOrEmpty(Convert.ToString(Session["Login_User"])))
@@ -135,6 +138,7 @@ namespace MVCApp.Controllers.Assembly
                     data.FTLH = line.Split(',')[1].Trim().ToUpper() + "(" + LHFrontTyre + ")";
                     RHFrontTyre = line.Split(',')[2].Trim().ToUpper();
                     data.FTRH = line.Split(',')[3].Trim().ToUpper() + "(" + RHFrontTyre + ")";
+                    tyreinfo = line;
                 }
             }
             catch (Exception ex)
@@ -147,6 +151,162 @@ namespace MVCApp.Controllers.Assembly
                 Msg = msg
             };
             return Json(myResult, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult Print(TyrePrinting data)
+        {
+            string msg = string.Empty; string mstType = string.Empty; string status = string.Empty;
+            string stageid = string.Empty;
+            try
+            {
+                if(string.IsNullOrEmpty(data.ItemCode))
+                {
+                    msg = "Please Select Tractor Fcode..";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(resul, JsonRequestBehavior.AllowGet);
+                }
+                if(string.IsNullOrEmpty(data.Quantity))
+                {
+                    msg = "Please Enter Quantity..";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(resul, JsonRequestBehavior.AllowGet);
+                }
+                query = string.Format(@"SELECT STAGE_ID FROM XXES_STAGE_MASTER WHERE PLANT_CODE='{0}' AND FAMILY_CODE='{1}' AND OFFLINE_KEYCODE='FT'
+                        ", data.Plant.Trim(), data.Family.Trim());
+                stageid = fun.get_Col_Value(query);
+                qty = Convert.ToInt32(data.Quantity);
+                for(int i = 1; i <= qty; i++)
+                {
+                    if(data.chkFTRH == true)
+                    {
+                        labelPrinting.Add(new LabelPrinting
+                        {
+                            dcode = tyreinfo.Split(',')[0].Trim().ToUpper(),
+                            description = tyreinfo.Split(',')[1].Trim().ToUpper(),
+                            plantcode = Convert.ToString(data.Plant).Trim().ToUpper(),
+                            familycode = Convert.ToString(data.Family).Trim().ToUpper()
+                        });
+                    }
+                    if (data.chkFTLH == true)
+                    {
+                        labelPrinting.Add(new LabelPrinting
+                        {
+                            dcode = tyreinfo.Split(',')[0].Trim().ToUpper(),
+                            description = tyreinfo.Split(',')[1].Trim().ToUpper(),
+                            plantcode = Convert.ToString(data.Plant).Trim().ToUpper(),
+                            familycode = Convert.ToString(data.Family).Trim().ToUpper()
+                        });
+                    }
+                }
+                foreach(LabelPrinting label in labelPrinting)
+                {
+                    fun.getSeries(data.Plant.Trim(), data.Family.Trim(), stageid);
+                    
+                }
+                
+
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+                msg = ex.Message;
+                mstType = Validation.str1;
+                status = Validation.str2;
+            }
+            var myResult = new
+            {
+                Result = data,
+                Msg = msg,
+                ID = mstType,
+                validation = status
+            };
+            return Json(myResult, JsonRequestBehavior.AllowGet);
+        }
+
+        //public bool PrintSticker(string line, TyrePrinting data)
+        //{
+        //    bool status = false;
+        //    string TyreType = string.Empty, Filename = string.Empty, itemname1 = string.Empty, itemname2 = string.Empty;
+        //    string cmd1 = "", cmd2 = "";
+        //    PrintAssemblyBarcodes af = new PrintAssemblyBarcodes();
+        //    try
+        //    {
+        //        Filename = "RT.txt";
+        //        query = af.ReadFile(Filename);
+        //        if (!string.IsNullOrEmpty(query))
+        //        {
+        //            if (assemblyfunctions == null)
+        //                assemblyfunctions = new Assemblyfunctions();
+        //            assemblyfunctions.getName(data.description.Trim().ToUpper(), ref itemname1, ref itemname2);
+        //            query = query.Replace("SERIES_NO", "");
+        //            query = query.Replace("ITEM_NAME1", itemname1);
+        //            query = query.Replace("ITEM_NAME2", itemname2);
+        //            query = query.Replace("DCODE_VAL", data.ItemCode);
+        //            query = query.Replace("MAKE_VAL", data.MakeTyre);
+        //            cmd1 = query;
+        //            if (PrintTyreLable(cmd1, data))
+        //                status = true;
+        //            else
+        //                status = false;
+        //        }
+        //        else
+        //        {
+        //            throw new Exception("Print File Not Found");
+        //        }
+        //        return status;
+        //    }
+
+        //    catch (Exception ex)
+        //    {
+        //        fun.LogWrite(ex);
+        //    }
+        //    finally { }
+        //}
+        public bool PrintTyreLable(string cmd1, TyrePrinting data)
+        {
+            System.Net.Sockets.TcpClient tc;
+            try
+            {
+                query = string.Format(@"select ipaddr || '#' || ipport from xxes_stage_master where 
+                        offline_keycode='FT' and plant_code='{0}' and family_code='{1}'", data.Plant.Trim(), data.Family.Trim());
+                string line = fun.get_Col_Value(query);
+                data.IPADDR = line.Split('#')[0].Trim();
+                data.IPPORT = line.Split('#')[1].Trim();
+                if (string.IsNullOrEmpty(Convert.ToString(data.IPPORT)))
+                {
+                    throw new Exception("PRINTER PORT NOT FOUND");
+                }
+                System.Net.Sockets.NetworkStream myStream;
+                tc = new System.Net.Sockets.TcpClient();
+                tc.Connect(data.IPADDR, Convert.ToInt32(data.IPPORT)); // IP address of the printer
+                // convert the string command to bytes
+                myStream = tc.GetStream();
+                if (myStream.CanWrite)
+                {
+                    Byte[] myFP = System.Text.Encoding.ASCII.GetBytes(cmd1.Trim());
+                    myStream.Write(myFP, 0, myFP.Length);
+                    myStream.Flush();
+                }
+                tc.Close();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+                if (ex.Message.ToUpper().Contains(("A connection attempt failed").ToUpper()))
+                {
+                    return false;
+                    //throw new Exception("PRINTER NOT CONNECTED " + bACKEND.IPADDR);
+                }
+                else
+                    throw;
+            }
+            finally { }
         }
     }
 }

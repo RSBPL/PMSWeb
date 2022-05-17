@@ -20,7 +20,21 @@ namespace MVCApp.Models
         public bool chkFTLH { get; set; } 
         public bool chkRTRH { get; set; }
         public bool chkRTLH { get; set; }
+        public string srlno { get; set; }
+        public string description { get; set; }
+        public string IPADDR { get; set; }
+        public string IPPORT { get; set; }
 
+
+
+    }
+    public class LabelPrinting
+    {
+        public string plantcode { get; set; }
+        public string familycode { get; set; }
+        public string dcode { get; set; }
+        public string srlno { get; set; }
+        public string description { get; set; }
 
     }
 }
