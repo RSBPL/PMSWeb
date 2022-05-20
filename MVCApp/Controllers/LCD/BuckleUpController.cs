@@ -211,6 +211,7 @@ namespace MVCApp.Controllers
                     finally
                     {
                         fun.ConClose();
+                        fun.Connection().Dispose();
                     }
                   
 
@@ -295,7 +296,7 @@ namespace MVCApp.Controllers
                         result.lblErrorVisible = true;
 
                     }
-                    finally { }
+                    finally { fun.ConClose(); }
                     //try
                     //{
                     //    query = "";

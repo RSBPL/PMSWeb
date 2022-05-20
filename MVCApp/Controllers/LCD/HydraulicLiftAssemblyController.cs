@@ -136,7 +136,7 @@ namespace MVCApp.Controllers.LCD
                                 sc.Parameters.Add("PRC", OracleDbType.RefCursor, ParameterDirection.Output);
                                 OracleDataAdapter dr = new OracleDataAdapter(sc);
                                 dr.Fill(dt);
-
+                                fun.ConClose();
                             }
                         }
                     }
@@ -147,7 +147,8 @@ namespace MVCApp.Controllers.LCD
                     }
                     finally 
                     {
-                        fun.ConClose(); 
+                        fun.ConClose();
+                        fun.Connection().Dispose();
                     }
 
                     try

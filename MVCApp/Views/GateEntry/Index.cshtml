@@ -89,7 +89,7 @@
                 <div class="clearfix" style="padding: 0 0 25px 0;"></div>
                 <div class="row">
                
-                    <div id="RePrintDate">
+                    <div id="RePrintDate">B
                         <div class="col-md-2">
                             <label for="NotValidateJob" class="text-right control-label col-form-label"><strong>MRN Date</strong></label>
                             @Html.EJS().DatePickerFor(Model => Model.FromDate).Format("dd-MMM-yyyy").Value(ViewBag.value).Max(ViewBag.maxDate).Render()
@@ -208,17 +208,16 @@ $("#RePrintDate").hide();
     function BindGrid() {
         $('#demoGrid').DataTable().destroy();
         var dtable = $("#demoGrid").DataTable({
-            "scrollX": true,
             "autoWidth": false,
             "lengthChange": true,
-            "pageLength": 20,
+            "pageLength": 10,
             "ordering": false,
             "processing": true, // for show progress bar
             "serverSide": true, // for process server side
             "filter": true, // this is for disable filter (search box)
             "orderMulti": false, // for disable multiple column at once
             language: {
-                search: "SEARCH BY MRN No",
+                search: "SEARCH BY TRACTOR CODE OR JOB ID",
                 searchPlaceholder: "Enter min 3 characters",
                 width: "250PX"
             },
@@ -297,6 +296,7 @@ $("#RePrintDate").hide();
                 }
                 return;
             });
+
 
     }
     function check_uncheck_checkbox(isChecked) {
@@ -385,24 +385,15 @@ $("#RePrintDate").hide();
                             });
                         }, 5000);
                     }
-                    //if (data.validation.includes("error")) {
-                    //    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                    //    setTimeout(function () {
-                    //        $.each($('.alert'), function () {
-                    //            closeAlert(this);
-                    //        });
-                    //    }, 5000);
-                    //}
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
 
-                    //else {
-                    //    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                    //    setTimeout(function () {
-                    //        $.each($('.alert'), function () {
-                    //            closeAlert(this);
-                    //        });
-                    //    }, 5000);
-
-                    //}
+                    }
                     BindGrid();
                 },
                 error: function (errormessage) {

@@ -138,6 +138,7 @@ namespace MVCApp.Controllers
                         finally
                         {
                             fun.ConClose();
+                            fun.Connection().Dispose();
                         }
 
                     }

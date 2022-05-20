@@ -1,0 +1,705 @@
+﻿@using Syncfusion.EJ2;
+@model MVCApp.Models.RollDown
+
+@*<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />*@
+<style>
+
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .hr1 {
+        margin-top: 2px;
+        margin-bottom: 6px;
+        border-top: 2px solid #023a5f;
+        width: 370px;
+    }
+    .inj {
+        width: 100px;
+    }
+    .m-50 {
+        width: 73%;
+        MARGIN: 0 0 0 130px
+    }
+    .W-100 {
+        width: 968px;
+        left: -119px;
+    }
+    .f-left {
+        float: LEFT;
+    }
+    .frm {
+        padding: 20px;
+    }
+    .C-1 {
+        WIDTH: 70px;
+    }
+    .w-adj {
+        WIDTH:100px;
+    }
+
+    .w-adj1 {
+        WIDTH: 155px;
+        margin: -3px 10px -12px 0;
+    }
+    .well {
+        background-color: #e8f2f9;
+    }
+    table.dataTable thead.tr.th {
+        background-color: #14567e;
+    }
+    table.dataTable tr.odd {
+        color: #7a7979;
+        background-color: #c2c2c269;
+        font-size: 13px;
+        font-weight: bolder;
+    }
+
+    table.dataTable tr.even {
+        color: #7a7979;
+        background-color: #eeeeee;
+        font-size: 13px;
+        font-weight: bolder;
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:10%; margin-left:38%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Roll Down</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    <div id="SearchItem" style="background-color: #6fb3e0; margin: 0px 5px 0px 5px; padding: 5px;">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <strong style="font-size: 19px;color:white;">ROLL DOWN</strong>
+                <hr class="hr1">
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    @*--------Form------------*@
+    <div class="container" style="width:100%!important">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal form-group">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            @Html.DropDownListFor(model => model.PLANTCODE, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.PLANTCODE, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>FAMILY</strong></label>
+                            @Html.DropDownListFor(model => model.FAMILYCODE, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.FAMILYCODE, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>scan job</strong></label>
+                            @Html.TextBoxFor(Model => Model.ITEM_CODE, null, new { @class = "form-control input-sm" })
+                        </div>
+                        @*<div class="col-md-1">
+                            <div style="MARGIN-TOP: 25px;">
+                                <button class="btn btn-success btn-sm" type="button" id="Show"><i class="ace-icon fa fa-search-plus bigger-110"></i><strong>SHOW</strong></button>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div style="MARGIN-TOP: 25px;">
+                                <button class="btn btn-success btn-sm" type="button" id="Save"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                            </div>
+                        </div>*@
+                    </div>
+                </fieldset>
+            </div>
+        }
+        <div class="form-horizontal form-group">
+            <fieldset class="the-fieldset bg-info">
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Transmission</strong></label>
+                        @Html.TextBoxFor(Model => Model.Transmission, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-2">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>RearAxel</strong></label>
+                        @Html.TextBoxFor(Model => Model.RearAxel, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Hydraulic</strong></label>
+                        @Html.TextBoxFor(Model => Model.Hydraulic, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Engine</strong></label>
+                        @Html.TextBoxFor(Model => Model.Engine, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-2">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Skid</strong></label>
+                        @Html.TextBoxFor(Model => Model.Skid, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-6">
+                        <fieldset>
+                            <legend>Rear Tyre</legend>
+                            <div class="col-md-4">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Srnn1</strong></label>
+                                @Html.TextBoxFor(Model => Model.RearSrnn1, null, new { @class = "form-control input-sm" })
+                            </div>
+                            <div class="col-md-4">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>RIM1</strong></label>
+                                @Html.TextBoxFor(Model => Model.RearRIM1, null, new { @class = "form-control input-sm" })
+                            </div>
+                            <div class="col-md-4">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Tyre1</strong></label>
+                                @Html.TextBoxFor(Model => Model.RearTyre1, null, new { @class = "form-control input-sm" })
+                            </div>
+
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6">
+                        <fieldset>
+                            <legend>Font Tyre</legend>
+                            <div class="col-md-4">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Srnn1</strong></label>
+                                @Html.TextBoxFor(Model => Model.FrontSrnn1, null, new { @class = "form-control input-sm" })
+                            </div>
+                            <div class="col-md-4">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>RIM1</strong></label>
+                                @Html.TextBoxFor(Model => Model.FrontRIM1, null, new { @class = "form-control input-sm" })
+                            </div>
+                            <div class="col-md-4">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Tyre1</strong></label>
+                                @Html.TextBoxFor(Model => Model.FrontTyre1, null, new { @class = "form-control input-sm" })
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Srnn2</strong></label>
+                        @Html.TextBoxFor(Model => Model.RearSrnn2, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-2">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>RIM2</strong></label>
+                        @Html.TextBoxFor(Model => Model.RearRIM2, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-2">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Tyre2</strong></label>
+                        @Html.TextBoxFor(Model => Model.RearTyre2, null, new { @class = "form-control input-sm" })
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Srnn2</strong></label>
+                        @Html.TextBoxFor(Model => Model.FrontSrnn2, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-2">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>RIM2</strong></label>
+                        @Html.TextBoxFor(Model => Model.FrontRIM2, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-2">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Tyre2</strong></label>
+                        @Html.TextBoxFor(Model => Model.FrontTyre2, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Battery</strong></label>
+                        @Html.TextBoxFor(Model => Model.Battery, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-3" style="margin: 8px 0 0 0;">
+                        <label for="fname" class="text-right control-label col-form-label"><strong></strong></label>
+                        <label for="fname" class="text-right control-label col-form-label"><strong></strong></label>
+                        @Html.DropDownListFor(model => model.BatMake, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                        <strong>@Html.ValidationMessageFor(model => model.BatMake, "", new { @class = "text-danger" })</strong>
+
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>hydrualic Pump</strong></label>
+                        @Html.TextBoxFor(Model => Model.HydrualicPump, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Radiator</strong></label>
+                        @Html.TextBoxFor(Model => Model.Radiator, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Power Steering Cylinder</strong></label>
+                        @Html.TextBoxFor(Model => Model.SteeringCylinder, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Steering Motor</strong></label>
+                        @Html.TextBoxFor(Model => Model.SteeringMotor, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Steering Motor</strong></label>
+                        @Html.TextBoxFor(Model => Model.SteeringAssem, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Alternator</strong></label>
+                        @Html.TextBoxFor(Model => Model.Alternator, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Cluster Assembly</strong></label>
+                        @Html.TextBoxFor(Model => Model.Cluster, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Starter Motor</strong></label>
+                        @Html.TextBoxFor(Model => Model.Motor, null, new { @class = "form-control input-sm" })
+                    </div>
+
+                    <div class="col-md-3">                    </div>
+
+                    <div class="col-md-3">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Quantity</strong></label>
+                        @Html.TextBoxFor(Model => Model.Quantity, null, new { @class = "form-control input-sm" })
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Srno</strong></label>
+                        @Html.TextBoxFor(Model => Model.Srno, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-2">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>IMEI</strong></label>
+                        @Html.TextBoxFor(Model => Model.IMEI, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-2">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>MOBILE</strong></label>
+                        @Html.TextBoxFor(Model => Model.MOBILE, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>ROPS Srno</strong></label>
+                        @Html.TextBoxFor(Model => Model.ROPSrno, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-2">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Oil Qty</strong></label>
+                        @Html.TextBoxFor(Model => Model.OilQty, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fname" class="text-right control-label col-form-label"><strong id="total"></strong></label>
+                        @*@Html.TextBoxFor(Model => Model.OilQty, null, new { @class = "form-control input-sm" })*@
+                    </div>
+                    <div class="col-md-2">
+                        <div style="MARGIN-TOP: 25px; display: none;">
+                            <button class="btn btn-success btn-sm" type="button" id="Savejob"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save Job</strong></button>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div style="MARGIN-TOP: 25px;display:none;">
+                            <button class="btn btn-success btn-sm" type="button" id="Deletejob"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Delete Job</strong></button>
+                        </div>
+                    </div>
+                    <div class="col-md-3" style="margin: 25px 0 0 0;">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Stage</strong></label>
+                        @Html.DropDownListFor(model => model.STAGE_Code, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                        <strong>@Html.ValidationMessageFor(model => model.STAGE_Code, "", new { @class = "text-danger" })</strong>
+
+                    </div>
+                    <div class="col-md-1">
+                        <div style="MARGIN-TOP: 25px;">
+                            <button class="btn btn-success btn-sm" type="button" id="Print"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Print</strong></button>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="TractorStagePrint" />
+<input type="hidden" id="TractorAutoid" />
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+@*<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>*@
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.js")"></script>
+<link href="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.css")" rel="stylesheet" />
+
+
+<script>
+
+    $(document).ready(function () {
+        $.noConflict();
+        DDLPlant();
+        BindStage();
+        AutoComplete();
+    });
+
+
+    function AutoComplete() {
+    $("#ITEM_CODE").autocomplete({
+            source: function (request, response) {
+
+                var Data = {
+                    PLANTCODE: $('#PLANTCODE').val(),
+                    FAMILYCODE: $('#FAMILYCODE').val(),
+                    ITEM_CODE: $('#ITEM_CODE').val()
+                };
+                $.ajax({
+                    url:  '@Url.Action("FillITEMCODE", "RollDown")',
+                    type: "POST",
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify({ data: Data }),
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            /*console.log(item.DESCRIPTION);*/
+                            return { label: item.Text, value: item.Text };
+                        }))
+                    },
+
+                    error: function (err) {
+                        alert(err);
+                    }
+
+                });
+
+            },
+
+            minLength: 4
+
+        });
+    };
+
+
+
+    $("#PLANTCODE").on("change", function () {
+        DDLFamilyByPlant();
+    });
+    $("#PLANTCODE").on("change", function () {
+        BindStage();
+    });
+    $("#FAMILYCODE").on("change", function () {
+        BindStage();
+    });
+    //Function to bind Plant
+    function DDLPlant() {
+        //$("#divLoader").show();
+        $.ajax({
+            url: '@Url.Action("BindPlant", "RollDown")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#PLANTCODE").append(optionhtml);
+                });
+
+
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    function BindStage() {
+        var plantselectedValue = $("#PLANTCODE").val();
+        var familyselectedValue = $("#FAMILYCODE").val();
+        //$("#divLoader").show();
+        $.ajax({
+            url: '@Url.Action("BindStages", "RollDown")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: plantselectedValue, family: familyselectedValue }),
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#STAGE_Code").append(optionhtml);
+                });
+
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        //$("#divLoader").show();
+        var selectedValue = $("#PLANTCODE").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "RollDown")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#FAMILYCODE").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#FAMILYCODE").append(optionhtml);
+                });
+                //BindGrid();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    $('#ITEM_CODE').on("change", function () {
+        gleSearch_EditValueChanged();
+        //NewTractorCode();
+    });
+
+
+    function gleSearch_EditValueChanged() {
+
+        if ($('#ITEM_CODE').val() != "") {
+            var itemCode = $('#ITEM_CODE').val();
+            const myArray = itemCode.split("#");
+            var Data = {
+                PLANTCODE: $('#PLANTCODE').val(),
+                FAMILYCODE: $('#FAMILYCODE').val(),
+                ITEM_CODE: myArray[0]
+            };
+        } else {
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("BindData", "RollDown")',
+            data: JSON.stringify({ obj: Data }),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+
+
+                if (data.Msg != "") {
+                    $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+
+                }
+                else {
+
+                    if (data.Result.Transmission != "" && data.Result.Transmission != null) {
+                        $("#Transmission").val(data.Result.Transmission);
+                    }
+                    if (data.Result.RearAxel != "" && data.Result.RearAxel != null) {
+                        $("#RearAxel").val(data.Result.RearAxel);
+                    }
+                    if (data.Result.Engine != "" && data.Result.Engine != null) {
+                        $("#Engine").val(data.Result.Engine);
+                    }
+                    if (data.Result.Backend != "" && data.Result.Backend != null) {
+                        $("#Backend").val(data.Result.Backend);
+                    }
+                    if (data.Result.Hydraulic != "" && data.Result.Hydraulic != null) {
+                        $("#Hydraulic").val(data.Result.Hydraulic);
+                    }
+                    if (data.Result.RearSrnn1 != "" && data.Result.RearSrnn1 != null) {
+                        $("#RearSrnn1").val(data.Result.RearSrnn1);
+                    }
+                    if (data.Result.RearSrnn2 != "" && data.Result.RearSrnn2 != null) {
+                        $("#RearSrnn2").val(data.Result.RearSrnn2);
+                    }
+                    if (data.Result.FrontSrnn1 != "" && data.Result.FrontSrnn1 != null) {
+                        $("#FrontSrnn1").val(data.Result.FrontSrnn1);
+                    }
+                    if (data.Result.FrontSrnn2 != "" && data.Result.FrontSrnn2 != null) {
+                        $("#FrontSrnn2").val(data.Result.FrontSrnn2);
+                    }
+                    if (data.Result.Battery != "" && data.Result.Battery != null) {
+                        $("#Battery").val(data.Result.Battery);
+                    }
+                    if (data.Result.HydrualicPump != "" && data.Result.HydrualicPump != null) {
+                        $("#HydrualicPump").val(data.Result.HydrualicPump);
+                    }
+                    if (data.Result.SteeringMotor != "" && data.Result.SteeringMotor != null) {
+                        $("#SteeringMotor").val(data.Result.SteeringMotor);
+                    }
+                    if (data.Result.SteeringAssem != "" && data.Result.SteeringAssem != null) {
+                        $("#SteeringAssem").val(data.Result.SteeringAssem);
+                    }
+                    if (data.Result.SteeringCylinder != "" && data.Result.SteeringCylinder != null) {
+                        $("#SteeringCylinder").val(data.Result.SteeringCylinder);
+                    }
+                    if (data.Result.Radiator != "" && data.Result.Radiator != null) {
+                        $("#Radiator").val(data.Result.Radiator);
+                    }
+                    if (data.Result.Cluster != "" && data.Result.Cluster != null) {
+                        $("#Cluster").val(data.Result.Cluster);
+                    }
+                    if (data.Result.Alternator != "" && data.Result.Alternator != null) {
+                        $("#Alternator").val(data.Result.Alternator);
+                    }
+                    if (data.Result.Motor != "" && data.Result.Motor != null) {
+                        $("#Motor").val(data.Result.Motor);
+                    }
+                    if (data.Result.RearRIM1 != "" && data.Result.RearRIM1 != null) {
+                        $("#RearRIM1").val(data.Result.RearRIM1);
+                    }
+                    if (data.Result.RearRIM2 != "" && data.Result.RearRIM2 != null) {
+                        $("#RearRIM2").val(data.Result.RearRIM2);
+                    }
+                    if (data.Result.FrontRIM1 != "" && data.Result.FrontRIM1 != null) {
+                        $("#FrontRIM1").val(data.Result.FrontRIM1);
+                    }
+                    if (data.Result.FrontRIM2 != "" && data.Result.FrontRIM2 != null) {
+                        $("#FrontRIM2").val(data.Result.FrontRIM2);
+                    }
+                    if (data.Result.RearTyre1 != "" && data.Result.RearTyre1 != null) {
+                        $("#RearTyre1").val(data.Result.RearTyre1);
+                    }
+                    if (data.Result.RearTyre2 != "" && data.Result.RearTyre2 != null) {
+                        $("#RearTyre2").val(data.Result.RearTyre2);
+                    }
+                    if (data.Result.FrontTyre1 != "" && data.Result.FrontTyre1 != null) {
+                        $("#FrontTyre1").val(data.Result.FrontTyre1);
+                    }
+                    if (data.Result.FrontTyre2 != "" && data.Result.FrontTyre2 != null) {
+                        $("#FrontTyre2").val(data.Result.FrontTyre2);
+                    }
+                    if (data.Result.Srno != "" && data.Result.Srno != null) {
+                        $("#Srno").val(data.Result.Srno);
+                    }
+                    if (data.Result.IMEI != "" && data.Result.IMEI != null) {
+                        $("#IMEI").val(data.Result.IMEI);
+                    }
+                    if (data.Result.MOBILE != "" && data.Result.MOBILE != null) {
+                        $("#MOBILE").val(data.Result.MOBILE);
+                    }
+                    if (data.Result.IMEI != "" && data.Result.IMEI != null) {
+                        $("#IMEI").val(data.Result.IMEI);
+                    }
+                    if (data.Result.IMEI != "" && data.Result.IMEI != null) {
+                        $("#IMEI").val(data.Result.IMEI);
+                    }
+                    if (data.Result.TractorStagePrint != "" && data.Result.TractorStagePrint != null) {
+                        $("#TractorStagePrint").val(data.Result.TractorStagePrint);
+                    }
+                    if (data.Result.TractorAutoid != "" && data.Result.TractorAutoid != null) {
+                        $("#TractorAutoid").val(data.Result.TractorAutoid);
+                    }
+                }
+
+            },
+            error: function (errormessage) {
+
+            }
+        });
+
+    };
+
+    $('#Print').on('click', function () {
+        printData();
+        //NewTractorCode();
+    });
+    function printData() {
+
+        if ($('#ITEM_CODE').val() != "") {
+            var itemCode = $('#ITEM_CODE').val();
+            var stagecode = $("#STAGE_Code").val();
+            if (stagecode == undefined && stagecode == "") {
+                $('#alert').append('<div class="alert alert-danger role = "alert"><strong>Please Select Stage</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                setTimeout(function () {
+                    $.each($('.alert'), function () {
+                        closeAlert(this);
+                    });
+                }, 500);
+                return;
+            }
+            const myArray = itemCode.split("#");
+            var Data = {
+                PLANTCODE: $('#PLANTCODE').val(),
+                FAMILYCODE: $('#FAMILYCODE').val(),
+                STAGE_Code: stagecode,
+                Transmission: $('#Transmission').val(),
+                RearAxel: $('#RearAxel').val(),
+                Hydraulic: $('#Hydraulic').val(),
+                Engine: $('#Engine').val(),
+                Skid: $('#Skid').val(),
+                RearSrnn1: $('#RearSrnn1').val(),
+                RearRIM1: $('#RearRIM1').val(),
+                RearTyre1: $('#RearTyre1').val(),
+                FrontSrnn1: $('#FrontSrnn1').val(),
+                FrontRIM1: $('#FrontRIM1').val(),
+                FrontTyre1: $('#FrontTyre1').val(),
+                RearSrnn2: $('#RearSrnn2').val(),
+                RearRIM2: $('#RearRIM2').val(),
+                RearTyre2: $('#RearTyre2').val(),
+                FrontSrnn2: $('#FrontSrnn2').val(),
+                FrontRIM2: $('#FrontRIM2').val(),
+                FrontTyre2: $('#FrontTyre2').val(),
+                Battery: $('#Battery').val(),
+                BatMake: $('#BatMake').val(),
+                HydrualicPump: $('#HydrualicPump').val(),
+                Radiator: $('#Radiator').val(),
+                SteeringCylinder: $('#SteeringCylinder').val(),
+                SteeringMotor: $('#SteeringMotor').val(),
+                SteeringAssem: $('#SteeringAssem').val(),
+                Alternator: $('#Alternator').val(),
+                Cluster: $('#Cluster').val(),
+                Motor: $('#Motor').val(),
+                Quantity: $('#Quantity').val(),
+                Srno: $('#Srno').val(),
+                IMEI: $('#IMEI').val(),
+                MOBILE: $('#MOBILE').val(),
+                ROPSrno: $('#ROPSrno').val(),
+                OilQty: $('#OilQty').val(),
+                TractorStagePrint: $("#TractorStagePrint").val(),
+                TractorAutoid: $("#TractorAutoid").val(),
+                ITEM_CODE: myArray[0]
+            };
+        } else {
+            return;
+        }
+        $.ajax({
+            url: '@Url.Action("PRINTDATA", "RollDown")',
+            data: JSON.stringify({ obj: Data }),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+
+
+                if (data.Msg != "") {
+                    $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+
+                }               
+
+            },
+            error: function (errormessage) {
+
+            }
+        });
+
+    };
+
+    $("#PLANTCODE,#FAMILYCODE,#STAGE_Code").select2({
+        allowClear: true,
+        width: '180px',
+    });
+</script>

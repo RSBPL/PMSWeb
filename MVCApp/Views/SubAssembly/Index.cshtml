@@ -476,7 +476,7 @@
             var FAMILYCODE = $("#FAMILYCODE").val();
             if (ITEMCODE != "" && ITEMCODE != null && ITEMCODE != "0") {
                 $.ajax({
-                    url: '../SubAssembly/FillJobsForDropdown?FAMILYCODE=' + FAMILYCODE + '&ITEMCODE=' + ITEMCODE + '&PLANTCODE' + PLANTCODE,
+                    url: '../SubAssembly/FillJobsForDropdown?FAMILYCODE=' + FAMILYCODE + '&ITEMCODE=' + ITEMCODE + '&PLANTCODE=' + PLANTCODE,
                     type: "GET",
                     contentType: "application/json;charset=UTF-8",
                     data: JSON.stringify({ PLANTCODE: PLANTCODE, optAsPerPlanning: true, FAMILYCODE: FAMILYCODE }),
