@@ -34,6 +34,15 @@
         MIN-WIDTH: 130px !important;
         MAX-HEIGHT: 30px !important;
     }
+    #PasswordPopUp .modal-lg {
+        max-width: 30% !important;
+    }
+    .important {
+        opacity: -0.5;
+    }
+    .test {
+        overflow: auto
+    }
 
 </style>
 
@@ -110,10 +119,7 @@
                             </div>
                         </fieldset>
                     </div>
-
-
                 }
-                @*<div id="Grid"></div>*@
             </div>
         </div>
         <div id="Menu2" class="tab-pane fade">
@@ -133,8 +139,8 @@
                             </div>
                             <div class="col-md-3">
                                 <label for="RBackend" class="text-right control-label col-form-label"><strong>Backend</strong></label>
-                                @Html.TextBoxFor(Model => Model.RBackend, null, new { @class = "form-control input-sm", @autocomplete = "off" })
-                                <strong>@Html.ValidationMessageFor(model => model.RBackend, "", new { @class = "text-danger" })</strong>
+                                @Html.TextBoxFor(Model => Model.RBackendSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.RBackendSrno, "", new { @class = "text-danger" })</strong>
                             </div>
                             <div class="col-md-3">
                                 <label for="RRearAxleSrno" class="text-right control-label col-form-label"><strong>RearAxle</strong></label>
@@ -160,35 +166,82 @@
                         </div>
                     </fieldset>
                 </div>
-
-                @*<div id="GridExport"></div>*@
             </div>
         </div>
 
-        @*<div id="Menu3" class="tab-pane fade">
+        <div id="Menu3" class="tab-pane fade">
             <div class="container" style="width:100%!important">
                 <div class="form-horizontal form-group ">
                     <fieldset class="the-fieldset bg-info">
                         <div class="row">
-                            <div class="col-md-4">
-                                <label for="TyreName" class="text-right control-label col-form-label"><strong>Tyre Manufacturer</strong></label>
-                                @Html.TextBoxFor(Model => Model.TyreName, null, new { @class = "form-control input-sm", @autocomplete = "off" })
-                                <strong>@Html.ValidationMessageFor(model => model.TyreName, "", new { @class = "text-danger" })</strong>
+                            <div class="col-md-3">
+                                <label for="MPlant" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                                @Html.DropDownListFor(model => model.MPlant, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.MPlant, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="MFamily" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                                @Html.DropDownListFor(model => model.MFamily, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.MFamily, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="MBackendSrno" class="text-right control-label col-form-label"><strong>Backend</strong></label>
+                                @Html.TextBoxFor(Model => Model.MBackendSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.MBackendSrno, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3" >
+                                <label for="MRearAxleSrno" class="text-right control-label col-form-label"><strong>RearAxle</strong></label>
+                                @Html.TextBoxFor(Model => Model.MRearAxleSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.MRearAxleSrno, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3" >
+                                <label for="MTransmissionSrno" class="text-right control-label col-form-label"><strong>Transmission</strong></label>
+                                @Html.TextBoxFor(Model => Model.MTransmissionSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.MTransmissionSrno, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3" >
+                                <label for="MHydraulicSrno" class="text-right control-label col-form-label"><strong>Hydraulic</strong></label>
+                                @Html.TextBoxFor(Model => Model.MHydraulicSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.MHydraulicSrno, "", new { @class = "text-danger" })</strong>
                             </div>
                             <div class="col-md-1" style="padding-top: 23px;">
-                                <button class="btn btn-success btn-sm" type="button" id="AddTyre"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
-                                <button class="btn btn-success btn-sm" type="button" id="UpdateTyre"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Update</strong></button>
+                                <button class="btn btn-success btn-sm" type="button" id="AddModify" data-toggle="modal" data-target="#PasswordPopUp"><i class="ace-icon fa fa-print bigger-110"></i><strong>Modify</strong></button>
                             </div>
                             <div class="col-md-1" style="padding-top: 23px;">
-                                <button class="btn btn-default btn-sm" type="button" id="ClearTyre"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                                <button class="btn btn-default btn-sm" type="button" id="ClearModify"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
                             </div>
                         </div>
                     </fieldset>
                 </div>
-                <div id="GridTyre"></div>
             </div>
-        </div>*@
+        </div>
 
+    </div>
+</div>
+
+<div class="modal fade" id="PasswordPopUp"  role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Enter Password</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="ORDERBY" class="col-form-label">Password</label>
+                            @Html.TextBoxFor(Model => Model.Password, null, new { @class = "form-control input-sm", type = "password" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="PasswordSubmit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
     </div>
 </div>
 
@@ -203,6 +256,7 @@
     $(document).ready(function () {
         DDLPlant();
         DDLReprintPlant();
+        DDLModifytPlant();
     });
     $("#Plant").on("change", function () {
         DDLFamilyByPlant();
@@ -214,7 +268,7 @@
     $("#Backend").on("change", function () {
         DDLBindJob();
     });
-          //Function to bind Plant
+    //Function to bind Plant
     function DDLPlant() {
         $.ajax({
             url: '@Url.Action("BindPlant", "BackendPartModification")',
@@ -232,7 +286,7 @@
             }
         });
     };
-      //Function to bind Family by Plant
+    //Function to bind Family by Plant
     function DDLFamilyByPlant() {
         var selectedValue = $("#Plant").val();
         $.ajax({
@@ -370,6 +424,10 @@
     $("#Clear").on("click", function () {
         location.reload(true);
     });
+    function closeAlert(alert) {
+
+        $(alert).hide();
+    };
 
     /**************************************reprint********************************************/
 
@@ -377,7 +435,11 @@
     $("#RPlant").on("change", function () {
         DDLReprintFamilyByPlant();
     });
-         //Function to bind Plant
+    $("#RBackendSrno").on("change", function () {
+        GetSerialNo();
+    });
+
+    //Function to bind Plant
     function DDLReprintPlant() {
         $.ajax({
             url: '@Url.Action("BindReprintPlant", "BackendPartModification")',
@@ -395,7 +457,7 @@
             }
         });
     };
-      //Function to bind Family by Plant
+    //Function to bind Family by Plant
     function DDLReprintFamilyByPlant() {
         var selectedValue = $("#RPlant").val();
         $.ajax({
@@ -417,6 +479,101 @@
         });
     };
 
+    function GetSerialNo() {
+            var Data = {
+                RBackendSrno: $('#RBackendSrno').val(),
+                RPlant: $('#RPlant').val(),
+                RFamily: $('#RFamily').val()
+            };
+        $.ajax({
+            url: '@Url.Action("GetSerialNo", "BackendPartModification")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.Msg != "") {
+                    $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+
+                }
+                else {
+
+                    if (data.Result.RRearAxleSrno != "" && data.Result.RRearAxleSrno != null) {
+                        $("#RRearAxleSrno").val(data.Result.RRearAxleSrno);
+
+                    }
+                    if (data.Result.RTransmissionSrno != "" && data.Result.RTransmissionSrno != null) {
+                        $("#RTransmissionSrno").val(data.Result.RTransmissionSrno);
+
+                    }
+                    if (data.Result.RHydraulicSrno != "" && data.Result.RHydraulicSrno != null) {
+                        $("#RHydraulicSrno").val(data.Result.RHydraulicSrno);
+                    }
+                   /* $('#RBackendSrno').prop('disabled', true);*/
+                    $('#RRearAxleSrno').prop('disabled', true);
+                    $('#RTransmissionSrno').prop('disabled', true);
+                    $('#RHydraulicSrno').prop('disabled', true);
+                }
+
+            },
+            error: function (errormessage) {
+
+            }
+        });
+
+    };
+
+    $("#AddReprint").on("click", function () {
+            $("#divLoader").show();
+            var data = {
+                RPlant: $('#RPlant').val(),
+                RFamily: $('#RFamily').val(),
+                RBackendSrno: $('#RBackendSrno').val(),
+                RRearAxleSrno: $("#RRearAxleSrno").val(),
+                RTransmissionSrno: $("#RTransmissionSrno").val(),
+                RHydraulicSrno: $("#RHydraulicSrno").val()
+            };
+            $.ajax({
+                url: '@Url.Action("Reprint", "BackendPartModification")',
+                data: JSON.stringify(data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        //$('#RearAxleSrno').val("");
+                        //$('#TransmissionSrno').val("");
+                    }
+
+                },
+                error: function (errormessage) {
+
+                }
+            });
+
+    });
+
     $("#RPlant").select2({
         allowClear: true,
         width: '315px',
@@ -426,6 +583,216 @@
         width: '315px',
     });
     $("#ClearReprint").on("click", function () {
+        location.reload(true);
+    });
+
+    /**************************************PartModify********************************************/
+    $("#MPlant").on("change", function () {
+        DDLModifyFamilyByPlant();
+    });
+    $("#MBackendSrno").on("change", function () {
+        GetModifySerialNo();
+    });
+
+    //Function to bind Plant
+    function DDLModifytPlant() {
+        $.ajax({
+            url: '@Url.Action("BindModifyPlant", "BackendPartModification")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#MPlant").append(optionhtml);
+                });
+                DDLModifyFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    //Function to bind Family by Plant
+    function DDLModifyFamilyByPlant() {
+        var selectedValue = $("#MPlant").val();
+        $.ajax({
+            url: '@Url.Action("BindModifyFamily", "BackendPartModification")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ MPlant: selectedValue }),
+            success: function (result) {
+                $("#MFamily").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#MFamily").append(optionhtml);
+                });
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    function GetModifySerialNo() {
+            var Data = {
+                MBackendSrno: $('#MBackendSrno').val(),
+                MPlant: $('#MPlant').val(),
+                MFamily: $('#MFamily').val()
+            };
+        $.ajax({
+            url: '@Url.Action("GetModifySerialNo", "BackendPartModification")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.Msg != "") {
+                    $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+
+                }
+                else {
+
+                    if (data.Result.MRearAxleSrno != "" && data.Result.MRearAxleSrno != null) {
+                        $("#MRearAxleSrno").val(data.Result.MRearAxleSrno);
+
+                    }
+                    if (data.Result.MTransmissionSrno != "" && data.Result.MTransmissionSrno != null) {
+                        $("#MTransmissionSrno").val(data.Result.MTransmissionSrno);
+
+                    }
+                    if (data.Result.MHydraulicSrno != "" && data.Result.MHydraulicSrno != null) {
+                        $("#MHydraulicSrno").val(data.Result.MHydraulicSrno);
+                    }
+                    //var ele = document.querySelectorAll('[id="abc"]');
+                    //for (i = 0; i < ele.length; i++) {
+                    //    ele[i].disabled = true;
+                    //}
+                    /*$('#MBackendSrno').prop('disabled', true);*/
+                    //$('#MRearAxleSrno').prop('disabled', true);
+                    //$('#MTransmissionSrno').prop('disabled', true);
+                    //$('#MHydraulicSrno').prop('disabled', true);
+                }
+
+            },
+            error: function (errormessage) {
+
+            }
+        });
+
+    };
+
+    function AddModify() {
+    /*$("#AddModify").on("click", function () {*/
+            $("#divLoader").show();
+            var data = {
+                MPlant: $('#MPlant').val(),
+                MFamily: $('#MFamily').val(),
+                MBackendSrno: $('#MBackendSrno').val(),
+                MRearAxleSrno: $("#MRearAxleSrno").val(),
+                MTransmissionSrno: $("#MTransmissionSrno").val(),
+                MHydraulicSrno: $("#MHydraulicSrno").val()
+            };
+            $.ajax({
+                url: '@Url.Action("SaveModify", "BackendPartModification")',
+                data: JSON.stringify(data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+
+                        //$('#RearAxleSrno').val("");
+                        //$('#TransmissionSrno').val("");
+                    }
+
+                },
+                error: function (errormessage) {
+
+                }
+            });
+
+    }
+
+    $("#PasswordSubmit").on("click", function () {
+        ChkPassword();
+    });
+
+
+    function ChkPassword() {
+        $("#divLoader").show();
+        var data = {
+            MPlant: $('#MPlant').val(),
+            MFamily: $('#MFamily').val(),
+            Password: $('#Password').val()
+        };
+        $.ajax({
+            url: '@Url.Action("PasswordPopup", "BackendPartModification")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#PasswordPopUp").hide();
+                $(".modal-backdrop").hide();
+                $(".modal-backdrop").addClass("important");
+                $("#divLoader").hide();
+                if (data.Msg == "Valid Password") {
+                    var chk = confirm("Are you sure you want to Update this?");
+                    if (chk == true) {
+                        $('body').addClass("test");
+                        $(window).scrollTop(0);
+                        AddModify();
+                    }
+                } else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    $('body').addClass("test");
+                    $(window).scrollTop(0);
+                }
+            },
+            error: function (errormessage) {
+
+            }
+        });
+
+    };
+
+    $("#MPlant").select2({
+        allowClear: true,
+        width: '315px',
+    });
+    $("#MFamily").select2({
+        allowClear: true,
+        width: '315px',
+    });
+    $("#ClearModify").on("click", function () {
         location.reload(true);
     });
 </script>

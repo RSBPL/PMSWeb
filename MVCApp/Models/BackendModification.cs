@@ -30,10 +30,20 @@ namespace MVCApp.Models
 
         public string RPlant { get; set; }
         public string RFamily { get; set; }
-        public string RBackend { get; set; }
+        public string RBackendSrno { get; set; }
         public string RRearAxleSrno { get; set; }
         public string RTransmissionSrno { get; set; }
         public string RHydraulicSrno { get; set; }
+
+        /*-----------------------------------PartModification---------------------------------------------*/
+
+        public string MPlant { get; set; }
+        public string MFamily { get; set; }
+        public string MBackendSrno { get; set; }
+        public string MRearAxleSrno { get; set; }
+        public string MTransmissionSrno { get; set; }
+        public string MHydraulicSrno { get; set; }
+        public string Password { get; set; }
 
 
     }
