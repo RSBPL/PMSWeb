@@ -389,7 +389,9 @@
     <Compile Include="Models\EngineAssembly.cs" />
     <Compile Include="Models\EngineModel.cs" />
     <Compile Include="Models\FIPModel.cs" />
+    <Compile Include="Models\PrintLabel.cs" />
     <Compile Include="Models\RollDown.cs" />
+    <Compile Include="Models\SendtoPrinter.cs" />
     <Compile Include="Models\TracktorSubAssemblyModel.cs" />
     <Compile Include="Models\SubAssemblyModel.cs" />
     <Compile Include="Models\GateEntryModel.cs" />

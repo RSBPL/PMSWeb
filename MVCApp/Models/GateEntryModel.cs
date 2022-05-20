@@ -227,6 +227,12 @@ namespace MVCApp.Models
             }
             return tobereturn;
         }
+
+        public string queryget(string query)
+        {
+            query="update ITEM_RECEIPT_DETIALS set REPRINTED_ON=sysdate,REPRINTED_BY='" + Convert.ToString(HttpContext.Current.Session["Login_User"]) + "' where mrn_no='" + query + "'";
+            return query;   
+        }
         public void UpdateRawMeterialMaster(MRNInvoice invoice, string Family_Code)
         {
             try

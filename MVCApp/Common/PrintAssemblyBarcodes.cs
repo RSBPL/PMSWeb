@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -161,7 +162,7 @@ namespace MVCApp.Common
                 }
                 if (subAssembly.PrintMode.Equals("LOCAL"))
                 {
-                    //WriteDataToLabelFile(barcode);
+                    WriteDataToLabelFile(barcode);
                     //if (SendtoPrinter.SendFileToPrinter(pd.PrinterSettings.PrinterName, Application.StartupPath.ToString() + "\\Label"))
                     //{
                     //    status = true;
@@ -1543,6 +1544,7 @@ namespace MVCApp.Common
         }
         public bool GenerateGateBarcode(string mode, string PRINTER_IP, string PRINTER_PORT, MRNInvoice invoice, DateTime printtime, bool copy2, string Family)
         {
+            PrinterSettings settings = new PrinterSettings();
             bool status = false;
             try
             {
@@ -1581,12 +1583,12 @@ namespace MVCApp.Common
                         query = query.Replace("MU", invoice.STORE_LOCATION);
                         query = query.Replace("SAMPLE", invoice.SAMPLE);
                         barcodedata += "\n" + query + "\n";
+                       
                     }
-
 
                     if (!string.IsNullOrEmpty(barcodedata))
                     {
-                        status = PrintStandardLabelByUser(barcodedata, HttpContext.Current.Session["Login_User"].ToString().ToUpper().Trim(), plant.Trim(), family.Trim());
+                        status = PrintStandardLabel(barcodedata, "LABEL", plant.Trim(), family.Trim());
                     }
 
                 }
@@ -1605,7 +1607,7 @@ namespace MVCApp.Common
             {
                 //PrintDialog pd = new PrintDialog();
                 string prnfilename = GetPrnCode(Convert.ToString(subAssembly.Family).Trim().ToUpper());
-                string query = string.Empty, itemname1 = "", itemname2 = "", barcode = string.Empty;
+                string query = string.Empty, itemname1 = "", itemname2 = "", barcode = string.Empty, PRINTER_IP = string.Empty, PRINTER_PORT = string.Empty;
                 getNameSubAssembly(subAssembly.DESCRIPTION.Trim().ToUpper(), ref itemname1, ref itemname2);
                 for (int i = 1; i <= copies; i++)
                 {
@@ -1649,33 +1651,33 @@ namespace MVCApp.Common
                         barcode = barcode + query;
                     }
                 }
-                //if (subAssembly.PrintMode.Equals("LOCAL"))
-                //{
-                //    //WriteDataToLabelFile(barcode);
-                //    if (SendtoPrinter.SendFileToPrinter(pd.PrinterSettings.PrinterName, Application.StartupPath.ToString() + "\\Label"))
-                //    {
-                //        status = true;
-                //    }
-                //}
-                //else
-                //{
-                //    string result = GetPrintterIPAddress(subAssembly.Stage);
-                //    if (!string.IsNullOrEmpty(result))
-                //    {
-                //        PRINTER_IP = result.Split('#')[0].Trim();
-                //        PRINTER_PORT = result.Split('#')[1].Trim();
-                //        if (string.IsNullOrEmpty(PRINTER_IP) || string.IsNullOrEmpty(PRINTER_PORT))
-                //        {
-                //            throw new Exception("Printer Ip address not define for this stage");
-                //        }
-                //        if (PrintLabelViaNetwork(barcode, "", PRINTER_IP, Convert.ToInt16(PRINTER_PORT)))
-                //        {
-                //            status = true;
-                //        }
-                //    }
-                //    else
-                //        throw new Exception("Printer Ip address not define for this stage");
-                //}
+                if (subAssembly.PrintMode.Equals("LOCAL"))
+                {
+                    WriteDataToLabelFile(barcode);
+                    //if (SendtoPrinter.SendFileToPrinter(pd.PrinterSettings.PrinterName, Application.StartupPath.ToString() + "\\Label"))
+                    //{
+                    //    status = true;
+                    //}
+                }
+                else
+                {
+                    string result = GetPrintterIPAddress(subAssembly.Stage);
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                        PRINTER_IP = result.Split('#')[0].Trim();
+                        PRINTER_PORT = result.Split('#')[1].Trim();
+                        if (string.IsNullOrEmpty(PRINTER_IP) || string.IsNullOrEmpty(PRINTER_PORT))
+                        {
+                            throw new Exception("Printer Ip address not define for this stage");
+                        }
+                        if (PrintLabelViaNetwork(barcode, "", PRINTER_IP, Convert.ToInt16(PRINTER_PORT)))
+                        {
+                            status = true;
+                        }
+                    }
+                    else
+                        throw new Exception("Printer Ip address not define for this stage");
+                }
 
                 if (!string.IsNullOrEmpty(barcode))
                 {
@@ -1686,6 +1688,33 @@ namespace MVCApp.Common
             }
             catch { throw; }
             finally { }
+        }
+        public void WriteDataToLabelFile(string data)
+        {
+            try
+            {
+                StreamWriter swrite = null;
+                if (File.Exists(System.IO.Directory.GetCurrentDirectory() + "\\Label"))
+                {
+                    File.Delete(System.IO.Directory.GetCurrentDirectory() + "\\Label");
+                }
+
+                swrite = File.AppendText(System.IO.Directory.GetCurrentDirectory() + "\\Label");
+                swrite.WriteLine(data);
+                swrite.Flush();
+                if (swrite != null)
+                {
+                    swrite.Dispose();
+                    swrite.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show("Module WriteDataToLabelFile: " + ex.Message, PubFun.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            { }
+
         }
         public string GetPrnCode(string family)
         {
@@ -1742,6 +1771,44 @@ namespace MVCApp.Common
             finally
             { }
 
+        }
+        public void Record_Reprint(string ITEMCODE, string SRNO, string JOB, string plant,string family)
+        {
+            try
+            {
+                //    if(Convert.ToString(cmbOfflineItems.SelectedValue)=="HYD")
+                query = @"insert into XXES_REPRINT_LABEL(PLANT_CODE,FAMILY_CODE,STAGE,LOGIN_USER,PRINT_DATE,ITEM_CODE,SRNO,JOB) values ('" + Convert.ToString(plant).Trim().ToUpper() + "','" + Convert.ToString(family).Trim().ToUpper() + "','" + Convert.ToString("JOB LABEL").Trim().ToUpper() + "','" + Convert.ToString(HttpContext.Current.Session["Login_User"].ToString()) + "',SYSDATE,'" + ITEMCODE.Trim() + "','" + SRNO.Trim() + "','" + JOB.Trim() + "')";
+                //else
+                //    query = @"insert into XXES_REPRINT_LABEL(PLANT_CODE,FAMILY_CODE,STAGE,LOGIN_USER,PRINT_DATE) values ('" + Convert.ToString(cmbPlant.SelectedValue).Trim().ToUpper() + "','" + Convert.ToString(cmbFamily.SelectedValue).Trim().ToUpper() + "','" + Convert.ToString(cmbOfflineItems.SelectedValue).Trim().ToUpper() + "','" + Convert.ToString(PubFun.Login_User).ToUpper() + "',SYSDATE)";
+                fun.EXEC_QUERY(query);
+            }
+            catch (Exception ex) { }
+            finally { }
+        }
+        public bool RecordPDIOK(Tractor tractor)
+        {
+            try
+            {
+                //query = string.Format(@"update xxes_job_status set PDIOKDATE=SYSDATE+  (1/1440*12),
+                //PDIDONEBY='{0}' where fcode_srlno='{1}' and PDIOKDATE is null", PubFun.Login_User, tractor.TSN);
+                //EXEC_QUERY(query);
+                query = string.Format(@"update xxes_job_status set PDIOKDATE=SYSDATE,
+                PDIDONEBY='{0}' where fcode_srlno='{1}' and PDIOKDATE is null", HttpContext.Current.Session["Login_User"].ToString(), tractor.TSN);
+                return fun.EXEC_QUERY(query);
+                //query = string.Format(@"select count(*) from XXES_PDIOK Where TSN='{0}'",
+                //    tractor.TSN);
+                //if (!CheckExits(query))
+                //{
+                //    query = string.Format(@"insert into XXES_PDIOK(plant_code,family_code,TSN,CREATEDBY) 
+                //values('{0}','{1}','{2}','{3}')", tractor.PLANT, tractor.FAMILY, tractor.TSN, PubFun.Login_User);
+                //    EXEC_QUERY(query);
+                //}
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }
