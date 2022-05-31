@@ -11,6 +11,7 @@ using MVCApp.CommonFunction;
 using System.Configuration;
 using System.IO;
 using System.Threading;
+using System.Net.Mail;
 
 namespace MVCApp.CommonFunction
 {
@@ -1205,6 +1206,42 @@ namespace MVCApp.CommonFunction
             }
         }
 
+        public List<DDLTextValue> Fill_All_Stage()
+        {
+            DataTable TmpDs = new DataTable();
+            List<DDLTextValue> Family = new List<DDLTextValue>();
+            try
+            {
+
+                string query = "SELECT  stage_description, OFFLINE_KEYCODE || '#' || STAGE_ID stage_id FROM xxes_stage_master ";
+                TmpDs = returnDataTable(query);
+
+
+                if (TmpDs.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in TmpDs.AsEnumerable())
+                    {
+
+                        Family.Add(new DDLTextValue
+                        {
+                            Text = dr["stage_description"].ToString(),
+                            Value = dr["stage_id"].ToString(),
+                        });
+
+                    }
+                }
+                return Family;
+            }
+            catch (Exception ex)
+            {
+                LogWrite(ex);
+                return Family;
+            }
+            finally
+            {
+                //ConClose();
+            }
+        }
         public List<DDLTextValue> Fill_All_Stage_ByPlantAndFamily(string plant, string family)
         {
             DataTable TmpDs = new DataTable();
@@ -1241,7 +1278,6 @@ namespace MVCApp.CommonFunction
                 //ConClose();
             }
         }
-
         public bool UpdateFamilySerial(ItemModel itemModel)
         {
             bool result = false;
@@ -2175,10 +2211,9 @@ namespace MVCApp.CommonFunction
 
         public void LogWrite(Exception ex)
         {
-            _readWriteLock.EnterWriteLock();
             try
             {
-                _readWriteLock.EnterWriteLock();
+                //_readWriteLock.EnterWriteLock();
                 if (ex.Message != "Thread was being aborted." || ex.Message != "The ConnectionString property has not been initialized.")
                 {
                     string DirectoryPath = HttpContext.Current.Server.MapPath("~/LogFiles/");
@@ -2205,11 +2240,7 @@ namespace MVCApp.CommonFunction
             }
             finally
             {
-                _readWriteLock.EnterWriteLock();
-            }
-            finally
-            {
-                _readWriteLock.ExitWriteLock();
+                //_readWriteLock.EnterWriteLock();
             }
         }
 
@@ -6874,6 +6905,22 @@ namespace MVCApp.CommonFunction
                 LogWrite(ex);
             }
         }
+        public void Insert_Part_Audit_DataNEW(string plant, string family, string Item_code, string Item_SrNo, string Part_Itemcode, string Part_Desc, string Remarks1, string Remarks2, string NEW_Part,string NEW_PART_DESC,string TrancationType,int TransactionNumber)
+        {
+            try
+            {
+                DateTime ServerDateTime = GetServerDateTime().Date;
+                string query = @"INSERT INTO XXES_PARTS_AUDIT_DATA(PLANT_CODE,FAMILY_CODE,ITEM_CODE,ENTRYDATE,PART_ITEM_CODE,OLD_PART_DESC,REMARKS1,REMARKS2,PART_NEW_ITEMCODE,NEW_PART_DESC,LOGIN_USER,SYSTEM,PART_DESC,TRANSACTION_NUMBER) 
+                                values('" + plant.Trim().ToUpper() + "','" + family.Trim().ToUpper() + "','" + Item_code.Trim().ToUpper() + "',SYSDATE,'"
+                                          + Part_Itemcode.Trim().ToUpper() + "','" + Part_Desc.Trim().ToUpper() + "','" + Remarks1.Trim() + "','" + Remarks2.Trim() + "','" + NEW_Part.Trim().ToUpper() + "','" + NEW_PART_DESC.Trim().ToUpper() + "','" + HttpContext.Current.Session["Login_User"] + "','" + GetUserIP().Trim() + "','" + TrancationType.Trim().ToUpper() + "'," + TransactionNumber + ")";
+                EXEC_QUERY(query);
+            }
+            catch (Exception ex)
+            {
+                LogWrite(ex);
+            }
+        }
+
         public void InsertBarcodeData(string PlantCode, string FamilyCode, string ItemCode, string EngineSrNo, string MarkMonth, string MarkDate, string MarkYear,
        string MarkTime, string VendorCode, string SrNo, string HeatCode, string Remark1, string BarcodeData)
         {
@@ -8742,6 +8789,100 @@ namespace MVCApp.CommonFunction
                 }
             }
             return IsReady;
+        }
+
+        public string SendMails(string Module, string MailBody, string MailSubject, string Email_To, string Email_CC,
+       string Username)
+        {
+            if (HttpContext.Current.Session["Login_User"].ToString() != "rs")
+            {
+                string MAIL_PRIORITY = string.Empty;
+                string SMTP_SERVER = string.Empty;
+                string LOGIN_EMAIL = string.Empty;
+                string PASSWORD = string.Empty;
+                string IS_SSL = string.Empty;
+                string SMTP_PORT = string.Empty;
+                DataTable dt = new DataTable();
+                string query = string.Empty, LoggedinUser = string.Empty;
+                Function pubfun = new Function();
+                query = string.Format(@"SELECT *FROM XXES_SMTP_DETAILS");
+                dt = pubfun.returnDataTable(query);
+                if (dt.Rows.Count > 0)
+                {
+                    SMTP_SERVER = dt.Rows[0]["SMTP_SERVER"].ToString();
+                    LOGIN_EMAIL = dt.Rows[0]["SMTP_USER"].ToString();
+                    PASSWORD = dt.Rows[0]["SMTP_PASSWORD"].ToString();
+                    IS_SSL = dt.Rows[0]["SSL_ENABLE"].ToString();
+                    SMTP_PORT = dt.Rows[0]["SMTP_PORT"].ToString();
+                    MAIL_PRIORITY = dt.Rows[0]["SMTP_PRIORITY"].ToString();
+                }
+                try
+                {
+                    if (SMTP_SERVER == "" || LOGIN_EMAIL == "")
+                    {
+                        return "Kindly check the SMTP settings.";
+                    }
+
+                    MailMessage Mail = new MailMessage();
+                    Mail.Subject = MailSubject;
+                    Mail.To.Add(Email_To);
+                    if ((Email_CC != ""))
+                    {
+                        Mail.CC.Add(Email_CC);
+                    }
+
+                    Mail.BodyEncoding = System.Text.Encoding.GetEncoding("utf-8");
+                    if (MAIL_PRIORITY.ToUpper() == "NORMAL")
+                    {
+                        Mail.Priority = MailPriority.Normal;
+                    }
+                    else if (MAIL_PRIORITY.ToUpper() == "HIGH")
+                    {
+                        Mail.Priority = MailPriority.High;
+                    }
+                    else if (MAIL_PRIORITY.ToUpper() == "LOW")
+                    {
+                        Mail.Priority = MailPriority.Low;
+                    }
+
+                    Mail.From = new System.Net.Mail.MailAddress(LOGIN_EMAIL);
+                    Mail.IsBodyHtml = true;
+                    MailBody = HttpUtility.HtmlDecode(MailBody);
+                    Mail.Body = MailBody;
+                    SmtpClient sc = new SmtpClient();
+                    sc.Host = SMTP_SERVER.Trim();
+                    //sc.DeliveryMethod = SmtpDeliveryMethod.Network;
+
+                    if (SMTP_PORT.Trim() != string.Empty)
+                    {
+                        sc.Port = Convert.ToInt16(SMTP_PORT);
+                    }
+
+                    if (IS_SSL.Trim() == "1" || IS_SSL.Trim() == "Y")
+                    {
+                        sc.EnableSsl = true;
+                    }
+
+                    sc.UseDefaultCredentials = false;
+                    sc.Credentials = new System.Net.NetworkCredential(LOGIN_EMAIL, PASSWORD);
+                    sc.Send(Mail);
+                    //query = string.Format(@"INSERT INTO XXES_MAILSLOG (MODULE,USERNAME,SUBJECT,EMAIL,BODY,STATUS,REMARKS)
+                    //VALUES('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", Module, pubfun.replaceApostophi(Username), pubfun.replaceApostophi(MailSubject), Email_To, "", "SUCCESS", "-");
+                    //pubfun.EXEC_QUERY(query);
+                    Console.WriteLine("Application Has Mailed To " + Email_To + " at " + DateTime.Now.ToString() + ".");
+                    return "Application Has Mailed To " + Email_To + " at " + DateTime.Now.ToString() + ".";
+                }
+                catch (Exception ex)
+                {
+                    pubfun.LogWrite(ex);
+                    Console.WriteLine("Module SendMails : " + ex.Message.ToString());
+                    //query = string.Format(@"INSERT INTO XXES_MAILSLOG (MODULE,USERNAME,SUBJECT,EMAIL,BODY,STATUS,REMARKS)
+                    //VALUES('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", Module, pubfun.replaceApostophi(Username), pubfun.replaceApostophi(MailSubject), Email_To, "", "FAILED", pubfun.replaceApostophi(ex.Message));
+                    //pubfun.EXEC_QUERY(query);
+                    return "Error" + ex.Message.ToString();
+                }
+            }
+            return "";
         }
 
     }

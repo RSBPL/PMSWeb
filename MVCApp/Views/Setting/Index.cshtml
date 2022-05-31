@@ -30,6 +30,24 @@
     .m-top {
         margin-top: 7px;
     }
+    .lblStrng {
+        font-size: xx-large;
+        color: white;
+    }
+
+    .bg-light a {
+        color: white;
+        font-size: medium;
+        font-weight: 700;
+    }
+
+    .nav > li > a:focus, .nav > li > a:hover {
+        background-color: #6fb3e0;
+    }
+
+    .nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
+        background-color: #285b74;
+    }
 </style>
 <div id="divLoader" style="display:none;">
     <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:10%; margin-left:38%" />
@@ -54,143 +72,295 @@
         @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
         {
             @Html.AntiForgeryToken()
-        <div class="form-horizontal form-group">
-            <fieldset class="the-fieldset bg-info">
+            <div class="form-horizontal form-group">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-3 col3">
+                            <label for="Plant" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                            @Html.DropDownListFor(model => model.Plant, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.Plant, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3 ">
+                            <label for="Family" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                            @Html.DropDownListFor(model => model.Family, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.Family, "", new { @class = "text-danger" })</strong>
+                        </div>
+
+
+                    </div>
+                </fieldset>
+
                 <div class="row">
-                    <div class="col-md-3 col3">
-                        <label for="Plant" class="text-right control-label col-form-label"><strong>Plant</strong></label>
-                        @Html.DropDownListFor(model => model.Plant, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
-                        <strong>@Html.ValidationMessageFor(model => model.Plant, "", new { @class = "text-danger" })</strong>
+                    <div class="form-horizontal form-group" style="background: #438eb9; margin-left: 0; margin-right: 0;">
+                        <ul class="nav nav-pills" id="myTab">
+                            <li class="bg-light active"><a data-toggle="tab" href="#Menu1">Ganeral Setting</a></li>
+                            <li class="bg-light"><a data-toggle="tab" href="#Menu2">SMTP SETTING</a></li>
+                            <li class="bg-light"><a data-toggle="tab" href="#Menu3">INTEGRATION (Y/N)</a></li>
+                            <li class="bg-light"><a data-toggle="tab" href="#Menu4">NOTIFICATION</a></li>
+                        </ul>
+
+                        <fieldset class="the-fieldset bg-info">
+                            <div class="tab-content">
+                                <div id="Menu1" class="tab-pane fade in active">
+                                    <div class="row m-top">
+                                        <div class="col-md-6">
+                                            <fieldset class="the-fieldset bg-info">
+                                                <legend class="le">Set Mobile App Message Interval</legend>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label for="SuccessIntvl" class="text-right control-label col-form-label"><strong>Success Interval</strong></label>
+                                                        @Html.DropDownListFor(model => model.SuccessIntvl, Enumerable.Empty<SelectListItem>(), new { @class = "form-control input-sm" })
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="ErrorIntvl" class="text-right control-label col-form-label"><strong>Error Interval</strong></label>
+                                                        @Html.DropDownListFor(model => model.ErrorIntvl, Enumerable.Empty<SelectListItem>(), new { @class = "form-control input-sm" })
+                                                    </div>
+
+
+
+                                                </div>
+
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <fieldset class="the-fieldset bg-info">
+                                                <legend class="le">Display Verification Label</legend>
+                                                <label for="QtyVeriLbl" class="text-right control-label col-form-label"><strong>Select Printing Option for Quantity Verification</strong></label>
+                                                <div class="row">
+                                                    <div class="col-md-1" style="width: 6%!important;">
+                                                        @Html.CheckBoxFor(model => model.A4Sheet, new { @class = "form-control  input-sm" })
+                                                    </div>
+                                                    <div class="col-md-3" style="width: 25%!important;">
+                                                        <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>A-4 Sheet</strong></label>
+                                                    </div>
+                                                    <div class="col-md-1" style="width: 6%!important;">
+                                                        @Html.CheckBoxFor(model => model.Barcode, new { @class = "form-control  input-sm" })
+                                                    </div>
+                                                    <div class="col-md-3" style="width: 28%!important;">
+                                                        <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>BarCode</strong></label>
+                                                    </div>
+
+                                                    <div class="col-md-1" style="width: 6%!important;">
+                                                        @Html.CheckBoxFor(model => model.Quality, new { @class = "form-control  input-sm" })
+                                                    </div>
+                                                    <div class="col-md-3" style="width: 28%!important;">
+                                                        <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>Quality</strong></label>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+
+                                    <div class="row m-top">
+                                        <div class="col-md-6">
+                                            <fieldset class="the-fieldset bg-info">
+                                                <legend class="le">Kanban Label</legend>
+                                                <label for="QtyVeriLbl" class="text-right control-label col-form-label"><strong>Select Printing Option for Kanban</strong></label>
+                                                <div class="row">
+                                                    <div class="col-md-1" style="width: 7%!important;">
+                                                        @Html.RadioButtonFor(model => model.PrintingCategory, "PDF", new { id = "Pdf", @class = "form-control  input-sm", @checked = "true" })
+                                                    </div>
+                                                    <div class="col-md-2" style="width: 13%!important;">
+                                                        <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>PDF</strong></label>
+                                                    </div>
+                                                    <div class="col-md-1" style="width: 7%!important;">
+                                                        @Html.RadioButtonFor(model => model.PrintingCategory, "BARCODES", new { id = "Bar", @class = "form-control  input-sm" })
+                                                    </div>
+                                                    <div class="col-md-2" style="width: 13%!important;">
+                                                        <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>BARCODE</strong></label>
+                                                    </div>
+
+                                                </div>
+                                            </fieldset>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <fieldset class="the-fieldset bg-info">
+                                                <legend class="le">QC [From Date] Days</legend>
+                                                <label for="QCFromDays" class="text-right control-label col-form-label"><strong>Enter Number of Days</strong></label>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        @Html.TextBoxFor(Model => Model.QCFromDays, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                                    </div>
+
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                    <div class="row m-top">
+                                        <div class="col-md-6">
+                                            <fieldset class="the-fieldset bg-info">
+                                                <legend class="le">Verification Label</legend>
+                                                <label for="QtyVeriLbl" class="text-right control-label col-form-label"><strong>Select Printing Option for Verification</strong></label>
+                                                <div class="row">
+                                                    <div class="col-md-1" style="width: 7%!important;">
+                                                        @Html.RadioButtonFor(model => model.PrintVerification, "BARCODES", new { id = "VrfBar", @class = "form-control  input-sm", @checked = "true" })
+                                                    </div>
+                                                    <div class="col-md-2" style="width: 13%!important;">
+                                                        <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>BARCODE</strong></label>
+                                                    </div>
+                                                    <div class="col-md-1" style="width: 7%!important;">
+                                                        @Html.RadioButtonFor(model => model.PrintVerification, "PDF", new { id = "VrfPdf", @class = "form-control  input-sm" })
+                                                    </div>
+                                                    <div class="col-md-2" style="width: 13%!important;">
+                                                        <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>PDF</strong></label>
+                                                    </div>
+
+                                                </div>
+                                            </fieldset>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="row m-top">
+                                        <div class="col-md-1" style="padding-top: 15px;">
+                                            <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                                        </div>
+                                        <div class="col-md-1" style="padding-top: 15px;">
+                                            <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                                        </div>
+                                    </div>
+
+                                    <div id="Grid"></div>
+                                </div>
+                                <div id="Menu2" class="tab-pane fade ">
+                                    <div class="row m-top">
+                                        <div class="col-md-12">
+                                            <fieldset class="the-fieldset bg-info">
+                                                <legend class="le">SMTP</legend>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label for="SuccessIntvl" class="text-right control-label col-form-label"><strong>SMTP SERVER</strong></label>
+                                                        @Html.TextBoxFor(Model => Model.SMTPServer, null, new { @class = "form-control input-sm" })
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="col-md-1" style="width: 31% !important; margin: 23px 0 0 0;">
+                                                            @Html.CheckBoxFor(model => model.ChkSSL, new { @class = "form-control  input-sm" })
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label for="Quality" class="text-right control-label col-form-label" style="font-size: 15px; margin: 24px 0 0 -15px;"><strong>ENABLE SSL</strong></label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label for="SuccessIntvl" class="text-right control-label col-form-label"><strong>EMAIL ID</strong></label>
+                                                        @Html.TextBoxFor(Model => Model.SMTPEMAILID, null, new { @class = "form-control input-sm" })
+                                                    </div>
+                                                    <div class="col-md-3" style="margin: 20px 0 0 0;">
+                                                        <label for="ErrorIntvl" class="text-right control-label col-form-label"><strong>PASSWORD</strong></label>
+                                                        @Html.PasswordFor(Model => Model.SMTPPSWORD)
+                                                        <strong>@Html.ValidationMessageFor(model => model.SMTPPSWORD, "", new { @class = "text-danger", placeholder = "Password", autocomplete = "off" })</strong>
+
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label for="SuccessIntvl" class="text-right control-label col-form-label"><strong>PRIORITY</strong></label>
+                                                        @Html.DropDownList("PRIORITY", new List<SelectListItem>
+                                                           {
+                                                               new SelectListItem{ Text = "NORMAL",Value="NORMAL" },
+                                                               new SelectListItem{ Text = "HIGH",Value="HIGH" },
+                                                               new SelectListItem{ Text = "LOW",Value="LOW"}
+                                                           })
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label for="ErrorIntvl" class="text-right control-label col-form-label"><strong>SMTP</strong></label>
+                                                        @Html.TextBoxFor(Model => Model.SMTPPORT, null, new { @class = "form-control input-sm" })
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="col-md-1" style="padding-top: 25px;">
+                                                            <button class="btn btn-success btn-sm" type="button" id="SMTPAdd"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save SMTP</strong></button>
+                                                        </div>
+                                                        <div class="col-md-3" style="padding-top: 25px; margin: 0 0 0 105px;">
+                                                            <button class="btn btn-default btn-sm" type="button" id="SMTPTEST"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>TEST SMTP</strong></button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label for="SuccessIntvl" class="text-right control-label col-form-label"><strong>EMAIL To</strong></label>
+                                                        @Html.TextBoxFor(Model => Model.EmailTo, null, new { @class = "form-control input-sm" })
+                                                    </div>
+                                                </div>
+
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="Menu3" class="tab-pane fade ">
+                                    <div class="row">
+                                        <div class="col-md-1" style="width: 3%!important;">
+                                            @Html.CheckBoxFor(model => model.ChkPRINT_SERIAL_NUMBER, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label for="Quality" class="text-right control-label col-form-label" style="font-size: 12px; margin: 3px 0 0 -15px;"><strong>PRINT_SERIAL_NUMBER</strong></label>
+                                        </div>
+                                        <div class="col-md-1" style="width: 3%!important;">
+                                            @Html.CheckBoxFor(model => model.ChkSUB_ASSEMBLY_SERIAL_NUMBER, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label for="Quality" class="text-right control-label col-form-label" style="font-size: 12px; margin: 3px 0 0 -15px;">
+                                                <strong>SUB_ASSEMBLY_SERIAL_NUMBER</strong>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-1" style="width: 3%!important;">
+                                            @Html.CheckBoxFor(model => model.ChkFAMILY_SERIAL, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label for="Quality" class="text-right control-label col-form-label" style="font-size: 12px; margin: 3px 0 0 -15px;">
+                                                <strong>FAMILY_SERIAL</strong>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-1" style="width: 3%!important;">
+                                            @Html.CheckBoxFor(model => model.ChkSwitch_Of_Tyre_Make, new { @class = "form-control  input-sm" })
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label for="Quality" class="text-right control-label col-form-label" style="font-size: 12px; margin: 3px 0 0 -15px;">
+                                                <strong>Switch_Of_Tyre_Make</strong>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button class="btn btn-success btn-sm" type="button" id="InteTblAdd"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="Menu4" class="tab-pane fade ">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="SuccessIntvl" class="text-right control-label col-form-label"><strong>STAGE</strong></label>
+                                            <div>
+                                                @Html.DropDownList("STAGE", new List<SelectListItem>
+                                                    {
+                                                        new SelectListItem{ Text = "OIL LEVEL",Value="OIL_LEVEL" },
+                                                        new SelectListItem{ Text = "TRACTOR BOM MODIFICATION",Value="TRACTOR_BOM"}
+                                                    })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="ErrorIntvl" class="text-right control-label col-form-label"><strong>EMAIL ID</strong></label>
+                                            @Html.TextBoxFor(Model => Model.NOTIFYEMAILID, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                        <div class="col-md-1" style="margin: 25px 0 0 0;">
+                                            <button class="btn btn-success btn-sm" type="button" id="NotifyAdd"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+
+                                        </div>
+                                        @*<div class="col-md-4">
+                <label for="SuccessIntvl" class="text-right control-label col-form-label"><strong>ITEM</strong></label>
+                @Html.DropDownList("ITEM", new List<SelectListItem>
+                {
+                    new SelectListItem{ Text = "TRANSMISSION",Value="TRANSMISSION" },
+                    new SelectListItem{ Text = "REARAXEL",Value="REARAXEL"}
+                })
+            </div>*@
+                                    </div>
+                                    <div id="GridEmails"></div>
+                                </div>
+                            </div>
+
+                        </fieldset>
                     </div>
-                    <div class="col-md-3 ">
-                        <label for="Family" class="text-right control-label col-form-label"><strong>Family</strong></label>
-                        @Html.DropDownListFor(model => model.Family, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
-                        <strong>@Html.ValidationMessageFor(model => model.Family, "", new { @class = "text-danger" })</strong>
-                    </div>
-
-                    <div class="col-md-1" style="padding-top: 15px;">
-                        <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
-                    </div>
-                    <div class="col-md-1" style="padding-top: 15px;">
-                        <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
-                    </div>
-                </div>
-            </fieldset>
-            <div class="row m-top">
-                <div class="col-md-6">
-                    <fieldset class="the-fieldset bg-info">
-                        <legend class="le">Set Mobile App Message Interval</legend>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="SuccessIntvl" class="text-right control-label col-form-label"><strong>Success Interval</strong></label>
-                                @Html.DropDownListFor(model => model.SuccessIntvl, Enumerable.Empty<SelectListItem>(), new { @class = "form-control input-sm" })
-                            </div>
-                            <div class="col-md-6">
-                                <label for="ErrorIntvl" class="text-right control-label col-form-label"><strong>Error Interval</strong></label>
-                                @Html.DropDownListFor(model => model.ErrorIntvl, Enumerable.Empty<SelectListItem>(), new { @class = "form-control input-sm" })
-                            </div>
-
-
-
-                        </div>
-
-                    </fieldset>
-                </div>
-                <div class="col-md-6">
-                    <fieldset class="the-fieldset bg-info">
-                        <legend class="le">Display Verification Label</legend>
-                        <label for="QtyVeriLbl" class="text-right control-label col-form-label"><strong>Select Printing Option for Quantity Verification</strong></label>
-                        <div class="row">
-                            <div class="col-md-1" style="width: 6%!important;">
-                                @Html.CheckBoxFor(model => model.A4Sheet, new { @class = "form-control  input-sm" })
-                            </div>
-                            <div class="col-md-3" style="width: 25%!important;">
-                                <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>A-4 Sheet</strong></label>
-                            </div>
-                            <div class="col-md-1" style="width: 6%!important;">
-                                @Html.CheckBoxFor(model => model.Barcode, new { @class = "form-control  input-sm" })
-                            </div>
-                            <div class="col-md-3" style="width: 28%!important;">
-                                <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>BarCode</strong></label>
-                            </div>
-
-                            <div class="col-md-1" style="width: 6%!important;">
-                                @Html.CheckBoxFor(model => model.Quality, new { @class = "form-control  input-sm" })
-                            </div>
-                            <div class="col-md-3" style="width: 28%!important;">
-                                <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>Quality</strong></label>
-                            </div>
-                        </div>
-                    </fieldset>
                 </div>
             </div>
-
-            <div class="row m-top">
-                <div class="col-md-6">
-                    <fieldset class="the-fieldset bg-info">
-                        <legend class="le">Kanban Label</legend>
-                        <label for="QtyVeriLbl" class="text-right control-label col-form-label"><strong>Select Printing Option for Kanban</strong></label>
-                        <div class="row">
-                            <div class="col-md-1" style="width: 7%!important;">
-                                @Html.RadioButtonFor(model => model.PrintingCategory, "PDF", new { id = "Pdf", @class = "form-control  input-sm", @checked = "true" })
-                            </div>
-                            <div class="col-md-2" style="width: 13%!important;">
-                                <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>PDF</strong></label>
-                            </div>
-                            <div class="col-md-1" style="width: 7%!important;">
-                                @Html.RadioButtonFor(model => model.PrintingCategory, "BARCODES", new { id = "Bar", @class = "form-control  input-sm" })
-                            </div>
-                            <div class="col-md-2" style="width: 13%!important;">
-                                <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>BARCODE</strong></label>
-                            </div>
-
-                        </div>
-                    </fieldset>
-                </div>
-
-                <div class="col-md-6">
-                    <fieldset class="the-fieldset bg-info">
-                        <legend class="le">QC [From Date] Days</legend>
-                        <label for="QCFromDays" class="text-right control-label col-form-label"><strong>Enter Number of Days</strong></label>
-                        <div class="row">
-                            <div class="col-md-4">
-                                @Html.TextBoxFor(Model => Model.QCFromDays, null, new { @class = "form-control input-sm", @autocomplete = "off" })
-                            </div>
-
-                        </div>
-                    </fieldset>
-                </div>
-            </div>
-            <div class="row m-top">
-                <div class="col-md-6">
-                    <fieldset class="the-fieldset bg-info">
-                        <legend class="le">Verification Label</legend>
-                        <label for="QtyVeriLbl" class="text-right control-label col-form-label"><strong>Select Printing Option for Verification</strong></label>
-                        <div class="row">
-                            <div class="col-md-1" style="width: 7%!important;">
-                                @Html.RadioButtonFor(model => model.PrintVerification, "BARCODES", new { id = "VrfBar", @class = "form-control  input-sm", @checked = "true" })
-                            </div>
-                            <div class="col-md-2" style="width: 13%!important;">
-                                <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>BARCODE</strong></label>
-                            </div>
-                            <div class="col-md-1" style="width: 7%!important;">
-                                @Html.RadioButtonFor(model => model.PrintVerification, "PDF", new { id = "VrfPdf", @class = "form-control  input-sm" })
-                            </div>
-                            <div class="col-md-2" style="width: 13%!important;">
-                                <label for="fname" class="text-right control-label col-form-label" style="font-size:12px;"><strong>PDF</strong></label>
-                            </div>
-
-                        </div>
-                    </fieldset>
-                </div>
-
-                
-            </div>
-
-        </div>
 
         }
-        <div id="Grid"></div>
     </div>
 </div>
 
@@ -198,17 +368,24 @@
 <script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
 <link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
 <script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
-
+<style type="text/css">
+    @@media (min-width: 992px){
+.col-md-4 {
+    width: 20.333%;
+}
+    }
+</style>
 
 <script>
 
 
     $(document).ready(function () {
-        
+
         BindTimeInterval();
         DDLPlant();
-        
-        
+        BindSMTP();
+        BindEmailGrid();
+
     });
 
 
@@ -226,7 +403,7 @@
     });
 
     function BindTimeInterval() {
-        
+
         $.ajax({
             url: '@Url.Action("BindTimeInterval", "Setting")',
             type: "GET",
@@ -239,7 +416,7 @@
                     $("#SuccessIntvl").append(optionhtml);
                     $("#ErrorIntvl").append(optionhtml);
                 });
-                
+
         },
             error: function (errormessage) {
             //alert(errormessage.responseText);
@@ -284,8 +461,6 @@
                     $("#Family").append(optionhtml);
 
                 });
-                BindExistingRecord();
-               /* BindGrid();*/
         },
             error: function (errormessage) {
             //alert(errormessage.responseText);
@@ -358,7 +533,7 @@
                 else {
                     $("#ErrorIntvl").val("SELECT");
                 }
-                //console.log(data.Result.A4Sheet);               
+                //console.log(data.Result.A4Sheet);
                 $("#A4Sheet").prop('checked', data.Result.A4Sheet);
                 $("#Barcode").prop('checked', data.Result.Barcode);
                 $("#Quality").prop('checked', data.Result.Quality);
@@ -422,8 +597,8 @@
     //Insert function
     $("#Add").on("click", function () {
         $("#divLoader").show();
-        if ($("#A4Sheet").prop('checked') == true) {
-            A4Sheet = true;
+        if ($("#ChkSSL").prop('checked') == true) {
+            ChkSSL = true;
         }
         else {
             A4Sheet = false;
@@ -478,7 +653,7 @@
                                 closeAlert(this);
                             });
                         }, 5000);
-                        
+
                         BindGrid();
                     }
                 },
@@ -500,11 +675,340 @@
       $(alert).hide();
     };
 
+
+     //Onclick SMTP SAVE
+     $("#SMTPAdd").on("click", function () {
+         $("#divLoader").show();
+         var ChkSSL = false;
+         if ($("#ChkSSL").prop('checked') == true) {
+             ChkSSL = true;
+         }
+         else {
+             ChkSSL = false;
+         }
+         if ($('#SMTPEMAILID').val() == "") {
+             $('#alert').append('<div class="alert alert-danger role = "alert"><strong>Please Enter EMAIL ID</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+             setTimeout(function () {
+                 $.each($('.alert'), function () {
+                     closeAlert(this);
+                 });
+             }, 5000);
+         }
+            var Data = {
+                SMTPServer: $('#SMTPServer').val(),
+                SMTPPSWORD: $('#SMTPPSWORD').val(),
+                PRIORITY: $('#PRIORITY').val(),
+                SMTPPORT: $('#SMTPPORT').val(),
+                ChkSSL: ChkSSL,
+                SMTPEMAILID: $('#SMTPEMAILID').val()
+         };
+         if (Data != null) {
+            $.ajax({
+                url: '@Url.Action("AddSMTP", "Setting")',
+                data: JSON.stringify({ data: Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+
+                    $("#divLoader").hide();
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+
+                        BindSMTP(data);
+                    }
+                },
+                error: function (errormessage) {
+                    $("#divLoader").hide();
+                    $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+
+                }
+            });
+         }
+     });
+    function BindSMTP(data) {
+        if (data != undefined && data != null) {
+            $("#SMTPServer").val(data[0].SMTPServer);
+            if (data[0].ChkSSL == true) {
+                $("#ChkSSL").prop('checked') = true
+                $("#ChkSSL").is(":checked");
+            } else {
+                $("#ChkSSL").is(":unchecked");
+            }
+            $("#SMTPEMAILID").val(data[0].SMTPEMAILID);
+            $("#SMTPPSWORD").val(data[0].SMTPPSWORD);
+            $("#PRIORITY").val(data[0].PRIORITY).attr("change");
+            $("#SMTPPORT").val(data[0].SMTPPORT);
+        }
+        else
+        {
+        $.ajax({
+            url: '@Url.Action("BindSMTPData", "Setting")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+
+                $("#SMTPServer").val(result[0].SMTPServer);
+                if (result[0].ChkSSL == true) {
+                    $("#ChkSSL").attr('checked');
+                } else {
+                    $("#ChkSSL").is(":unchecked");
+                }
+                $("#SMTPEMAILID").val(result[0].SMTPEMAILID);
+                $("#SMTPPSWORD").val(result[0].SMTPPSWORD);
+                $("#PRIORITY").val(result[0].PRIORITY).attr("change");
+                $("#SMTPPORT").val(result[0].SMTPPORT);
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+        }
+    }
+       $("#SMTPTEST").on("click", function () {
+         $("#divLoader").show();
+         var ChkSSL = false;
+         if ($("#ChkSSL").prop('checked') == true) {
+             ChkSSL = true;
+        }
+        else {
+             ChkSSL = false;
+        }
+            var Data = {
+                SMTPServer: $('#SMTPServer').val(),
+                SMTPEMAILID: $('#EmailTo').val(),
+                EmailTo: $('#EmailTo').val(),
+                SMTPPSWORD: $('#SMTPPSWORD').val(),
+                PRIORITY: $('#PRIORITY').val(),
+                SMTPPORT: $('#SMTPPORT').val(),
+                ChkSSL: ChkSSL
+            };
+            $.ajax({
+                url: '@Url.Action("TESTSMTP", "Setting")',
+                data: JSON.stringify({ data: Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+
+                    $("#divLoader").hide();
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+
+                        BindSMTP(data);
+                    }
+                },
+                error: function (errormessage) {
+                    $("#divLoader").hide();
+                    $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+
+                }
+            });
+       });
+
+       $("#NotifyAdd").on("click", function () {
+            var Data = {
+                STAGE: $('#STAGE').val(),
+                NOTIFYEMAILID: $('#NOTIFYEMAILID').val()
+            };
+            $.ajax({
+                url: '@Url.Action("SaveEmail", "Setting")',
+                data: JSON.stringify({ data: Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+
+                    $("#divLoader").hide();
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+
+                    }
+                },
+                error: function (errormessage) {
+                    $("#divLoader").hide();
+                    $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+
+                }
+            });
+       });
+    $("#InteTblAdd").on("click", function () {
+        var PRINT_SERIAL_NUMBER = false;
+        var SUB_ASSEMBLY_SERIAL_NUMBER = false;
+        var FAMILY_SERIAL = false;
+        var Switch_Of_Tyre_Make = false;
+        if ($("#ChkPRINT_SERIAL_NUMBER").prop('checked') == true) {
+            PRINT_SERIAL_NUMBER = true;
+        }
+        else {
+            PRINT_SERIAL_NUMBER = false;
+        }
+        if ($("#ChkSUB_ASSEMBLY_SERIAL_NUMBER").prop('checked') == true) {
+            SUB_ASSEMBLY_SERIAL_NUMBER = true;
+        }
+        else {
+            SUB_ASSEMBLY_SERIAL_NUMBER = false;
+        }
+        if ($("#ChkFAMILY_SERIAL").prop('checked') == true) {
+            FAMILY_SERIAL = true;
+        }
+        else {
+            FAMILY_SERIAL = false;
+        }
+        if ($("#ChkSwitch_Of_Tyre_Make").prop('checked') == true) {
+            Switch_Of_Tyre_Make = true;
+        }
+        else {
+            Switch_Of_Tyre_Make = false;
+        }
+            var Data = {
+                 PRINT_SERIAL_NUMBER : PRINT_SERIAL_NUMBER,
+                SUB_ASSEMBLY_SERIAL_NUMBER : SUB_ASSEMBLY_SERIAL_NUMBER,
+                FAMILY_SERIAL : FAMILY_SERIAL,
+                Switch_Of_Tyre_Make : Switch_Of_Tyre_Make
+            };
+            $.ajax({
+                url: '@Url.Action("SaveIntegratetable", "Setting")',
+                data: JSON.stringify({ data: Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+
+                    $("#divLoader").hide();
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+
+                    }
+                },
+                error: function (errormessage) {
+                    $("#divLoader").hide();
+                    $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+
+                }
+            });
+       });
+
+    $("#STAGE").on("change", function () {
+        BindEmailGrid();
+        /*BindGrid();*/
+    });
+     //Function to bind EmailGrid
+    function BindEmailGrid() {
+        $("#divLoader").show();
+        var Data = {
+            STAGE: $('#STAGE').val()
+
+                };
+        $.ajax({
+            url: '@Url.Action("GridEmails", "Setting")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+
+                $("#GridEmails").html(result);
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
     $("#Plant").select2({
         allowClear: true,
         width: '185px',
     });
     $("#Family").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#STAGE").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#PRIORITY").select2({
         allowClear: true,
         width: '100%',
     });

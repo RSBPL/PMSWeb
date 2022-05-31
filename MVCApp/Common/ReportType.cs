@@ -127,7 +127,8 @@ namespace MVCApp
                          new ReportCode(){Code="ROLL",Text="ROLLOUT"},
 
                          new ReportCode(){Code="ROLL_AUDIT",Text="ROLL OUT STICKER LOG"},
-                         new ReportCode(){Code="PDI_AUDIT",Text="PDI STICKER LOG"}
+                         new ReportCode(){Code="PDI_AUDIT",Text="PDI STICKER LOG"},
+                         new ReportCode(){Code="WEEKLY_OIL_FILTRATION",Text="WEEKLY OIL FILTRATION"}
 
 
                      };

@@ -359,7 +359,26 @@
             $('#PNLReportType').show();
             $('#lbltext').text("Tractor Usage");
         }
-        else {
+        else if ($('#ReportType').val() == 'WEEKLY_OIL_FILTRATION')  {
+            $('#PNLTotalTractorsManufactured').hide();
+            $('#PNLJobHistory').hide();
+            $('#PNLJobExistance').hide();
+            $('#PNLProductionReport').hide();
+            $('#PNLQCOKPRINTON').hide();
+            $('#hideshowdate').show();
+            $('#PNLShiftDetail').hide();
+            $('#PNLSTFILTERBY').hide();
+            $('#PNLReportType').hide();
+            var d0 = $("#FromDate").val();
+            var myPastDate = new Date(d0);
+            myPastDate.setDate(myPastDate.getDate() - 7);
+            formatDate(myPastDate);
+            $("#FromDate").val(myPastDate);
+            //var newVar = new Date(d0);
+            //var startDate = newVar.getDate() - 7;
+            //var finaldate = new Date(startDate); 
+            //$("#FromDate").val(finaldate.format('dd-MMM-yyyy'));
+        } else {
             $('#PNLTotalTractorsManufactured').hide();
             $('#PNLJobHistory').hide();
             $('#PNLJobExistance').hide();
@@ -371,6 +390,19 @@
             $('#PNLReportType').hide();
         }
 
+    }
+    function formatDate(date) {
+        let { day, month, year } = new Intl.DateTimeFormat('en', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        }).formatToParts(date).reduce((acc, part) => {
+            if (part.type != 'literal') {
+                acc[part.type] = part.value;
+            }
+            return acc;
+        }, Object.create(null));
+        return `${day}-${month}-${year}`;
     }
 
     //Function to bind Plant

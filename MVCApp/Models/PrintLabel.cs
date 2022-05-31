@@ -14,65 +14,8 @@ namespace MVCApp.Models
     {
         Function fun = new Function();
         PrintAssemblyBarcodes af = new PrintAssemblyBarcodes();
-        public bool PrintPDIOK(Tractor tractor, int copies, string mode,string ip,int port,string stage)
-        {
-            string fileData = string.Empty;bool Status;
-            string prnfilename = string.Empty, barcode = string.Empty, AppPath = string.Empty;
-            try
-            {
-                PrinterSettings pd = new PrinterSettings();
-                if (!fun.CheckMyPrinter(pd.PrinterName) && mode.Equals("LOCAL"))
-                {
-                    //MessageBox.Show("Printer must be online or default printer should be barcode printer to print the barcode", "Barcoding System", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return false;
-                }
-                AppPath = System.IO.Directory.GetCurrentDirectory();
-                prnfilename = "PDI.txt";
-                if (!File.Exists(AppPath + "\\" + prnfilename))
-                {
-                    //MessageBox.Show(prnfilename + " file doesn't exists");
-                    return false;
-                }
-                StreamReader sread = null;
-                sread = File.OpenText(AppPath + "\\" + prnfilename);
-                while (sread.EndOfStream == false)
-                {
-                    fileData = sread.ReadToEnd();
-                }
-                barcode = fileData;
 
-                for (int i = 0; i < copies; i++)
-                {
-                    fileData = barcode;
-                    fileData = fileData.Replace("TSN", tractor.TSN);
-                    fileData = fileData.Replace("JOB_ID", tractor.JOB);
-                    fileData = fileData.Replace("ITEM_CODE", tractor.ITEMCODE);
-                    fileData = fileData.Replace("ITEM_DESC", tractor.DESC);
-                    fileData = fileData.Replace("AVG_HOURS", tractor.avgHours);
-                    fileData = fileData.Replace("PDI_DATE", tractor.pdidate);
-                    af.WriteDataToLabelFile(fileData);
-                    if (mode.Equals("LOCAL"))
-                    {
-                        Status = af.PrintStandardLabel(fileData, stage, tractor.PLANT, tractor.FAMILY);
-                       
-                    }
-                    else
-                    {
-                        if (af.PrintLabelViaNetwork(fileData, "",ip, port))
-                        {
-                            Status = true;
-                        }
-                    }
-                }
-                fun.Insert_Into_ActivityLog("PDI_STICKER", "PDI_STICKER", tractor.TSN, Convert.ToString(HttpContext.Current.Session["IPADDR"]),
-                  Convert.ToString(HttpContext.Current.Session["Login_Unit"]), Convert.ToString(HttpContext.Current.Session["LoginFamily"]) );
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            return true;
-        }
+        
         //public bool PrintCraneEngine(CraneBarcode craneBarcode, int copies, string mode)
         //{
         //    string fileData = string.Empty; string prnfilename = string.Empty, barcode = string.Empty, AppPath = string.Empty;

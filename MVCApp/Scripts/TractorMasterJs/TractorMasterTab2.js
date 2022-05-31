@@ -1279,10 +1279,13 @@ function BindT4Family() {
 
 function AddS() {
     $("#divLoader").show();
+    var itemCode = $('#T4_ItemCode').val();
+    const myArray = itemCode.split("#");
     var Data = {
         T4_Plant: $('#T4_Plant').val(),
         T4_Family: $('#T4_Family').val(),
         T4_ItemCode: $('#T4_ItemCode').val(),
+        gleSearch: myArray[0],
 
         FrontSupport: $("#FrontSupport").val(),
         CenterAxel: $("#CenterAxel").val(),
@@ -1368,11 +1371,13 @@ function AddS() {
 };
 function UpdateS() {
     $("#divLoader").show();
+    var itemCode = $('#T4_ItemCode').val();
+    const myArray = itemCode.split("#");
     var Data = {
         T4_Plant: $('#T4_Plant').val(),
         T4_Family: $('#T4_Family').val(),
         T4_ItemCode: $('#T4_ItemCode').val(),
-
+        gleSearch: myArray[0],
         FrontSupport: $("#FrontSupport").val(),
         CenterAxel: $("#CenterAxel").val(),
         Slider: $("#Slider").val(),

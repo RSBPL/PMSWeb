@@ -23,6 +23,25 @@ namespace MVCApp.Models
         public string PrintingCategory { get; set; }
         public string QCFromDays { get; set; }
         public string PrintVerification { get; set; }
+
+        public string SMTPServer { get; set; }
+        public bool ChkSSL { get; set; }
+        public string SMTPEMAILID { get; set; }
+        public string EmailTo { get; set; }
+        public string SMTPPSWORD { get; set; }
+        public string PRIORITY { get; set; }
+        public string SMTPPORT { get; set; }
+        public bool ChkPRINT_SERIAL_NUMBER { get; set; }
+        public bool ChkSUB_ASSEMBLY_SERIAL_NUMBER { get; set; }
+        public bool ChkFAMILY_SERIAL { get; set; }
+        public bool ChkSwitch_Of_Tyre_Make { get; set; }
+        public string STAGE { get; set; }
+        public string ITEM { get; set; }
+        public string NOTIFYEMAILID { get; set; }
+
+
+
+
     }
     
 }

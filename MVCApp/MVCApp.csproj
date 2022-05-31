@@ -775,6 +775,12 @@
     <Content Include="Image\print.jpg" />
     <Content Include="Image\print.png" />
     <Content Include="Image\Red.png" />
+    <Content Include="Printer\BK.TXT" />
+    <Content Include="Printer\EN.TXT" />
+    <Content Include="Printer\EN17.TXT" />
+    <Content Include="Printer\hyd.txt" />
+    <Content Include="Printer\JOB.TXT" />
+    <Content Include="Printer\PDI.TXT" />
     <Content Include="Scripts\AutoFill\images\ui-anim_basic_16x16.gif" />
     <Content Include="Scripts\AutoFill\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
     <Content Include="Scripts\AutoFill\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
@@ -1243,6 +1249,8 @@
     <Content Include="Views\Report\GrdCRITICIAL_VENDOR_MRN.cshtml" />
     <Content Include="Views\RollDown\Grid.cshtml" />
     <Content Include="Views\RollDown\Index.cshtml" />
+    <Content Include="Views\Setting\GridEmails.cshtml" />
+    <Content Include="Views\Report\GrdWEEKLY_OIL_FILTRATION.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,116 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    
+    <div class="table-responsive">
+        @{
+            List<object> commands = new List<object>();
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-delete", cssClass = "delete" } });
+        }
+
+        @(Html.EJS().Grid("GridEmails").DataSource((System.Data.DataTable)ViewBag.EmailDataSource).
+                AllowPaging(true).
+                PageSettings(Page => Page.PageSize(10)).
+                AllowFiltering().
+                AllowGrouping().
+                AllowSorting().
+                AllowSelection().
+                AllowTextWrap().
+                AllowResizing().
+                Columns(col =>
+                {
+                    col.Field("STAGE").HeaderText("STAGE").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                    col.Field("EMAIL").HeaderText("EMAIL").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+
+                }).AllowExcelExport().
+                ToolbarClick("toolbarClick")
+                .Toolbar(new List<string>() { "ExcelExport" }).//AllowRowDragAndDrop().
+                Render())
+
+        
+        <script>
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("Grid1").ej2_instances[0];
+                gridObj.excelExport();
+            }
+
+            var AutoId, Plant, Family, Location;
+            //function commandClick(args) {
+            //    if (args.rowData != null) {
+            //        if (args.target.classList.contains('edit')) {
+            //            AutoId = args.rowData["AUTOID"];
+
+            //            $("#Plant").val(args.rowData["PLANT_CODE"]);
+            //            $("#Family").val(args.rowData["FAMILY_CODE"]);
+
+            //            var itmcode = args.rowData["ITEM_CODE"];
+            //            var itmdesc = args.rowData["ITEM_DESCRIPTION"];
+            //            var codeDesc = itmcode + " # " + itmdesc;
+            //            $("#Item").val(codeDesc);
+
+            //            $("#Location").val(args.rowData["LOCATION_CODE"]);
+            //            $("#Capacity").val(args.rowData["CAPACITY"]);
+            //            $("#SftStkQuantity").val(args.rowData["SAFTY_STOCK_QUANTITY"]);
+            //            $("#NoOfLocAllocated").val(args.rowData["NO_OF_LOC_ALLOCATED"]);
+            //            $("#PackingType").val(args.rowData["PACKAGING_TYPE"]);
+            //            $("#VerticalStkLevel").val(args.rowData["VERTICAL_STACKING_LEVEL"]);
+            //            $("#BulkStoreSNP").val(args.rowData["BULK_STORAGE_SNP"]);
+            //            $("#UsagePerTractor").val(args.rowData["USAGE_PER_TRACTOR"]);
+            //            $("#Revision").val(args.rowData["REVISION"]);
+            //            $("#MaxInventory").val(args.rowData["MAX_INVENTORY"]);
+            //            var res = args.rowData["TEMP_LOC"];
+            //            if (res == "Y") {
+            //                $("#TempLoc").prop('checked', true)
+            //            }
+            //            else {
+            //                $("#TempLoc").prop('checked', false)
+            //            }
+            //             var res = args.rowData["UNPACKED"];
+            //            if (res == "Y") {
+            //                $("#chkUnpck").prop('checked', true)
+            //            }
+            //            else {
+            //                $("#chkUnpck").prop('checked', false)
+            //            }
+
+            //            $('#Plant').prop('disabled', true);
+            //            $('#Family').prop('disabled', true);
+
+
+            //            $('#Add').hide();
+            //            $('#Update').show();
+            //        }
+            //        if (args.target.classList.contains('delete')) {
+
+
+            //            AutoId = args.rowData["AUTOID"];
+            //            Plant = args.rowData["PLANT_CODE"];
+            //            Family = args.rowData["FAMILY_CODE"];
+            //            Location = args.rowData["LOCATION_CODE"];
+            //            deleteItem();
+
+            //        }
+            //    }
+            //};
+            function deleteItem() {
+                if (confirm("Are you sure, to delete this Record ?")) {
+                    Delete();
+                }
+                return false;
+            }
+
+        </script>
+    </div>
+</div>
+
+
+@Html.EJS().ScriptManager()

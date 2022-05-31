@@ -173,7 +173,7 @@ namespace MVCApp.Common
                     string result = GetPrintterIPAddress(subAssembly.Stage);
                     if (!string.IsNullOrEmpty(result))
                     {
-                       string PRINTER_IP = result.Split('#')[0].Trim();
+                        string PRINTER_IP = result.Split('#')[0].Trim();
                         string PRINTER_PORT = result.Split('#')[1].Trim();
                         if (string.IsNullOrEmpty(PRINTER_IP) || string.IsNullOrEmpty(PRINTER_PORT))
                         {
@@ -195,7 +195,7 @@ namespace MVCApp.Common
             finally { }
         }
 
-     public bool PrintLabelViaNetwork(string cmd1, string cmd2, string ip, int port)
+        public bool PrintLabelViaNetwork(string cmd1, string cmd2, string ip, int port)
         {
             System.Net.Sockets.TcpClient tc;
             try
@@ -432,7 +432,7 @@ namespace MVCApp.Common
                             query = query.Replace("REV_NO", item.REVISION);
                             query = query.Replace("BULK_LOC", item.LOCATION);
                             query = query.Replace("NO_OF_LOC", item.NOOFLOCALLOCATED);
-                            if(string.IsNullOrEmpty(item.MAX_INVENTORY))
+                            if (string.IsNullOrEmpty(item.MAX_INVENTORY))
                             {
                                 item.MAX_INVENTORY = "";
                             }
@@ -498,7 +498,7 @@ namespace MVCApp.Common
                             if (!string.IsNullOrEmpty(item.ITEM_DESCRIPTION) && item.ITEM_DESCRIPTION.Trim().Length > 26)
                             {
                                 item.ITEM_DESCRIPTION = item.ITEM_DESCRIPTION.Substring(0, 26);
-                                
+
                             }
                             item.ITEM_DESCRIPTION = RemoveDoubleQuote(item.ITEM_DESCRIPTION);
                             query = query.Replace("ITEM_DESC", item.ITEM_DESCRIPTION);
@@ -754,12 +754,12 @@ namespace MVCApp.Common
                     string Buckleupdate = string.Format(@"select to_char( ENTRYDATE, 'dd-Mon-yyyy HH24:MI:SS' )
                     from xxes_job_status where jobid='{0}' and plant_code='{1}' and family_code='{2}'",
                     fTBuckleup.JOB.Trim().ToUpper(), fTBuckleup.PLANT.Trim().ToUpper(),
-                    fTBuckleup.FAMILY.Trim().ToUpper());                   
+                    fTBuckleup.FAMILY.Trim().ToUpper());
                     query = query.Replace("JOB_VAL", fTBuckleup.JOB.Trim().ToUpper());
                     query = query.Replace("ITEM_NAME1", itemname1.Trim());
                     query = query.Replace("ITEM_NAME2", itemname2.Trim());
-                    query = query.Replace("FCODE_VAL", fTBuckleup.ITEMCODE.Trim().ToUpper()); 
-                    
+                    query = query.Replace("FCODE_VAL", fTBuckleup.ITEMCODE.Trim().ToUpper());
+
                     if (isTransRequire == false && isBackEndRequire == false)
                         query = query.Replace("TRANS_VAL", "NA");
                     else
@@ -892,7 +892,7 @@ namespace MVCApp.Common
                             query = query.Replace("VENDOR_CODE", item.VENDOR_CODE);
 
                             char[] countDigitItemcode = fun.characterArray(item.ITEMCODE.Trim());
-                            if(countDigitItemcode.Length == 9)
+                            if (countDigitItemcode.Length == 9)
                             {
                                 query = query.Replace("ITEM_REVISION", item.ITEM_REVISION);
                                 query = query.Replace("BOM_REV", item.BOM_REVISION);
@@ -916,7 +916,7 @@ namespace MVCApp.Common
                             query = query.Replace("IMPLEMENTED", item.IMPLEMENT);
                             query = query.Replace("PRINTED_ON", item.PRINTED_ON);
                             query = query.Replace("BUYER", item.BUYER_NAME);
-                            
+
                             barcodedata += "\n" + query + "\n";
                         }
 
@@ -1068,7 +1068,7 @@ namespace MVCApp.Common
                         else
                             if (TractorType.ToUpper().Trim() == "DOMESTIC" && engine.PrintMMYYFormat == "1")
                         {
-                           
+
                             Suffix = fun.get_Col_Value(@"select MY_CODE from XXES_SUFFIX_CODE where
                                             MON_YYYY='" + fun.ServerDate.Date.ToString("MMM-yyyy").ToUpper() + "' and TYPE='QRDOMESTIC' and plant='" + engine.Plant.Trim().ToUpper() + "'");
                             query = query.Replace("MONTH", Suffix.Trim());
@@ -1168,9 +1168,9 @@ namespace MVCApp.Common
                 fTEngine.REQUIREBACKEND = line.Split('#')[12] == "Y" ? true : false;
 
                 TractorType = fun.get_Col_Value(string.Format(@"select TYPE from xxes_daily_plan_TRAN where item_code ='{0}' and 
-                                autoid='{1}' and plant_code='{2}' and family_code='{3}'",fTEngine.ITEMCODE,fTEngine.FCODEID,
-                                fTEngine.Plant,fTEngine.Family));
-                
+                                autoid='{1}' and plant_code='{2}' and family_code='{3}'", fTEngine.ITEMCODE, fTEngine.FCODEID,
+                                fTEngine.Plant, fTEngine.Family));
+
                 if (TractorType.ToUpper().Trim() == "EXPORT")
                     Filename = "EN17.txt";
                 else
@@ -1194,7 +1194,7 @@ namespace MVCApp.Common
                         query = query.Replace("ENGG_VAL", "NA");
                     else
                         query = query.Replace("ENGG_VAL", fTEngine.ENGINESRLNO);
-                   
+
 
                     if (fTEngine.REQUIREBACKEND == false)
                     {
@@ -1224,9 +1224,9 @@ namespace MVCApp.Common
                                     and rownum=1", fTEngine.JobId.Trim(), fTEngine.ITEMCODE.Trim().ToUpper(), fTEngine.Plant.Trim().ToUpper(), fTEngine.Family.Trim().ToUpper()));
                             if (string.IsNullOrEmpty(EnMisc))
                             {
-                               
+
                                 throw new Exception("BUCKELUP NOT FOUND FOR JOB : " + fTEngine.JobId);
-                                
+
                             }
 
                             Suffix = fun.get_Col_Value(@"select MY_CODE from XXES_SUFFIX_CODE where
@@ -1583,7 +1583,7 @@ namespace MVCApp.Common
                         query = query.Replace("MU", invoice.STORE_LOCATION);
                         query = query.Replace("SAMPLE", invoice.SAMPLE);
                         barcodedata += "\n" + query + "\n";
-                       
+
                     }
 
                     if (!string.IsNullOrEmpty(barcodedata))
@@ -1743,6 +1743,279 @@ namespace MVCApp.Common
             }
             return code;
         }
+        public string ReadStageFile(string stage, string plant, string family, string tractortype = null)
+        {
+            try
+            {
+                string Filename = string.Empty;
+                if (stage == "PDIOK")
+                    Filename = "PDI.txt";
+                else if (stage == "BK")
+                    Filename = "BK.txt";
+                else if (stage == "HYD")
+                    Filename = "hyd.txt";
+                else if (stage == "BA")
+                {
+                    if (tractortype == "EXPORT")
+                        Filename = "BD17.txt";
+                    else
+                        Filename = "BD.txt";
+
+                }
+                else if (stage == "EN")
+                {
+                    if (tractortype == "EXPORT")
+                        Filename = "EN17.txt";
+                    else
+                        Filename = "EN.txt";
+
+                }
+                else if (stage == "COM" && plant == "T02")
+                    Filename = "KUBOTAJOB.txt";
+                else if (stage == "COM" && plant != "T02")
+                    Filename = "JOB.txt";
+
+                string path = HttpContext.Current.Server.MapPath("~//Printer//" + Filename.Trim());
+                if (!File.Exists(path))
+                {
+                    throw new Exception("Print file not found");
+                    return "";
+                }
+
+                StreamReader sread = null; string line = "";
+                sread = File.OpenText(path);
+                while (sread.EndOfStream == false)
+                {
+                    line = sread.ReadToEnd();
+                }
+                if (sread != null)
+                {
+                    sread.Dispose();
+                    sread.Close();
+                }
+
+                return line.Trim();
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+                throw;
+            }
+            finally { }
+        }
+        public bool PrintAssemblyStagesSticker(RollDown tractor, int copies)
+        {
+            string fileData = string.Empty, line = string.Empty, IPADDR = string.Empty, IPPORT = string.Empty; bool Status;
+            string prnfilename = string.Empty, barcode = string.Empty, AppPath = string.Empty;
+            try
+            {
+
+                line = fun.getPrinterIp(tractor.STAGE_Code, tractor.PLANTCODE, tractor.FAMILYCODE);
+                if (string.IsNullOrEmpty(line))
+                {
+                    throw new Exception("STAGE PRINTER IP ADDRESS AND PORT NOT FOUND");
+                }
+                IPADDR = line.Split('#')[0].Trim();
+                IPPORT = line.Split('#')[1].Trim();
+                if (string.IsNullOrEmpty(IPADDR))
+                {
+                    throw new Exception("PRINTER IP NOT FOUND");
+                }
+                if (string.IsNullOrEmpty(IPPORT))
+                {
+                    throw new Exception("PRINTER PORT NOT FOUND");
+                }
+                string itemname1 = string.Empty, itemname2 = string.Empty;
+                if (!string.IsNullOrEmpty(tractor.TractorDesc))
+                    getNameSubAssembly(tractor.TractorDesc.Trim().ToUpper(), ref itemname1, ref itemname2);
+                fileData = ReadStageFile(tractor.STAGE_Code, tractor.PLANTCODE, tractor.FAMILYCODE);
+                barcode = fileData;
+                for (int i = 0; i < copies; i++)
+                {
+                    fileData = barcode;
+                    if (tractor.STAGE_Code == "PDIOK")
+                    {
+
+                        query = string.Format(@"update xxes_job_status set PDIOKDATE=SYSDATE,
+                        PDIDONEBY='{0}' where fcode_srlno='{1}' and PDIOKDATE is null", 
+                        HttpContext.Current.Session["Login_User"].ToString(), tractor.TractorSrlno);
+                        fun.EXEC_QUERY(query);
+                        string avgHours = string.Empty;
+                        if (tractor.isEnableCarebutton == "Y")
+                        {
+                            if (string.IsNullOrEmpty(tractor.Carebuttonoildate))
+                            {
+                                //MessageBox.Show("CARE BUTTON NOT SCANNED AT PDI STAGE", PubFun.AppName);
+                                throw new Exception("CARE BUTTON NOT SCANNED AT PDI STAGE");
+                            }
+                            if (!string.IsNullOrEmpty(tractor.Rolloutdate) && !string.IsNullOrEmpty(tractor.Carebuttonoildate))
+                            {
+                                TimeSpan span = Convert.ToDateTime(tractor.Rolloutdate) - Convert.ToDateTime(tractor.Carebuttonoildate);
+                                span = new TimeSpan(Math.Abs(span.Ticks));
+                                tractor.avgHours = (int)span.TotalHours + span.ToString(@"\:mm\:ss");
+                            }
+                        }
+                        else
+                        {
+                            TimeSpan span = Convert.ToDateTime(tractor.Rolloutdate) - Convert.ToDateTime(tractor.Pdidate);
+                            span = new TimeSpan(Math.Abs(span.Ticks));
+                            avgHours = (int)span.TotalHours + span.ToString(@"\:mm\:ss");
+                            tractor.avgHours = avgHours;
+
+                        }
+                        
+                        fileData = fileData.Replace("TSN", tractor.TractorSrlno);
+                        fileData = fileData.Replace("JOB_ID", tractor.JOBID);
+                        fileData = fileData.Replace("ITEM_CODE", tractor.TractorCode);
+                        fileData = fileData.Replace("ITEM_DESC", tractor.TractorDesc);
+                        fileData = fileData.Replace("AVG_HOURS", tractor.avgHours);
+                        fileData = fileData.Replace("PDI_DATE", tractor.Pdidate);
+                    }
+                    else if (tractor.STAGE_Code == "BK")
+                    {
+                        fileData = fileData.Replace("JOB_VAL", Convert.ToString(tractor.JOBID).ToUpper());
+                        fileData = fileData.Replace("ITEM_NAME1", itemname1.Trim());
+                        fileData = fileData.Replace("ITEM_NAME2", itemname2.Trim());
+                        fileData = fileData.Replace("FCODE_VAL", tractor.TractorSrlno);
+                        if (tractor.isTransRequire == false)
+                            fileData = fileData.Replace("TRANS_VAL", "NA");
+                        else fileData = fileData.Replace("TRANS_VAL", tractor.Transmission.Trim().ToUpper());
+                        if (tractor.isRearAxelRequire == false) fileData = fileData.Replace("REAR_VAL", "NA");
+                        else fileData = fileData.Replace("REAR_VAL", tractor.RearAxel.Trim().ToUpper());
+                    }
+                    else if (tractor.STAGE_Code == "HYD")
+                    {
+                        itemname1 = itemname2 = "";
+                        if (!string.IsNullOrEmpty(tractor.hydrualic_desc))
+                            getNameSubAssembly(tractor.hydrualic_desc.Trim().ToUpper(), ref itemname1, ref itemname2);
+
+                        fileData = fileData.Replace("SERIES_NO", tractor.Hydraulic_srlno);
+                        fileData = fileData.Replace("ITEM_NAME1", itemname1.Trim());
+                        fileData = fileData.Replace("ITEM_NAME2", itemname2.Trim());
+                        fileData = fileData.Replace("DCODE_VAL", tractor.Hydraulic);
+
+                    }
+                    else if (tractor.STAGE_Code == "EN" || tractor.STAGE_Code == "BA")
+                    {
+                        if (tractor.PrintMMYYFormat.Trim() == "1")
+                        {
+                            string EnMisc = fun.get_Col_Value("select to_char(scan_date,'MON-YYYY') scan_date" +
+                                " from XXES_SCAN_TIME where jobid='" + tractor.JOBID.Trim() + "' and ITEM_CODE='" + tractor.TractorCode.Trim().ToUpper() + "' and stage='EN' and PLANT_CODE='" + tractor.PLANTCODE + "' and FAMILY_CODE='" + tractor.FAMILYCODE + "' and rownum=1");
+                            if (string.IsNullOrEmpty(EnMisc))
+                            {
+                                throw new Exception("Record not found when the engine assembled on this job : " + tractor.JOBID);
+                            }
+                            if (string.IsNullOrEmpty(tractor.Prefix_4))
+                                tractor.Suffix = fun.get_Col_Value(@"select MY_CODE from XXES_SUFFIX_CODE where
+                            MON_YYYY='" + EnMisc.ToUpper() + "' and TYPE='QRDOMESTIC' and plant='" + tractor.PLANTCODE + "'");
+                            else
+                                tractor.Suffix = tractor.Prefix_4;
+                        }
+
+                        fileData = fileData.Replace("JOB_VAL", tractor.JOBID);
+                        fileData = fileData.Replace("ITEM_NAME1", itemname1.Trim());
+                        fileData = fileData.Replace("ITEM_NAME2", itemname2.Trim());
+                        fileData = fileData.Replace("FCODE_VAL", tractor.TractorCode.Trim().ToUpper());
+                        fileData = fileData.Replace("SERIES_NO", tractor.TractorSrlno.Trim().ToUpper());
+                        if (tractor.isEngineRequire == false)
+                            fileData = fileData.Replace("ENGG_VAL", "NA");
+                        else
+                            fileData = fileData.Replace("ENGG_VAL", tractor.Engine_srlno.Trim().ToUpper());
+                        if (tractor.STAGE_Code == "EN")
+                        {
+                            if (!tractor.isBackendRequire)
+                            {
+                                fileData = fileData.Replace("TRANS_VAL", tractor.Transmission_srlno.Trim().ToUpper());
+                                fileData = fileData.Replace("REAR_VAL", tractor.RearAxel_srlno.Trim().ToUpper());
+                            }
+                            else
+                            {
+                                fileData = fileData.Replace("TRANS_VAL", tractor.Backend_srlno.Trim().ToUpper());
+                                fileData = fileData.Replace("REAR_VAL", "");
+                            }
+                        }
+                        else
+                        {
+                            fileData = fileData.Replace("BACKEND_VAL", tractor.Backend_srlno.Trim().ToUpper());
+                        }
+                        fileData = fileData.Replace("ROPS_SRNO", tractor.ROPSrno.Trim());
+                        if (!string.IsNullOrEmpty(tractor.TractorSrlno))
+                        {
+                            if (tractor.TractorSrlno.Trim().Length == 17)
+                                fileData = fileData.Replace("MONTH", tractor.TractorSrlno.Trim().ToUpper().Substring(8, 2));
+                            else
+                                if (tractor.TractorType.ToUpper().Trim() == "DOMESTIC" && tractor.PrintMMYYFormat == "1")
+                            {
+                                fileData = fileData.Replace("MONTH", tractor.Suffix.Trim());
+                            }
+                            else
+                                fileData = fileData.Replace("MONTH", tractor.TractorSrlno.Trim().ToUpper().Substring(tractor.TractorSrlno.Trim().Length - 2, 2));
+                        }
+                        else
+                            fileData = fileData.Replace("MONTH", "");
+
+                    }
+                    else if (tractor.STAGE_Code == "COM")
+                    {
+                        if (string.IsNullOrEmpty(tractor.TractorSrlno) || string.IsNullOrEmpty(tractor.Engine_srlno))
+                        {
+                            throw new Exception("Tractor/Engine Srlno is mandatory");
+                        }
+                        if (tractor.TractorType == "DOMESTIC" &&
+                            (string.IsNullOrEmpty(tractor.IMEI) || string.IsNullOrEmpty(tractor.MOBILE) || string.IsNullOrEmpty(tractor.simserialno)) && tractor.reqcarebtn.Trim() == "Y")
+                        {
+                            throw new Exception("For Domestic Tractors, Care button scanning is mandatory");
+                        }
+                        //    if (string.IsNullOrEmpty(tractor.Hydraulic_srlno.Trim()) || 
+                        //        string.IsNullOrEmpty(tractor.Transmission_srlno) || string.IsNullOrEmpty(tractor.Engine_srlno)
+                        //|| string.IsNullOrEmpty(tractor.RearAxel_srlno) || 
+                        //string.IsNullOrEmpty(tractor.reartyremake) || string.IsNullOrEmpty(tractor.Battery))
+                        //    {
+                        //        throw new Exception("Some of the items are not scanned in selected job. Still want to Print ?", "Print", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
+                        //            return;
+                        //    }
+                        DateTime Printdate = new DateTime();
+                        if (!string.IsNullOrEmpty(tractor.Rolloutdate))
+                        {
+                            Printdate = Convert.ToDateTime(tractor.Rolloutdate);
+                        }
+                        else
+                        {
+                            Printdate = fun.GetServerDateTime();
+                        }
+
+                        fileData = fileData.Replace("FCODE_VAL", tractor.TractorCode);
+                        if (tractor.PLANTCODE == "T02")
+                            fileData = fileData.Replace("PIN_NO", tractor.TractorSrlno.Substring(tractor.TractorSrlno.Length - 6));
+
+                        fileData = fileData.Replace("SERIES_NO", tractor.TractorSrlno);
+                        fileData = fileData.Replace("MAKE_VAL", tractor.reartyremake.Trim());
+                        fileData = fileData.Replace("TRANS_VAL", tractor.Transmission_srlno);
+                        fileData = fileData.Replace("ITEM_NAME1", itemname1.Trim());
+                        fileData = fileData.Replace("ITEM_NAME2", itemname2.Trim());
+                        fileData = fileData.Replace("REAR_VAL", tractor.RearAxel_srlno.Trim());
+                        fileData = fileData.Replace("HYDLIFT_VAL", tractor.Hydraulic_srlno.Trim());
+                        fileData = fileData.Replace("ENGINE_VAL", tractor.Engine_srlno);
+                        fileData = fileData.Replace("BATTERY_MAKE", tractor.batterymake.Trim());
+                        fileData = fileData.Replace("BATTERY_SLNO", tractor.Battery.Trim());
+                        fileData = fileData.Replace("JOBID", tractor.JOBID.Trim());
+                        fileData = fileData.Replace("SHORT_CODE", tractor.shortcode.Trim());
+                        fileData = fileData.Replace("TREMARKS", tractor.remarks.Trim());
+                        fileData = fileData.Replace("PRINT_DATE", Printdate.ToString("dd-MMM-yyyy HH:mm:ss"));
+                    }
+                }
+                PrintLabelViaNetwork(fileData, "", IPADDR, Convert.ToInt32(IPPORT));
+
+
+                fun.Insert_Into_ActivityLog("STAGE_WISE_STICKER", "PDI_STICKER", tractor.TractorSrlno, Convert.ToString(HttpContext.Current.Session["IPADDR"]),
+                  Convert.ToString(HttpContext.Current.Session["Login_Unit"]), Convert.ToString(HttpContext.Current.Session["LoginFamily"]));
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return true;
+        }
         public void getNameSubAssembly(string fcode_desc, ref string itemname1, ref string itemname2)
         {
             try
@@ -1766,13 +2039,13 @@ namespace MVCApp.Common
             }
 
             catch (Exception ex)
-            { 
+            {
             }
             finally
             { }
 
         }
-        public void Record_Reprint(string ITEMCODE, string SRNO, string JOB, string plant,string family)
+        public void Record_Reprint(string ITEMCODE, string SRNO, string JOB, string plant, string family)
         {
             try
             {
@@ -1785,30 +2058,6 @@ namespace MVCApp.Common
             catch (Exception ex) { }
             finally { }
         }
-        public bool RecordPDIOK(Tractor tractor)
-        {
-            try
-            {
-                //query = string.Format(@"update xxes_job_status set PDIOKDATE=SYSDATE+  (1/1440*12),
-                //PDIDONEBY='{0}' where fcode_srlno='{1}' and PDIOKDATE is null", PubFun.Login_User, tractor.TSN);
-                //EXEC_QUERY(query);
-                query = string.Format(@"update xxes_job_status set PDIOKDATE=SYSDATE,
-                PDIDONEBY='{0}' where fcode_srlno='{1}' and PDIOKDATE is null", HttpContext.Current.Session["Login_User"].ToString(), tractor.TSN);
-                return fun.EXEC_QUERY(query);
-                //query = string.Format(@"select count(*) from XXES_PDIOK Where TSN='{0}'",
-                //    tractor.TSN);
-                //if (!CheckExits(query))
-                //{
-                //    query = string.Format(@"insert into XXES_PDIOK(plant_code,family_code,TSN,CREATEDBY) 
-                //values('{0}','{1}','{2}','{3}')", tractor.PLANT, tractor.FAMILY, tractor.TSN, PubFun.Login_User);
-                //    EXEC_QUERY(query);
-                //}
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
+    
     }
 }

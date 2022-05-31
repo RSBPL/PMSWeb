@@ -71,6 +71,11 @@
         font-size: 13px;
         font-weight: bolder;
     }
+    .fixed-height {
+        padding: 1px;
+        max-height: 400px;
+        overflow: auto;
+    }
 </style>
 <div id="divLoader" style="display:none;">
     <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:10%; margin-left:38%" />
@@ -125,7 +130,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="fname" class="text-right control-label col-form-label"><strong>scan job</strong></label>
-                            @Html.TextBoxFor(Model => Model.ITEM_CODE, null, new { @class = "form-control input-sm" })
+                            @Html.TextBoxFor(Model => Model.JOBID, null, new { @class = "form-control input-sm" })
                         </div>
                         @*<div class="col-md-1">
                             <div style="MARGIN-TOP: 25px;">
@@ -195,7 +200,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="fname" class="text-right control-label col-form-label"><strong>Tyre1</strong></label>
-                                @Html.TextBoxFor(Model => Model.FrontTyre1, null, new { @class = "form-control input-sm" })
+                                @Html.TextBoxFor(Model => Model.FrontTyre1_srlno1, null, new { @class = "form-control input-sm" })
                             </div>
                         </fieldset>
                     </div>
@@ -209,7 +214,7 @@
                     </div>
                     <div class="col-md-2">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Tyre2</strong></label>
-                        @Html.TextBoxFor(Model => Model.RearTyre2, null, new { @class = "form-control input-sm" })
+                        @Html.TextBoxFor(Model => Model.RearTyre2_srlno2, null, new { @class = "form-control input-sm" })
                     </div>
 
                     <div class="col-md-2">
@@ -222,7 +227,7 @@
                     </div>
                     <div class="col-md-2">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Tyre2</strong></label>
-                        @Html.TextBoxFor(Model => Model.FrontTyre2, null, new { @class = "form-control input-sm" })
+                        @Html.TextBoxFor(Model => Model.FrontTyre2_srlno2, null, new { @class = "form-control input-sm" })
                     </div>
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Battery</strong></label>
@@ -346,13 +351,13 @@
 
 
     function AutoComplete() {
-    $("#ITEM_CODE").autocomplete({
+        $("#JOBID").autocomplete({
             source: function (request, response) {
 
                 var Data = {
                     PLANTCODE: $('#PLANTCODE').val(),
                     FAMILYCODE: $('#FAMILYCODE').val(),
-                    ITEM_CODE: $('#ITEM_CODE').val()
+                    JOBID: $('#JOBID').val()
                 };
                 $.ajax({
                     url:  '@Url.Action("FillITEMCODE", "RollDown")',
@@ -363,7 +368,7 @@
                     success: function (data) {
                         response($.map(data, function (item) {
                             /*console.log(item.DESCRIPTION);*/
-                            return { label: item.Text, value: item.Text };
+                            return { label: item.Text, value: item.Value };
                         }))
                     },
 
@@ -378,6 +383,7 @@
             minLength: 4
 
         });
+        $("#JOBID").autocomplete("widget").addClass('fixed-height');
     };
 
 
@@ -456,7 +462,7 @@
         });
     };
 
-    $('#ITEM_CODE').on("change", function () {
+    $('#JOBID').on("change", function () {
         gleSearch_EditValueChanged();
         //NewTractorCode();
     });
@@ -464,13 +470,13 @@
 
     function gleSearch_EditValueChanged() {
 
-        if ($('#ITEM_CODE').val() != "") {
-            var itemCode = $('#ITEM_CODE').val();
+        if ($('#JOBID').val() != "") {
+            var itemCode = $('#JOBID').val();
             const myArray = itemCode.split("#");
             var Data = {
                 PLANTCODE: $('#PLANTCODE').val(),
                 FAMILYCODE: $('#FAMILYCODE').val(),
-                ITEM_CODE: myArray[0]
+                JOBID: itemCode
             };
         } else {
             return;
@@ -566,14 +572,14 @@
                     if (data.Result.RearTyre1 != "" && data.Result.RearTyre1 != null) {
                         $("#RearTyre1").val(data.Result.RearTyre1);
                     }
-                    if (data.Result.RearTyre2 != "" && data.Result.RearTyre2 != null) {
-                        $("#RearTyre2").val(data.Result.RearTyre2);
+                    if (data.Result.RearTyre2_srlno2 != "" && data.Result.RearTyre2_srlno2 != null) {
+                        $("#RearTyre2_srlno2").val(data.Result.RearTyre2_srlno2);
                     }
                     if (data.Result.FrontTyre1 != "" && data.Result.FrontTyre1 != null) {
                         $("#FrontTyre1").val(data.Result.FrontTyre1);
                     }
-                    if (data.Result.FrontTyre2 != "" && data.Result.FrontTyre2 != null) {
-                        $("#FrontTyre2").val(data.Result.FrontTyre2);
+                    if (data.Result.FrontTyre2_srlno2 != "" && data.Result.FrontTyre2_srlno2 != null) {
+                        $("#FrontTyre2_srlno2").val(data.Result.FrontTyre2_srlno2);
                     }
                     if (data.Result.Srno != "" && data.Result.Srno != null) {
                         $("#Srno").val(data.Result.Srno);
@@ -612,67 +618,27 @@
     });
     function printData() {
 
-        if ($('#ITEM_CODE').val() != "") {
-            var itemCode = $('#ITEM_CODE').val();
+        if ($('#JOBID').val() != "") {
+            var jOBID = $('#JOBID').val();
             var stagecode = $("#STAGE_Code").val();
             if (stagecode == undefined && stagecode == "") {
                 $('#alert').append('<div class="alert alert-danger role = "alert"><strong>Please Select Stage</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 
-                setTimeout(function () {
-                    $.each($('.alert'), function () {
-                        closeAlert(this);
-                    });
-                }, 500);
                 return;
             }
-            const myArray = itemCode.split("#");
+            //const myArray = itemCode.split("#");
             var Data = {
                 PLANTCODE: $('#PLANTCODE').val(),
                 FAMILYCODE: $('#FAMILYCODE').val(),
                 STAGE_Code: stagecode,
-                Transmission: $('#Transmission').val(),
-                RearAxel: $('#RearAxel').val(),
-                Hydraulic: $('#Hydraulic').val(),
-                Engine: $('#Engine').val(),
-                Skid: $('#Skid').val(),
-                RearSrnn1: $('#RearSrnn1').val(),
-                RearRIM1: $('#RearRIM1').val(),
-                RearTyre1: $('#RearTyre1').val(),
-                FrontSrnn1: $('#FrontSrnn1').val(),
-                FrontRIM1: $('#FrontRIM1').val(),
-                FrontTyre1: $('#FrontTyre1').val(),
-                RearSrnn2: $('#RearSrnn2').val(),
-                RearRIM2: $('#RearRIM2').val(),
-                RearTyre2: $('#RearTyre2').val(),
-                FrontSrnn2: $('#FrontSrnn2').val(),
-                FrontRIM2: $('#FrontRIM2').val(),
-                FrontTyre2: $('#FrontTyre2').val(),
-                Battery: $('#Battery').val(),
-                BatMake: $('#BatMake').val(),
-                HydrualicPump: $('#HydrualicPump').val(),
-                Radiator: $('#Radiator').val(),
-                SteeringCylinder: $('#SteeringCylinder').val(),
-                SteeringMotor: $('#SteeringMotor').val(),
-                SteeringAssem: $('#SteeringAssem').val(),
-                Alternator: $('#Alternator').val(),
-                Cluster: $('#Cluster').val(),
-                Motor: $('#Motor').val(),
-                Quantity: $('#Quantity').val(),
-                Srno: $('#Srno').val(),
-                IMEI: $('#IMEI').val(),
-                MOBILE: $('#MOBILE').val(),
-                ROPSrno: $('#ROPSrno').val(),
-                OilQty: $('#OilQty').val(),
-                TractorStagePrint: $("#TractorStagePrint").val(),
-                TractorAutoid: $("#TractorAutoid").val(),
-                ITEM_CODE: myArray[0]
+                JOBID: $('#JOBID').val()
             };
         } else {
             return;
         }
         $.ajax({
             url: '@Url.Action("PRINTDATA", "RollDown")',
-            data: JSON.stringify({ obj: Data }),
+            data: JSON.stringify({ down: Data }),
             type: "POST",
             contentType: "application/json;charset=utf-8",
             dataType: "json",

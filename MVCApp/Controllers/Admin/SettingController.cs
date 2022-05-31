@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Net.Mail;
 
 namespace MVCApp.Controllers.Admin
 {
@@ -204,6 +205,266 @@ namespace MVCApp.Controllers.Admin
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        
+        [HttpPost]
+        public JsonResult BindStage()
+        {
+            List<DDLTextValue> result = new List<DDLTextValue>();
+                result = fun.Fill_All_Stage();
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult AddSMTP(SftSetting data)
+        {
+            string msg = string.Empty; string mstType = string.Empty; string status = string.Empty; string query = string.Empty;
+            int j;
+            List<SftSetting> SMTPFinal = new List<SftSetting>();
+            try
+            {
+                if (string.IsNullOrEmpty(data.SMTPEMAILID) || string.IsNullOrEmpty(data.SMTPServer))
+                {
+                    msg = Validation.str30;
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var err = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(err, JsonRequestBehavior.AllowGet);
+                }
+                if (string.IsNullOrEmpty(data.SMTPPSWORD))
+                {
+                    
+                        msg = "SMTP PASSWORD ENTER..";
+                        mstType = Validation.str1;
+                        status = Validation.str2;
+                        var err = new { Msg = msg, ID = mstType, validation = status };
+                        return Json(err, JsonRequestBehavior.AllowGet);
+
+                }
+
+                query = "delete from XXES_SMTP_DETAILS";
+                fun.EXEC_QUERY(query);
+                fun.Insert_Into_ActivityLog("SMTP_DETAILS", "DELETE", data.SMTPServer.ToString().Trim(), query, "", "");
+                //fun.LogWrite(query);
+
+                query = "insert into XXES_SMTP_DETAILS(SMTP_SERVER,SMTP_USER,SMTP_PASSWORD,SSL_ENABLE,SMTP_PORT,SMTP_PRIORITY) values('" + data.SMTPServer.Trim() + "','" + data.SMTPEMAILID.Trim() + "','" + data.SMTPPSWORD.Trim() + "','" + (data.ChkSSL == true ? "1" : "0") + "','" + data.SMTPPORT.Trim() + "','" + data.PRIORITY.Trim() + "')";
+                if (fun.EXEC_QUERY(query))
+                {
+                    fun.Insert_Into_ActivityLog("SMTP_DETAILS", "INSERT", data.SMTPServer.Trim(), query, "", "");
+                    DataTable dataTable = new DataTable();
+                    SMTPFinal = getSMTPData();
+                    
+                    msg = "SMTP details saved Sucessfully !!";
+                }
+
+                else
+                {
+                    msg = "Some thing wrong !!";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                }
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+                msg = ex.Message;
+                mstType = Validation.str1;
+                status = Validation.str2;
+                var resul = new { Msg = msg, ID = mstType, validation = status };
+                return Json(resul, JsonRequestBehavior.AllowGet);
+            }
+            var result = new { Msg = msg, ID = mstType, validation = status };
+            return Json(new { Msg = msg, ID = mstType, validation = status, data = SMTPFinal }, JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpGet]
+        public JsonResult BindSMTPData()
+        {
+            List<SftSetting> result = new List<SftSetting>();
+            result = getSMTPData();
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        public List<SftSetting> getSMTPData()
+        {
+            DataTable dt = new DataTable();
+            List<SftSetting> sftSettings = new List<SftSetting>();
+            try
+            {
+                dt = fun.returnDataTable("select * from XXES_SMTP_DETAILS");
+                if (dt.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        SftSetting SMTPDATA = new SftSetting();
+                        SMTPDATA.SMTPEMAILID = Convert.ToString(dr["SMTP_USER"]);
+                        SMTPDATA.SMTPServer = Convert.ToString(dr["SMTP_SERVER"]);
+                        SMTPDATA.SMTPPSWORD = Convert.ToString(dr["SMTP_PASSWORD"]);
+                        SMTPDATA.SMTPPORT = Convert.ToString(dr["SMTP_PORT"]);
+                        SMTPDATA.PRIORITY = Convert.ToString(dr["SMTP_PRIORITY"]);
+                        if (Convert.ToString(dr["SSL_ENABLE"]).Trim() == "1")
+                            SMTPDATA.ChkSSL = true;
+                        else
+                            SMTPDATA.ChkSSL = false;
+                        sftSettings.Add(SMTPDATA);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+                throw;
+            }
+            return sftSettings;
+        }
+
+        [HttpPost]
+        public JsonResult TESTSMTP(SftSetting data)
+        {
+            string msg = string.Empty; string mstType = string.Empty; string status = string.Empty; string query = string.Empty;
+            int j;
+            if (string.IsNullOrEmpty(data.EmailTo.Trim()))
+            {
+                msg= "Please enter Email address on which test mail need to send";
+                return Json(new { Msg = msg, ID = mstType, validation = status }, JsonRequestBehavior.AllowGet);
+            }
+            MailMessage message = new MailMessage();
+            SmtpClient client = new SmtpClient();
+
+            MailAddress address = new MailAddress(data.SMTPEMAILID.Trim());
+
+            // Set the sender's address
+            message.From = address;
+
+            // Allow multiple "To" addresses to be separated by a semi-colon
+            if (data.SMTPEMAILID.Trim().Length > 0)
+            {
+                foreach (string addr in data.EmailTo.Trim().Split(';'))
+                {
+                    if (!string.IsNullOrEmpty(addr))
+                        message.To.Add(new MailAddress(addr));
+                }
+            }
+
+            // Set the subject and message body text
+            message.Subject = "TEST MAIL";
+            message.Body = "The is system generated test mail";
+            // TODO: *** Modify for your SMTP server ***
+            // Set the SMTP server to be used to send the message
+            client.Host = data.SMTPServer.Trim();
+            string domain = "barcode4u.com";
+            if (data.SMTPPORT.Trim() != "")
+                client.Port = Convert.ToInt32(data.SMTPPORT.Trim());
+                if (data.PRIORITY.Trim().ToUpper() == "NORMAL")
+                    message.Priority = MailPriority.Normal;
+                else if (data.PRIORITY.Trim().ToUpper() == "HIGH")
+                    message.Priority = MailPriority.High;
+                else if (data.PRIORITY.Trim().ToUpper() == "LOW")
+                    message.Priority = MailPriority.Low;
+            message.IsBodyHtml = true;
+            client.Credentials = new System.Net.NetworkCredential(data.EmailTo.Trim(), data.SMTPPSWORD.Trim());
+            client.UseDefaultCredentials = false;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            // Send the e-mail message 
+            try
+            {
+                client.Send(message);
+                msg = "Sent Sucessfully";
+            }
+            catch (Exception ex)
+            {
+                msg = "Error:";
+            }
+            finally
+            {
+                //btnSMTP.Enabled = true;
+                //Cursor.Current = Cursors.Default;
+            }
+            return Json(new { Msg = msg, ID = mstType, validation = status }, JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpPost]
+        public JsonResult SaveEmail(SftSetting data)
+        {
+            string msg = string.Empty; string mstType = string.Empty; string status = string.Empty; string query = string.Empty;
+            //if (string.IsNullOrEmpty(data.NOTIFYEMAILID.Trim()))
+            //{
+            //     msg = "Please enter email id";
+            //    return Json(new { Msg = msg, ID = mstType, validation = status }, JsonRequestBehavior.AllowGet);
+            //}
+            //else if (string.IsNullOrEmpty(cmbOfflineItems.Text.Trim()) || cmbOfflineItems.SelectedIndex < 0)
+            //{
+            //    MessageBox.Show("Please select stage");
+            //    cmbOfflineItems.Focus();
+            //    return;
+            //}
+            query = string.Format(@"delete from XXES_STAGE_EMAILS where STAGE = '{0}'", Convert.ToString(data.STAGE));
+            fun.EXEC_QUERY(query);
+            query = "insert into XXES_STAGE_EMAILS(STAGE,ITEM ,EMAIL,STAGE_DESC) values('" + Convert.ToString(data.STAGE) + "','','" + data.NOTIFYEMAILID.Trim() + "','" + data.STAGE.Trim() + "')";
+            if (fun.EXEC_QUERY(query))
+            {
+                fun.Insert_Into_ActivityLog("STAGE_MAIL", "INSERT", Convert.ToString(data.STAGE), query, "", "");
+                GridEmails(data);
+                msg= "Email Added Sucessfully !!";
+            }
+            return Json(new { Msg = msg, ID = mstType, validation = status }, JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpPost]
+        public JsonResult SaveIntegratetable(SftSetting data)
+        {
+            string msg = string.Empty; string mstType = string.Empty; string status = string.Empty; string query = string.Empty;
+
+            if (data.ChkPRINT_SERIAL_NUMBER == true) 
+                query = "Insert into XXES_SFT_SETTINGS(PARAMETERINFO,STATUS) values('PRINT_SERIAL_NUMBER','Y')";
+            else
+                query = "Insert into XXES_SFT_SETTINGS(PARAMETERINFO,STATUS) values('PRINT_SERIAL_NUMBER','N')";
+            fun.EXEC_QUERY(query);
+
+            query = "delete from XXES_SFT_SETTINGS where PARAMETERINFO='SUB_ASSEMBLY_SERIAL_NUMBER'";
+            fun.EXEC_QUERY(query);
+
+            if (data.ChkSUB_ASSEMBLY_SERIAL_NUMBER== true)
+                query = "Insert into XXES_SFT_SETTINGS(PARAMETERINFO,STATUS) values('SUB_ASSEMBLY_SERIAL_NUMBER','Y')";
+            else
+                query = "Insert into XXES_SFT_SETTINGS(PARAMETERINFO,STATUS) values('SUB_ASSEMBLY_SERIAL_NUMBER','N')";
+            fun.EXEC_QUERY(query);
+            fun.Insert_Into_ActivityLog("INTEGRATION_TABLE", "INSERT", "SUB_ASSEMBLY_SERIAL_NUMBER", query, "", "");
+
+
+            query = "delete from XXES_SFT_SETTINGS where PARAMETERINFO='FAMILY_SERIAL'";
+            fun.EXEC_QUERY(query);
+
+            if (data.ChkFAMILY_SERIAL == true)
+                query = "Insert into XXES_SFT_SETTINGS(PARAMETERINFO,STATUS) values('FAMILY_SERIAL','Y')";
+            else
+                query = "Insert into XXES_SFT_SETTINGS(PARAMETERINFO,STATUS) values('FAMILY_SERIAL','N')";
+            fun.EXEC_QUERY(query);
+            fun.Insert_Into_ActivityLog("INTEGRATION_TABLE", "INSERT", "FAMILY_SERIAL", query, "", "");
+
+
+            query = "delete from XXES_SFT_SETTINGS where PARAMETERINFO='OFF_TYRE_MAKE_CHECK'";
+            fun.EXEC_QUERY(query);
+
+            if (data.ChkSwitch_Of_Tyre_Make == true)
+                query = "Insert into XXES_SFT_SETTINGS(PARAMETERINFO,STATUS) values('OFF_TYRE_MAKE_CHECK','Y')";
+            else
+                query = "Insert into XXES_SFT_SETTINGS(PARAMETERINFO,STATUS) values('OFF_TYRE_MAKE_CHECK','N')";
+            if (fun.EXEC_QUERY(query))
+            {
+                fun.Insert_Into_ActivityLog("TYRE_MAKE_CHECK", "INSERT", "TYRE_MAKE", query, "", "");
+                msg = "Integrate Sucessfully !!";
+            }
+            return Json(new { Msg = msg, ID = mstType, validation = status }, JsonRequestBehavior.AllowGet);
+
+        }
+        public PartialViewResult GridEmails(SftSetting data)
+        {
+            query = string.Format(@"select STAGE_DESC as STAGE, EMAIL as EMAIL, STAGE as CODE, ITEM from XXES_STAGE_EMAILS where STAGE = '{0}'", Convert.ToString(data.STAGE));
+            DataTable dt = fun.returnDataTable(query);
+
+            ViewBag.EmailDataSource = dt;
+            return PartialView();
+        }
     }
 }
