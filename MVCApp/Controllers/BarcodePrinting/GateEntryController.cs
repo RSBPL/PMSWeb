@@ -135,9 +135,9 @@ namespace MVCApp.Controllers.Masters
                 invoice.TRANSACTION_DATE = Convert.ToDateTime(item.TRANSACTION_DATE);
                 GEFun.UpdateMrnDetails(invoice.PLANT_CODE, invoice.MRN_NO,item.FAMILYCODE);
                 lstInvoice.Add(invoice.INVOICE_NO);
+                PrintAssemblyBarcodes barcodes = new PrintAssemblyBarcodes();
                 if (item.CheckboxReprint==false) //if printing
                 {
-                    PrintAssemblyBarcodes barcodes = new PrintAssemblyBarcodes();
                     query = "select count(*) from ITEM_RECEIPT_DETIALS where mrn_no='" + invoice.MRN_NO + "'";
                     if (!fun.CheckExits(query))
                     {
@@ -167,6 +167,18 @@ namespace MVCApp.Controllers.Masters
                                     totPrint++;
                                 }
                             }
+                        }
+                    }
+                }
+                else if (item.CheckboxReprint == true)
+                {
+                    GEFun.UpdateRawMeterialMaster(invoice, item.FAMILYCODE);
+                    query = GEFun.queryget(invoice.MRN_NO);// and invoice_no='" + invoice.INVOICE_NO + "'";
+                    if (fun.EXEC_QUERY(query))
+                    {
+                        if (barcodes.GenerateGateBarcode("LOCAL", "", "", invoice, printtime, copy2, item.FAMILYCODE))
+                        {
+                            totPrint++;
                         }
                     }
                 }

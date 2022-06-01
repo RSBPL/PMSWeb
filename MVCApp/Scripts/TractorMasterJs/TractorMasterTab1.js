@@ -1423,10 +1423,13 @@ function Add_T3() {
 
 function Add() {
     $("#divLoader").show();
+    var itemCode = $('#ItemCode').val();
+    const myArray = itemCode.split("#");
     var Data = {
         Plant: $('#Plant').val(),
         Family: $('#Family').val(),
         ItemCode: $('#ItemCode').val(),
+        gleSearch: myArray[0],
         TransmissionChk: $('#TransmissionChk').prop("checked"),
         Transmission: $('#Transmission').val(),
         EngineChk: $('#EngineChk').prop("checked"),
@@ -1569,11 +1572,13 @@ function Update() {
     else if ($("#Exp").is(":checked")) {
         modlType = $("#Exp").val();
     }
-
+    var itemCode = $('#ItemCode').val();
+    const myArray = itemCode.split("#");
     var Data = {
         Plant: $('#Plant').val(),
         Family: $('#Family').val(),
         ItemCode: $('#ItemCode').val(),
+        gleSearch: myArray[0],
         TransmissionChk: $('#TransmissionChk').prop("checked"),
         Transmission: $('#Transmission').val(),
         EngineChk: $('#EngineChk').prop("checked"),

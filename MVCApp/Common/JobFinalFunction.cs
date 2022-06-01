@@ -46,7 +46,6 @@ namespace MVCApp.Common
                 fun.ConClose();
             }
         }
-
         public string getItemCode(string srlno)
         {
             try
@@ -382,7 +381,7 @@ namespace MVCApp.Common
 
         //    return new Tuple<bool, string, string, string, string>(result, errorNo, msg, DCODE_TRANS, DCODE_AXEL);
         //}
-
+       
         public Tuple<bool, string, string, string> ChecKHydraulic(TRACTOR data, string FCODE, bool isRequireHyrdraulic)
         {
             bool result = true; string msg = string.Empty, errorNo = string.Empty;
@@ -525,6 +524,32 @@ namespace MVCApp.Common
             }
 
             return new Tuple<bool, string, string, string,string>(result, errorNo, msg, DCODE,MAKE);
+        }
+
+        public bool RecordPDIOK(Tractor tractor)
+        {
+            try
+            {
+                //query = string.Format(@"update xxes_job_status set PDIOKDATE=SYSDATE+  (1/1440*12),
+                //PDIDONEBY='{0}' where fcode_srlno='{1}' and PDIOKDATE is null", PubFun.Login_User, tractor.TSN);
+                //EXEC_QUERY(query);
+                query = string.Format(@"update xxes_job_status set PDIOKDATE=SYSDATE,
+                PDIDONEBY='{0}' where fcode_srlno='{1}' and PDIOKDATE is null", Convert.ToString(HttpContext.Current.Session["Login_User"]), tractor.TSN);
+                return fun.EXEC_QUERY(query);
+                //query = string.Format(@"select count(*) from XXES_PDIOK Where TSN='{0}'",
+                //    tractor.TSN);
+                //if (!CheckExits(query))
+                //{
+                //    query = string.Format(@"insert into XXES_PDIOK(plant_code,family_code,TSN,CREATEDBY) 
+                //values('{0}','{1}','{2}','{3}')", tractor.PLANT, tractor.FAMILY, tractor.TSN, PubFun.Login_User);
+                //    EXEC_QUERY(query);
+                //}
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

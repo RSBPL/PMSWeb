@@ -1,0 +1,62 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bg-primary" style="padding-top:5px; padding-left:5px;">
+                <center>
+                    <label style="color:white;">@ViewBag.heading</label>
+                    <label style="color: white;padding-right: 10px;" class="pull-right"><strong>Total Tractor Produced  : @ViewBag.Total </strong></label>
+                    <label style="color:white;" class="pull-right">|&nbsp;</label>
+                    <label style="color: white;padding-right: 10px;" class="pull-right"><strong>Total Oil Qty  : @ViewBag.SumQty </strong></label>
+                </center>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        @(Html.EJS().Grid("GrdWEEKLY_OIL_FILTRATION").DataSource((System.Data.DataTable)ViewBag.DataSource).
+            AllowPaging(true).Height("400").
+            PageSettings(Page => Page.PageSize(20)).
+            AllowSelection(false).
+            AllowResizing().
+            AllowExcelExport().
+            ToolbarClick("toolbarClick").
+            AllowFiltering().
+            //AllowGrouping().
+            AllowSorting().
+            Columns(col =>
+            {
+                col.Field("ITEM_CODE").HeaderText("FCODE").Add();
+                col.Field("ITEM_DESCRIPTION").HeaderText("ITEM_DESCRIPTION").Add();
+                col.Field("OILQTY").HeaderText("OIL QTY").Add();
+                col.Field("ENTRYDATE").HeaderText("ROLLDOWN DATE").Add();
+                col.Field("FCODE_SRLNO").HeaderText("TRACTOR SERIAL NUMBER").Add();
+
+
+            }).
+            Toolbar(new List<string>() { "ExcelExport" }).
+            Render())
+        <script>
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("GrdWEEKLY_OIL_FILTRATION").ej2_instances[0];
+                gridObj.excelExport();
+            }
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+
+
+
+
