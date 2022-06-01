@@ -1,15 +1,16 @@
-﻿@*@if (ViewBag.CheckURL == "Y")
-    {
-        Layout = null;
-    }*@
-
+﻿@using System.Data;
+@model System.Data.DataSet
 @{
     Layout = null;
 }
+@if (ViewBag.CheckURL == "Y")
+{
+    Layout = null;
+}
+
 <link rel="icon" href="~/Image/favicon-32x32.png" type="image/x-icon">
 <title>AFTER PAINT LCD2</title>
 <style>
-
     #divLoader {
         position: fixed;
         top: 0px;
@@ -25,44 +26,444 @@
         filter: alpha(opacity=40); /* For IE8 and earlier */
     }
 </style>
+<style>
 
+    html, body {
+        background-color: white;
+        height: 100%;
+        margin: 0;
+    }
+
+    h2 {
+        margin: 0 130px 0 130px;
+    }
+
+
+    div.table-title {
+        display: block;
+        margin: auto;
+        max-width: 600px;
+        padding: 5px;
+        width: 100%;
+    }
+
+    .table-title h3 {
+        color: #fafafa;
+        font-size: 30px;
+        font-weight: 400;
+        font-style: normal;
+        font-family: "Roboto", helvetica, arial, sans-serif;
+        text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+        text-transform: uppercase;
+    }
+
+
+    /** Table Styles */
+
+    .table-fill {
+        background: white;
+        border-radius: 3px;
+        border-collapse: collapse;
+        height: 150PX;
+        margin: 0;
+        /*max-width: 600px;*/
+        padding: 5px;
+        width: 50%;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        animation: float 5s infinite;
+    }
+
+    .th1 {
+        color: #ffffff;
+        background: #065499;
+        border: 2px solid #a3a085;
+        font-size: 15px;
+        font-weight: 600;
+        padding: 5px;
+        text-align: left;
+        text-shadow: 0 1px 1px rgb(0 0 0 / 10%);
+        vertical-align: middle;
+    }
+
+
+        .th1:first-child {
+            border-top-left-radius: 3px;
+        }
+
+        .th1:last-child {
+            border-top-right-radius: 3px;
+        }
+
+    .tr1:hover td {
+        background: #4E5066;
+        color: #FFFFFF;
+    }
+
+    .tr1:first-child {
+    }
+
+    /*.tr1:last-child {
+                border-bottom: none;
+            }*/
+
+    /*.tr1:nth-child(odd) td {
+                background: #EBEBEB;
+            }
+
+            .tr1:nth-child(odd):hover td {
+                background: #4E5066;
+            }*/
+
+    /* .tr1:last-child td:first-child {
+                border-bottom-left-radius: 3px;
+            }
+
+            .tr1:last-child td:last-child {
+                border-bottom-right-radius: 3px;
+            }*/
+
+    .td1 {
+        background: #FFFFFF;
+        text-align: center;
+        font-weight: bold;
+        font-size: 20px;
+        color: black;
+    }
+
+
+    .th1.text-left {
+        text-align: center;
+    }
+
+    .th1.text-center {
+        text-align: center;
+    }
+
+    .th1.text-right {
+        text-align: center;
+    }
+
+    .td1.text-left {
+        text-align: center;
+    }
+
+    .td1.text-center {
+        text-align: center;
+    }
+
+    .td1.text-right {
+        text-align: center;
+    }
+
+    table tbody tr td {
+        border: 1px solid black;
+        border: 1px solid black;
+        font-size: 15px;
+        font-weight: 600;
+        text-align: center;
+        padding: 3px;
+    }
+
+    tr:nth-child(odd) {
+        background-color: rgb(157 228 255);
+    }
+
+    .tr1:nth-child(odd) {
+        background-color: rgb(157 228 255);
+    }
+
+
+    /*/ Automatic Serial Number Row /
+        .css-serial {
+            counter-reset: serial-number;
+            / Set the serial number counter to 0 /
+        }
+
+        .css-serial td:first-child:before {
+            counter-increment: serial-number;
+            / Increment the serial number counter / content: counter(serial-number);
+            / Display the counter /
+        }*/
+    .leftgrid {
+        float: left;
+        text-align: center;
+        font-size: 17px;
+        font-weight: bold;
+    }
+
+    .tdhide {
+        display: none;
+    }
+
+    .head-header {
+        font-size: 30px;
+        color: #ffffff;
+        margin-top: -35px;
+        float: right;
+        WIDTH: 63%;
+        FONT-FAMILY: fangsong;
+    }
+
+
+    .hr1 {
+        border-top: 3px solid #01f5c7;
+        width: 50%;
+        margin-top: -33px;
+        BACKGROUND-COLOR: brown;
+    }
+
+    .tr2 {
+        color: #ffffff;
+        background: #0c7096;
+        border: 2px solid black;
+        font-size: 15px;
+        font-weight: 600;
+        padding: 5px;
+        text-align: left;
+        text-shadow: 0 1px 1px rgb(0 0 0 / 10%);
+        vertical-align: middle;
+    }
+    td#special {
+        font-size: 28px;
+        background-color: #04d0fd;
+    }
+</style>
 
 <div class="container-fluid">
     <div id="divLoader" style="display:none;">
         <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:10%; margin-left:38%" />
     </div>
 </div>
+<div class="row">
+    <div class="col-md-12 " style="BACKGROUND: #065499; HEIGHT: 60PX;">
+        <div class="col-md-2">
+            <img src="~/Image/logo.gif" Height="50" Width="80" style="margin: 5px;" />
+        </div>
+        <div class="col-md-10">
+            <strong class="head-header" style="margin-top: -50px;">AFTER PAINT LCD2 DISPLAY</strong>
+        </div>
+    </div>
+</div>
 
-<div id="Grid"></div>
+
+
+<div style="width: 100%; color: #fff; background-color: #065499; border-color: #428bca; height: 42px; padding: 0; text-align: center; vertical-align: central;">
+    <input type="hidden" id="PlantCode" value="@ViewBag.PlantCode" />
+    <div style="color: #fff; background-color: #065499; border-color: #428bca; height: 45px; padding: 0; text-align: center; vertical-align: central;">
+        <table style="width: 100%">
+            <tr  style="font-size: 25px;" class="tr2">
+                <td id="special" align="center" style="WIDTH: 20%;">
+                    <label class="text-right control-label col-form-label" id="lblDate"></label>
+                </td>
+                <td id="special" align="center" style="WIDTH: 20%;">
+                    <label class="text-right control-label col-form-label" id="lblTime"></label>
+                </td>
+                <td id="special" align="center" style="WIDTH: 20%;">
+                    <label class="text-right control-label col-form-label" id="lblShift"></label>
+                </td>
+                <td id="special" align="center" style="WIDTH: 20%;">
+                    <label class="text-right control-label col-form-label" id="lblHookDown"></label>
+                </td>
+                <td id="special" align="center" style="WIDTH: 20%;">
+                    <label class="text-right control-label col-form-label" id="lblDayTotal"></label>
+                </td>
+                <td id="special" style="visibility:@ViewBag.imgstatusHS">
+                    <img src="@ViewBag.imgstatus">
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="page-content">
+    @*@if (ViewBag.lblInfoTF == true)
+    {
+        <div class="alert alert-info" role="alert">
+            <strong>@ViewBag.lblInfo</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+    }
+
+    @if (ViewBag.lblInfodbTF == true)
+    {
+        <div class="alert alert-info" role="alert">
+            <strong>@ViewBag.lblInfodb</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+    }
+
+    @if (ViewBag.lblErrorTF == true)
+    {
+        <div class="alert alert-danger" role="alert">
+            <strong>@ViewBag.lblError</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+    }*@
+    <div class="alert alert-info" role="alert" id="info">
+        <strong id="lblinfo"></strong>
+    </div>
+
+    <div class="alert alert-info" role="alert" id="infodb">
+        <strong id="lblInfodb"></strong>
+    </div>
+
+
+    <div class="alert alert-danger" role="alert" id="Error">
+        <strong id="lblError"></strong>
+    </div>
+    @*@if (ViewBag.lblErrordbTF == true)
+        {
+            <div class="alert alert-danger" role="alert">
+                <strong>@ViewBag.lblErrordb</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+        }*@
+</div>
+<div class="row ">
+    <div class="col-md-12" style="float: left; text-align: center; font-size: 20px; font-weight: bold; width: 100%;">
+        <table class="table-fill css-serial table-hover" style="width: 100%; height: 25px;" id="tbldetail">
+            <thead>
+                <tr>
+                    <th class="text-left th1">SRNO </th>
+                    <th class="text-left th1">FCODE</th>
+                    <th class="text-left th1">SHORTCODE</th>
+                    <th class="text-left th1">FENDER LH</th>
+                    <th class="text-left th1">FENDER RH</th>
+                    <th class="text-left th1">FENDER HARNESS LH</th>
+                    <th class="text-left th1">FENDER HARNESS RH</th>
+                    <th class="text-left th1">RADIATOR</th>
+                    <th class="text-left th1">FENDER LAMP</th>
+                    <th class="text-left th1">PLAN</th>
+                    <th class="text-left th1">DONE</th>
+                    <th class="text-left th1">PENDING</th>
+                </tr>
+            </thead>
+
+
+        </table>
+    </div>
+</div>
 
 <script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
 <script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
 
 @Styles.Render("~/Content/ej2")
 
-<script>
-    var refresh = '@System.Configuration.ConfigurationManager.AppSettings["pagerefresh"].ToString()';
+@*<script>
+        var refresh = '@System.Configuration.ConfigurationManager.AppSettings["pagerefresh"].ToString()';
 
 
-    $(document).ready(function () {
-        BindGrid();
-        var myVar = setInterval(BindGrid, refresh * 1000);
-    });
-
-    //Function to bind Grid
-    function BindGrid() {
-        //$("#divLoader").show();
-        $.ajax({
-            url: '@Url.Action("Grid", "AfterPaintLCD2")',
-            type: "POST",
-            contentType: "application/json;charset=UTF-8",
-            success: function (result) {
-                $("#Grid").html(result);
-                //$("#divLoader").hide();
-            },
-            error: function (errormessage) {
-                alert(errormessage.responseText);
-            }
+        $(document).ready(function () {
+            BindGrid();
+            var myVar = setInterval(BindGrid, refresh * 1000);
         });
-    };
+
+        //Function to bind Grid
+        function BindGrid() {
+            //$("#divLoader").show();
+            $.ajax({
+                url: '@Url.Action("Grid", "AfterPaintLCD2")',
+                type: "POST",
+                contentType: "application/json;charset=UTF-8",
+                success: function (result) {
+                    $("#Grid").html(result);
+                    //$("#divLoader").hide();
+                },
+                error: function (errormessage) {
+                    alert(errormessage.responseText);
+                }
+            });
+        };
+    </script>*@
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            checkinfo();
+        });
+        var refresh = '@System.Configuration.ConfigurationManager.AppSettings["pagerefresh"].ToString()';
+        window.onload = function () {
+            setInterval(function () {
+                checkinfo();
+            }, refresh*1000);
+        };
+
+         function checkinfo() {
+                var Data = $('#PlantCode').val();
+                if (Data != null && Data != undefined && Data != "") {
+                    $.ajax({
+                    url: '@Url.Action("Grid", "AfterPaintLCD2")',
+                    data: { PLANTCODE: Data },
+                    type: "GET",
+                    contentType: "application/json;charset=UTF-8",
+                        success: function (result) {
+                            Setlblvalue(result);
+                    },
+                        error: function (errormessage) {
+                        //alert(errormessage.responseText);
+                        }
+                    });
+                }
+
+         }
+
+         function Setlblvalue(data) {
+
+             if (data.lblInfoTF == true) {
+                 $("#info").show();
+                 $("#lblInfo").text(data.lblInfo);
+             }
+             else {
+                 $("#info").hide();
+             }
+             if (data.lblInfodbTF == true) {
+                 $("#infodb").show();
+                 $("#lblInfodb").text(data.lblInfodb);
+             }
+             else {
+                 $("#infodb").hide();
+             }
+             if (data.lblErrorTF == true) {
+                 $("#Error").show();
+                 $("#lblError").text(data.lblError);
+             }
+             else {
+                 $("#Error").hide();
+             }
+
+             $("#lblDate").text(data.lblDate);
+             $("#lblTime").text(data.Time);
+             $("#lblShift").text(data.Shift);
+             $("#lblHookDown").text(data.lblHookDown);
+             $("#lblDayTotal").text(data.lblDayTotal);
+            $('#tbldetail tbody').html('');
+            for (var i = 0; i < data.APgriddata.length; i++) {
+                var rawCode = i;
+                var tr;
+                if (data.APgriddata[i].PENDING > 0) {
+                    tr = "<tr id='" + data.PTtabls[i] + "'>";
+                }
+                else {
+                    tr = "<tr id='" + data.APgriddata[i] + "'>";
+                }
+                var row = $(tr);
+                $("#tbldetail").append(row);
+
+                row.append("<td>" + data.APgriddata[i].SRNO + "</td>");
+                row.append("<td><span id='F_CODE" + rawCode + "'>" + data.APgriddata[i].F_CODE + "</span></td>");
+                row.append("<td><span id='F_CODE" + rawCode + "'>" + data.APgriddata[i].F_CODE + "</span></td>");
+                row.append("<td><span id='SHORT_CODE" + rawCode + "'>" + data.APgriddata[i].SHORT_CODE + "</span></td>");
+                row.append("<td><span id='FENDER_LH" + rawCode + "'>" + data.APgriddata[i].FENDER_LH + "</span></td>");
+                row.append("<td><span id='FENDER_RH" + rawCode + "'>" + data.APgriddata[i].FENDER_RH + "</span></td>");
+                row.append("<td><span id='FENDER_HARNESS_LH" + rawCode + "'>" + data.APgriddata[i].FENDER_HARNESS_LH + "</span></td>");
+                row.append("<td><span id='FENDER_HARNESS_RH" + rawCode + "'>" + data.APgriddata[i].FENDER_HARNESS_RH + "</span></td>");
+                row.append("<td><span id='RADIATOR" + rawCode + "'>" + data.APgriddata[i].RADIATOR + "</span></td>");
+                row.append("<td><span id='QTY" + rawCode + "'>" + data.APgriddata[i].QTY + "</span></td>");
+                row.append("<td><span id='DONE" + rawCode + "'>" + data.APgriddata[i].DONE + "</span></td>");
+                row.append("<td><span id='PENDING" + rawCode + "'>" + data.APgriddata[i].PENDING + "</span></td>");
+
+            }
+            //debugger;
+            //GetTaskComplete(result);
+        }
+
 </script>

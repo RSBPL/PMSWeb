@@ -26,7 +26,7 @@ namespace MVCApp.Controllers
         string query = string.Empty;
 
          
-        public ActionResult Index()
+        public ActionResult Index(string id)
         {
             //if (string.IsNullOrEmpty(Convert.ToString(Session["Login_User"])))
             //{
@@ -36,18 +36,21 @@ namespace MVCApp.Controllers
             //else
             //    ViewBag.CheckURL = "N";
 
-           
-                Session["BeforeScreenUnit"] = Url.RequestContext.RouteData.Values["id"];
+            ViewBag.PlantCode = id;
+            Session["BeforeScreenUnit"] = Url.RequestContext.RouteData.Values["id"];
                 //ViewBag.CheckURL = "Y";
 
                 return View();
         }
 
-        public PartialViewResult Grid()
+
+        [HttpGet]
+        public JsonResult Grid(string PLANTCODE)
         {
             string plant = "", family = "", DisplayMethod = ""; 
             List<BEFOREPAINTLCDGRID> GridList = new List<BEFOREPAINTLCDGRID>();
-            MsgReturn mr = new MsgReturn();
+            var result = new BEFOREPAINTLCDGRID();
+            BEFOREPAINTLCDGRID mr = new BEFOREPAINTLCDGRID();
             try
             {
                 string Shiftcode = "", NightExists = "", data = "", isDayNeedToLess = "0"; DateTime Plandate = new DateTime(); string expqty = "";
@@ -58,7 +61,7 @@ namespace MVCApp.Controllers
                 //}
                 DisplayMethod = Convert.ToString(ConfigurationManager.AppSettings["DisplayMethod"]);
 
-                plant = Convert.ToString(Session["BeforeScreenUnit"]);
+                plant = PLANTCODE;
                 if (plant == "4")
                 {
                     plant = "T04";
@@ -70,7 +73,7 @@ namespace MVCApp.Controllers
                     family = "TRACTOR FT";
                 }               
 
-                mr = CheckInfo(plant, family);
+                result = CheckInfo(plant, family);
 
                 DateTime ShiftStart, shiftEnd;
                 data = fun.getshift();
@@ -88,7 +91,9 @@ namespace MVCApp.Controllers
                         Plandate = fun.GetServerDateTime().Date;
 
                     ViewBag.lblDate = "DATE: " + Plandate.ToString("dd MMM yyyy");
+                    result.lblDate = ViewBag.lblDate;
                     ViewBag.Shift = "SHIFT: " + Shiftcode;
+                    result.Shift = ViewBag.Shift;
                     //string planid = fun.GetplanId(plant, family, Plandate, Shiftcode);
                     //if(string.IsNullOrEmpty(planid))
                     //{
@@ -101,6 +106,7 @@ namespace MVCApp.Controllers
                     String[] StrDate = Str.Split(Spearator, StringSplitOptions.None);
 
                     ViewBag.Time = "TIME: " + StrDate[1];
+                    result.lblTime = ViewBag.Time;
 
                     DataTable dt = new DataTable();
                     if (DisplayMethod.ToUpper() == "INLINE")
@@ -110,7 +116,7 @@ namespace MVCApp.Controllers
                     }
                     else 
                     {
-                        bool result = false;
+                        bool flag = false;
 
                         try
                         {
@@ -132,8 +138,8 @@ namespace MVCApp.Controllers
                                 sc.Parameters.Add("PRC", OracleDbType.RefCursor, ParameterDirection.Output);
                                 OracleDataAdapter dr = new OracleDataAdapter(sc);
                                 dr.Fill(dt);
-                                //fun.ConClose();
-                                result = true;
+                                fun.ConClose();
+                                flag = true;
                             }
                         }
                         catch (Exception ex)
@@ -161,45 +167,79 @@ namespace MVCApp.Controllers
                                     dt.Rows.Remove(row);
                                 int COUNT = 0;
                                 bool Resetflag = false;
+                            
                                 foreach (DataRow dr in dt.Rows)
                                 {
-                                   COUNT++;
-                                    if (Convert.ToInt32(dr["AGEING_DAYS"]) == 0 && !Resetflag)
-                                    {
-                                        COUNT = 1;
-                                        Resetflag = true;
-                                    };
-                                    BEFOREPAINTLCDGRID GR = new BEFOREPAINTLCDGRID
-                                    {
-                                        SRNO = COUNT.ToString(),
-                                        FCODE = dr["FCODE"].ToString(),
-                                        //DESCRIPTION = dr["DESCRIPTION"].ToString(),
-                                        SHORTCODE = dr["SHORTCODE"].ToString(),
-                                        //ENGINE = dr["ENGINE"].ToString(),
-                                        //LIFT = dr["LIFT"].ToString(),
-                                        //FRONT_AXLE = dr["FRONT_AXLE"].ToString(),
-                                        BRAKE_PEDAL = dr["BRK_PAD"].ToString(),
-                                        FUEL_TANK = dr["FUEL_TANK"].ToString(),
-                                        CLUTCH_PEDAL = dr["CLUTCH_PEDAL"].ToString(),
-                                        SPOOL_VALUE = dr["SPOOL_VALUE"].ToString(),
-                                        TANDEM_PUMP = dr["TANDEM_PUMP"].ToString(),
-                                        STARTER_MOTOR = dr["STARTER_MOTOR"].ToString(),
-                                        ALTERNATOR = dr["ALTERNATOR"].ToString(),
-                                        //FRONT_SUPPORT = dr["FRONT_SUPPORT"].ToString(),
-                                        //STEERING_COLUMN = dr["STEERING_COLUMN"].ToString(),
-                                        PLANNED = dr["PLANNED"].ToString(),
-                                        ACTUAL = dr["ACTUAL"].ToString(),
-                                        PENDING = dr["PENDING"].ToString(),
-                                        AGEING_DAYS = Convert.ToInt32(dr["AGEING_DAYS"].ToString()),
+                                     COUNT++;
+                                     if (Convert.ToInt32(dr["AGEING_DAYS"]) == 0 && !Resetflag)
+                                     {
+                                         COUNT = 1;
+                                         Resetflag = true;
+                                     };
 
-                                    };
-                                    GridList.Add(GR);
-                                    
-                                }                                
-                            }
-                            //ViewBag.DataSource = GridList;
+                                    var BPtablsdata = new BEFOREPAINTLCDGRID();
+                                    BPtablsdata.SRNO = COUNT.ToString();
+                                    BPtablsdata.FCODE = dr["FCODE"].ToString();
+                                    //BPtablsdata.DESCRIPTION = dr["DESCRIPTION"].ToString();
+                                    BPtablsdata.SHORTCODE = dr["SHORTCODE"].ToString();
+                                    //BPtablsdata.ENGINE = dr["ENGINE"].ToString();
+                                    //BPtablsdata.LIFT = dr["LIFT"].ToString();
+                                    //BPtablsdata.FRONT_AXLE = dr["FRONT_AXLE"].ToString();
+                                    BPtablsdata.BRAKE_PEDAL = dr["BRK_PAD"].ToString();
+                                    BPtablsdata.FUEL_TANK = dr["FUEL_TANK"].ToString();
+                                    BPtablsdata.CLUTCH_PEDAL = dr["CLUTCH_PEDAL"].ToString();
+                                    BPtablsdata.SPOOL_VALUE = dr["SPOOL_VALUE"].ToString();
+                                    BPtablsdata.TANDEM_PUMP = dr["TANDEM_PUMP"].ToString();
+                                    BPtablsdata.STARTER_MOTOR = dr["STARTER_MOTOR"].ToString();
+                                    BPtablsdata.ALTERNATOR = dr["ALTERNATOR"].ToString();
+                                    //BPtablsdata.FRONT_SUPPORT = dr["FRONT_SUPPORT"].ToString();
+                                    //BPtablsdata.STEERING_COLUMN = dr["STEERING_COLUMN"].ToString();
+                                    BPtablsdata.PLANNED = dr["PLANNED"].ToString();
+                                    BPtablsdata.ACTUAL = dr["ACTUAL"].ToString();
+                                    BPtablsdata.PENDING = dr["PENDING"].ToString();
+                                    BPtablsdata.AGEING_DAYS = Convert.ToInt32(dr["AGEING_DAYS"].ToString());
+                                    GridList.Add(BPtablsdata);
+                                }
 
-                            ViewBag.lblPending = "PENDING: " + Convert.ToString(dt.Compute("Sum(PENDING)", ""));
+                            //foreach (DataRow dr in dt.Rows)
+                            //{
+                            //   COUNT++;
+                            //    if (Convert.ToInt32(dr["AGEING_DAYS"]) == 0 && !Resetflag)
+                            //    {
+                            //        COUNT = 1;
+                            //        Resetflag = true;
+                            //    };
+                            //    BEFOREPAINTLCDGRID GR = new BEFOREPAINTLCDGRID
+                            //    {
+                            //        SRNO = COUNT.ToString(),
+                            //        FCODE = dr["FCODE"].ToString(),
+                            //        //DESCRIPTION = dr["DESCRIPTION"].ToString(),
+                            //        SHORTCODE = dr["SHORTCODE"].ToString(),
+                            //        //ENGINE = dr["ENGINE"].ToString(),
+                            //        //LIFT = dr["LIFT"].ToString(),
+                            //        //FRONT_AXLE = dr["FRONT_AXLE"].ToString(),
+                            //        BRAKE_PEDAL = dr["BRK_PAD"].ToString(),
+                            //        FUEL_TANK = dr["FUEL_TANK"].ToString(),
+                            //        CLUTCH_PEDAL = dr["CLUTCH_PEDAL"].ToString(),
+                            //        SPOOL_VALUE = dr["SPOOL_VALUE"].ToString(),
+                            //        TANDEM_PUMP = dr["TANDEM_PUMP"].ToString(),
+                            //        STARTER_MOTOR = dr["STARTER_MOTOR"].ToString(),
+                            //        ALTERNATOR = dr["ALTERNATOR"].ToString(),
+                            //        //FRONT_SUPPORT = dr["FRONT_SUPPORT"].ToString(),
+                            //        //STEERING_COLUMN = dr["STEERING_COLUMN"].ToString(),
+                            //        PLANNED = dr["PLANNED"].ToString(),
+                            //        ACTUAL = dr["ACTUAL"].ToString(),
+                            //        PENDING = dr["PENDING"].ToString(),
+                            //        AGEING_DAYS = Convert.ToInt32(dr["AGEING_DAYS"].ToString()),
+
+                            //    };
+                            //    GridList.Add(GR);
+
+                            //}
+                        }
+                        ViewBag.DataSource = GridList;
+
+                        result.lblPending = "PENDING: " + Convert.ToString(dt.Compute("Sum(PENDING)", ""));
 
                             string fromtime = ShiftStart.ToString("dd-MMM-yyyy HH:mm:ss");
                             string totime = shiftEnd.ToString("dd-MMM-yyyy HH:mm:ss");
@@ -207,34 +247,36 @@ namespace MVCApp.Controllers
                             query = string.Format(@"select count(*) from XXES_CONTROLLERS_DATA where stage='BP' AND HOOK_NO <> 9999 AND PLANT_CODE = 'T04' AND ENTRY_DATE BETWEEN to_date('{1}', 'DD-MON-YYYY HH24:MI:SS') AND to_date('{2}', 'DD-MON-YYYY HH24:MI:SS')", plant.Trim(), fromtime, totime);
                             expqty = fun.get_Col_Value(query);
                             ViewBag.lblHookUp = "HOOKUP: " + (expqty.Trim() == "" ? "0" : expqty.Trim());
-                            ViewBag.lblDayTotal = GetDayTotalHookedUp(plant.Trim());
+                            result.lblHookUp = ViewBag.lblHookUp;
+                            result.lblDayTotal = GetDayTotalHookedUp(plant.Trim());
                          
                     }
                     catch (Exception ex)
                     {
-                        mr.lblError = mr.lblError + "\n" + ex.Message.ToString();
-                        mr.lblErrorTF = true;
+                        result.lblError = result.lblError + "\n" + ex.Message.ToString();
+                        result.lblErrorTF = true;
                     }
                     finally { }                   
                     //CheckInfo(plant, family);
+                
                 }
             }
             catch (Exception ex)
             {
-                mr.lblError = mr.lblError + "\n" + ex.Message.ToString();
-                mr.lblErrorTF = true;
+                result.lblError = result.lblError + "\n" + ex.Message.ToString();
+                result.lblErrorTF = true;
             }
             finally { }
-            ViewBag.lblInfoTF = mr.lblInfoTF;
-            ViewBag.lblInfo = mr.lblInfo;
-            ViewBag.lblInfodbTF = mr.lblInfodbTF;
-            ViewBag.lblInfodb = mr.lblInfodb;
-            ViewBag.lblErrorTF = mr.lblErrorTF;
-            ViewBag.lblError = mr.lblError;
-            ViewBag.lblErrordbTF = mr.lblErrordbTF;
-            ViewBag.lblErrordb = mr.lblErrordb;
-
-            return PartialView(GridList);
+            //result.lblInfoTF = result.lblInfoTF;
+            //result.lblInfo = result.lblInfo;
+            //result.lblInfodbTF = result.lblInfodbTF;
+            //result.lblInfodb = result.lblInfodb;
+            //result.lblErrorTF = result.lblErrorTF;
+            //result.lblError = result.lblError;
+            //result.lblErrordbTF = result.lblErrordbTF;
+            //result.lblErrordb = result.lblErrordb;
+            result.BPgriddata = GridList;
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         //public string GetDayTotalHookUp(string plant)
@@ -283,14 +325,14 @@ namespace MVCApp.Controllers
         //    }
         //}
 
-        private MsgReturn CheckInfo(string plant, string family)
+        public BEFOREPAINTLCDGRID CheckInfo(string plant, string family)
         {
             //if (string.IsNullOrEmpty(Convert.ToString(Session["Login_User"])))
             //    ViewBag.CheckURL = "Y";
             //else
             //    ViewBag.CheckURL = "N";
 
-            MsgReturn R = new MsgReturn();
+            BEFOREPAINTLCDGRID R = new BEFOREPAINTLCDGRID();
             try
             {
                 bool isError = false;
