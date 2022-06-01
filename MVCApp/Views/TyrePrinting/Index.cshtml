@@ -1,0 +1,422 @@
+﻿
+@model MVCApp.Models.TyrePrinting
+
+<style>
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .the-legend {
+        box-shadow: 0px 1px 5px #7f8b8f;
+    }
+
+    ol, ul {
+        margin: 5px 0px 1px 1px;
+    }
+
+    .tab-content {
+        padding: 6px 0px 0px 0px;
+    }
+    .m-50 {
+        width: 73%;
+        MARGIN: 0 0 0 130px
+    }
+    .newinputwidth {
+        MIN-WIDTH: 130px !important;
+        MAX-HEIGHT: 30px !important;
+    }
+    #PasswordPopUp .modal-lg {
+        max-width: 30% !important;
+    }
+    .important {
+        opacity: -0.5;
+    }
+    .test {
+        overflow: auto
+    }
+
+</style>
+
+
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:10%; margin-left:38%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">Tyre Barcode Printing</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    <ul class="nav nav-pills">
+        <li class="bg-light active"><a data-toggle="tab" href="#Menu1">Front Tyre</a></li>
+        <li class="bg-light"><a data-toggle="tab" href="#Menu2">Rear Tyre</a></li>
+    </ul>
+    @*--------Form------------*@
+    <div class="tab-content">
+        <div id="Menu1" class="tab-pane fade in active">
+            <div class="container" style="width:100%!important">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-horizontal form-group ">
+                        <fieldset class="the-fieldset bg-info">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="Plant" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                                    @Html.DropDownListFor(model => model.Plant, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.Plant, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="Family" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                                    @Html.DropDownListFor(model => model.Family, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.Family, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="ItemCode" class="text-right control-label col-form-label"><strong>Tractor</strong></label>
+                                    @Html.DropDownListFor(model => model.ItemCode, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.ItemCode, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="MakeTyre" class="text-right control-label col-form-label"><strong>Make Tyre</strong></label>
+                                    @Html.DropDownListFor(model => model.MakeTyre, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                    <strong>@Html.ValidationMessageFor(model => model.MakeTyre, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-1">
+                                    <label for="Quantity" class="text-right control-label col-form-label"><strong>Quantity</strong></label>
+                                    @Html.TextBoxFor(Model => Model.Quantity, null, new { @class = "form-control input-sm", @autocomplete = "off", type = "number" })
+                                    <strong>@Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>Front Tyre RH</strong></label>
+                                    <div class="row">
+                                        <div class="col-md-1">
+                                            @Html.CheckBoxFor(model => model.chkFTRH, new { @class = "form-control  input-sm", @checked = "checked" })
+                                        </div>
+                                        <div class="col-md-11" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.FTRH, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="fname" class="text-right control-label col-form-label" style="width:auto;"><strong>Front Tyre LH</strong></label>
+                                    <div class="row">
+                                        <div class="col-md-1">
+                                            @Html.CheckBoxFor(model => model.chkFTLH, new { @class = "form-control  input-sm", @checked = "checked" })
+                                        </div>
+                                        <div class="col-md-11" style="padding: 5px 12px 5px 12px !important;">
+                                            @Html.TextBoxFor(Model => Model.FTLH, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1" style="padding-top: 23px;">
+                                    <button class="btn btn-success btn-sm" type="button" id="print"><i class="ace-icon fa fa-print bigger-110"></i><strong>Print</strong></button>
+                                </div>
+                                <div class="col-md-1" style="padding-top: 23px;">
+                                    <button class="btn btn-success btn-sm" type="button" id="Reprint"><i class="ace-icon fa fa-print bigger-110"></i><strong>Reprint</strong></button>
+                                </div>
+                                <div class="col-md-1" style="padding-top: 23px;">
+                                    <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                }
+            </div>
+        </div>
+        @*<div id="Menu2" class="tab-pane fade">
+            <div class="container" style="width:100%!important">
+                <div class="form-horizontal form-group ">
+                    <fieldset class="the-fieldset bg-info">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="RPlant" class="text-right control-label col-form-label"><strong>Plant</strong></label>
+                                @Html.DropDownListFor(model => model.RPlant, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.RPlant, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="RFamily" class="text-right control-label col-form-label"><strong>Family</strong></label>
+                                @Html.DropDownListFor(model => model.RFamily, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.RFamily, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="RBackend" class="text-right control-label col-form-label"><strong>Backend</strong></label>
+                                @Html.TextBoxFor(Model => Model.RBackendSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.RBackendSrno, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="RRearAxleSrno" class="text-right control-label col-form-label"><strong>RearAxle</strong></label>
+                                @Html.TextBoxFor(Model => Model.RRearAxleSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.RRearAxleSrno, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="RTransmissionSrno" class="text-right control-label col-form-label"><strong>Transmission</strong></label>
+                                @Html.TextBoxFor(Model => Model.RTransmissionSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.RTransmissionSrno, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="RHydraulicSrno" class="text-right control-label col-form-label"><strong>Hydraulic</strong></label>
+                                @Html.TextBoxFor(Model => Model.RHydraulicSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                                <strong>@Html.ValidationMessageFor(model => model.RHydraulicSrno, "", new { @class = "text-danger" })</strong>
+                            </div>
+                            <div class="col-md-1" style="padding-top: 23px;">
+                                <button class="btn btn-success btn-sm" type="button" id="AddReprint"><i class="ace-icon fa fa-print bigger-110"></i><strong>RePrint</strong></button>
+                            </div>
+                            <div class="col-md-1" style="padding-top: 23px;">
+                                <button class="btn btn-default btn-sm" type="button" id="ClearReprint"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>*@
+
+    </div>
+</div>
+
+
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+        DDLPlant();
+        DDLTyre();
+    });
+    $("#Plant").on("change", function () {
+        DDLFamilyByPlant();
+    });
+    $("#Family").on("change", function () {
+        BindTractor();
+    });
+    $("#ItemCode").on("change", function () {
+        GetTyreDeCode();
+    });
+    //Function to bind Plant
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "TyrePrinting")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#Plant").append(optionhtml);
+                });
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        var selectedValue = $("#Plant").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "TyrePrinting")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#Family").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#Family").append(optionhtml);
+                });
+                BindTractor();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+     function BindTractor() {
+        var Data = {
+            Plant: $("#Plant").val(),
+            Family: $("#Family").val()
+        };
+        $.ajax({
+            url: '@Url.Action("BindItemCode", "TyrePrinting")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify(Data),
+            success: function (result) {
+                $("#ItemCode").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#ItemCode").append(optionhtml);
+                });
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    function DDLTyre() {
+        $.ajax({
+            url: '@Url.Action("BindTyre", "TyrePrinting")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#MakeTyre").append(optionhtml);
+                });
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    function GetTyreDeCode() {
+            var Data = {
+                ItemCode: $('#ItemCode').val(),
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val()
+            };
+        $.ajax({
+            url: '@Url.Action("GetTyreDeCode", "TyrePrinting")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.Msg != "") {
+                    $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+
+                }
+                else {
+
+                    if (data.Result.FTLH != "" && data.Result.FTLH != null) {
+                        $("#FTLH").val(data.Result.FTLH);
+
+                    }
+                    if (data.Result.FTRH != "" && data.Result.FTRH != null) {
+                        $("#FTRH").val(data.Result.FTRH);
+
+                    }
+                    $('#FTLH').prop('disabled', true);
+                    $('#FTRH').prop('disabled', true);
+                }
+
+            },
+            error: function (errormessage) {
+
+            }
+        });
+
+    };
+    $("#Plant").select2({
+        allowClear: true,
+        width: '300px',
+    });
+    $("#Family").select2({
+        allowClear: true,
+        width: '300px',
+    });
+    $("#ItemCode").select2({
+        allowClear: true,
+        width: '300px',
+    });
+    $("#MakeTyre").select2({
+        allowClear: true,
+        width: '200px',
+    });
+
+    $("#print").on("click", function () {
+            $("#divLoader").show();
+            var data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                ItemCode: $('#ItemCode').val(),
+                MakeTyre: $("#MakeTyre").val(),
+                Quantity: $("#Quantity").val(),
+                FTRH: $("#FTRH").val(),
+                FTLH: $("#FTLH").val()
+            };
+            $.ajax({
+                url: '@Url.Action("Print", "TyrePrinting")',
+                data: JSON.stringify(data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        //$('#RearAxleSrno').val("");
+                        //$('#TransmissionSrno').val("");
+                    }
+
+                },
+                error: function (errormessage) {
+
+                }
+            });
+
+    });
+
+    $("#Clear").on("click", function () {
+        location.reload(true);
+    });
+    function closeAlert(alert) {
+        $(alert).hide();
+    };
+
+    /**************************************reprint********************************************/
+
+</script>
+
+
+
+

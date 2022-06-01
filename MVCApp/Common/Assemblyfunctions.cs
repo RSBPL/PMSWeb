@@ -779,6 +779,94 @@ namespace MVCApp.Common
             }
             return LastHookNo;
         }
+        public RollDown GetTractorDetails(string data,string plant,string family,string field)
+        {
+            
+            RollDown down = new RollDown();
+            try
+            {
+              
+                query = string.Format(@"select j.JOBID,j.ITEM_CODE FCODE ,
+                j.ENGINE_SRLNO,j.FCODE_SRLNO ,REARTYRE_SRLNO1,REARTYRE_SRLNO2,FRONTTYRE_SRLNO1,FRONTTYRE_SRLNO2,
+                SIM_SERIAL_NO,IMEI_NO,MOBILE,m.REQUIRE_REARAXEL,M.REQUIRE_ENGINE,M.REQUIRE_TRANS,M.REQUIRE_BACKEND,m.ITEM_DESCRIPTION
+                 DESCRIPTION,HYDRALUIC_SRLNO HYDRAULIC_LIFT,REARTYRE_MAKE TYRE_MAKE, 
+                j.REARAXEL REAR_AXLE,REARAXEL_SRLNO,j.BACKEND,j.BACKEND_SRLNO,j.TRANSMISSION,TRANSMISSION_SRLNO,j.ENGINE,BATTERY_MAKE,BATTERY_SRLNO,
+                fcode_id,
+                REQ_CAREBTN CAREBUTTONREQ,to_char( FINAL_LABEL_DATE, 'dd-Mon-yyyy HH24:MI:SS' )  FINAL_LABEL_DATE,
+                to_char( PDIOKDATE, 'dd-Mon-yyyy HH24:MI:SS' ) PDIOKDATE,   
+                M.remarks,M.short_code ,to_char( CAREBUTTONOIL, 'dd-Mon-yyyy HH24:MI:SS' )  CAREBUTTONOIL,
+                 SWAPCAREBTN,j.HYDRALUIC_DESCRIPTION,j.REARTYRE_DESCRIPTION,j.FRONTTYRE_DESCRIPTION,Prefix_4,
+                j.HYDRALUIC,j.HYDRALUIC_SRLNO,ROPS_SRNO
+                from XXES_ITEM_MASTER m join xxes_job_status j on m.plant_code=j.plant_code
+                and m.family_code=j.family_code and m.item_code=j.item_code where 
+                 j.plant_code='{0}' and j.family_code='{1}' and j.{3}='{2}'",
+                   plant.Trim().ToUpper(),
+                  family.Trim().ToUpper(),data,field);
+                DataTable dt = new DataTable();
+                dt = funtion.returnDataTable(query);
+                if (dt.Rows.Count > 0)
+                {
+                    down.PLANTCODE = plant;
+                    down.FAMILYCODE = family;
+                    down.ROPSrno = Convert.ToString(dt.Rows[0]["ROPS_SRNO"]);
+                    down.Carebuttonoildate = Convert.ToString(dt.Rows[0]["CAREBUTTONOIL"]);
+                    down.hydrualic_desc = Convert.ToString(dt.Rows[0]["HYDRALUIC_DESCRIPTION"]);
+                    down.REARTYRE_DESCRIPTION = Convert.ToString(dt.Rows[0]["REARTYRE_DESCRIPTION"]);
+                    down.FRONTTYRE_DESCRIPTION = Convert.ToString(dt.Rows[0]["FRONTTYRE_DESCRIPTION"]);
+                    down.TractorCode = Convert.ToString(dt.Rows[0]["FCODE"]);
+                    down.TractorSrlno = Convert.ToString(dt.Rows[0]["FCODE_SRLNO"]);
+                    down.TractorDesc = Convert.ToString(dt.Rows[0]["DESCRIPTION"]);
+                    down.Hydraulic = Convert.ToString(dt.Rows[0]["HYDRALUIC"]);
+                    down.Hydraulic_srlno = Convert.ToString(dt.Rows[0]["HYDRALUIC_SRLNO"]);
+                    down.reartyremake = Convert.ToString(dt.Rows[0]["TYRE_MAKE"]);
+                    down.RearAxel = Convert.ToString(dt.Rows[0]["REAR_AXLE"]);
+                    down.RearAxel_srlno = Convert.ToString(dt.Rows[0]["REARAXEL_SRLNO"]);
+                    down.Transmission = Convert.ToString(dt.Rows[0]["TRANSMISSION"]);
+                    down.Transmission_srlno = Convert.ToString(dt.Rows[0]["TRANSMISSION_SRLNO"]);
+                    down.Engine = Convert.ToString(dt.Rows[0]["ENGINE"]);
+                    down.Engine_srlno = Convert.ToString(dt.Rows[0]["ENGINE_SRLNO"]);
+                    down.Backend = Convert.ToString(dt.Rows[0]["backend"]);
+                    down.Backend_srlno = Convert.ToString(dt.Rows[0]["BACKEND_SRLNO"]);
+                    down.batterymake = Convert.ToString(dt.Rows[0]["BATTERY_MAKE"]);
+                    down.Battery = Convert.ToString(dt.Rows[0]["BATTERY_SRLNO"]);
+                    down.TractorAutoid = Convert.ToString(dt.Rows[0]["FCODE_ID"]);
+                    down.JOBID = Convert.ToString(dt.Rows[0]["JOBID"]);
+                    down.simserialno = Convert.ToString(dt.Rows[0]["SIM_SERIAL_NO"]);
+                    down.IMEI = Convert.ToString(dt.Rows[0]["IMEI_NO"]);
+                    down.MOBILE = Convert.ToString(dt.Rows[0]["MOBILE"]);
+                    down.RearTyre1_srlno1 = Convert.ToString(dt.Rows[0]["REARTYRE_SRLNO1"]);
+                    down.RearTyre2_srlno2 = Convert.ToString(dt.Rows[0]["REARTYRE_SRLNO2"]);
+                    down.FrontTyre1_srlno1 = Convert.ToString(dt.Rows[0]["FRONTTYRE_SRLNO1"]);
+                    down.FrontTyre2_srlno2 = Convert.ToString(dt.Rows[0]["FRONTTYRE_SRLNO2"]);
+                    down.reqcarebtn = Convert.ToString(dt.Rows[0]["CAREBUTTONREQ"]);
+                    down.swapbtn = Convert.ToString(dt.Rows[0]["SWAPCAREBTN"]);
+                    down.Rolloutdate = Convert.ToString(dt.Rows[0]["FINAL_LABEL_DATE"]);
+                    down.Pdidate = Convert.ToString(dt.Rows[0]["PDIOKDATE"]);
+                    down.remarks = Convert.ToString(dt.Rows[0]["remarks"]);
+                    down.shortcode = Convert.ToString(dt.Rows[0]["short_code"]);
+                    down.isEnableCarebutton = Convert.ToString(dt.Rows[0]["CAREBUTTONREQ"]);
+                    down.Carebuttonoildate = Convert.ToString(dt.Rows[0]["CAREBUTTONOIL"]);
+                    down.isRearAxelRequire = (Convert.ToString(dt.Rows[0]["REQUIRE_REARAXEL"]) == "Y" ? true : false);
+                    down.isEngineRequire = (Convert.ToString(dt.Rows[0]["REQUIRE_ENGINE"]) == "Y" ? true : false);
+                    down.isTransRequire = (Convert.ToString(dt.Rows[0]["REQUIRE_TRANS"]) == "Y" ? true : false);
+                    down.isBackendRequire = (Convert.ToString(dt.Rows[0]["REQUIRE_BACKEND"]) == "Y" ? true : false);
+                    down.TractorType = funtion.get_Col_Value(String.Format(@"select TYPE from xxes_daily_plan_TRAN 
+                    where autoid='{0}' and plant_code='{1}' and family_code='{2}'",
+                    down.TractorAutoid,down.PLANTCODE,down.FAMILYCODE
+                    ));
+                    down.PrintMMYYFormat = funtion.get_Col_Value("select ONLINE_SCREEN  from " +
+                    " XXES_Stage_Master where plant_code='" + down.PLANTCODE + "' and family_code='" + down.FAMILYCODE + "' and OFFLINE_KEYCODE='" + down.STAGE_Code + "'");
+                    down.Prefix_4 = Convert.ToString(dt.Rows[0]["Prefix_4"]);
+
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return down;
+        }
         public string SplitEngineDcode(string barcode, string type)
         {
             FIP data = new FIP();

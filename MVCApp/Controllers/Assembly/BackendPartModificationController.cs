@@ -12,6 +12,7 @@ using System.Web.Mvc;
 
 namespace MVCApp.Controllers.Assembly
 {
+    [Authorize]
     public class BackendPartModificationController : Controller
     {
         // GET: BackendPartModification
@@ -311,17 +312,27 @@ namespace MVCApp.Controllers.Assembly
                     var resul = new { Msg = msg, ID = mstType, validation = status };
                     return Json(resul, JsonRequestBehavior.AllowGet);
                 }
+                
                 data.runningSrlno = runningSrlno;
                 data.BackendSrno = BackendSrlno;
                 data.backend_desc = Backenddesc;
                 data.Transmission = ActualTrans;
                 data.RearAxle = ActualAxle;
-                if(UpdateBackend(data))
+                data.Hydraulic = ActualHydrualic;      
+                if (UpdateBackend(data))
                 {
-                    if(PrintBackendFT(data,1))
+                    data.Backend = data.Backend.Split('#')[0].Trim();
+                    data.JobId = data.JobId.Split('#')[0].Trim();
+                    if (PrintBackendFT(data,1))
                     {
                         msg = "Backend Srno generated and printed successfully !!";
-                        mstType = Validation.str1;
+                        mstType = "alert-success";
+                        status = Validation.str2;
+                    }
+                    else
+                    {
+                        msg = "Print File Not Found";
+                        mstType = "alert-danger";
                         status = Validation.str2;
                     }
                 }
@@ -330,9 +341,20 @@ namespace MVCApp.Controllers.Assembly
             catch (Exception ex)
             {
                 fun.LogWrite(ex);
+                msg = ex.Message;
+                mstType = Validation.str1;
+                status = Validation.str2;
             }
-            var result = new { Msg = msg, ID = mstType, validation = status };
-            return Json(result, JsonRequestBehavior.AllowGet);
+            var myResult = new
+            {
+                Result = data,
+                Msg = msg,
+                ID = mstType,
+                validation = status
+            };
+            //var result = new { Msg = msg, ID = mstType, validation = status };
+            //return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(myResult, JsonRequestBehavior.AllowGet);
         }
 
         public void getSeries(string unit, string family, string stage, out string runningSrlno, out string BackendSrlno)
@@ -388,11 +410,15 @@ namespace MVCApp.Controllers.Assembly
         public bool UpdateBackend(BackendModification data)
         {
             string stage = "BAB";
-            bool result = false;
+            bool result = false; string Backend = string.Empty, FCODE_ID = string.Empty, JobId = string.Empty;
             string orgid = fun.getOrgId(data.Plant, data.Family);
-            //string Backend = data.Backend.Split('#')[0].Trim();
-            //string FCODE_ID = data.Backend.Split('#')[1].Trim();
-            //string JobId = data.JobId.Split('#')[0].Trim();
+            if (!string.IsNullOrEmpty(data.runningSrlno))
+            {
+                Backend = data.Backend.Split('#')[0].Trim();
+                FCODE_ID = data.Backend.Split('#')[1].Trim();
+                JobId = data.JobId.Split('#')[0].Trim();
+            }
+
             string connectionString = ConfigurationManager.ConnectionStrings["CON"].ConnectionString;
             using(OracleConnection connection = new OracleConnection(connectionString))
             {
@@ -411,9 +437,7 @@ namespace MVCApp.Controllers.Assembly
                     
                     if (!string.IsNullOrEmpty(data.runningSrlno))
                     {
-                        string Backend = data.Backend.Split('#')[0].Trim();
-                        string FCODE_ID = data.Backend.Split('#')[1].Trim();
-                        string JobId = data.JobId.Split('#')[0].Trim();
+                       
                         query = string.Format(@"update XXES_FAMILY_SERIAL set Current_Serial_number='{0}',LAST_PRINTED_LABEL_DATE_TI=SYSDATE WHERE
                             plant_code='{1}' and family_code='{2}' and offline_keycode='{3}'", data.runningSrlno.Trim(), data.Plant.Trim(), data.Family.Trim(), stage);
                         command.CommandText = query;
@@ -546,7 +570,7 @@ namespace MVCApp.Controllers.Assembly
                         query = query.Replace("ITEM_NAME2", data.backend_desc);
                     }
                     cmd1 = query;
-                    if (PrintBackendLable(cmd1, "", data))
+                    if (PrintBackendLable(cmd1, data))
                         status = true;
                     else
                         status = false;
@@ -565,13 +589,17 @@ namespace MVCApp.Controllers.Assembly
             finally { }
         }
 
-        public bool PrintBackendLable(string cmd1, string cmd2, BackendModification data)
+        public bool PrintBackendLable(string cmd1, BackendModification data)
         {
             System.Net.Sockets.TcpClient tc;
             try
             {
-                //WriteFile(cmd1 + cmd2);
-                if (string.IsNullOrEmpty(data.IPPORT))
+                query = string.Format(@"select ipaddr || '#' || ipport from xxes_stage_master where 
+                        offline_keycode='BAB' and plant_code='{0}' and family_code='{1}'", data.Plant.Trim(),data.Family.Trim());
+                string line =  fun.get_Col_Value(query);
+                data.IPADDR = line.Split('#')[0].Trim();
+                data.IPPORT = line.Split('#')[1].Trim();
+                if (string.IsNullOrEmpty(Convert.ToString(data.IPPORT)))
                 {
                     throw new Exception("PRINTER PORT NOT FOUND");
                 }
@@ -582,7 +610,7 @@ namespace MVCApp.Controllers.Assembly
                 myStream = tc.GetStream();
                 if (myStream.CanWrite)
                 {
-                    Byte[] myFP = System.Text.Encoding.ASCII.GetBytes(cmd1.Trim() + cmd2.Trim());
+                    Byte[] myFP = System.Text.Encoding.ASCII.GetBytes(cmd1.Trim());
                     myStream.Write(myFP, 0, myFP.Length);
                     myStream.Flush();
                 }
@@ -667,6 +695,16 @@ namespace MVCApp.Controllers.Assembly
                     data.RRearAxleSrno = line.Split('#')[6].Trim().ToUpper();
                     data.RHydraulicSrno = line.Split('#')[7].Trim().ToUpper();
                     string hydra = line.Split('#')[8].Trim().ToUpper();
+                    data.Plant = data.RPlant;
+                    data.Family = data.RFamily;
+                }
+                else
+                {
+                    msg = "Data Not Found.";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(resul, JsonRequestBehavior.AllowGet);
                 }
             }
             catch (Exception ex)
@@ -702,7 +740,13 @@ namespace MVCApp.Controllers.Assembly
                 if (PrintBackendFT(data, 1))
                 {
                     msg = "Backend Reprinted !!";
-                    mstType = Validation.str1;
+                    mstType = "alert-success";
+                    status = Validation.str2;
+                }
+                else
+                {
+                    msg = "Print File Not Found";
+                    mstType = "alert-danger";
                     status = Validation.str2;
                 }
             }
@@ -710,9 +754,19 @@ namespace MVCApp.Controllers.Assembly
             {
                 fun.LogWrite(ex);
                 msg = ex.Message;
+                mstType = Validation.str1;
+                status = Validation.str2;
             }
-            var result = new { Msg = msg, ID = mstType, validation = status };
-            return Json(result, JsonRequestBehavior.AllowGet);
+            var myResult = new
+            {
+                Result = data,
+                Msg = msg,
+                ID = mstType,
+                validation = status
+            };
+            //var result = new { Msg = msg, ID = mstType, validation = status };
+            //return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(myResult, JsonRequestBehavior.AllowGet);
         }
 
         /******************************************PartModify*************************************************/
@@ -778,6 +832,14 @@ namespace MVCApp.Controllers.Assembly
                     data.MRearAxleSrno = line.Split('#')[6].Trim().ToUpper();
                     data.MHydraulicSrno = line.Split('#')[7].Trim().ToUpper();
                     string hydra = line.Split('#')[8].Trim().ToUpper();
+                }
+                else
+                {
+                    msg = "Data Not Found.";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(resul, JsonRequestBehavior.AllowGet);
                 }
             }
             catch (Exception ex)
@@ -993,7 +1055,13 @@ namespace MVCApp.Controllers.Assembly
                     if (PrintBackendFT(data, 1))
                     {
                         msg = "Updated and printed successfully !!";
-                        mstType = Validation.str1;
+                        mstType = "alert-success";
+                        status = Validation.str2;
+                    }
+                    else
+                    {
+                        msg = "Updated but not printed successfully";
+                        mstType = "alert-danger";
                         status = Validation.str2;
                     }
                 }
@@ -1002,11 +1070,14 @@ namespace MVCApp.Controllers.Assembly
             {
                 fun.LogWrite(ex);
                 msg = ex.Message;
+                mstType = Validation.str1;
+                status = Validation.str2;
             }
             var myResult = new
             {
                 Result = data,
                 Msg = msg,
+                ID = mstType,
                 validation = status
             };
             //var result = new { Msg = msg, ID = mstType, validation = status };
@@ -1025,7 +1096,7 @@ namespace MVCApp.Controllers.Assembly
                 if (fun.CheckExits(query))
                 {
                     msg = "Valid Password";
-                    mstType = Validation.str1;
+                    mstType = "alert-success";
                     status = Validation.str2;
                     var reult = new { Msg = msg, ID = mstType, validation = status };
                     return Json(reult, JsonRequestBehavior.AllowGet);

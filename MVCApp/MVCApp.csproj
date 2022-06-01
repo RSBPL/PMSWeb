@@ -269,6 +269,7 @@
     <Compile Include="Controllers\Assembly\HookUpAndDownController.cs" />
     <Compile Include="Controllers\Assembly\ImportExportController.cs" />
     <Compile Include="Controllers\Assembly\JobFinalController.cs" />
+    <Compile Include="Controllers\Assembly\TyrePrintingController.cs" />
     <Compile Include="Controllers\BarcodePrinting\TracktorSubAssemblyController.cs" />
     <Compile Include="Controllers\BarcodePrinting\SubAssemblyController.cs" />
     <Compile Include="Controllers\BarcodePrinting\GateEntryController.cs" />
@@ -389,7 +390,9 @@
     <Compile Include="Models\EngineAssembly.cs" />
     <Compile Include="Models\EngineModel.cs" />
     <Compile Include="Models\FIPModel.cs" />
+    <Compile Include="Models\PrintLabel.cs" />
     <Compile Include="Models\RollDown.cs" />
+    <Compile Include="Models\SendtoPrinter.cs" />
     <Compile Include="Models\TracktorSubAssemblyModel.cs" />
     <Compile Include="Models\SubAssemblyModel.cs" />
     <Compile Include="Models\GateEntryModel.cs" />
@@ -423,6 +426,7 @@
     <Compile Include="Models\SubAssemblyMapping.cs" />
     <Compile Include="Models\TRACTOR.cs" />
     <Compile Include="Models\TractorMster.cs" />
+    <Compile Include="Models\TyrePrinting.cs" />
     <Compile Include="Models\UserMaster.cs" />
     <Compile Include="Models\Validation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -773,6 +777,12 @@
     <Content Include="Image\print.jpg" />
     <Content Include="Image\print.png" />
     <Content Include="Image\Red.png" />
+    <Content Include="Printer\BK.TXT" />
+    <Content Include="Printer\EN.TXT" />
+    <Content Include="Printer\EN17.TXT" />
+    <Content Include="Printer\hyd.txt" />
+    <Content Include="Printer\JOB.TXT" />
+    <Content Include="Printer\PDI.TXT" />
     <Content Include="Scripts\AutoFill\images\ui-anim_basic_16x16.gif" />
     <Content Include="Scripts\AutoFill\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
     <Content Include="Scripts\AutoFill\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
@@ -1241,6 +1251,9 @@
     <Content Include="Views\Report\GrdCRITICIAL_VENDOR_MRN.cshtml" />
     <Content Include="Views\RollDown\Grid.cshtml" />
     <Content Include="Views\RollDown\Index.cshtml" />
+    <Content Include="Views\Setting\GridEmails.cshtml" />
+    <Content Include="Views\Report\GrdWEEKLY_OIL_FILTRATION.cshtml" />
+    <Content Include="Views\TyrePrinting\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

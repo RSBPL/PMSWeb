@@ -1,0 +1,49 @@
+<xpml><page quantity='0' pitch='50.8 mm'></xpml>'Seagull:2.1:DP
+INPUT OFF
+VERBOFF
+INPUT ON
+SYSVAR(48) = 0
+ERROR 15,"FONT NOT FOUND"
+ERROR 18,"DISK FULL"
+ERROR 26,"PARAMETER TOO LARGE"
+ERROR 27,"PARAMETER TOO SMALL"
+ERROR 37,"CUTTER DEVICE NOT FOUND"
+ERROR 1003,"FIELD OUT OF LABEL"
+SYSVAR(35)=0
+OPEN "tmp:setup.sys" FOR OUTPUT AS #1
+PRINT#1,"Printing,Media,Print Area,Media Margin (X),0"
+PRINT#1,"Printing,Media,Print Area,Media Width,406"
+PRINT#1,"Printing,Media,Print Area,Media Length,407"
+PRINT#1,"Printing,Media,Clip Default,On"
+CLOSE #1
+SETUP "tmp:setup.sys"
+KILL "tmp:setup.sys"
+<xpml></page></xpml><xpml><page quantity='1' pitch='50.8 mm'></xpml>CLL
+PRPOS 35,300
+PRIMAGE "ESCORT2.PCX"
+OPTIMIZE "BATCH" ON
+PP28,295:AN7
+NASC 8
+FT "Arial Black"
+FONTSIZE 8
+FONTSLANT 0
+PT "SR.NO:-"
+PP28,219:PT "ITEM :-"
+PP117,342:BARSET "CODE128B",2,1,2,50
+PB "SERIES_NO"
+PP187,295:PT "SERIES_NO"
+PP15,252:AN1
+PL381,5
+PP15,151:PL381,5
+PP130,219:AN7
+PT "DCODE_VAL"
+PP15,25:AN1
+PX356,382,5
+PP28,116:AN7
+FONTSIZE 7
+PT "ITEM_NAME1"
+PP28,92:PT "ITEM_NAME2"
+LAYOUT RUN ""
+PF
+PRINT KEY OFF
+<xpml></page></xpml><xpml><end/></xpml>

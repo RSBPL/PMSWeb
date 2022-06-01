@@ -557,7 +557,6 @@
 
                     else {
                         $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-
                         setTimeout(function () {
                             $.each($('.alert'), function () {
                                 closeAlert(this);

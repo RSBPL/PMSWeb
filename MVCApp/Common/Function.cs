@@ -11,11 +11,13 @@ using MVCApp.CommonFunction;
 using System.Configuration;
 using System.IO;
 using System.Threading;
+using System.Net.Mail;
 
 namespace MVCApp.CommonFunction
 {
     static class stringExtention
     {
+        
         public static void SetPropertiesToDefaultValues<T>(this T obj)
         {
             var props = obj.GetType().GetProperties();
@@ -40,6 +42,7 @@ namespace MVCApp.CommonFunction
         OracleDataAdapter da;
         BaseEncDec bed = new BaseEncDec();
         private static ReaderWriterLockSlim _readWriteLock = new ReaderWriterLockSlim();
+
         public OracleConnection Connection()
         {
 
@@ -1130,7 +1133,6 @@ namespace MVCApp.CommonFunction
             }
             finally
             {
-
                 if (sw != null)
                 {
                     sw.Dispose();
@@ -1204,6 +1206,42 @@ namespace MVCApp.CommonFunction
             }
         }
 
+        public List<DDLTextValue> Fill_All_Stage()
+        {
+            DataTable TmpDs = new DataTable();
+            List<DDLTextValue> Family = new List<DDLTextValue>();
+            try
+            {
+
+                string query = "SELECT  stage_description, OFFLINE_KEYCODE || '#' || STAGE_ID stage_id FROM xxes_stage_master ";
+                TmpDs = returnDataTable(query);
+
+
+                if (TmpDs.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in TmpDs.AsEnumerable())
+                    {
+
+                        Family.Add(new DDLTextValue
+                        {
+                            Text = dr["stage_description"].ToString(),
+                            Value = dr["stage_id"].ToString(),
+                        });
+
+                    }
+                }
+                return Family;
+            }
+            catch (Exception ex)
+            {
+                LogWrite(ex);
+                return Family;
+            }
+            finally
+            {
+                //ConClose();
+            }
+        }
         public List<DDLTextValue> Fill_All_Stage_ByPlantAndFamily(string plant, string family)
         {
             DataTable TmpDs = new DataTable();
@@ -1240,7 +1278,6 @@ namespace MVCApp.CommonFunction
                 //ConClose();
             }
         }
-
         public bool UpdateFamilySerial(ItemModel itemModel)
         {
             bool result = false;
@@ -2176,7 +2213,7 @@ namespace MVCApp.CommonFunction
         {
             try
             {
-                _readWriteLock.EnterWriteLock();
+                //_readWriteLock.EnterWriteLock();
                 if (ex.Message != "Thread was being aborted." || ex.Message != "The ConnectionString property has not been initialized.")
                 {
                     string DirectoryPath = HttpContext.Current.Server.MapPath("~/LogFiles/");
@@ -2203,7 +2240,7 @@ namespace MVCApp.CommonFunction
             }
             finally
             {
-                _readWriteLock.ExitWriteLock();
+                //_readWriteLock.EnterWriteLock();
             }
         }
 
@@ -6868,6 +6905,22 @@ namespace MVCApp.CommonFunction
                 LogWrite(ex);
             }
         }
+        public void Insert_Part_Audit_DataNEW(string plant, string family, string Item_code, string Item_SrNo, string Part_Itemcode, string Part_Desc, string Remarks1, string Remarks2, string NEW_Part,string NEW_PART_DESC,string TrancationType,int TransactionNumber)
+        {
+            try
+            {
+                DateTime ServerDateTime = GetServerDateTime().Date;
+                string query = @"INSERT INTO XXES_PARTS_AUDIT_DATA(PLANT_CODE,FAMILY_CODE,ITEM_CODE,ENTRYDATE,PART_ITEM_CODE,OLD_PART_DESC,REMARKS1,REMARKS2,PART_NEW_ITEMCODE,NEW_PART_DESC,LOGIN_USER,SYSTEM,PART_DESC,TRANSACTION_NUMBER) 
+                                values('" + plant.Trim().ToUpper() + "','" + family.Trim().ToUpper() + "','" + Item_code.Trim().ToUpper() + "',SYSDATE,'"
+                                          + Part_Itemcode.Trim().ToUpper() + "','" + Part_Desc.Trim().ToUpper() + "','" + Remarks1.Trim() + "','" + Remarks2.Trim() + "','" + NEW_Part.Trim().ToUpper() + "','" + NEW_PART_DESC.Trim().ToUpper() + "','" + HttpContext.Current.Session["Login_User"] + "','" + GetUserIP().Trim() + "','" + TrancationType.Trim().ToUpper() + "'," + TransactionNumber + ")";
+                EXEC_QUERY(query);
+            }
+            catch (Exception ex)
+            {
+                LogWrite(ex);
+            }
+        }
+
         public void InsertBarcodeData(string PlantCode, string FamilyCode, string ItemCode, string EngineSrNo, string MarkMonth, string MarkDate, string MarkYear,
        string MarkTime, string VendorCode, string SrNo, string HeatCode, string Remark1, string BarcodeData)
         {
@@ -8604,28 +8657,29 @@ namespace MVCApp.CommonFunction
                 {
                     search = Convert.ToString(obj.P_Search).ToUpper().Trim();
                 }
+                obj.length = Convert.ToInt32(obj.start) + Convert.ToInt32(obj.length);
                 if (obj.CheckboxReprint!=true)
                 {
                     days = Convert.ToInt16(ConfigurationSettings.AppSettings["MRN_DAYS"]);
-                        if (ConfigurationSettings.AppSettings["LOGIN_CHECK_MRN"].ToString() != "N")
-                        {
-                            query = @" select distinct '0' SELECT_MRN, to_char( TRANSACTION_DATE, 'dd-Mon-yyyy HH24:MI:SS' ) TRANSACTION_DATE,MRN_NO,VEHICLE_NO, ";
-                            query += " VENDOR_CODE,VENDOR_NAME,INVOICE_NO,INVOICE_DATE, ";
-                            query += " (select g.ITEM_DESCRIPTION || ' [' || g.ITEM_CODE || ']' from apps.XXESGATETAGPRINT_BARCODE g where g.mrn_no=b.MRN_NO and g.Invoice_no=b.Invoice_no AND ";
-                            query += " to_char(TRANSACTION_DATE,'dd-Mon-yyyy')>=to_char(sysdate-" + days + ",'dd-Mon-yyyy') and ORGANIZATION_CODE='" + obj.PLANTCODE + "' and UPPER(CREATED_BY)='" + HttpContext.Current.Session["Login_User"].ToString().ToUpper().Trim() + "' and rownum=1) ITEM, ";
-                            query += " (select count(*) from apps.XXESGATETAGPRINT_BARCODE g where g.mrn_no=b.MRN_NO and g.Invoice_no=b.Invoice_no AND ";
-                            query += " to_char(TRANSACTION_DATE,'dd-Mon-yyyy')>=to_char(sysdate-" + days + ",'dd-Mon-yyyy') and ORGANIZATION_CODE='" + obj.PLANTCODE + "' and UPPER(CREATED_BY)='" + HttpContext.Current.Session["Login_User"].ToString().ToUpper().Trim() + "' ) TOTAL_ITEM  ,SOURCE_DOCUMENT_CODE SOURCE_TYPE,ORGANIZATION_CODE,STATUS from apps.XXESGATETAGPRINT_BARCODE b where  ";
-                            query += "  to_char(TRANSACTION_DATE,'dd-Mon-yyyy')>=to_char(sysdate-" + days + ",'dd-Mon-yyyy') and ORGANIZATION_CODE='" + obj.PLANTCODE + "' and UPPER(CREATED_BY)='" + HttpContext.Current.Session["Login_User"].ToString().ToUpper().Trim() + "' and MRN_NO not in (select mrn_no from ITEM_RECEIPT_DETIALS)  And MRN_No like '%" + search + "%' order by mrn_no,invoice_no";
-                        }
-                        else if (ConfigurationSettings.AppSettings["LOGIN_CHECK_MRN"].ToString() == "N")
-                        {
-                            query = @" select distinct '0' SELECT_MRN, to_char( TRANSACTION_DATE, 'dd-Mon-yyyy HH24:MI:SS' ) TRANSACTION_DATE,MRN_NO,VEHICLE_NO, ";
-                            query += " VENDOR_CODE,VENDOR_NAME,INVOICE_NO,INVOICE_DATE, ";
-                            query += " (select g.ITEM_DESCRIPTION || ' [' || g.ITEM_CODE || ']' from apps.XXESGATETAGPRINT_BARCODE g where g.mrn_no=b.MRN_NO and g.Invoice_no=b.Invoice_no AND ";
-                            query += " to_char(TRANSACTION_DATE,'dd-Mon-yyyy')=to_char(sysdate-" + days + ",'dd-Mon-yyyy') and ORGANIZATION_CODE='" + obj.PLANTCODE + "' and rownum=1) ITEM, ";
-                            query += " (select count(*) from apps.XXESGATETAGPRINT_BARCODE g where g.mrn_no=b.MRN_NO and g.Invoice_no=b.Invoice_no AND ";
-                            query += " to_char(TRANSACTION_DATE,'dd-Mon-yyyy')=to_char(sysdate-" + days + ",'dd-Mon-yyyy') and ORGANIZATION_CODE='" + obj.PLANTCODE + "') TOTAL_ITEM  ,SOURCE_DOCUMENT_CODE SOURCE_TYPE,ORGANIZATION_CODE,STATUS from apps.XXESGATETAGPRINT_BARCODE b where  ";
-                            query += "  to_char(TRANSACTION_DATE,'dd-Mon-yyyy')=to_char(sysdate-" + days + ",'dd-Mon-yyyy') and ORGANIZATION_CODE='" + obj.PLANTCODE + "' and  MRN_NO not in (select mrn_no from ITEM_RECEIPT_DETIALS) And MRN_No like '%" + search + "%' order by mrn_no,invoice_no";
+                    if (ConfigurationSettings.AppSettings["LOGIN_CHECK_MRN"].ToString() != "N")
+                    {
+                        query = @" select distinct '0' SELECT_MRN, to_char( TRANSACTION_DATE, 'dd-Mon-yyyy HH24:MI:SS' ) TRANSACTION_DATE,MRN_NO,VEHICLE_NO, ";
+                        query += " VENDOR_CODE,VENDOR_NAME,INVOICE_NO,INVOICE_DATE, ";
+                        query += " (select g.ITEM_DESCRIPTION || ' [' || g.ITEM_CODE || ']' from apps.XXESGATETAGPRINT_BARCODE g where g.mrn_no=b.MRN_NO and g.Invoice_no=b.Invoice_no AND ";
+                        query += " to_char(TRANSACTION_DATE,'dd-Mon-yyyy')>=to_char(sysdate-" + days + ",'dd-Mon-yyyy') and ORGANIZATION_CODE='" + obj.PLANTCODE + "' and UPPER(CREATED_BY)='" + HttpContext.Current.Session["Login_User"].ToString().ToUpper().Trim() + "' and rownum=1) ITEM, ";
+                        query += " (select count(*) from apps.XXESGATETAGPRINT_BARCODE g where g.mrn_no=b.MRN_NO and g.Invoice_no=b.Invoice_no AND ";
+                        query += " to_char(TRANSACTION_DATE,'dd-Mon-yyyy')>=to_char(sysdate-" + days + ",'dd-Mon-yyyy') and ORGANIZATION_CODE='" + obj.PLANTCODE + "' and UPPER(CREATED_BY)='" + HttpContext.Current.Session["Login_User"].ToString().ToUpper().Trim() + "' ) TOTAL_ITEM  ,SOURCE_DOCUMENT_CODE SOURCE_TYPE,ORGANIZATION_CODE,STATUS from apps.XXESGATETAGPRINT_BARCODE b where  ";
+                        query += "  to_char(TRANSACTION_DATE,'dd-Mon-yyyy')>=to_char(sysdate-" + days + ",'dd-Mon-yyyy') and ORGANIZATION_CODE='" + obj.PLANTCODE + "' and UPPER(CREATED_BY)='" + HttpContext.Current.Session["Login_User"].ToString().ToUpper().Trim() + "' and MRN_NO not in (select mrn_no from ITEM_RECEIPT_DETIALS)  And MRN_No like '%" + search + "%' order by mrn_no,invoice_no";
+                    }
+                    else if (ConfigurationSettings.AppSettings["LOGIN_CHECK_MRN"].ToString() == "N")
+                    {
+                        query = @" SELECT A.TOTALCOUNT,A.SELECT_MRN,A.TRANSACTION_DATE,A.MRN_NO,A.VEHICLE_NO,A.VENDOR_CODE,A.VENDOR_NAME,A.INVOICE_NO,A.ITEM,A.TOTAL_ITEM,A.SOURCE_TYPE,A.ORGANIZATION_CODE,A.STATUS,A.INVOICE_DATE FROM(select distinct '0' SELECT_MRN,ROW_NUMBER() OVER (ORDER BY INVOICE_NO) as ROWNMBER,COUNT(*) over() as TOTALCOUNT, to_char( TRANSACTION_DATE, 'dd-Mon-yyyy HH24:MI:SS' ) TRANSACTION_DATE,MRN_NO,VEHICLE_NO, ";
+                        query += " VENDOR_CODE,VENDOR_NAME,INVOICE_NO,INVOICE_DATE, ";
+                        query += " (select g.ITEM_DESCRIPTION || ' [' || g.ITEM_CODE || ']' from apps.XXESGATETAGPRINT_BARCODE g where g.mrn_no=b.MRN_NO and g.Invoice_no=b.Invoice_no AND ";
+                        query += " to_char(TRANSACTION_DATE,'dd-Mon-yyyy')=to_char(sysdate-" + days + ",'dd-Mon-yyyy') and ORGANIZATION_CODE='" + obj.PLANTCODE + "' and rownum=1) ITEM, ";
+                        query += " (select count(*) from apps.XXESGATETAGPRINT_BARCODE g where g.mrn_no=b.MRN_NO and g.Invoice_no=b.Invoice_no AND ";
+                        query += " to_char(TRANSACTION_DATE,'dd-Mon-yyyy')=to_char(sysdate-" + days + ",'dd-Mon-yyyy') and ORGANIZATION_CODE='" + obj.PLANTCODE + "') TOTAL_ITEM  ,SOURCE_DOCUMENT_CODE SOURCE_TYPE,ORGANIZATION_CODE,STATUS from apps.XXESGATETAGPRINT_BARCODE b where  ";
+                        query += "  to_char(TRANSACTION_DATE,'dd-Mon-yyyy')=to_char(sysdate-" + days + ",'dd-Mon-yyyy') and ORGANIZATION_CODE='" + obj.PLANTCODE + "' and  MRN_NO not in (select mrn_no from ITEM_RECEIPT_DETIALS) And MRN_No like '%" + search + "%' order by mrn_no,invoice_no) A  where ROWNMBER > " + Convert.ToInt32(obj.start) + " and ROWNMBER <= " + Convert.ToInt32(obj.length) + ""; 
                         }
                  
                 }
@@ -8635,12 +8689,12 @@ namespace MVCApp.CommonFunction
                     //        (select g.ITEM_DESCRIPTION || ' [' || g.ITEM_CODE || ']' from apps.XXESGATETAGPRINT_BARCODE g where g.mrn_no=b.MRN_NO and g.Invoice_no=b.Invoice_no and rownum=1) ITEM,
                     //        SOURCE_DOCUMENT_CODE SOURCE_TYPE,ORGANIZATION_CODE,STATUS from apps.XXESGATETAGPRINT_BARCODE b where  
                     //         ORGANIZATION_CODE='" + PubFun.Login_Unit + "' and MRN_NO in (select mrn_no from ITEM_RECEIPT_DETIALS where to_char(TRANSACTION_DATE,'dd-Mon-yyyy')>=to_date('" + dateTimePicker1.Value.ToString("dd-MMM-yyyy") + "','dd-Mon-yyyy'))  order by mrn_no,invoice_no";
-                    query = @"select distinct '0' SELECT_MRN,to_char( TRANSACTION_DATE, 'dd-Mon-yyyy HH24:MI:SS' ) TRANSACTION_DATE,MRN_NO,VEHICLE_NO,
+                    query = string.Format(@"SELECT A.TOTALCOUNT,A.SELECT_MRN,A.TRANSACTION_DATE,A.MRN_NO,A.VEHICLE_NO,A.VENDOR_CODE,A.VENDOR_NAME,A.INVOICE_NO,A.ITEM,A.TOTAL_ITEM,A.SOURCE_TYPE,A.ORGANIZATION_CODE,A.STATUS,A.INVOICE_DATE FROM(SELECT distinct '0' SELECT_MRN,ROW_NUMBER() OVER (ORDER BY INVOICE_NO) as ROWNMBER,COUNT(*) over() as TOTALCOUNT,to_char( TRANSACTION_DATE, 'dd-Mon-yyyy HH24:MI:SS' ) TRANSACTION_DATE,MRN_NO,VEHICLE_NO,
                             VENDOR_CODE,VENDOR_NAME,INVOICE_NO,INVOICE_DATE,
                              b.ITEM_DESCRIPTION || ' [' || b.ITEM_CODE || ']'  ITEM,TOTAL_ITEM,
                             SOURCE_DOCUMENT_CODE SOURCE_TYPE,PLANT_CODE ORGANIZATION_CODE,STATUS from ITEM_RECEIPT_DETIALS b where  
-                             to_char(TRANSACTION_DATE,'dd-Mon-yyyy')>=to_date('" + obj.FromDate.ToString("dd-MMM-yyyy") + "','dd-Mon-yyyy') and PLANT_CODE='" + Convert.ToString(HttpContext.Current.Session["Login_Unit"]) + "' And MRN_No like '%" + search + "%' order by mrn_no,invoice_no";
-
+                             to_char(TRANSACTION_DATE,'dd-Mon-yyyy')>=to_date('" + obj.FromDate.ToString("dd-MMM-yyyy") + "','dd-Mon-yyyy') and PLANT_CODE='" + obj.PLANTCODE + "' And MRN_No like '%" + search + "%' order by mrn_no,invoice_no)A  where ROWNMBER > {0} and ROWNMBER <= {1} ", Convert.ToInt32(obj.start),obj.length);
+             
                 dt = returnDataTable(query);
 
                 if (dt.Rows.Count > 0)
@@ -8649,6 +8703,7 @@ namespace MVCApp.CommonFunction
                     {
                         GateEntryModel gateEntry = new GateEntryModel
                         {
+                            TOTALCOUNT = Convert.ToInt32(dr["TOTALCOUNT"]),
                             TRANSACTION_DATE = dr["TRANSACTION_DATE"].ToString(),
                             MRN_NO = dr["MRN_NO"].ToString(),
                             VEHICLE_NO = dr["VEHICLE_NO"].ToString(),
@@ -8707,6 +8762,127 @@ namespace MVCApp.CommonFunction
                 throw;
             }
 
+        }
+        public bool CheckMyPrinter(string printerToCheck)
+        {
+            DataTable dt = new DataTable();
+            query = string.Format(@"SELECT * FROM   Win32_Printer");
+            dt = returnDataTable(query);
+            bool IsReady = false; string printerName = "";
+
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow row in dt.Rows)
+                {
+                    printerName = row["Name"].ToString().ToLower();
+                    if (printerName.ToLower().Equals(printerToCheck.Trim().ToLower()))
+                    {
+                        if (row["WorkOffline"].ToString().ToLower().Equals("false"))
+                        {
+                            IsReady = true;
+                        }
+                        //string state =  printer["PrinterState"].ToString();
+                        //string status = printer["PrinterStatus"].ToString();
+                        //string error = printer["DetectedErrorState"].ToString(); 
+
+                    }
+                }
+            }
+            return IsReady;
+        }
+
+        public string SendMails(string Module, string MailBody, string MailSubject, string Email_To, string Email_CC,
+       string Username)
+        {
+            if (HttpContext.Current.Session["Login_User"].ToString() != "rs")
+            {
+                string MAIL_PRIORITY = string.Empty;
+                string SMTP_SERVER = string.Empty;
+                string LOGIN_EMAIL = string.Empty;
+                string PASSWORD = string.Empty;
+                string IS_SSL = string.Empty;
+                string SMTP_PORT = string.Empty;
+                DataTable dt = new DataTable();
+                string query = string.Empty, LoggedinUser = string.Empty;
+                Function pubfun = new Function();
+                query = string.Format(@"SELECT *FROM XXES_SMTP_DETAILS");
+                dt = pubfun.returnDataTable(query);
+                if (dt.Rows.Count > 0)
+                {
+                    SMTP_SERVER = dt.Rows[0]["SMTP_SERVER"].ToString();
+                    LOGIN_EMAIL = dt.Rows[0]["SMTP_USER"].ToString();
+                    PASSWORD = dt.Rows[0]["SMTP_PASSWORD"].ToString();
+                    IS_SSL = dt.Rows[0]["SSL_ENABLE"].ToString();
+                    SMTP_PORT = dt.Rows[0]["SMTP_PORT"].ToString();
+                    MAIL_PRIORITY = dt.Rows[0]["SMTP_PRIORITY"].ToString();
+                }
+                try
+                {
+                    if (SMTP_SERVER == "" || LOGIN_EMAIL == "")
+                    {
+                        return "Kindly check the SMTP settings.";
+                    }
+
+                    MailMessage Mail = new MailMessage();
+                    Mail.Subject = MailSubject;
+                    Mail.To.Add(Email_To);
+                    if ((Email_CC != ""))
+                    {
+                        Mail.CC.Add(Email_CC);
+                    }
+
+                    Mail.BodyEncoding = System.Text.Encoding.GetEncoding("utf-8");
+                    if (MAIL_PRIORITY.ToUpper() == "NORMAL")
+                    {
+                        Mail.Priority = MailPriority.Normal;
+                    }
+                    else if (MAIL_PRIORITY.ToUpper() == "HIGH")
+                    {
+                        Mail.Priority = MailPriority.High;
+                    }
+                    else if (MAIL_PRIORITY.ToUpper() == "LOW")
+                    {
+                        Mail.Priority = MailPriority.Low;
+                    }
+
+                    Mail.From = new System.Net.Mail.MailAddress(LOGIN_EMAIL);
+                    Mail.IsBodyHtml = true;
+                    MailBody = HttpUtility.HtmlDecode(MailBody);
+                    Mail.Body = MailBody;
+                    SmtpClient sc = new SmtpClient();
+                    sc.Host = SMTP_SERVER.Trim();
+                    //sc.DeliveryMethod = SmtpDeliveryMethod.Network;
+
+                    if (SMTP_PORT.Trim() != string.Empty)
+                    {
+                        sc.Port = Convert.ToInt16(SMTP_PORT);
+                    }
+
+                    if (IS_SSL.Trim() == "1" || IS_SSL.Trim() == "Y")
+                    {
+                        sc.EnableSsl = true;
+                    }
+
+                    sc.UseDefaultCredentials = false;
+                    sc.Credentials = new System.Net.NetworkCredential(LOGIN_EMAIL, PASSWORD);
+                    sc.Send(Mail);
+                    //query = string.Format(@"INSERT INTO XXES_MAILSLOG (MODULE,USERNAME,SUBJECT,EMAIL,BODY,STATUS,REMARKS)
+                    //VALUES('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", Module, pubfun.replaceApostophi(Username), pubfun.replaceApostophi(MailSubject), Email_To, "", "SUCCESS", "-");
+                    //pubfun.EXEC_QUERY(query);
+                    Console.WriteLine("Application Has Mailed To " + Email_To + " at " + DateTime.Now.ToString() + ".");
+                    return "Application Has Mailed To " + Email_To + " at " + DateTime.Now.ToString() + ".";
+                }
+                catch (Exception ex)
+                {
+                    pubfun.LogWrite(ex);
+                    Console.WriteLine("Module SendMails : " + ex.Message.ToString());
+                    //query = string.Format(@"INSERT INTO XXES_MAILSLOG (MODULE,USERNAME,SUBJECT,EMAIL,BODY,STATUS,REMARKS)
+                    //VALUES('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", Module, pubfun.replaceApostophi(Username), pubfun.replaceApostophi(MailSubject), Email_To, "", "FAILED", pubfun.replaceApostophi(ex.Message));
+                    //pubfun.EXEC_QUERY(query);
+                    return "Error" + ex.Message.ToString();
+                }
+            }
+            return "";
         }
 
     }

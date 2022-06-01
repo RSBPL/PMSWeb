@@ -370,7 +370,9 @@
                             @Html.DropDownList("TypePwd", new List<SelectListItem>
 
                                   {
-                                      new SelectListItem{ Text = "TRACTOR MASTER",Value="TRACTOR_MASTER_PASSWORD" }
+                                      new SelectListItem{ Text = "TRACTOR MASTER",Value="TRACTOR_MASTER_PASSWORD" },
+                                       new SelectListItem{ Text = "Password to Modify Daily Plan less than current date",Value="DAILYPLAN"},
+                                       new SelectListItem{ Text = "Password To Reprint MRN label At Gate",Value="MRN_PASSWORD"}
                                   })
                         </div>
                         <div class="col-md-3">
