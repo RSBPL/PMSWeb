@@ -28,5 +28,27 @@ namespace MVCApp.Models
         public string PENDING { get; set; }
         public int AGEING_DAYS { get; set; }
         public string BackColor { get; set; }
+        public string lblPending { get; set; }
+        public string lblHookUp { get; set; }
+        public string lblDayTotal { get; set; }
+        public string lblInfo { get; set; }
+        public string lblDate { get; set; }
+        public string Shift { get; set; }
+        public string lblTime { get; set; }
+        public bool lblInfoTF { get; set; }
+
+        public string lblInfodb { get; set; }
+        public bool lblInfodbTF { get; set; }
+
+        public string lblError { get; set; }
+        public bool lblErrorTF { get; set; }
+
+        public string lblErrordb { get; set; }
+        public bool lblErrordbTF { get; set; }
+
+        public string imgstatus { get; set; }
+        public string imgstatusHS { get; set; }
+
+        public virtual ICollection<BEFOREPAINTLCDGRID> BPgriddata { get; set; }
     }
 }

@@ -26,7 +26,7 @@ namespace MVCApp.Controllers
         string query = string.Empty;
         
 
-        public ActionResult Index()
+        public ActionResult Index(string id)
         {
             //if (string.IsNullOrEmpty(Convert.ToString(Session["Login_User"])))
             //{
@@ -35,18 +35,20 @@ namespace MVCApp.Controllers
             //}
             //else
             //    ViewBag.CheckURL = "N";
-            
-                Session["AfterScreenUnit"] = Url.RequestContext.RouteData.Values["id"];
-                //ViewBag.CheckURL = "Y";
+            ViewBag.PlantCode = id;
+            //Session["AfterScreenUnit"] = Url.RequestContext.RouteData.Values["id"];
+            //ViewBag.CheckURL = "Y";
             
             
             return View();
         }
 
-        public PartialViewResult Grid()
+        [HttpGet]
+        public JsonResult Grid(string PLANTCODE)
         {
             string plant = "", family = "", DisplayMethod = "";
             List<APGRID> GridList = new List<APGRID>();
+            var result = new APGRID();
             MsgReturn mr = new MsgReturn();
             try
             {
@@ -57,7 +59,7 @@ namespace MVCApp.Controllers
                 //    return PartialView(GridList);
                 //}
                 DisplayMethod = Convert.ToString(ConfigurationManager.AppSettings["DisplayMethod"]);
-                plant = Convert.ToString(Session["AfterScreenUnit"]);
+                plant = PLANTCODE;
                 if (plant == "4")
                 {
                     plant = "T04";
@@ -69,7 +71,7 @@ namespace MVCApp.Controllers
                     family = "TRACTOR FT";
                 }
 
-                mr = CheckInfo(plant, family);
+                result = CheckInfo(plant, family);
 
                 DateTime ShiftStart, shiftEnd;
                 data = fun.getshift();
@@ -85,8 +87,8 @@ namespace MVCApp.Controllers
                     else
                         Plandate = fun.GetServerDateTime().Date;
 
-                    ViewBag.lblDate = "DATE: " + Plandate.ToString("dd MMM yyyy");
-                    ViewBag.Shift = "SHIFT: " + Shiftcode;
+                    result.lblDate = "DATE: " + Plandate.ToString("dd MMM yyyy");
+                    result.Shift = "SHIFT: " + Shiftcode;
 
                     DateTime Date = fun.GetServerDateTime();
 
@@ -94,7 +96,7 @@ namespace MVCApp.Controllers
                     char[] Spearator = { ' ' };
                     String[] StrDate = Str.Split(Spearator, StringSplitOptions.None);
 
-                    ViewBag.Time = "TIME: " + StrDate[1];
+                    result.Time = "TIME: " + StrDate[1];
                     DataTable dt = new DataTable();
                     if (DisplayMethod.ToUpper() == "INLINE")
                     {
@@ -103,7 +105,7 @@ namespace MVCApp.Controllers
                     }
                     else
                     {
-                        bool result = false;
+                        bool flag = false;
 
                         try
                         {
@@ -126,7 +128,7 @@ namespace MVCApp.Controllers
                                 OracleDataAdapter dr = new OracleDataAdapter(sc);
                                 dr.Fill(dt);
                                 //fun.ConClose();
-                                result = true;
+                                flag = true;
                             }
 
                         }
@@ -158,30 +160,69 @@ namespace MVCApp.Controllers
                                 //        group by FCODE_ID order by FCODE_ID";
                                 //OracleDataAdapter a = new OracleDataAdapter(query, fun.ConString());
                                 //a.Fill(dt);
+
                                 if (Convert.ToString(ConfigurationSettings.AppSettings["AP_HOOK_SORT"]) == "Y")
                                     dt.DefaultView.Sort = "HOOK";
-                                int COUNT = 0;
+                                int srno = 1;
                                 foreach (DataRow dr in dt.Rows)
                                 {
-                                    COUNT++;
-                                    APGRID GR = new APGRID
-                                    {
-                                        SRNO = COUNT.ToString(),
-                                        ITEM_CODE = dr["ITEM_CODE"].ToString(),
-                                        ITEM_DESCRIPTION = dr["ITEM_DESCRIPTION"].ToString(),
-                                        SHORT_CODE = dr["SHORT_CODE"].ToString(),
-                                        FROM_ID = dr["FROM_ID"].ToString(),
-                                        TO_ID = dr["TO_ID"].ToString(),
-                                        QTY = dr["QTY"].ToString(),
-                                        HOOK = dr["HOOK"].ToString(),
-                                        FENDER = dr["FENDER"].ToString(),
-                                        FENDER_RAILING = dr["FENDER_RAILING"].ToString(),
-                                        RADIATOR = dr["RADIATOR"].ToString(),
-                                        FRONTTYRE = dr["FRONTTYRE"].ToString(),
-                                        REARTYRE = dr["REARTYRE"].ToString()
-                                    };
-                                    GridList.Add(GR);
+                                    var APtablsdata = new APGRID();
+                                    APtablsdata.SRNO = Convert.ToString(srno);
+
+                                    APtablsdata.ITEM_CODE = dr["ITEM_CODE"].ToString();
+
+                                    APtablsdata.ITEM_DESCRIPTION = dr["ITEM_DESCRIPTION"].ToString();
+
+                                    APtablsdata.SHORT_CODE = dr["SHORT_CODE"].ToString();
+
+                                    APtablsdata.FROM_ID = dr["FROM_ID"].ToString();
+
+                                    APtablsdata.TO_ID = dr["TO_ID"].ToString();
+
+                                    APtablsdata.QTY = dr["QTY"].ToString();
+
+                                    APtablsdata.HOOK = dr["HOOK"].ToString();
+
+                                    APtablsdata.FENDER = dr["FENDER"].ToString();
+
+                                    APtablsdata.FENDER_RAILING = dr["FENDER_RAILING"].ToString();
+
+                                    APtablsdata.RADIATOR = dr["RADIATOR"].ToString();
+
+                                    APtablsdata.FRONTTYRE = dr["FRONTTYRE"].ToString();
+
+                                    APtablsdata.REARTYRE = dr["REARTYRE"].ToString();
+
+                                    GridList.Add(APtablsdata);
+                                    srno++;
                                 }
+
+
+
+                                //if (Convert.ToString(ConfigurationSettings.AppSettings["AP_HOOK_SORT"]) == "Y")
+                                //    dt.DefaultView.Sort = "HOOK";
+                                //int COUNT = 0;
+                                //foreach (DataRow dr in dt.Rows)
+                                //{
+                                //    COUNT++;
+                                //    APGRID GR = new APGRID
+                                //    {
+                                //        SRNO = COUNT.ToString(),
+                                //        ITEM_CODE = dr["ITEM_CODE"].ToString(),
+                                //        ITEM_DESCRIPTION = dr["ITEM_DESCRIPTION"].ToString(),
+                                //        SHORT_CODE = dr["SHORT_CODE"].ToString(),
+                                //        FROM_ID = dr["FROM_ID"].ToString(),
+                                //        TO_ID = dr["TO_ID"].ToString(),
+                                //        QTY = dr["QTY"].ToString(),
+                                //        HOOK = dr["HOOK"].ToString(),
+                                //        FENDER = dr["FENDER"].ToString(),
+                                //        FENDER_RAILING = dr["FENDER_RAILING"].ToString(),
+                                //        RADIATOR = dr["RADIATOR"].ToString(),
+                                //        FRONTTYRE = dr["FRONTTYRE"].ToString(),
+                                //        REARTYRE = dr["REARTYRE"].ToString()
+                                //    };
+                                //    GridList.Add(GR);
+                                //}
                             }
                             //ViewBag.DataSource = GridList;
 
@@ -190,14 +231,14 @@ namespace MVCApp.Controllers
 
                             query = string.Format(@"select count(*) from XXES_CONTROLLERS_DATA where stage='AP' AND HOOK_NO <> 9999 AND PLANT_CODE = 'T04' AND ENTRY_DATE BETWEEN to_date('{1}', 'DD-MON-YYYY HH24:MI:SS') AND to_date('{2}', 'DD-MON-YYYY HH24:MI:SS')", plant.Trim(), fromtime, totime);
                             expqty = fun.get_Col_Value(query);
-                            ViewBag.lblHookDown = "HOOKDOWN: " + (expqty.Trim() == "" ? "0" : expqty.Trim());
-                            ViewBag.lblDayTotal = GetDayTotalHookedDown(plant.Trim());
+                            result.lblHookDown = "HOOKDOWN: " + (expqty.Trim() == "" ? "0" : expqty.Trim());
+                            result.lblDayTotal = GetDayTotalHookedDown(plant.Trim());
                         //}
                     }
                     catch (Exception ex)
                     {
-                        mr.lblError = mr.lblError + "\n" + ex.Message.ToString();
-                        mr.lblErrorTF = true;
+                        result.lblError = result.lblError + "\n" + ex.Message.ToString();
+                        result.lblErrorTF = true;
                     }
                     finally { }
                     //CheckInfo(plant, family);
@@ -205,30 +246,22 @@ namespace MVCApp.Controllers
             }
             catch (Exception ex)
             {
-                mr.lblError = mr.lblError + "\n" + ex.Message.ToString();
-                mr.lblErrorTF = true;
+                result.lblError = result.lblError + "\n" + ex.Message.ToString();
+                result.lblErrorTF = true;
             }
             finally { }
-            ViewBag.lblInfoTF = mr.lblInfoTF;
-            ViewBag.lblInfo = mr.lblInfo;
-            ViewBag.lblInfodbTF = mr.lblInfodbTF;
-            ViewBag.lblInfodb = mr.lblInfodb;
-            ViewBag.lblErrorTF = mr.lblErrorTF;
-            ViewBag.lblError = mr.lblError;
-            ViewBag.lblErrordbTF = mr.lblErrordbTF;
-            ViewBag.lblErrordb = mr.lblErrordb;
-
-            return PartialView(GridList);
+            result.APgriddata = GridList;
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        private MsgReturn CheckInfo(string plant, string family)
+        public APGRID CheckInfo(string plant, string family)
         {
             //if (string.IsNullOrEmpty(Convert.ToString(Session["Login_User"])))
             //    ViewBag.CheckURL = "Y";
             //else
             //    ViewBag.CheckURL = "N";
 
-            MsgReturn R = new MsgReturn();
+            APGRID R = new APGRID();
             try
             {
                 bool isError = false;

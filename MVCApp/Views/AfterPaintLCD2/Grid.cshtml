@@ -286,6 +286,7 @@
 
             @foreach (var d in Model)
             {
+
                 <tr style="width:inherit">
                     <td style="padding: 5px;font-size: 15px;font-weight: 700;text-align: center;">@d.SRNO</td>
                     <td style="padding: 5px;font-size: 15px;font-weight: 700;text-align: center;">@d.F_CODE</td>
@@ -302,18 +303,18 @@
 
 
 
-                    <!--<td style="padding: 5px;">@d.ITEM_CODE</td>
+                    @*<td style="padding: 5px;">@d.ITEM_CODE</td>
                     <td style="padding: 5px; width:200px;">@d.ITEM_DESCRIPTION</td>
-                    <td style="padding: 5px; width:300px;">@d.SHORT_CODE</td>-->
-                    @*<td style="padding: 5px;">@d.FROM_ID</td>
-                        <td style="padding: 5px;">@d.TO_ID</td>*@
-                    <!--<td style="padding: 5px;">@d.QTY</td>
+                    <td style="padding: 5px; width:300px;">@d.SHORT_CODE</td>
+                    <td style="padding: 5px;">@d.FROM_ID</td>
+                    <td style="padding: 5px;">@d.TO_ID</td>
+                    <td style="padding: 5px;">@d.QTY</td>
                     <td style="padding: 5px;">@d.HOOK</td>
                     <td style="padding: 5px;">@d.BATTERY</td>
                     <td style="padding: 5px;">@d.HEAD_LAMP</td>
                     <td style="padding: 5px;">@d.STEERING_WHEEL</td>
                     <td style="padding: 5px;">@d.REAR_HOOD_WIRING_HARNESS</td>
-                    <td style="padding: 5px;">@d.SEAT</td>-->
+                    <td style="padding: 5px;">@d.SEAT</td>*@
                 </tr>
             }
         </table>
