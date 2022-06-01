@@ -24,6 +24,9 @@
         border: 1px solid transparent;
         text-align: center;
     }
+    strong {
+        text-transform: uppercase;
+    }
 </style>
 <title>BEFORE PAINT LCD</title>
 <style>
@@ -297,7 +300,7 @@
 <div class="page-content">
 
     <div class="alert alert-info" role="alert" id="info">
-        <strong id="lblInfo"></strong>
+        <strong id="lblInfo" ></strong>
     </div>
     <div class="alert alert-info" role="alert" id="Infodb">
         <strong id="lblInfodb"></strong>
@@ -464,38 +467,38 @@
                     
             for (var i = 0; i < data.BPgriddata.length; i++) {
                      
-                if (data.BPgriddata.AGEING_DAYS != 0) {
+                if (data.BPgriddata[i].AGEING_DAYS > 0) {
                     var rawCode = i;
-                    var tr = "<tr style='background - color: yellow;'>";
+                    var tr;
                     if (data.BPgriddata[i].PENDING > 0) {
-                        tr = "<tr style='background-color: yellow;' id='" + data.BPgriddata[i] + "'>";
+                        tr = "<tr id='" + data.BPgriddata[i] + "'>";
                     }
                     else {
-                        tr = "<tr style='background-color: yellow;' id='" + data.BPgriddata[i] + "'>";
+                        tr = "<tr id='" + data.BPgriddata[i] + "'>";
                     }
                     var row = $(tr);
                     $("#tbldetail").append(row);
 
-                    row.append("<td>" + data.BPgriddata[i].SRNO + "</td>");
-                    row.append("<td><span id='FCODE" + rawCode + "'>" + data.BPgriddata[i].FCODE + "</span></td>");
-                    //row.append("<td><span id='DESCRIPTION" + rawCode + "'>" + data.BPgriddata[i].DESCRIPTION + "</span></td>");
-                    row.append("<td><span id='SHORTCODE" + rawCode + "'>" + data.BPgriddata[i].SHORTCODE + "</span></td>");
-                    //row.append("<td><span id='ENGINE" + rawCode + "'>" + data.BPgriddata[i].ENGINE + "</span></td>");
-                    //row.append("<td><span id='LIFT" + rawCode + "'>" + data.BPgriddata[i].LIFT + "</span></td>");
-                    //row.append("<td><span id='FRONT_AXLE" + rawCode + "'>" + data.BPgriddata[i].FRONT_AXLE + "</span></td>");
-                    row.append("<td><span id='BRAKE_PEDAL" + rawCode + "'>" + data.BPgriddata[i].BRAKE_PEDAL + "</span></td>");
-                    row.append("<td><span id='FUEL_TANK" + rawCode + "'>" + data.BPgriddata[i].FUEL_TANK + "</span></td>");
-                    row.append("<td><span id='CLUTCH_PEDAL" + rawCode + "'>" + data.BPgriddata[i].CLUTCH_PEDAL + "</span></td>");
-                    //row.append("<td><span id='SPOOL_VALUE" + rawCode + "'>" + data.BPgriddata[i].SPOOL_VALUE + "</span></td>");
-                    //row.append("<td><span id='TANDEM_PUMP" + rawCode + "'>" + data.BPgriddata[i].TANDEM_PUMP + "</span></td>");
-                    row.append("<td><span id='STARTER_MOTOR" + rawCode + "'>" + data.BPgriddata[i].STARTER_MOTOR + "</span></td>");
-                    row.append("<td><span id='ALTERNATOR" + rawCode + "'>" + data.BPgriddata[i].ALTERNATOR + "</span></td>");
-                    //row.append("<td><span id='FRONT_SUPPORT" + rawCode + "'>" + data.BPgriddata[i].FRONT_SUPPORT + "</span></td>");
-                    //row.append("<td><span id='STEERING_COLUMN" + rawCode + "'>" + data.BPgriddata[i].STEERING_COLUMN + "</span></td>");
-                    row.append("<td><span id='PLANNED" + rawCode + "'>" + data.BPgriddata[i].PLANNED + "</span></td>");
-                    row.append("<td><span id='ACTUAL" + rawCode + "'>" + data.BPgriddata[i].ACTUAL + "</span></td>");
-                    row.append("<td><span id='PENDING" + rawCode + "'>" + data.BPgriddata[i].PENDING + "</span></td>");
-                    row.append("<td><span id='AGEING_DAYS" + rawCode + "'>" + data.BPgriddata[i].AGEING_DAYS + "</span></td>");
+                    row.append("<td style='background-color: yellow;'>" + data.BPgriddata[i].SRNO + "</td>");
+                    row.append("<td style='background-color: yellow;' ><span id='FCODE" + rawCode + "'>" + data.BPgriddata[i].FCODE + "</span></td>");
+                    //row.append("<td style='background-color: yellow;'><span id='DESCRIPTION" + rawCode + "'>" + data.BPgriddata[i].DESCRIPTION + "</span></td>");
+                    row.append("<td style='background-color: yellow;'><span id='SHORTCODE" + rawCode + "'>" + data.BPgriddata[i].SHORTCODE + "</span></td>");
+                    //row.append("<td style='background-color: yellow;'><span id='ENGINE" + rawCode + "'>" + data.BPgriddata[i].ENGINE + "</span></td>");
+                    //row.append("<td style='background-color: yellow;'><span id='LIFT" + rawCode + "'>" + data.BPgriddata[i].LIFT + "</span></td>");
+                    //row.append("<td style='background-color: yellow;'><span id='FRONT_AXLE" + rawCode + "'>" + data.BPgriddata[i].FRONT_AXLE + "</span></td>");
+                    row.append("<td style='background-color: yellow;'><span id='BRAKE_PEDAL" + rawCode + "'>" + data.BPgriddata[i].BRAKE_PEDAL + "</span></td>");
+                    row.append("<td style='background-color: yellow;'><span id='FUEL_TANK" + rawCode + "'>" + data.BPgriddata[i].FUEL_TANK + "</span></td>");
+                    row.append("<td style='background-color: yellow;'><span id='CLUTCH_PEDAL" + rawCode + "'>" + data.BPgriddata[i].CLUTCH_PEDAL + "</span></td>");
+                    //row.append("<td style='background-color: yellow;'><span id='SPOOL_VALUE" + rawCode + "'>" + data.BPgriddata[i].SPOOL_VALUE + "</span></td>");
+                    //row.append("<td style='background-color: yellow;'><span id='TANDEM_PUMP" + rawCode + "'>" + data.BPgriddata[i].TANDEM_PUMP + "</span></td>");
+                    row.append("<td style='background-color: yellow;'><span id='STARTER_MOTOR" + rawCode + "'>" + data.BPgriddata[i].STARTER_MOTOR + "</span></td>");
+                    row.append("<td style='background-color: yellow;'><span id='ALTERNATOR" + rawCode + "'>" + data.BPgriddata[i].ALTERNATOR + "</span></td>");
+                    //row.append("<td style='background-color: yellow;'><span id='FRONT_SUPPORT" + rawCode + "'>" + data.BPgriddata[i].FRONT_SUPPORT + "</span></td>");
+                    //row.append("<td style='background-color: yellow;'><span id='STEERING_COLUMN" + rawCode + "'>" + data.BPgriddata[i].STEERING_COLUMN + "</span></td>");
+                    row.append("<td style='background-color: yellow;'><span id='PLANNED" + rawCode + "'>" + data.BPgriddata[i].PLANNED + "</span></td>");
+                    row.append("<td style='background-color: yellow;'><span id='ACTUAL" + rawCode + "'>" + data.BPgriddata[i].ACTUAL + "</span></td>");
+                    row.append("<td style='background-color: yellow;'><span id='PENDING" + rawCode + "'>" + data.BPgriddata[i].PENDING + "</span></td>");
+                    row.append("<td style='background-color: yellow;'><span id='AGEING_DAYS" + rawCode + "'>" + data.BPgriddata[i].AGEING_DAYS + "</span></td>");
 
                 }
                 else {
