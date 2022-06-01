@@ -22,18 +22,22 @@
     <div class="table-responsive">
         @(Html.EJS().Grid("GrdAVG_TIME").DataSource((System.Data.DataTable)ViewBag.DataSource).
             Height("400").
-            AllowSelection(false).
+            AllowPaging(true).
+            PageSettings(Page => Page.PageSize(20)).
+            AllowSelection(false).            
             AllowResizing().
             AllowExcelExport().
             ToolbarClick("toolbarClick").
             AllowFiltering().
             AllowGrouping().
-            AllowSorting().EnableColumnVirtualization().EnableVirtualization().
+            //AllowSorting().EnableColumnVirtualization().EnableVirtualization().
             Columns(col =>
             {
-                col.Field("VEHICLE_NO").HeaderText("VEHICLE_NO").Add();
-                col.Field("TRANSACTION_DATE").HeaderText("TRANSACTION_DATE").Add();
-                col.Field("TOTAL_HOURS").HeaderText("TOTAL_HOURS").Add();
+                col.Field("VEHICLE_NO").HeaderText("VEHICLE_NO").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                col.Field("TRANSACTION_DATE").HeaderText("PRINT DATE").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                col.Field("TIMEIN").HeaderText("TIMEIN").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                col.Field("TIMEOUT").HeaderText("TIMEOUT").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                col.Field("TOTAL_HOURS").HeaderText("TOTAL_HOURS").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
 
             }).
             Toolbar(new List<string>() { "ExcelExport" }).
