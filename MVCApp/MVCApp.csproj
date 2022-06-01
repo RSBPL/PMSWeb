@@ -269,6 +269,7 @@
     <Compile Include="Controllers\Assembly\HookUpAndDownController.cs" />
     <Compile Include="Controllers\Assembly\ImportExportController.cs" />
     <Compile Include="Controllers\Assembly\JobFinalController.cs" />
+    <Compile Include="Controllers\Assembly\TyrePrintingController.cs" />
     <Compile Include="Controllers\BarcodePrinting\TracktorSubAssemblyController.cs" />
     <Compile Include="Controllers\BarcodePrinting\SubAssemblyController.cs" />
     <Compile Include="Controllers\BarcodePrinting\GateEntryController.cs" />
@@ -423,6 +424,7 @@
     <Compile Include="Models\SubAssemblyMapping.cs" />
     <Compile Include="Models\TRACTOR.cs" />
     <Compile Include="Models\TractorMster.cs" />
+    <Compile Include="Models\TyrePrinting.cs" />
     <Compile Include="Models\UserMaster.cs" />
     <Compile Include="Models\Validation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1241,6 +1243,7 @@
     <Content Include="Views\Report\GrdCRITICIAL_VENDOR_MRN.cshtml" />
     <Content Include="Views\RollDown\Grid.cshtml" />
     <Content Include="Views\RollDown\Index.cshtml" />
+    <Content Include="Views\TyrePrinting\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

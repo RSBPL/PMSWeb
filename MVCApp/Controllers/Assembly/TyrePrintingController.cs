@@ -153,7 +153,7 @@ namespace MVCApp.Controllers.Assembly
             return Json(myResult, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpGet]
+        [HttpPost]
         public JsonResult Print(TyrePrinting data)
         {
             string msg = string.Empty; string mstType = string.Empty; string status = string.Empty;
@@ -206,10 +206,30 @@ namespace MVCApp.Controllers.Assembly
                 foreach(LabelPrinting label in labelPrinting)
                 {
                     fun.getSeries(data.Plant.Trim(), data.Family.Trim(), stageid);
-                    
+                    PrintSticker(data, 1);
+                    if(label.srlno != "")
+                    {
+                        query = string.Format(@"update XXES_FAMILY_SERIAL set Current_Serial_number='{0}',LAST_PRINTED_LABEL_DATE_TI = SYSDATE where  plant_code='{1}'
+                                and family_code='{2}' and offline_keycode='FT'", label.srlno.Trim(), data.Plant.Trim(), data.Family.Trim());
+                    }
+                   
                 }
-                
-
+                if(labelPrinting.Count > 0)
+                {
+                    foreach(LabelPrinting label in labelPrinting)
+                    {
+                        Insert_Into_Print_Serials(label.srlno, stageid, data);
+                    }
+                    msg = "Barcode Printed Sucessfully !!";
+                    mstType = "alert-success";
+                    status = Validation.str2;
+                }
+                else
+                {
+                    msg = "Error found while printing barcode";
+                    mstType = "alert-danger";
+                    status = Validation.str2;
+                }
             }
             catch (Exception ex)
             {
@@ -228,45 +248,46 @@ namespace MVCApp.Controllers.Assembly
             return Json(myResult, JsonRequestBehavior.AllowGet);
         }
 
-        //public bool PrintSticker(string line, TyrePrinting data)
-        //{
-        //    bool status = false;
-        //    string TyreType = string.Empty, Filename = string.Empty, itemname1 = string.Empty, itemname2 = string.Empty;
-        //    string cmd1 = "", cmd2 = "";
-        //    PrintAssemblyBarcodes af = new PrintAssemblyBarcodes();
-        //    try
-        //    {
-        //        Filename = "RT.txt";
-        //        query = af.ReadFile(Filename);
-        //        if (!string.IsNullOrEmpty(query))
-        //        {
-        //            if (assemblyfunctions == null)
-        //                assemblyfunctions = new Assemblyfunctions();
-        //            assemblyfunctions.getName(data.description.Trim().ToUpper(), ref itemname1, ref itemname2);
-        //            query = query.Replace("SERIES_NO", "");
-        //            query = query.Replace("ITEM_NAME1", itemname1);
-        //            query = query.Replace("ITEM_NAME2", itemname2);
-        //            query = query.Replace("DCODE_VAL", data.ItemCode);
-        //            query = query.Replace("MAKE_VAL", data.MakeTyre);
-        //            cmd1 = query;
-        //            if (PrintTyreLable(cmd1, data))
-        //                status = true;
-        //            else
-        //                status = false;
-        //        }
-        //        else
-        //        {
-        //            throw new Exception("Print File Not Found");
-        //        }
-        //        return status;
-        //    }
+        public bool PrintSticker(TyrePrinting data,int copies)
+        {
+            bool status = false;
+            string TyreType = string.Empty, Filename = string.Empty, itemname1 = string.Empty, itemname2 = string.Empty;
+            PrintAssemblyBarcodes af = new PrintAssemblyBarcodes();
+            try
+            {
+         
+                Filename = "RT.txt";
+                query = af.ReadFile(Filename); string cmd1 = "", cmd2 = "";
+                if (!string.IsNullOrEmpty(query))
+                {
+                    if (assemblyfunctions == null)
+                        assemblyfunctions = new Assemblyfunctions();
+                    assemblyfunctions.getName(data.description.Trim().ToUpper(), ref itemname1, ref itemname2);
+                    query = query.Replace("SERIES_NO", "");
+                    query = query.Replace("ITEM_NAME1", itemname1);
+                    query = query.Replace("ITEM_NAME2", itemname2);
+                    query = query.Replace("DCODE_VAL", data.ItemCode);
+                    query = query.Replace("MAKE_VAL", data.MakeTyre);
+                    cmd1 = query;
+                    if (PrintTyreLable(cmd1, data))
+                        status = true;
+                    else
+                        status = false;
+                }
+                else
+                {
+                    throw new Exception("Print File Not Found");
+                }
+                return status;
+            }
 
-        //    catch (Exception ex)
-        //    {
-        //        fun.LogWrite(ex);
-        //    }
-        //    finally { }
-        //}
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+                throw;
+            }
+            finally { }
+        }
         public bool PrintTyreLable(string cmd1, TyrePrinting data)
         {
             System.Net.Sockets.TcpClient tc;
@@ -305,6 +326,33 @@ namespace MVCApp.Controllers.Assembly
                 }
                 else
                     throw;
+            }
+            finally { }
+        }
+
+        private bool Insert_Into_Print_Serials(string Current_Serial_number, string stageid ,TyrePrinting data)
+        {
+            bool status = false;
+            try
+            {
+                query = string.Format(@"select count(*) from XXES_PRINT_SERIALS where PLANT_CODE='{0}' and  FAMILY_CODE='{1}' and STAGE_ID='{2}' and DCODE='{3}' and SRNO='{4}'",
+                        data.Plant.Trim(), data.Family.Trim(), stageid, data.ItemCode.Trim(), Current_Serial_number);
+                if(fun.CheckExits(query))
+                {
+                    throw new Exception("Serial No already exist..");
+                }
+                else
+                {
+                    query = string.Format(@"INSERT INTO XXES_PRINT_SERIALS(PLANT_CODE,FAMILY_CODE,STAGE_ID,DCODE,SRNO,PRINTDATE,OFFLINE_KEYCODE,TYRE_DCODE,RIM_DCODE,MISC1,FCODE)
+                            VALUES('{0}','{1}','{2}','{3}','{4}',SYSDATE,'{5}','','','{6}','{7}')", data.Plant.Trim(), data.Family.Trim(), stageid, data.FTLH.Trim(),
+                            Current_Serial_number, "FT", data.MakeTyre.Trim(), data.ItemCode.Trim());
+                }
+                return status;
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+                throw;
             }
             finally { }
         }
