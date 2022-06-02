@@ -324,32 +324,39 @@
                                 </div>
                                 <div id="Menu4" class="tab-pane fade ">
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <label for="SuccessIntvl" class="text-right control-label col-form-label"><strong>STAGE</strong></label>
                                             <div>
                                                 @Html.DropDownList("STAGE", new List<SelectListItem>
                                                     {
-                                                        new SelectListItem{ Text = "OIL LEVEL",Value="OIL_LEVEL" },
-                                                        new SelectListItem{ Text = "TRACTOR BOM MODIFICATION",Value="TRACTOR_BOM"}
+                                                        new SelectListItem{ Text = "TRACTOR_BOM",Value="TRACTOR_BOM"},
+                                                        new SelectListItem{ Text = "OIL_ALERT 1",Value="OIL_ALERT1"},
+                                                        new SelectListItem{ Text = "OIL_ALERT 2",Value="OIL_ALERT2"},
+                                                        new SelectListItem{ Text = "OIL_ALERT 3",Value="OIL_ALERT3"},
+                                                        new SelectListItem{ Text = "OIL_ALERT 4",Value="OIL_ALERT4"},
+                                                        new SelectListItem{ Text = "OIL_ALERT 5",Value="OIL_ALERT5"},
+                                                        new SelectListItem{ Text = "OIL_ALERT 6",Value="OIL_ALERT6"},
+                                                        new SelectListItem{ Text = "OIL_ALERT 7",Value="OIL_ALERT7"},
+                                                        new SelectListItem{ Text = "OIL_ALERT 8",Value="OIL_ALERT8"}
                                                     })
                                             </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="ErrorIntvl" class="text-right control-label col-form-label"><strong>USER NAME</strong></label>
+                                            @Html.TextBoxFor(Model => Model.NOTIFYUSERNAME, null, new { @class = "form-control input-sm" })
                                         </div>
                                         <div class="col-md-3">
                                             <label for="ErrorIntvl" class="text-right control-label col-form-label"><strong>EMAIL ID</strong></label>
                                             @Html.TextBoxFor(Model => Model.NOTIFYEMAILID, null, new { @class = "form-control input-sm" })
                                         </div>
+                                        <div class="col-md-2">
+                                            <label for="ErrorIntvl" class="text-right control-label col-form-label"><strong>MOBILE</strong></label>
+                                            @Html.TextBoxFor(Model => Model.NOTIFYMOBILE, null, new { @class = "form-control input-sm" })
+                                        </div>
                                         <div class="col-md-1" style="margin: 25px 0 0 0;">
                                             <button class="btn btn-success btn-sm" type="button" id="NotifyAdd"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
 
                                         </div>
-                                        @*<div class="col-md-4">
-                <label for="SuccessIntvl" class="text-right control-label col-form-label"><strong>ITEM</strong></label>
-                @Html.DropDownList("ITEM", new List<SelectListItem>
-                {
-                    new SelectListItem{ Text = "TRANSMISSION",Value="TRANSMISSION" },
-                    new SelectListItem{ Text = "REARAXEL",Value="REARAXEL"}
-                })
-            </div>*@
                                     </div>
                                     <div id="GridEmails"></div>
                                 </div>
@@ -850,6 +857,8 @@
        $("#NotifyAdd").on("click", function () {
             var Data = {
                 STAGE: $('#STAGE').val(),
+                NOTIFYMOBILE: $('#NOTIFYMOBILE').val(),
+                NOTIFYUSERNAME: $('#NOTIFYUSERNAME').val(),
                 NOTIFYEMAILID: $('#NOTIFYEMAILID').val()
             };
             $.ajax({

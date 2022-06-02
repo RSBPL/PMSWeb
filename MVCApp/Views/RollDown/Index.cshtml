@@ -173,7 +173,7 @@
                         <fieldset>
                             <legend>Rear Tyre</legend>
                             <div class="col-md-4">
-                                <label for="fname" class="text-right control-label col-form-label"><strong>Srnn1</strong></label>
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Srn.no 1</strong></label>
                                 @Html.TextBoxFor(Model => Model.RearSrnn1, null, new { @class = "form-control input-sm" })
                             </div>
                             <div class="col-md-4">
@@ -191,7 +191,7 @@
                         <fieldset>
                             <legend>Font Tyre</legend>
                             <div class="col-md-4">
-                                <label for="fname" class="text-right control-label col-form-label"><strong>Srnn1</strong></label>
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Srn.no 1</strong></label>
                                 @Html.TextBoxFor(Model => Model.FrontSrnn1, null, new { @class = "form-control input-sm" })
                             </div>
                             <div class="col-md-4">
@@ -205,7 +205,7 @@
                         </fieldset>
                     </div>
                     <div class="col-md-2">
-                        <label for="fname" class="text-right control-label col-form-label"><strong>Srnn2</strong></label>
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Srn.no 2</strong></label>
                         @Html.TextBoxFor(Model => Model.RearSrnn2, null, new { @class = "form-control input-sm" })
                     </div>
                     <div class="col-md-2">
@@ -218,7 +218,7 @@
                     </div>
 
                     <div class="col-md-2">
-                        <label for="fname" class="text-right control-label col-form-label"><strong>Srnn2</strong></label>
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Srn.no 2</strong></label>
                         @Html.TextBoxFor(Model => Model.FrontSrnn2, null, new { @class = "form-control input-sm" })
                     </div>
                     <div class="col-md-2">
@@ -281,7 +281,7 @@
                     </div>
 
                     <div class="col-md-2">
-                        <label for="fname" class="text-right control-label col-form-label"><strong>Srno</strong></label>
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Srn.no </strong></label>
                         @Html.TextBoxFor(Model => Model.Srno, null, new { @class = "form-control input-sm" })
                     </div>
                     <div class="col-md-2">
@@ -602,6 +602,7 @@
                     if (data.Result.TractorAutoid != "" && data.Result.TractorAutoid != null) {
                         $("#TractorAutoid").val(data.Result.TractorAutoid);
                     }
+                    $('input').attr('readonly', true);
                 }
 
             },
@@ -631,6 +632,7 @@
                 PLANTCODE: $('#PLANTCODE').val(),
                 FAMILYCODE: $('#FAMILYCODE').val(),
                 STAGE_Code: stagecode,
+                Quantity: $('#Quantity').val(),
                 JOBID: $('#JOBID').val()
             };
         } else {

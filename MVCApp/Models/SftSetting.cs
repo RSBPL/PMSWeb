@@ -38,10 +38,13 @@ namespace MVCApp.Models
         public string STAGE { get; set; }
         public string ITEM { get; set; }
         public string NOTIFYEMAILID { get; set; }
+        public string NOTIFYMOBILE { get; set; }
+        public string NOTIFYUSERNAME { get; set; }
+
 
 
 
 
     }
-    
+
 }

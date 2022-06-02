@@ -399,7 +399,7 @@ namespace MVCApp.Controllers.Admin
             //}
             query = string.Format(@"delete from XXES_STAGE_EMAILS where STAGE = '{0}'", Convert.ToString(data.STAGE));
             fun.EXEC_QUERY(query);
-            query = "insert into XXES_STAGE_EMAILS(STAGE,ITEM ,EMAIL,STAGE_DESC) values('" + Convert.ToString(data.STAGE) + "','','" + data.NOTIFYEMAILID.Trim() + "','" + data.STAGE.Trim() + "')";
+            query = "insert into XXES_STAGE_EMAILS(STAGE,ITEM ,EMAIL,STAGE_DESC,USERNAME,MOBILE) values('" + Convert.ToString(data.STAGE) + "','','" + data.NOTIFYEMAILID.Trim() + "','" + data.STAGE.Trim() + "','" + data.NOTIFYUSERNAME.Trim() + "','" + data.NOTIFYMOBILE.Trim() + "')";
             if (fun.EXEC_QUERY(query))
             {
                 fun.Insert_Into_ActivityLog("STAGE_MAIL", "INSERT", Convert.ToString(data.STAGE), query, "", "");
