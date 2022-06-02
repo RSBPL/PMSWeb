@@ -371,13 +371,9 @@
             $('#PNLReportType').hide();
             var d0 = $("#FromDate").val();
             var myPastDate = new Date(d0);
-            myPastDate.setDate(myPastDate.getDate() - 7);
-            formatDate(myPastDate);
-            $("#FromDate").val(myPastDate);
-            //var newVar = new Date(d0);
-            //var startDate = newVar.getDate() - 7;
-            //var finaldate = new Date(startDate); 
-            //$("#FromDate").val(finaldate.format('dd-MMM-yyyy'));
+            myPastDate.setDate(myPastDate.getDate() - 6);
+           var datefrom = formatDate(myPastDate);
+            $("#FromDate").val(datefrom);
         } else {
             $('#PNLTotalTractorsManufactured').hide();
             $('#PNLJobHistory').hide();

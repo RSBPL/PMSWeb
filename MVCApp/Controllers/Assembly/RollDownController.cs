@@ -68,9 +68,9 @@ namespace MVCApp.Controllers
                 DataTable dt = new DataTable();
                 if (!string.IsNullOrEmpty(plant) && !string.IsNullOrEmpty(family))
                 {
-                    query = string.Format(@"SELECT stage_description description,offline_keycode code FROM xxes_stage_master
-                        WHERE plant_code='{0}' AND family_code='{1}'
-                        AND IPADDR IS NOT NULL and offline_keycode not in ('QUALITY')", plant.Trim().ToUpper(), family.Trim().ToUpper());
+                    query = string.Format(@"SELECT SM.stage_description description,SM.offline_keycode code FROM xxes_stage_master SM 
+                                    inner join xxes_users_master UM ON SM.STAGE_ID=UM.STAGEID
+                                    WHERE SM.PLANT_CODE='{0}' AND SM.family_code='{1}' AND UM.USRNAME='{2}' AND IPADDR IS NOT NULL and offline_keycode not in ('QUALITY')", plant.Trim().ToUpper(), family.Trim().ToUpper(), fun.getUSERNAME());
                     //    query = string.Format(@"select distinct segment1 || ' # ' || description as DESCRIPTION, segment1 as ITEM_CODE from " + schema + ".mtl_system_items " +
                     //"where organization_id in (" + orgid + ") and substr(segment1, 1, 1) in ('D','S') AND (SEGMENT1 LIKE '{0}%' OR DESCRIPTION LIKE '{1}%') order by segment1", data.SubAssembly1.Trim().ToUpper(), data.SubAssembly1.Trim().ToUpper());
 
@@ -159,6 +159,16 @@ namespace MVCApp.Controllers
                 if (string.IsNullOrEmpty(Convert.ToString(obj.JOBID.Trim())) || obj.JOBID == null)
                 {
                     msg = "Scan job to continue.";
+                    var myResult1 = new
+                    {
+                        Result = tm,
+                        Msg = msg
+                    };
+                    return Json(myResult1, JsonRequestBehavior.AllowGet);
+                }
+                if (obj.PLANTCODE == null || obj.FAMILYCODE == null)
+                {
+                    msg = "Please Select Plant And Family";
                     var myResult1 = new
                     {
                         Result = tm,
@@ -328,7 +338,7 @@ namespace MVCApp.Controllers
             return Json(myResult, JsonRequestBehavior.AllowGet);
         }
 
-      
+
 
         public JsonResult PRINTDATA(RollDown down)
         {
@@ -343,35 +353,40 @@ namespace MVCApp.Controllers
                 Msg = msg
             };
             try
-                {
+            {
 
-                    Assemblyfunctions assemblyfunctions = new Assemblyfunctions();
+                Assemblyfunctions assemblyfunctions = new Assemblyfunctions();
                 RollDown rolldown = new RollDown();
-                if (down.JOBID!=null || down.PLANTCODE != null || down.FAMILYCODE != null) { 
+                if (down.JOBID != null || down.PLANTCODE != null || down.FAMILYCODE != null)
+                {
                     rolldown = assemblyfunctions.GetTractorDetails(down.JOBID, down.PLANTCODE, down.FAMILYCODE,
                         "JOBID");
                 }
                 else
                 {
                     msg = "Please Select JOBID , Plant AND FamilyCode";
-                   
+
                     return Json(myResult, JsonRequestBehavior.AllowGet);
                 }
                 rolldown.STAGE_Code = down.STAGE_Code;
+                rolldown.Quantity = down.Quantity;
 
-                    if (string.IsNullOrEmpty(rolldown.TractorType))
-                    {
-                        //MessageBox.Show("Invalid Tractor Type. i.e EXPORT or DOMESTIC"); 
+                if (string.IsNullOrEmpty(rolldown.TractorType))
+                {
+                    //MessageBox.Show("Invalid Tractor Type. i.e EXPORT or DOMESTIC"); 
                     msg = "Invalid Tractor Type. i.e EXPORT or DOMESTIC";
 
                     return Json(myResult, JsonRequestBehavior.AllowGet);
                 }
-                    string mode = "NETWORK", ip = string.Empty; int port = 0;
+                string mode = "NETWORK", ip = string.Empty; int port = 0;
 
-
-                    if (af.PrintAssemblyStagesSticker(rolldown, 1))
-                    {
-                        //MessageBox.Show("PDI OK sticker printed successfully !! ");
+                if (rolldown.Quantity == null)
+                {
+                    rolldown.Quantity = "1";
+                }
+                if (af.PrintAssemblyStagesSticker(rolldown, Convert.ToInt32(rolldown.Quantity)))
+                {
+                    //MessageBox.Show("PDI OK sticker printed successfully !! ");
                     msg = "BuckleUp sticker printed successfully !! ";
 
                     return Json(myResult, JsonRequestBehavior.AllowGet);
@@ -380,13 +395,13 @@ namespace MVCApp.Controllers
 
                 return Json(myResult, JsonRequestBehavior.AllowGet);
             }
-          
+
             catch (Exception ex)
             {
                 msg = ex.Message;
             }
             finally { }
-           
+
             return Json(myResult, JsonRequestBehavior.AllowGet);
         }
 

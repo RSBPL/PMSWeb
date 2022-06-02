@@ -144,7 +144,12 @@ namespace MVCApp.CommonFunction
                 ConOrcl.Dispose();
             }
         }
-      
+        public string getUSERNAME()
+        {
+            string UsrName = string.Empty;
+             UsrName = HttpContext.Current.Session["Login_User"].ToString().ToUpper().Trim();
+            return UsrName;
+        }
         public string getSeries(string unit, string family, string stage, string category = null)
         {
             int Start_serial_number, Current_Serial_number, End_serial_Number;
