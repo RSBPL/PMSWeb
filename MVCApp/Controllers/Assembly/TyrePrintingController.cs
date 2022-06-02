@@ -22,7 +22,7 @@ namespace MVCApp.Controllers.Assembly
         DataTable dt;
         Function fun = new Function();
         string query = "", prevQty = ""; DataTable dtJob; string ORGID = "";
-        List<LabelPrinting> labelPrinting = null; int qty;
+        List<LabelPrinting> labelPrinting = new List<LabelPrinting>(); int qty;
         string tyreinfo = string.Empty; Assemblyfunctions assemblyfunctions = null;
         public ActionResult Index()
         {
@@ -118,7 +118,7 @@ namespace MVCApp.Controllers.Assembly
         public JsonResult GetTyreDeCode(TyrePrinting data)
         {
             string msg = string.Empty; string mstType = string.Empty; string status = string.Empty;
-            string LHFrontTyre = string.Empty , RHFrontTyre = string.Empty;
+            string LHFrontTyre = string.Empty, RHFrontTyre = string.Empty;
             try
             {
                 if (string.IsNullOrEmpty(data.ItemCode))
@@ -129,17 +129,18 @@ namespace MVCApp.Controllers.Assembly
                     var resul = new { Msg = msg, ID = mstType, validation = status };
                     return Json(resul, JsonRequestBehavior.AllowGet);
                 }
-                query = string.Format(@"SELECT FRONTTYRE || ',' || SUBSTR(FRONTTYRE_DESCRIPTION,0,50) || ',' || RH_FRONTTYRE || ',' || SUBSTR(RH_FRONTTYRE_DESC,0,50)  
+                query = string.Format(@"SELECT FRONTTYRE || '#' || SUBSTR(FRONTTYRE_DESCRIPTION,0,50) || '#' || RH_FRONTTYRE || '#' || SUBSTR(RH_FRONTTYRE_DESC,0,50)  
                         AS Text FROM XXES_ITEM_MASTER WHERE ITEM_CODE='{0}' AND PLANT_CODE='{1}' AND FAMILY_CODE='{2}'", data.ItemCode.Trim(), data.Plant.Trim(), data.Family.Trim());
                 string line = fun.get_Col_Value(query);
-                if(!string.IsNullOrEmpty(line))
+                if (!string.IsNullOrEmpty(line))
                 {
-                    LHFrontTyre = line.Split(',')[0].Trim().ToUpper();
-                    data.FTLH = line.Split(',')[1].Trim().ToUpper() + "(" + LHFrontTyre + ")";
-                    RHFrontTyre = line.Split(',')[2].Trim().ToUpper();
-                    data.FTRH = line.Split(',')[3].Trim().ToUpper() + "(" + RHFrontTyre + ")";
+                    LHFrontTyre = line.Split('#')[0].Trim().ToUpper();
+                    data.FTLH = line.Split('#')[1].Trim().ToUpper() + "(" + LHFrontTyre + ")";
+                    RHFrontTyre = line.Split('#')[2].Trim().ToUpper();
+                    data.FTRH = line.Split('#')[3].Trim().ToUpper() + "(" + RHFrontTyre + ")";
                     tyreinfo = line;
                 }
+
             }
             catch (Exception ex)
             {
@@ -157,7 +158,7 @@ namespace MVCApp.Controllers.Assembly
         public JsonResult Print(TyrePrinting data)
         {
             string msg = string.Empty; string mstType = string.Empty; string status = string.Empty;
-            string stageid = string.Empty;
+            string stageid = string.Empty; string tyreinfo1 = string.Empty; string Current_Serial_number = string.Empty;
             try
             {
                 if(string.IsNullOrEmpty(data.ItemCode))
@@ -176,6 +177,18 @@ namespace MVCApp.Controllers.Assembly
                     var resul = new { Msg = msg, ID = mstType, validation = status };
                     return Json(resul, JsonRequestBehavior.AllowGet);
                 }
+                query = string.Format(@"SELECT FRONTTYRE || '#' || SUBSTR(FRONTTYRE_DESCRIPTION,0,50) || '#' || RH_FRONTTYRE || '#' || SUBSTR(RH_FRONTTYRE_DESC,0,50)  
+                        AS Text FROM XXES_ITEM_MASTER WHERE ITEM_CODE='{0}' AND PLANT_CODE='{1}' AND FAMILY_CODE='{2}'", data.ItemCode.Trim(), data.Plant.Trim(), data.Family.Trim());
+                string line = fun.get_Col_Value(query);
+                if (!string.IsNullOrEmpty(line))
+                {
+                   string LHFrontTyre = line.Split('#')[0].Trim().ToUpper();
+                    data.FTLH = line.Split('#')[1].Trim().ToUpper() + "(" + LHFrontTyre + ")";
+                   string RHFrontTyre = line.Split('#')[2].Trim().ToUpper();
+                    data.FTRH = line.Split('#')[3].Trim().ToUpper() + "(" + RHFrontTyre + ")";
+                    tyreinfo1 = line;
+                }
+               
                 query = string.Format(@"SELECT STAGE_ID FROM XXES_STAGE_MASTER WHERE PLANT_CODE='{0}' AND FAMILY_CODE='{1}' AND OFFLINE_KEYCODE='FT'
                         ", data.Plant.Trim(), data.Family.Trim());
                 stageid = fun.get_Col_Value(query);
@@ -186,26 +199,30 @@ namespace MVCApp.Controllers.Assembly
                     {
                         labelPrinting.Add(new LabelPrinting
                         {
-                            dcode = tyreinfo.Split(',')[0].Trim().ToUpper(),
-                            description = tyreinfo.Split(',')[1].Trim().ToUpper(),
-                            plantcode = Convert.ToString(data.Plant).Trim().ToUpper(),
-                            familycode = Convert.ToString(data.Family).Trim().ToUpper()
+                            dcode = tyreinfo.Split('#')[2].Trim().ToUpper(),
+                            description = tyreinfo.Split('#')[3].Trim().ToUpper(),
+                            Plant = data.Plant.Trim().ToUpper(),
+                            Family = data.Family.Trim().ToUpper()
                         });
                     }
                     if (data.chkFTLH == true)
                     {
                         labelPrinting.Add(new LabelPrinting
                         {
-                            dcode = tyreinfo.Split(',')[0].Trim().ToUpper(),
-                            description = tyreinfo.Split(',')[1].Trim().ToUpper(),
-                            plantcode = Convert.ToString(data.Plant).Trim().ToUpper(),
-                            familycode = Convert.ToString(data.Family).Trim().ToUpper()
+                            dcode = tyreinfo1.Split('#')[0].Trim().ToUpper(),
+                            description = tyreinfo1.Split('#')[1].Trim().ToUpper(),
+                            Plant = Convert.ToString(data.Plant.Trim().ToUpper()),
+                            Family = Convert.ToString(data.Family.Trim().ToUpper())
+                            
                         });
                     }
                 }
                 foreach(LabelPrinting label in labelPrinting)
                 {
-                    fun.getSeries(data.Plant.Trim(), data.Family.Trim(), stageid);
+                    string stage = "FT";
+                    Current_Serial_number = fun.getSeries(data.Plant.Trim(), data.Family.Trim(), stage);
+                   string srnoTobeUpdate = Current_Serial_number.Trim().Split('#')[1].Trim();
+                    Current_Serial_number = Current_Serial_number.Replace("#", "").Trim();
                     PrintSticker(data, 1);
                     if(label.srlno != "")
                     {
@@ -252,6 +269,7 @@ namespace MVCApp.Controllers.Assembly
         {
             bool status = false;
             string TyreType = string.Empty, Filename = string.Empty, itemname1 = string.Empty, itemname2 = string.Empty;
+            string Current_Serial_number = string.Empty;
             PrintAssemblyBarcodes af = new PrintAssemblyBarcodes();
             try
             {
@@ -263,7 +281,7 @@ namespace MVCApp.Controllers.Assembly
                     if (assemblyfunctions == null)
                         assemblyfunctions = new Assemblyfunctions();
                     assemblyfunctions.getName(data.description.Trim().ToUpper(), ref itemname1, ref itemname2);
-                    query = query.Replace("SERIES_NO", "");
+                    query = query.Replace("SERIES_NO", Current_Serial_number);
                     query = query.Replace("ITEM_NAME1", itemname1);
                     query = query.Replace("ITEM_NAME2", itemname2);
                     query = query.Replace("DCODE_VAL", data.ItemCode);

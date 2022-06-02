@@ -358,7 +358,19 @@
     });
 
     $("#print").on("click", function () {
-            $("#divLoader").show();
+        $("#divLoader").show();
+        if ($("#chkFTRH").prop('checked') == true) {
+            chkbox1 = true;
+        }
+        else {
+            chkbox1 = false;
+        }
+        if ($("#chkFTLH").prop('checked') == true) {
+            chkbox2 = true;
+        }
+        else {
+            chkbox2 = false;
+        }
             var data = {
                 Plant: $('#Plant').val(),
                 Family: $('#Family').val(),
@@ -366,7 +378,9 @@
                 MakeTyre: $("#MakeTyre").val(),
                 Quantity: $("#Quantity").val(),
                 FTRH: $("#FTRH").val(),
-                FTLH: $("#FTLH").val()
+                FTLH: $("#FTLH").val(),
+                chkFTRH:chkbox1,
+                chkFTLH:chkbox2
             };
             $.ajax({
                 url: '@Url.Action("Print", "TyrePrinting")',

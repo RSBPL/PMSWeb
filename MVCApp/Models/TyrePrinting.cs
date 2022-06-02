@@ -30,8 +30,8 @@ namespace MVCApp.Models
     }
     public class LabelPrinting
     {
-        public string plantcode { get; set; }
-        public string familycode { get; set; }
+        public string Plant { get; set; }
+        public string Family { get; set; }
         public string dcode { get; set; }
         public string srlno { get; set; }
         public string description { get; set; }
