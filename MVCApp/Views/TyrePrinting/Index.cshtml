@@ -256,7 +256,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <label for="Date" class="control-label col-form-label"><strong>Date</strong></label>
-                            @Html.EJS().DatePickerFor(Model => Model.Date).Format("dd-MMM-yyyy").Value(ViewBag.DefaultDate).Render()
+                            @Html.EJS().DatePickerFor(Model => Model.Date).Format("dd-MMM-yyyy").Value(ViewBag.value).Max(ViewBag.maxDate).Render()
                             <strong>@Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })</strong>
 
                         </div>
@@ -315,7 +315,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <label for="Date" class="control-label col-form-label"><strong>Date</strong></label>
-                            @Html.EJS().DatePickerFor(Model => Model.RDate).Format("dd-MMM-yyyy").Value(ViewBag.DefaultDate).Render()
+                            @Html.EJS().DatePickerFor(Model => Model.RDate).Format("dd-MMM-yyyy").Value(ViewBag.value).Max(ViewBag.maxDate).Render()
                             <strong>@Html.ValidationMessageFor(model => model.RDate, "", new { @class = "text-danger" })</strong>
 
                         </div>
@@ -361,6 +361,7 @@
     });
     $("#ItemCode").on("change", function () {
         GetTyreDeCode();
+        DDLTyre();
     });
     //Function to bind Plant
     function DDLPlant() {
@@ -420,6 +421,7 @@
 
                     $("#ItemCode").append(optionhtml);
                 });
+                DDLTyre();
         },
             error: function (errormessage) {
             //alert(errormessage.responseText);
@@ -428,6 +430,28 @@
     };
 
     function DDLTyre() {
+        var selectedValue = $("#ItemCode").val();
+        $.ajax({
+            url: '@Url.Action("BindTyreCode", "TyrePrinting")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ ItemCode: selectedValue }),
+            success: function (result) {
+                $("#MakeTyre").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#MakeTyre").append(optionhtml);
+                });
+               /* BindTractor();*/
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+     @*function DDLTyre() {
         $.ajax({
             url: '@Url.Action("BindTyre", "TyrePrinting")',
             type: "GET",
@@ -442,7 +466,7 @@
             //alert(errormessage.responseText);
             }
         });
-    };
+    };*@
 
     function GetTyreDeCode() {
             var Data = {
@@ -669,6 +693,7 @@
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 success: function (data) {
+                    
                     $("#divLoader").hide();
                     if (data.validation.includes("error")) {
                         $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -688,6 +713,7 @@
                                 closeAlert(this);
                             });
                         }, 5000);
+                      
                         //$('#RearAxleSrno').val("");
                         //$('#TransmissionSrno').val("");
                     }
@@ -826,7 +852,7 @@
         width: '200px',
     });
     /**************************************Rear tyre********************************************/
-    
+
     $("#RPlant").on("change", function () {
         DDLRFamilyByPlant();
     });
@@ -835,6 +861,7 @@
     });
     $("#RItemCode").on("change", function () {
         GetRTyreDeCode();
+        DDLRTyre();
     });
     //Function to bind Plant
     function DDLRPlant() {
@@ -894,6 +921,28 @@
 
                     $("#RItemCode").append(optionhtml);
                 });
+                DDLRTyre();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    function DDLRTyre() {
+        var selectedValue = $("#RItemCode").val();
+        $.ajax({
+            url: '@Url.Action("BindRTyreCode", "TyrePrinting")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ RItemCode: selectedValue }),
+            success: function (result) {
+                $("#RMakeTyre").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#RMakeTyre").append(optionhtml);
+                });
+               /* BindTractor();*/
         },
             error: function (errormessage) {
             //alert(errormessage.responseText);
@@ -901,7 +950,7 @@
         });
     };
 
-    function DDLRTyre() {
+    @*function DDLRTyre() {
         $.ajax({
             url: '@Url.Action("BindRTyre", "TyrePrinting")',
             type: "GET",
@@ -916,7 +965,7 @@
             //alert(errormessage.responseText);
             }
         });
-    };
+    };*@
 
     function GetRTyreDeCode() {
             var Data = {

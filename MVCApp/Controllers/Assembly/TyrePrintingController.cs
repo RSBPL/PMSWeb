@@ -32,6 +32,7 @@ namespace MVCApp.Controllers.Assembly
             }
             else
             {
+                ViewBag.value = DateTime.Now;
                 return View();
             }
         }
@@ -47,7 +48,7 @@ namespace MVCApp.Controllers.Assembly
             List<DDLTextValue> result = new List<DDLTextValue>();
             if (!string.IsNullOrEmpty(Plant))
             {
-                result = fun.Fill_All_Family(Plant);
+                result = fun.Fill_FamilyOnlyTractor(Plant);
             }
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -86,33 +87,74 @@ namespace MVCApp.Controllers.Assembly
             }
             return Json(_Item, JsonRequestBehavior.AllowGet);
         }
-        [HttpGet]
-        public JsonResult BindTyre()
+        [HttpPost]
+        public JsonResult BindTyreCode(string ItemCode)
         {
-            List<DDLTextValue> _Tyre = new List<DDLTextValue>();
+            List<DDLTextValue> tyre = new List<DDLTextValue>();
             try
             {
                 DataTable dt = new DataTable();
-                query = string.Format(@"select PARAMETERINFO as Name from XXES_SFT_SETTINGS where PARAMVALUE='TYRE_MAN_NAME' order by PARAMETERINFO");
-                dt = fun.returnDataTable(query);
-                if (dt.Rows.Count > 0)
+                if (!string.IsNullOrEmpty(ItemCode))
                 {
-                    foreach (DataRow dr in dt.AsEnumerable())
+                    ItemCode = ItemCode.Split('#')[0].Trim();
+                    if (Convert.ToString(ItemCode)=="F10101960")
                     {
-                        _Tyre.Add(new DDLTextValue
+                        query = string.Format(@"select PARAMETERINFO as Name from XXES_SFT_SETTINGS where PARAMVALUE='TYRE_MAN_NAME' AND PARAMETERINFO='GOODYEAR VAJRA' order by PARAMETERINFO");
+                    }
+                    else
+                    {
+                        query = string.Format(@"select PARAMETERINFO as Name from XXES_SFT_SETTINGS where PARAMVALUE='TYRE_MAN_NAME' order by PARAMETERINFO");
+                    }
+                    dt = fun.returnDataTable(query);
+                    if (dt.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in dt.AsEnumerable())
                         {
-                            Text =Convert.ToString(dr["Name"]),
-                            Value =Convert.ToString(dr["Name"])
-                        });
+                            tyre.Add(new DDLTextValue
+                            {
+                                Text = Convert.ToString(dr["Name"]),
+                                Value = Convert.ToString(dr["Name"])
+                            });
+                        }
                     }
                 }
+               
             }
             catch (Exception ex)
             {
                 fun.LogWrite(ex);
+                throw;
             }
-            return Json(_Tyre, JsonRequestBehavior.AllowGet);
+            return Json(tyre, JsonRequestBehavior.AllowGet);
         }
+
+        //[HttpGet]
+        //public JsonResult BindTyre()
+        //{
+        //    List<DDLTextValue> _Tyre = new List<DDLTextValue>();
+        //    try
+        //    {
+        //        DataTable dt = new DataTable();
+        //        query = string.Format(@"select PARAMETERINFO as Name from XXES_SFT_SETTINGS where PARAMVALUE='TYRE_MAN_NAME' order by PARAMETERINFO");
+        //        dt = fun.returnDataTable(query);
+        //        if (dt.Rows.Count > 0)
+        //        {
+        //            foreach (DataRow dr in dt.AsEnumerable())
+        //            {
+        //                _Tyre.Add(new DDLTextValue
+        //                {
+        //                    Text =Convert.ToString(dr["Name"]),
+        //                    Value =Convert.ToString(dr["Name"])
+        //                });
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        fun.LogWrite(ex);
+        //    }
+        //    return Json(_Tyre, JsonRequestBehavior.AllowGet);
+        //}
 
         [HttpPost]
         public JsonResult GetTyreDeCode(TyrePrinting data)
@@ -385,7 +427,9 @@ namespace MVCApp.Controllers.Assembly
                     {
                         query = string.Format(@"INSERT INTO XXES_PRINT_SERIALS(PLANT_CODE,FAMILY_CODE,STAGE_ID,DCODE,SRNO,PRINTDATE,OFFLINE_KEYCODE,TYRE_DCODE,RIM_DCODE,MISC1,FCODE,DESCRIPTION)
                             VALUES('{0}','{1}','{2}','{3}','{4}',SYSDATE,'{5}','','','{6}','{7}','{8}')", data.Plant.Trim(), data.Family.Trim(), stageid, Dcode.Trim(),
-                                Current_Serial_number, stage, data.MakeTyre.Trim(), data.ItemCode.Trim(), description);
+                                Current_Serial_number, stage, data.MakeTyre.Trim(), data.ItemCode.Trim(), description.Trim());
+                        fun.EXEC_QUERY(query);
+                            
                     }
                 }
                 else if(stage == "RT")
@@ -399,8 +443,9 @@ namespace MVCApp.Controllers.Assembly
                     else
                     {
                         query = string.Format(@"INSERT INTO XXES_PRINT_SERIALS(PLANT_CODE,FAMILY_CODE,STAGE_ID,DCODE,SRNO,PRINTDATE,OFFLINE_KEYCODE,TYRE_DCODE,RIM_DCODE,MISC1,FCODE,DESCRIPTION)
-                            VALUES('{0}','{1}','{2}','{3}','{4}',SYSDATE,'{5}','','','{6}','{7}')", data.RPlant.Trim(), data.RFamily.Trim(), stageid, Dcode.Trim(),
-                                Current_Serial_number, stage, data.RMakeTyre.Trim(), data.RItemCode.Trim(), description);
+                            VALUES('{0}','{1}','{2}','{3}','{4}',SYSDATE,'{5}','','','{6}','{7}','{8}')", data.RPlant.Trim(), data.RFamily.Trim(), stageid, Dcode.Trim(),
+                                Current_Serial_number, stage, data.RMakeTyre.Trim(), data.RItemCode.Trim(), description.Trim());
+                        fun.EXEC_QUERY(query);
                     }
                 }
                 
@@ -428,7 +473,8 @@ namespace MVCApp.Controllers.Assembly
             List<DDLTextValue> result = new List<DDLTextValue>();
             if (!string.IsNullOrEmpty(RPlant))
             {
-                result = fun.Fill_All_Family(RPlant);
+                //result = fun.Fill_All_Family(RPlant);
+                result = fun.Fill_FamilyOnlyTractor(RPlant);
             }
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -468,34 +514,76 @@ namespace MVCApp.Controllers.Assembly
             }
             return Json(_Item, JsonRequestBehavior.AllowGet);
         }
-        [HttpGet]
-        public JsonResult BindRTyre()
+
+        [HttpPost]
+        public JsonResult BindRTyreCode(string RItemCode)
         {
-            List<DDLTextValue> _Tyre = new List<DDLTextValue>();
+            List<DDLTextValue> tyre = new List<DDLTextValue>();
             try
             {
-
                 DataTable dt = new DataTable();
-                query = string.Format(@"select PARAMETERINFO as Name from XXES_SFT_SETTINGS where PARAMVALUE='TYRE_MAN_NAME' order by PARAMETERINFO");
-                dt = fun.returnDataTable(query);
-                if (dt.Rows.Count > 0)
+                if (!string.IsNullOrEmpty(RItemCode))
                 {
-                    foreach (DataRow dr in dt.AsEnumerable())
+                    RItemCode = RItemCode.Split('#')[0].Trim();
+                    if (Convert.ToString(RItemCode) == "F10101960")
                     {
-                        _Tyre.Add(new DDLTextValue
+                        query = string.Format(@"select PARAMETERINFO as Name from XXES_SFT_SETTINGS where PARAMVALUE='TYRE_MAN_NAME' AND PARAMETERINFO='GOODYEAR VAJRA' order by PARAMETERINFO");
+                    }
+                    else
+                    {
+                        query = string.Format(@"select PARAMETERINFO as Name from XXES_SFT_SETTINGS where PARAMVALUE='TYRE_MAN_NAME' order by PARAMETERINFO");
+                    }
+                    dt = fun.returnDataTable(query);
+                    if (dt.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in dt.AsEnumerable())
                         {
-                            Text = Convert.ToString(dr["Name"]),
-                            Value = Convert.ToString(dr["Name"])
-                        });
+                            tyre.Add(new DDLTextValue
+                            {
+                                Text = Convert.ToString(dr["Name"]),
+                                Value = Convert.ToString(dr["Name"])
+                            });
+                        }
                     }
                 }
+
             }
             catch (Exception ex)
             {
                 fun.LogWrite(ex);
+                throw;
             }
-            return Json(_Tyre, JsonRequestBehavior.AllowGet);
+            return Json(tyre, JsonRequestBehavior.AllowGet);
         }
+
+        //[HttpGet]
+        //public JsonResult BindRTyre()
+        //{
+        //    List<DDLTextValue> _Tyre = new List<DDLTextValue>();
+        //    try
+        //    {
+
+        //        DataTable dt = new DataTable();
+        //        query = string.Format(@"select PARAMETERINFO as Name from XXES_SFT_SETTINGS where PARAMVALUE='TYRE_MAN_NAME' order by PARAMETERINFO");
+        //        dt = fun.returnDataTable(query);
+        //        if (dt.Rows.Count > 0)
+        //        {
+        //            foreach (DataRow dr in dt.AsEnumerable())
+        //            {
+        //                _Tyre.Add(new DDLTextValue
+        //                {
+        //                    Text = Convert.ToString(dr["Name"]),
+        //                    Value = Convert.ToString(dr["Name"])
+        //                });
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        fun.LogWrite(ex);
+        //    }
+        //    return Json(_Tyre, JsonRequestBehavior.AllowGet);
+        //}
 
         [HttpPost]
         public JsonResult GetRTyreDeCode(TyrePrinting data)
