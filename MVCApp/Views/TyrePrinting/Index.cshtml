@@ -35,7 +35,10 @@
         MIN-WIDTH: 130px !important;
         MAX-HEIGHT: 30px !important;
     }
-    #PasswordPopUp .modal-lg {
+    #PawordPopUp .modal-lg {
+        max-width: 30% !important;
+    }
+    #RPawordPopUp .modal-lg {
         max-width: 30% !important;
     }
     .important {
@@ -44,7 +47,12 @@
     .test {
         overflow: auto
     }
-
+    #SerialNoPopUp .modal-lg {
+        max-width: 40% !important;
+    }
+    #RSerialNoPopUp .modal-lg {
+        max-width: 40% !important;
+    }
 </style>
 
 
@@ -131,7 +139,7 @@
                                     <button class="btn btn-success btn-sm" type="button" id="print"><i class="ace-icon fa fa-print bigger-110"></i><strong>Print</strong></button>
                                 </div>
                                 <div class="col-md-1" style="padding-top: 23px;">
-                                    <button class="btn btn-success btn-sm" type="button" id="Reprint"><i class="ace-icon fa fa-print bigger-110"></i><strong>Reprint</strong></button>
+                                    <button class="btn btn-success btn-sm" type="button" id="Reprint" data-toggle="modal" data-target="#PawordPopUp"><i class="ace-icon fa fa-print bigger-110"></i><strong>Reprint</strong></button>
                                 </div>
                                 <div class="col-md-1" style="padding-top: 23px;">
                                     <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
@@ -142,7 +150,7 @@
                 }
             </div>
         </div>
-        @*<div id="Menu2" class="tab-pane fade">
+        <div id="Menu2" class="tab-pane fade">
             <div class="container" style="width:100%!important">
                 <div class="form-horizontal form-group ">
                     <fieldset class="the-fieldset bg-info">
@@ -158,41 +166,176 @@
                                 <strong>@Html.ValidationMessageFor(model => model.RFamily, "", new { @class = "text-danger" })</strong>
                             </div>
                             <div class="col-md-3">
-                                <label for="RBackend" class="text-right control-label col-form-label"><strong>Backend</strong></label>
-                                @Html.TextBoxFor(Model => Model.RBackendSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
-                                <strong>@Html.ValidationMessageFor(model => model.RBackendSrno, "", new { @class = "text-danger" })</strong>
+                                <label for="RItemCode" class="text-right control-label col-form-label"><strong>Tractor</strong></label>
+                                @Html.DropDownListFor(model => model.RItemCode, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.RItemCode, "", new { @class = "text-danger" })</strong>
                             </div>
-                            <div class="col-md-3">
-                                <label for="RRearAxleSrno" class="text-right control-label col-form-label"><strong>RearAxle</strong></label>
-                                @Html.TextBoxFor(Model => Model.RRearAxleSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
-                                <strong>@Html.ValidationMessageFor(model => model.RRearAxleSrno, "", new { @class = "text-danger" })</strong>
+                            <div class="col-md-2">
+                                <label for="RMakeTyre" class="text-right control-label col-form-label"><strong>Make Tyre</strong></label>
+                                @Html.DropDownListFor(model => model.RMakeTyre, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                                <strong>@Html.ValidationMessageFor(model => model.RMakeTyre, "", new { @class = "text-danger" })</strong>
                             </div>
-                            <div class="col-md-3">
-                                <label for="RTransmissionSrno" class="text-right control-label col-form-label"><strong>Transmission</strong></label>
-                                @Html.TextBoxFor(Model => Model.RTransmissionSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
-                                <strong>@Html.ValidationMessageFor(model => model.RTransmissionSrno, "", new { @class = "text-danger" })</strong>
+                            <div class="col-md-1">
+                                <label for="RQuantity" class="text-right control-label col-form-label"><strong>Quantity</strong></label>
+                                @Html.TextBoxFor(Model => Model.RQuantity, null, new { @class = "form-control input-sm", @autocomplete = "off", type = "number" })
+                                <strong>@Html.ValidationMessageFor(model => model.RQuantity, "", new { @class = "text-danger" })</strong>
                             </div>
-                            <div class="col-md-3">
-                                <label for="RHydraulicSrno" class="text-right control-label col-form-label"><strong>Hydraulic</strong></label>
-                                @Html.TextBoxFor(Model => Model.RHydraulicSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
-                                <strong>@Html.ValidationMessageFor(model => model.RHydraulicSrno, "", new { @class = "text-danger" })</strong>
+                            <div class="col-md-6">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Rear Tyre RH</strong></label>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        @Html.CheckBoxFor(model => model.chkRTRH, new { @class = "form-control  input-sm", @checked = "checked" })
+                                    </div>
+                                    <div class="col-md-11" style="padding: 5px 12px 5px 12px !important;">
+                                        @Html.TextBoxFor(Model => Model.RTRH, null, new { @class = "form-control input-sm" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="fname" class="text-right control-label col-form-label" style="width:auto;"><strong>Rear Tyre LH</strong></label>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        @Html.CheckBoxFor(model => model.chkRTLH, new { @class = "form-control  input-sm", @checked = "checked" })
+                                    </div>
+                                    <div class="col-md-11" style="padding: 5px 12px 5px 12px !important;">
+                                        @Html.TextBoxFor(Model => Model.RTLH, null, new { @class = "form-control input-sm" })
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-1" style="padding-top: 23px;">
-                                <button class="btn btn-success btn-sm" type="button" id="AddReprint"><i class="ace-icon fa fa-print bigger-110"></i><strong>RePrint</strong></button>
+                                <button class="btn btn-success btn-sm" type="button" id="Rprint"><i class="ace-icon fa fa-print bigger-110"></i><strong>Print</strong></button>
                             </div>
                             <div class="col-md-1" style="padding-top: 23px;">
-                                <button class="btn btn-default btn-sm" type="button" id="ClearReprint"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                                <button class="btn btn-success btn-sm" type="button" id="RReprint" data-toggle="modal" data-target="#RPawordPopUp"><i class="ace-icon fa fa-print bigger-110"></i><strong>Reprint</strong></button>
+                            </div>
+                            <div class="col-md-1" style="padding-top: 23px;">
+                                <button class="btn btn-default btn-sm" type="button" id="RClear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
                             </div>
                         </div>
                     </fieldset>
                 </div>
             </div>
-        </div>*@
+        </div>
 
     </div>
 </div>
+<div class="modal fade" id="PawordPopUp" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Enter Password</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="ORDERBY" class="col-form-label">Password</label>
+                            @Html.TextBoxFor(Model => Model.Password, null, new { @class = "form-control input-sm", type = "password" })
 
+                        </div>
+                    </div>
+                </div>
 
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="PawordSubmit" class="btn btn-primary" data-toggle="modal" data-target="#SerialNoPopUp">Submit</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="SerialNoPopUp" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Tyre Reprint</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="Date" class="control-label col-form-label"><strong>Date</strong></label>
+                            @Html.EJS().DatePickerFor(Model => Model.Date).Format("dd-MMM-yyyy").Value(ViewBag.value).Max(ViewBag.maxDate).Render()
+                            <strong>@Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })</strong>
+
+                        </div>
+                        <div class="col-md-4">
+                            <label for="srlno" class="control-label col-form-label"><strong>Select SrNo</strong></label>
+                            @Html.DropDownListFor(model => model.srlno, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.srlno, "", new { @class = "text-danger" })</strong>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="PopUpPrint" class="btn btn-primary">Print</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="RPawordPopUp" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Enter Password</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="ORDERBY" class="col-form-label">Password</label>
+                            @Html.TextBoxFor(Model => Model.RPassword, null, new { @class = "form-control input-sm", type = "password" })
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="RPawordSubmit" class="btn btn-primary" data-toggle="modal" data-target="#RSerialNoPopUp">Submit</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="RSerialNoPopUp" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Tyre Reprint</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="Date" class="control-label col-form-label"><strong>Date</strong></label>
+                            @Html.EJS().DatePickerFor(Model => Model.RDate).Format("dd-MMM-yyyy").Value(ViewBag.value).Max(ViewBag.maxDate).Render()
+                            <strong>@Html.ValidationMessageFor(model => model.RDate, "", new { @class = "text-danger" })</strong>
+
+                        </div>
+                        <div class="col-md-4">
+                            <label for="srlno" class="control-label col-form-label"><strong>Select SrNo</strong></label>
+                            @Html.DropDownListFor(model => model.Rsrlno, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.Rsrlno, "", new { @class = "text-danger" })</strong>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="RPopUpPrint" class="btn btn-primary">Print</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
 <script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
@@ -204,7 +347,11 @@
 
     $(document).ready(function () {
         DDLPlant();
+        DDLRPlant();
         DDLTyre();
+        DDLRTyre();
+        DDLSrno();
+        DDLRSrno();
     });
     $("#Plant").on("change", function () {
         DDLFamilyByPlant();
@@ -214,6 +361,7 @@
     });
     $("#ItemCode").on("change", function () {
         GetTyreDeCode();
+        DDLTyre();
     });
     //Function to bind Plant
     function DDLPlant() {
@@ -273,6 +421,7 @@
 
                     $("#ItemCode").append(optionhtml);
                 });
+                DDLTyre();
         },
             error: function (errormessage) {
             //alert(errormessage.responseText);
@@ -281,6 +430,28 @@
     };
 
     function DDLTyre() {
+        var selectedValue = $("#ItemCode").val();
+        $.ajax({
+            url: '@Url.Action("BindTyreCode", "TyrePrinting")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ ItemCode: selectedValue }),
+            success: function (result) {
+                $("#MakeTyre").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#MakeTyre").append(optionhtml);
+                });
+               /* BindTractor();*/
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+     @*function DDLTyre() {
         $.ajax({
             url: '@Url.Action("BindTyre", "TyrePrinting")',
             type: "GET",
@@ -295,7 +466,7 @@
             //alert(errormessage.responseText);
             }
         });
-    };
+    };*@
 
     function GetTyreDeCode() {
             var Data = {
@@ -356,9 +527,25 @@
         allowClear: true,
         width: '200px',
     });
+    $("#srlno").select2({
+        allowClear: true,
+        width: '200px',
+    });
 
     $("#print").on("click", function () {
-            $("#divLoader").show();
+        $("#divLoader").show();
+        if ($("#chkFTRH").prop('checked') == true) {
+            chkbox1 = true;
+        }
+        else {
+            chkbox1 = false;
+        }
+        if ($("#chkFTLH").prop('checked') == true) {
+            chkbox2 = true;
+        }
+        else {
+            chkbox2 = false;
+        }
             var data = {
                 Plant: $('#Plant').val(),
                 Family: $('#Family').val(),
@@ -366,7 +553,9 @@
                 MakeTyre: $("#MakeTyre").val(),
                 Quantity: $("#Quantity").val(),
                 FTRH: $("#FTRH").val(),
-                FTLH: $("#FTLH").val()
+                FTLH: $("#FTLH").val(),
+                chkFTRH:chkbox1,
+                chkFTLH:chkbox2
             };
             $.ajax({
                 url: '@Url.Action("Print", "TyrePrinting")',
@@ -414,6 +603,498 @@
     };
 
     /**************************************reprint********************************************/
+    $("#Date").on('click', function () {
+        DDLSrno();
+    });
+    function DDLSrno() {
+        var Data = {
+            Plant: $("#Plant").val(),
+            Family: $("#Family").val(),
+            Date: $("#Date").val()
+        };
+        $.ajax({
+            url: '@Url.Action("BindSrNo", "TyrePrinting")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify(Data),
+            success: function (result) {
+                $("#srlno").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#srlno").append(optionhtml);
+                });
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    $("#PawordSubmit").on("click", function () {
+        /* localStorage.setItem("IsTabChange", true);*/
+        ChkPassword();
+    });
+    function ChkPassword() {
+        $("#divLoader").show();
+        var data = {
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val(),
+            Password: $('#Password').val()
+        };
+        $.ajax({
+            url: '@Url.Action("PasswordPopup", "TyrePrinting")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#PawordPopUp").hide();
+                $(".modal-backdrop").hide();
+                $(".modal-backdrop").addClass("important");
+                $("#divLoader").hide();
+                if (data.Msg == "Valid Password") {
+                    var chk = confirm("Are you sure you want to Reprint this?");
+                    if (chk == true) {
+                        $('body').addClass("test");
+                        $(window).scrollTop(0);
+                       /* Update();*/
+                    }
+                } else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    $('body').addClass("test");
+                    $(window).scrollTop(0);
+                }
+            },
+            error: function (errormessage) {
+
+            }
+        });
+
+    };
+
+    $("#PopUpPrint").on("click", function () {
+        $("#divLoader").show();
+            var data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                Date: $('#Date').val(),
+                srlno: $("#srlno").val()
+            };
+            $.ajax({
+                url: '@Url.Action("Reprint", "TyrePrinting")',
+                data: JSON.stringify(data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    
+                    $("#divLoader").hide();
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                      
+                        //$('#RearAxleSrno').val("");
+                        //$('#TransmissionSrno').val("");
+                    }
+
+                },
+                error: function (errormessage) {
+
+                }
+            });
+
+    });
+
+    /**************************************Rearreprint********************************************/
+    $("#RDate").on('click', function () {
+        DDLRSrno();
+    });
+    function DDLRSrno() {
+        var Data = {
+            RPlant: $("#RPlant").val(),
+            RFamily: $("#RFamily").val(),
+            RDate: $("#RDate").val()
+        };
+        $.ajax({
+            url: '@Url.Action("BindRSrNo", "TyrePrinting")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify(Data),
+            success: function (result) {
+                $("#Rsrlno").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#Rsrlno").append(optionhtml);
+                });
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    $("#RPawordSubmit").on("click", function () {
+        /* localStorage.setItem("IsTabChange", true);*/
+        ChkRPassword();
+    });
+    function ChkRPassword() {
+        $("#divLoader").show();
+        var data = {
+            RPlant: $('#RPlant').val(),
+            RFamily: $('#RFamily').val(),
+            RPassword: $('#RPassword').val()
+        };
+        $.ajax({
+            url: '@Url.Action("RPasswordPopup", "TyrePrinting")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#RPawordPopUp").hide();
+                $(".modal-backdrop").hide();
+                $(".modal-backdrop").addClass("important");
+                $("#divLoader").hide();
+                if (data.Msg == "Valid Password") {
+                    var chk = confirm("Are you sure you want to Reprint this?");
+                    if (chk == true) {
+                        $('body').addClass("test");
+                        $(window).scrollTop(0);
+                       /* Update();*/
+                    }
+                } else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    $('body').addClass("test");
+                    $(window).scrollTop(0);
+                }
+            },
+            error: function (errormessage) {
+
+            }
+        });
+
+    };
+
+    $("#RPopUpPrint").on("click", function () {
+        $("#divLoader").show();
+            var data = {
+                RPlant: $('#RPlant').val(),
+                RFamily: $('#RFamily').val(),
+                RDate: $('#RDate').val(),
+                Rsrlno: $("#Rsrlno").val()
+            };
+            $.ajax({
+                url: '@Url.Action("RearReprint", "TyrePrinting")',
+                data: JSON.stringify(data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        //$('#RearAxleSrno').val("");
+                        //$('#TransmissionSrno').val("");
+                    }
+
+                },
+                error: function (errormessage) {
+
+                }
+            });
+
+    });
+    $("#Rsrlno").select2({
+        allowClear: true,
+        width: '200px',
+    });
+    /**************************************Rear tyre********************************************/
+
+    $("#RPlant").on("change", function () {
+        DDLRFamilyByPlant();
+    });
+    $("#RFamily").on("change", function () {
+        BindRTractor();
+    });
+    $("#RItemCode").on("change", function () {
+        GetRTyreDeCode();
+        DDLRTyre();
+    });
+    //Function to bind Plant
+    function DDLRPlant() {
+        $.ajax({
+            url: '@Url.Action("BindRPlant", "TyrePrinting")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#RPlant").append(optionhtml);
+                });
+                DDLRFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    //Function to bind Family by Plant
+    function DDLRFamilyByPlant() {
+        var selectedValue = $("#RPlant").val();
+        $.ajax({
+            url: '@Url.Action("BindRFamily", "TyrePrinting")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ RPlant: selectedValue }),
+            success: function (result) {
+                $("#RFamily").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#RFamily").append(optionhtml);
+                });
+                BindRTractor();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+     function BindRTractor() {
+        var Data = {
+            RPlant: $("#RPlant").val(),
+            RFamily: $("#RFamily").val()
+        };
+        $.ajax({
+            url: '@Url.Action("BindRItemCode", "TyrePrinting")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify(Data),
+            success: function (result) {
+                $("#RItemCode").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#RItemCode").append(optionhtml);
+                });
+                DDLRTyre();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    function DDLRTyre() {
+        var selectedValue = $("#RItemCode").val();
+        $.ajax({
+            url: '@Url.Action("BindRTyreCode", "TyrePrinting")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ RItemCode: selectedValue }),
+            success: function (result) {
+                $("#RMakeTyre").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#RMakeTyre").append(optionhtml);
+                });
+               /* BindTractor();*/
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    @*function DDLRTyre() {
+        $.ajax({
+            url: '@Url.Action("BindRTyre", "TyrePrinting")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#RMakeTyre").append(optionhtml);
+                });
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };*@
+
+    function GetRTyreDeCode() {
+            var Data = {
+                RItemCode: $('#RItemCode').val(),
+                RPlant: $('#RPlant').val(),
+                RFamily: $('#RFamily').val()
+            };
+        $.ajax({
+            url: '@Url.Action("GetRTyreDeCode", "TyrePrinting")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.Msg != "") {
+                    $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+
+                }
+                else {
+
+                    if (data.Result.RTRH != "" && data.Result.RTRH != null) {
+                        $("#RTRH").val(data.Result.RTRH);
+
+                    }
+                    if (data.Result.RTLH != "" && data.Result.RTLH != null) {
+                        $("#RTLH").val(data.Result.RTLH);
+
+                    }
+                    $('#RTRH').prop('disabled', true);
+                    $('#RTLH').prop('disabled', true);
+                }
+
+            },
+            error: function (errormessage) {
+
+            }
+        });
+
+    };
+
+    $("#Rprint").on("click", function () {
+        $("#divLoader").show();
+        if ($("#chkRTRH").prop('checked') == true) {
+            chkbox1 = true;
+        }
+        else {
+            chkbox1 = false;
+        }
+        if ($("#chkRTLH").prop('checked') == true) {
+            chkbox2 = true;
+        }
+        else {
+            chkbox2 = false;
+        }
+        var data = {
+            RPlant: $('#RPlant').val(),
+            RFamily: $('#RFamily').val(),
+            RItemCode: $('#RItemCode').val(),
+            RMakeTyre: $("#RMakeTyre").val(),
+            RQuantity: $("#RQuantity").val(),
+            RTRH: $("#RTRH").val(),
+            RTLH: $("#RTLH").val(),
+            chkRTRH: chkbox1,
+            chkRTLH: chkbox2
+        };
+        $.ajax({
+            url: '@Url.Action("RPrint", "TyrePrinting")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+                if (data.validation.includes("error")) {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                }
+
+                else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    //$('#RearAxleSrno').val("");
+                    //$('#TransmissionSrno').val("");
+                }
+
+            },
+            error: function (errormessage) {
+
+            }
+        });
+
+    });
+
+
+
+    $("#RPlant").select2({
+        allowClear: true,
+        width: '300px',
+    });
+    $("#RFamily").select2({
+        allowClear: true,
+        width: '300px',
+    });
+    $("#RItemCode").select2({
+        allowClear: true,
+        width: '300px',
+    });
+    $("#RMakeTyre").select2({
+        allowClear: true,
+        width: '200px',
+    });
+    $("#RClear").on("click", function () {
+        location.reload(true);
+    });
 
 </script>
 

@@ -1,0 +1,69 @@
+<xpml><page quantity='0' pitch='50.8 mm'></xpml>'Seagull:2.1:DP
+INPUT OFF
+VERBOFF
+INPUT ON
+SYSVAR(48) = 0
+ERROR 15,"FONT NOT FOUND"
+ERROR 18,"DISK FULL"
+ERROR 26,"PARAMETER TOO LARGE"
+ERROR 27,"PARAMETER TOO SMALL"
+ERROR 37,"CUTTER DEVICE NOT FOUND"
+ERROR 1003,"FIELD OUT OF LABEL"
+SYSVAR(35)=0
+OPEN "tmp:setup.sys" FOR OUTPUT AS #1
+PRINT#1,"Printing,Media,Print Area,Media Margin (X),0"
+PRINT#1,"Printing,Media,Print Method,Ribbon (TTR)"
+PRINT#1,"Printing,Print Quality,Media Sensitivity,Very High"
+PRINT#1,"Printing,Media,LTS Sensitivity Level,0"
+PRINT#1,"Printing,Media,Media Type,Media With Gaps"
+PRINT#1,"Printing,Media,Start Adjust,-133"
+PRINT#1,"Printing,Media,Stop Adjust,0"
+PRINT#1,"Printing,Media,Print Area,Media Width,405"
+PRINT#1,"Printing,Media,Print Area,Media Length,407"
+PRINT#1,"Printing,Print Quality,Darkness,66"
+PRINT#1,"Printing,Print Quality,Contrast,+0%"
+PRINT#1,"Printing,Print Quality,Print Speed,100"
+PRINT#1,"Printing,Media,Media Calibration Mode,Fast"
+PRINT#1,"Printing,Media,Length (Slow Mode),0"
+PRINT#1,"Printing,Media,Clip Default,On"
+CLOSE #1
+SETUP "tmp:setup.sys"
+KILL "tmp:setup.sys"
+LTS& OFF
+CUT OFF
+CLIP ON
+CLIP BARCODE ON
+LBLCOND 3,2
+<xpml></page></xpml><xpml><page quantity='1' pitch='50.8 mm'></xpml>CLL
+OPTIMIZE "BATCH" ON
+PP25,328:AN7
+NASC 8
+FT "CG Times Bold"
+FONTSIZE 7
+FONTSLANT 0
+PT "SR.NO:-"
+PP52,375:BARSET "CODE128B",2,1,2,41
+PB "SERIES_NO"
+PP122,331:FONTSIZE 8
+PT "SERIES_NO"
+PP16,280:AN1
+PL381,5
+PP18,205:PL381,5
+PP15,123:PL381,5
+PP13,19:PX368,386,5
+PP25,260:AN7
+FONTSIZE 7
+PT "ITEM:-"
+PP25,198:PT "ITEM_NAME1"
+PP25,170:PT "ITEM_NAME2"
+PP19,67:PT "MAKE:-"
+PP107,264:FONTSIZE 9
+PT "DCODE_VAL"
+PP62,112:BARSET "CODE128B",2,1,2,41
+PB "MAKE_VAL"
+PP123,69:FONTSIZE 8
+PT "MAKE_VAL"
+LAYOUT RUN ""
+PF
+PRINT KEY OFF
+<xpml></page></xpml><xpml><end/></xpml>
