@@ -1803,8 +1803,9 @@ namespace MVCApp.Common
             }
             finally { }
         }
-        public bool PrintAssemblyStagesSticker(RollDown tractor, int copies)
+        public string PrintAssemblyStagesSticker(RollDown tractor, int copies)
         {
+            string result = string.Empty;
             string fileData = string.Empty, line = string.Empty, IPADDR = string.Empty, IPPORT = string.Empty; bool Status;
             string prnfilename = string.Empty, barcode = string.Empty, AppPath = string.Empty;
             try
@@ -1813,23 +1814,24 @@ namespace MVCApp.Common
                 line = fun.getPrinterIp(tractor.STAGE_Code, tractor.PLANTCODE, tractor.FAMILYCODE);
                 if (string.IsNullOrEmpty(line))
                 {
-                    throw new Exception("STAGE PRINTER IP ADDRESS AND PORT NOT FOUND");
+                    return result = "STAGE PRINTER IP ADDRESS AND PORT NOT FOUND";
                 }
                 IPADDR = line.Split('#')[0].Trim();
                 IPPORT = line.Split('#')[1].Trim();
                 if (string.IsNullOrEmpty(IPADDR))
                 {
-                    throw new Exception("PRINTER IP NOT FOUND");
+                    return result = "PRINTER IP NOT FOUND";
                 }
                 if (string.IsNullOrEmpty(IPPORT))
                 {
-                    throw new Exception("PRINTER PORT NOT FOUND");
+                    return result = "PRINTER PORT NOT FOUND";
                 }
                 string itemname1 = string.Empty, itemname2 = string.Empty;
                 if (!string.IsNullOrEmpty(tractor.TractorDesc))
                     getNameSubAssembly(tractor.TractorDesc.Trim().ToUpper(), ref itemname1, ref itemname2);
                 fileData = ReadStageFile(tractor.STAGE_Code, tractor.PLANTCODE, tractor.FAMILYCODE);
                 barcode = fileData;
+                bool dataresult = false;
                 for (int i = 0; i < copies; i++)
                 {
                     fileData = barcode;
@@ -1837,7 +1839,7 @@ namespace MVCApp.Common
                     {
 
                         query = string.Format(@"update xxes_job_status set PDIOKDATE=SYSDATE,
-                        PDIDONEBY='{0}' where fcode_srlno='{1}' and PDIOKDATE is null", 
+                        PDIDONEBY='{0}' where fcode_srlno='{1}' and PDIOKDATE is null",
                         HttpContext.Current.Session["Login_User"].ToString(), tractor.TractorSrlno);
                         fun.EXEC_QUERY(query);
                         string avgHours = string.Empty;
@@ -1846,7 +1848,7 @@ namespace MVCApp.Common
                             if (string.IsNullOrEmpty(tractor.Carebuttonoildate))
                             {
                                 //MessageBox.Show("CARE BUTTON NOT SCANNED AT PDI STAGE", PubFun.AppName);
-                                throw new Exception("CARE BUTTON NOT SCANNED AT PDI STAGE");
+                                return result = "CARE BUTTON NOT SCANNED AT PDI STAGE";
                             }
                             if (!string.IsNullOrEmpty(tractor.Rolloutdate) && !string.IsNullOrEmpty(tractor.Carebuttonoildate))
                             {
@@ -1854,6 +1856,7 @@ namespace MVCApp.Common
                                 span = new TimeSpan(Math.Abs(span.Ticks));
                                 tractor.avgHours = (int)span.TotalHours + span.ToString(@"\:mm\:ss");
                             }
+                            tractor.Pdidate = tractor.Carebuttonoildate;
                         }
                         else
                         {
@@ -1863,7 +1866,7 @@ namespace MVCApp.Common
                             tractor.avgHours = avgHours;
 
                         }
-                        
+
                         fileData = fileData.Replace("TSN", tractor.TractorSrlno);
                         fileData = fileData.Replace("JOB_ID", tractor.JOBID);
                         fileData = fileData.Replace("ITEM_CODE", tractor.TractorCode);
@@ -1876,12 +1879,12 @@ namespace MVCApp.Common
                         fileData = fileData.Replace("JOB_VAL", Convert.ToString(tractor.JOBID).ToUpper());
                         fileData = fileData.Replace("ITEM_NAME1", itemname1.Trim());
                         fileData = fileData.Replace("ITEM_NAME2", itemname2.Trim());
-                        fileData = fileData.Replace("FCODE_VAL", tractor.TractorSrlno);
+                        fileData = fileData.Replace("FCODE_VAL", tractor.TractorCode);
                         if (tractor.isTransRequire == false)
                             fileData = fileData.Replace("TRANS_VAL", "NA");
-                        else fileData = fileData.Replace("TRANS_VAL", tractor.Transmission.Trim().ToUpper());
+                        else fileData = fileData.Replace("TRANS_VAL", tractor.Transmission_srlno.Trim().ToUpper());
                         if (tractor.isRearAxelRequire == false) fileData = fileData.Replace("REAR_VAL", "NA");
-                        else fileData = fileData.Replace("REAR_VAL", tractor.RearAxel.Trim().ToUpper());
+                        else fileData = fileData.Replace("REAR_VAL", tractor.RearAxel_srlno.Trim().ToUpper());
                     }
                     else if (tractor.STAGE_Code == "HYD")
                     {
@@ -1903,7 +1906,7 @@ namespace MVCApp.Common
                                 " from XXES_SCAN_TIME where jobid='" + tractor.JOBID.Trim() + "' and ITEM_CODE='" + tractor.TractorCode.Trim().ToUpper() + "' and stage='EN' and PLANT_CODE='" + tractor.PLANTCODE + "' and FAMILY_CODE='" + tractor.FAMILYCODE + "' and rownum=1");
                             if (string.IsNullOrEmpty(EnMisc))
                             {
-                                throw new Exception("Record not found when the engine assembled on this job : " + tractor.JOBID);
+                                result = "Record not found when the engine assembled on this job : " + tractor.JOBID;
                             }
                             if (string.IsNullOrEmpty(tractor.Prefix_4))
                                 tractor.Suffix = fun.get_Col_Value(@"select MY_CODE from XXES_SUFFIX_CODE where
@@ -1959,12 +1962,12 @@ namespace MVCApp.Common
                     {
                         if (string.IsNullOrEmpty(tractor.TractorSrlno) || string.IsNullOrEmpty(tractor.Engine_srlno))
                         {
-                            throw new Exception("Tractor/Engine Srlno is mandatory");
+                            return result = "Tractor/Engine Srlno is mandatory";
                         }
                         if (tractor.TractorType == "DOMESTIC" &&
                             (string.IsNullOrEmpty(tractor.IMEI) || string.IsNullOrEmpty(tractor.MOBILE) || string.IsNullOrEmpty(tractor.simserialno)) && tractor.reqcarebtn.Trim() == "Y")
                         {
-                            throw new Exception("For Domestic Tractors, Care button scanning is mandatory");
+                            return result = "For Domestic Tractors, Care button scanning is mandatory";
                         }
                         //    if (string.IsNullOrEmpty(tractor.Hydraulic_srlno.Trim()) || 
                         //        string.IsNullOrEmpty(tractor.Transmission_srlno) || string.IsNullOrEmpty(tractor.Engine_srlno)
@@ -2003,18 +2006,46 @@ namespace MVCApp.Common
                         fileData = fileData.Replace("TREMARKS", tractor.remarks.Trim());
                         fileData = fileData.Replace("PRINT_DATE", Printdate.ToString("dd-MMM-yyyy HH:mm:ss"));
                     }
+                    dataresult = PrintLabelViaNetwork(fileData, "", IPADDR, Convert.ToInt32(IPPORT));
                 }
-                PrintLabelViaNetwork(fileData, "", IPADDR, Convert.ToInt32(IPPORT));
+                if (dataresult == true)
+                {
+                    if (tractor.STAGE_Code == "COM")
+                    {
+                        fun.HookUpDown(tractor.JOBID, tractor.PLANTCODE, tractor.FAMILYCODE.Trim(), tractor.TractorCode,
+                            "9999", tractor.TractorAutoid, true, true, "");
+                        fun.Insert_Into_ActivityLog("ROLLOUT_STICKER", "ROLLOUT_STICKER", tractor.TractorSrlno, Convert.ToString(HttpContext.Current.Session["IPADDR"]),
+                                    tractor.PLANTCODE, tractor.FAMILYCODE);
+                        if (string.IsNullOrEmpty(tractor.Rolloutdate))
+                        {
+                            // query = "Update XXES_JOB_STATUS set FINAL_LABEL_DATE=to_date('" + Printdate + "','dd-Mon-yyyy hh24:mi:ss') where jobid='" + gleJobs.EditValue.ToString().Trim() + "' and ITEM_CODE='" + ITEM_CODE.Trim() + "' and PLANT_CODE='" + Convert.ToString(cmbPlant.SelectedValue).Trim() + "' and family_code='" + Convert.ToString(cmbFamily.SelectedValue).Trim() + "' and FINAL_LABEL_DATE is null";
+                            query = "Update XXES_JOB_STATUS set FINAL_LABEL_DATE=sysdate where jobid='" + tractor.JOBID + "' and PLANT_CODE='" + tractor.PLANTCODE + "' and family_code='" + tractor.FAMILYCODE.Trim() + "' and FINAL_LABEL_DATE is null and PDIOKDATE is null";
+                            if (fun.EXEC_QUERY(query))
+                            {
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        fun.Insert_Into_ActivityLog("STAGE_WISE_STICKER", tractor.STAGE_Code, tractor.TractorSrlno, Convert.ToString(HttpContext.Current.Session["IPADDR"]),
+                        tractor.PLANTCODE, tractor.FAMILYCODE);
+                    }
+                    result = "successfully Printed";
+                }
+                else
+                {
+                    result = "something went wrong";
+                }
 
 
-                fun.Insert_Into_ActivityLog("STAGE_WISE_STICKER", "PDI_STICKER", tractor.TractorSrlno, Convert.ToString(HttpContext.Current.Session["IPADDR"]),
-                  Convert.ToString(HttpContext.Current.Session["Login_Unit"]), Convert.ToString(HttpContext.Current.Session["LoginFamily"]));
+
             }
             catch (Exception)
             {
                 throw;
             }
-            return true;
+            return result;
         }
         public void getNameSubAssembly(string fcode_desc, ref string itemname1, ref string itemname2)
         {
@@ -2058,6 +2089,6 @@ namespace MVCApp.Common
             catch (Exception ex) { }
             finally { }
         }
-    
+
     }
 }

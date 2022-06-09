@@ -8871,9 +8871,9 @@ namespace MVCApp.CommonFunction
                     sc.UseDefaultCredentials = false;
                     sc.Credentials = new System.Net.NetworkCredential(LOGIN_EMAIL, PASSWORD);
                     sc.Send(Mail);
-                    //query = string.Format(@"INSERT INTO XXES_MAILSLOG (MODULE,USERNAME,SUBJECT,EMAIL,BODY,STATUS,REMARKS)
-                    //VALUES('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", Module, pubfun.replaceApostophi(Username), pubfun.replaceApostophi(MailSubject), Email_To, "", "SUCCESS", "-");
-                    //pubfun.EXEC_QUERY(query);
+                    query = string.Format(@"INSERT INTO XXES_MAILSLOG (MODULE,USERNAME,SUBJECT,EMAIL,BODY,STATUS,REMARKS)
+                    VALUES('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", Module, pubfun.replaceApostophi(Username), pubfun.replaceApostophi(MailSubject), Email_To, "", "SUCCESS", "-");
+                    pubfun.EXEC_QUERY(query);
                     Console.WriteLine("Application Has Mailed To " + Email_To + " at " + DateTime.Now.ToString() + ".");
                     return "Application Has Mailed To " + Email_To + " at " + DateTime.Now.ToString() + ".";
                 }
@@ -8881,9 +8881,9 @@ namespace MVCApp.CommonFunction
                 {
                     pubfun.LogWrite(ex);
                     Console.WriteLine("Module SendMails : " + ex.Message.ToString());
-                    //query = string.Format(@"INSERT INTO XXES_MAILSLOG (MODULE,USERNAME,SUBJECT,EMAIL,BODY,STATUS,REMARKS)
-                    //VALUES('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", Module, pubfun.replaceApostophi(Username), pubfun.replaceApostophi(MailSubject), Email_To, "", "FAILED", pubfun.replaceApostophi(ex.Message));
-                    //pubfun.EXEC_QUERY(query);
+                    query = string.Format(@"INSERT INTO XXES_MAILSLOG (MODULE,USERNAME,SUBJECT,EMAIL,BODY,STATUS,REMARKS)
+                    VALUES('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", Module, pubfun.replaceApostophi(Username), pubfun.replaceApostophi(MailSubject), Email_To, "", "FAILED", pubfun.replaceApostophi(ex.Message));
+                    pubfun.EXEC_QUERY(query);
                     return "Error" + ex.Message.ToString();
                 }
             }

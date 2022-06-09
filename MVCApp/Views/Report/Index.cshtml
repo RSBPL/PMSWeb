@@ -28,6 +28,8 @@
     .ui-autocomplete {
         height: 400px;
     }
+
+   
 </style>
 <div id="divLoader" style="display:none;">
     <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:10%; margin-left:38%" />
@@ -79,6 +81,7 @@
                                 <strong>@Html.ValidationMessageFor(model => model.ToDate, "", new { @class = "text-danger" })</strong>
                             </div>
                         </div>
+
                         <div class="col-md-3">
                             <label for="fname" class="text-right control-label col-form-label"><strong>Report Type</strong></label><div class="pull-right"> @Html.CheckBoxFor(model => model.chkGateReports, null) Gate Reports</div>
                             @Html.DropDownListFor(model => model.ReportType, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
@@ -150,6 +153,21 @@
                 </fieldset>
 
             </div>
+            <div class="modal fade modal-fullscreen" id="DeleteConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content" style=" width: fit-content; max-height: fit-content;">
+
+                        <div class="modal-body">
+                            <div class="form-group">
+                               <div id="GridReports"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="btnDeleteCancel" class="btn btn-success btn-sm"><i class="fa fa-arrow-left"></i> Cancel</button>
+                          </div>
+                    </div>
+                </div>
+            </div>
         }
     </div>
     <div id="Grid"></div>
@@ -175,6 +193,7 @@
         $('#PNLSTFILTERBY').hide();
         $('#PNLReportType').hide();
 
+        $('#hideshowdateMonth').hide();
 
         DDLPlant();
         DDLShift();
@@ -184,7 +203,9 @@
 
 
     });
-
+    $("#btnDeleteCancel").on("click", function () {
+        $('#DeleteConfirm').modal('hide');
+    });
     function AutoCompleteJobHistory() {
 
         $.noConflict();
@@ -365,15 +386,9 @@
             $('#PNLJobExistance').hide();
             $('#PNLProductionReport').hide();
             $('#PNLQCOKPRINTON').hide();
-            $('#hideshowdate').show();
             $('#PNLShiftDetail').hide();
             $('#PNLSTFILTERBY').hide();
             $('#PNLReportType').hide();
-            var d0 = $("#FromDate").val();
-            var myPastDate = new Date(d0);
-            myPastDate.setDate(myPastDate.getDate() - 6);
-           var datefrom = formatDate(myPastDate);
-            $("#FromDate").val(datefrom);
         } else {
             $('#PNLTotalTractorsManufactured').hide();
             $('#PNLJobHistory').hide();
@@ -655,5 +670,47 @@
     //    allowClear: true,
     //    width: '100%',
     //});
+     function commandClick(args) {
+                if (args.rowData != null) {
+                    if (args.target.classList.contains('edit')) {
 
+                        const arr = args.rowData["DateRange"].split("TO");
+                        var Fromdate = arr[0];
+                        var Todate = arr[1];
+                        var Data = {
+                            Plant: $('#Plant').val(),
+                            Family: $('#Family').val(),
+                            FromDate: Fromdate,
+                            ToDate: Todate
+                        };
+
+                          $.ajax({
+                                     url: '@Url.Action("WeeklyReports", "Report")',
+                                     data: JSON.stringify(Data),
+                                     type: "POST",
+                                     contentType: "application/json;charset=UTF-8",
+                                    success: function (result) {
+                                        if (result != "") {
+                                            $("#GridReports").html(result);
+                                            $('#DeleteConfirm').modal('show');
+                                        }
+                                    //$("#divLoader").hide();
+                                    },
+                                error: function (errormessage) {
+                                    //alert(errormessage.responseText);
+                                }
+                              });
+
+
+                    }
+                    //if (args.target.classList.contains('delete')) {
+
+                    //    AutoId = args.rowData["AUTOID"];
+
+                    //    $('#DeleteConfirm').modal('show');
+                    //}
+                }
+            };
 </script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>

@@ -54,7 +54,7 @@ namespace MVCApp.Controllers.MHS
             List<DDLTextValue> Result = new List<DDLTextValue>();
             if (!string.IsNullOrEmpty(Plant))
             {
-                Result = fun.Fill_All_Family(Plant);
+                Result = fun.Fill_FamilyMRNVerfication(Plant);
             }
             return Json(Result, JsonRequestBehavior.AllowGet);
         }
@@ -86,7 +86,7 @@ namespace MVCApp.Controllers.MHS
             bool IsDIMEmpty = false; bool IsMTEmpty = false; double quantity;
             double DIMOKQTY0 = 0, DIMREJQTY0 = 0, DIMOKDEV0 = 0, DIMOKAFTERSEG0 = 0, DIMOKAFTEREWORK0 = 0, DIMHOLDQTY0 = 0;
             double MTOKQTY0 = 0, MTREJQTY0 = 0, MTOKDEV0 = 0, MTOKAFTERSEG0 = 0, MTOKAFTEREWORK0 = 0, MTHOLDQTY0 = 0;
-            double TotalDIM,TotalMT;
+            double TotalDIM, TotalMT;
             try
             {
                 if (!string.IsNullOrEmpty(data.DIMOK_QTY0))
@@ -272,10 +272,10 @@ namespace MVCApp.Controllers.MHS
                 }
 
                 quantity = Convert.ToDouble(data.QUANTITY);
-                if(IsDIMEmpty)
+                if (IsDIMEmpty)
                 {
                     TotalDIM = DIMOKQTY0 + DIMREJQTY0 + DIMOKDEV0 + DIMOKAFTERSEG0 + DIMOKAFTEREWORK0 + DIMHOLDQTY0;
-                    if(TotalDIM > quantity)
+                    if (TotalDIM > quantity)
                     {
                         msg = "Sum of DIM Fields cannot be more than quantity";
                         mstType = Validation.str1;
@@ -283,7 +283,7 @@ namespace MVCApp.Controllers.MHS
                         var resul = new { Msg = msg, ID = mstType, validation = status };
                         return Json(resul, JsonRequestBehavior.AllowGet);
                     }
-                    if(quantity > TotalDIM)
+                    if (quantity > TotalDIM)
                     {
                         double DimDifference = quantity - TotalDIM;
                         data.DIMHOLD_QTY0 = Convert.ToString(DIMHOLDQTY0 + DimDifference);
@@ -348,11 +348,14 @@ namespace MVCApp.Controllers.MHS
             string orgid = fun.getOrgId(Convert.ToString(PlantCode).Trim().ToUpper(), Convert.ToString(familyCode).Trim().ToUpper());
 
             query = string.Format(@"SELECT PLAN_ID FROM APPS.QA_PLANS WHERE NAME LIKE '%{0}%' AND ORGANIZATION_ID = '{1}'", ItemCode, orgid);
-            dt = fun.returnDataTable(query);
-            string plant_ID = dt.Rows[0]["PLAN_ID"].ToString();
-            query = string.Format(@"SELECT '" + MRN + "' As MRNNO ,'" + ItemCode + "' AS ITEMCODE,PROMPT,CHAR_NAME AS CHARNAME,PROMPT_SEQUENCE AS PROMPTSEQUENCE,COALESCE(DATA_ENTRY_HINT,' ') AS DATAENTRYHINT FROM  apps.qa_plan_chars_v WHERE PLAN_ID = '{0}' AND ORGANIZATION_ID = '{1}' ORDER BY PROMPT_SEQUENCE", plant_ID, orgid);
-            dt = fun.returnDataTable(query);
-            return GetReportForMRN(dt);
+            string plant_ID = fun.get_Col_Value(query);
+            if (plant_ID != "")
+            {
+                query = string.Format(@"SELECT '" + MRN + "' As MRNNO ,'" + ItemCode + "' AS ITEMCODE,PROMPT,CHAR_NAME AS CHARNAME,PROMPT_SEQUENCE AS PROMPTSEQUENCE,COALESCE(DATA_ENTRY_HINT,' ') AS DATAENTRYHINT FROM  apps.qa_plan_chars_v WHERE PLAN_ID = '{0}' AND ORGANIZATION_ID = '{1}' ORDER BY PROMPT_SEQUENCE", plant_ID, orgid);
+                dt = fun.returnDataTable(query);
+                return GetReportForMRN(dt);
+            }
+            return View("Empty");
         }
         private FileResult GetReportForMRN(DataTable dt)
         {

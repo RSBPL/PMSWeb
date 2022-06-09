@@ -1,4 +1,6 @@
-﻿<div class="container" style="width:100%!important">
+﻿<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<div class="container" style="width:100%!important">
     <style>
         .e-headercell {
             background-color: #14567e !important;
@@ -15,13 +17,15 @@
                 <center>
                     <label style="color:white;">@ViewBag.heading</label>
                     <label style="color: white;padding-right: 10px;" class="pull-right"><strong>Total Tractor Produced  : @ViewBag.Total </strong></label>
-                    <label style="color:white;" class="pull-right">|&nbsp;</label>
-                    <label style="color: white;padding-right: 10px;" class="pull-right"><strong>Total Oil Qty  : @ViewBag.SumQty </strong></label>
                 </center>
             </div>
         </div>
     </div>
     <div class="table-responsive">
+        @{
+            List<object> commands = new List<object>();
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-settings", cssClass = "edit" } });
+        }
         @(Html.EJS().Grid("GrdWEEKLY_OIL_FILTRATION").DataSource((System.Data.DataTable)ViewBag.DataSource).
             AllowPaging(true).Height("400").
             PageSettings(Page => Page.PageSize(20)).
@@ -34,21 +38,25 @@
             AllowSorting().
             Columns(col =>
             {
-                col.Field("ITEM_CODE").HeaderText("FCODE").Add();
-                col.Field("ITEM_DESCRIPTION").HeaderText("ITEM_DESCRIPTION").Add();
-                col.Field("OILQTY").HeaderText("OIL QTY").Add();
-                col.Field("ENTRYDATE").HeaderText("ROLLDOWN DATE").Add();
-                col.Field("FCODE_SRLNO").HeaderText("TRACTOR SERIAL NUMBER").Add();
+                col.Field("SRNO").HeaderText("SR_NO").Add();
+                col.Field("TotalTractor").HeaderText("Total Tractor Produced").Add();
+                col.Field("OILQTY").HeaderText("Total Oil Qty").Add();
+                col.Field("DateRange").HeaderText("Date Range").Add();
+                col.HeaderText("Reports").Commands(commands).Width("75").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+
 
 
             }).
-            Toolbar(new List<string>() { "ExcelExport" }).
+            Toolbar(new List<string>() { "ExcelExport" }).SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick").
             Render())
         <script>
             function toolbarClick(args) {
                 var gridObj = document.getElementById("GrdWEEKLY_OIL_FILTRATION").ej2_instances[0];
                 gridObj.excelExport();
             }
+           
+
+
         </script>
     </div>
 </div>

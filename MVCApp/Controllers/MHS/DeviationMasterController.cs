@@ -53,7 +53,7 @@ namespace MVCApp.Controllers.MHS
             List<DDLTextValue> Result = new List<DDLTextValue>();
             if (!string.IsNullOrEmpty(Plant))
             {
-                Result = fun.Fill_All_Family(Plant);
+                Result = fun.Fill_FamilyMRNVerfication(Plant);
             }
             return Json(Result, JsonRequestBehavior.AllowGet);
         }

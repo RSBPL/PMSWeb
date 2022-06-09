@@ -48,7 +48,7 @@ namespace MVCApp.Controllers
             List<DDLTextValue> result = new List<DDLTextValue>();
             if (!string.IsNullOrEmpty(Plant))
             {
-                result = fun.Fill_All_Family(Plant);
+                result = fun.Fill_FamilyMRNVerfication(Plant);
             }
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -68,9 +68,17 @@ namespace MVCApp.Controllers
                 DataTable dt = new DataTable();
                 if (!string.IsNullOrEmpty(plant) && !string.IsNullOrEmpty(family))
                 {
+                    if (fun.getUSERNAME() == "RS")
+                    {
+                        query = string.Format(@"SELECT SM.stage_description description,SM.offline_keycode code FROM xxes_stage_master SM 
+                                    WHERE SM.PLANT_CODE='{0}' AND SM.family_code='{1}' AND IPADDR IS NOT NULL and offline_keycode not in ('QUALITY')", plant.Trim().ToUpper(), family.Trim().ToUpper(), fun.getUSERNAME());
+
+                    }
+                    else { 
                     query = string.Format(@"SELECT SM.stage_description description,SM.offline_keycode code FROM xxes_stage_master SM 
                                     inner join xxes_users_master UM ON SM.STAGE_ID=UM.STAGEID
                                     WHERE SM.PLANT_CODE='{0}' AND SM.family_code='{1}' AND UM.USRNAME='{2}' AND IPADDR IS NOT NULL and offline_keycode not in ('QUALITY')", plant.Trim().ToUpper(), family.Trim().ToUpper(), fun.getUSERNAME());
+                    }
                     //    query = string.Format(@"select distinct segment1 || ' # ' || description as DESCRIPTION, segment1 as ITEM_CODE from " + schema + ".mtl_system_items " +
                     //"where organization_id in (" + orgid + ") and substr(segment1, 1, 1) in ('D','S') AND (SEGMENT1 LIKE '{0}%' OR DESCRIPTION LIKE '{1}%') order by segment1", data.SubAssembly1.Trim().ToUpper(), data.SubAssembly1.Trim().ToUpper());
 
@@ -114,8 +122,9 @@ namespace MVCApp.Controllers
                 DataTable dt = new DataTable();
                 if (!string.IsNullOrEmpty(data.JOBID))
                 {
-                    query = string.Format(@"select ITEM_DESCRIPTION || ' # ' || '(' || ITEM_CODE || ')' || ' # ' || ' TSN : '|| ' # ' ||  FCODE_SRLNO || ' # ' || ' JOB :' || ' # ' ||  JOBID DESCRIPTION,JOBID  FROM XXES_JOB_STATUS" +
-                        " where JOBID LIKE '%{0}%'  Or FCODE_SRLNO LIKE '%{0}%' AND PLANT_CODE='{1}' And FAMILY_CODE='{2}' order by JOBID", data.JOBID.Trim().ToUpper(), data.PLANTCODE.Trim().ToUpper(), data.FAMILYCODE.Trim().ToUpper());
+                    query = string.Format(@"select FCODE_SRLNO || ' # '|| ITEM_CODE || '(' || substr(ITEM_DESCRIPTION,1,25) || ')' || ' # ' || ' JOB :' || ' # ' || 
+                             JOBID DESCRIPTION,JOBID  FROM XXES_JOB_STATUS" +
+                        " where JOBID LIKE '%{0}%'  Or FCODE_SRLNO LIKE '%{0}%' Or ITEM_CODE LIKE '%{0}%' AND PLANT_CODE='{1}' And FAMILY_CODE='{2}' order by JOBID", data.JOBID.Trim().ToUpper(), data.PLANTCODE.Trim().ToUpper(), data.FAMILYCODE.Trim().ToUpper());
                     //    query = string.Format(@"select distinct segment1 || ' # ' || description as DESCRIPTION, segment1 as ITEM_CODE from " + schema + ".mtl_system_items " +
                     //"where organization_id in (" + orgid + ") and substr(segment1, 1, 1) in ('D','S') AND (SEGMENT1 LIKE '{0}%' OR DESCRIPTION LIKE '{1}%') order by segment1", data.SubAssembly1.Trim().ToUpper(), data.SubAssembly1.Trim().ToUpper());
 
@@ -176,7 +185,7 @@ namespace MVCApp.Controllers
                     };
                     return Json(myResult1, JsonRequestBehavior.AllowGet);
                 }
-                query = @"select count(*) from XXES_JOB_STATUS where JOBID='" + obj.JOBID.Trim() + "' " +
+                query = @"select count(*) from XXES_JOB_STATUS where JOBID='" + obj.JOBID.Trim() + "' or  FCODE_SRLNO='" + obj.JOBID.Trim() + "' or  ITEM_CODE='" + obj.JOBID.Trim() + "' " +
                     " and  plant_code='" + Convert.ToString(obj.PLANTCODE).Trim().ToUpper() + "' " +
                     " and family_code='" + Convert.ToString(obj.FAMILYCODE).Trim().ToUpper() + "'";
 
@@ -193,7 +202,7 @@ namespace MVCApp.Controllers
                 }
                 scanjob = obj.JOBID.Trim().ToUpper();
                 //displayJobDetails(obj.ITEM_CODE.Trim().ToUpper());
-                query = "select * from XXES_JOB_STATUS where JOBID='" + obj.JOBID.Trim() + "' and  plant_code='" + Convert.ToString(obj.PLANTCODE).Trim().ToUpper() + "' and family_code='" + Convert.ToString(obj.FAMILYCODE).Trim().ToUpper() + "'";
+                query = "select * from XXES_JOB_STATUS where JOBID='" + obj.JOBID.Trim() + "' or  FCODE_SRLNO='" + obj.JOBID.Trim() + "' or  ITEM_CODE='" + obj.JOBID.Trim() + "' and  plant_code='" + Convert.ToString(obj.PLANTCODE).Trim().ToUpper() + "' and family_code='" + Convert.ToString(obj.FAMILYCODE).Trim().ToUpper() + "'";
                 dt = new DataTable();
                 dt = fun.returnDataTable(query);
                 if (dt.Rows.Count > 0)
@@ -359,8 +368,14 @@ namespace MVCApp.Controllers
                 RollDown rolldown = new RollDown();
                 if (down.JOBID != null || down.PLANTCODE != null || down.FAMILYCODE != null)
                 {
-                    rolldown = assemblyfunctions.GetTractorDetails(down.JOBID, down.PLANTCODE, down.FAMILYCODE,
-                        "JOBID");
+                    rolldown = assemblyfunctions.GetTractorDetails(down.JOBID.Trim(), down.PLANTCODE, down.FAMILYCODE,
+                       "JOBID");
+                    if (rolldown.JOBID == null)
+                    {
+                        msg = "JOBID Not Found";
+
+                        return Json(myResult, JsonRequestBehavior.AllowGet);
+                    }
                 }
                 else
                 {
@@ -384,21 +399,23 @@ namespace MVCApp.Controllers
                 {
                     rolldown.Quantity = "1";
                 }
-                if (af.PrintAssemblyStagesSticker(rolldown, Convert.ToInt32(rolldown.Quantity)))
-                {
                     //MessageBox.Show("PDI OK sticker printed successfully !! ");
-                    msg = "BuckleUp sticker printed successfully !! ";
-
-                    return Json(myResult, JsonRequestBehavior.AllowGet);
-                }
-                msg = "";
-
+                    msg = af.PrintAssemblyStagesSticker(rolldown, Convert.ToInt32(rolldown.Quantity));
+                 myResult = new
+                {
+                    Result = result,
+                    Msg = msg
+                };
                 return Json(myResult, JsonRequestBehavior.AllowGet);
             }
 
             catch (Exception ex)
             {
-                msg = ex.Message;
+                myResult = new
+                {
+                    Result = result,
+                    Msg = ex.Message
+                };
             }
             finally { }
 

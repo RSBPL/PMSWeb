@@ -801,7 +801,7 @@ namespace MVCApp.Common
                 and m.family_code=j.family_code and m.item_code=j.item_code where 
                  j.plant_code='{0}' and j.family_code='{1}' and j.{3}='{2}'",
                    plant.Trim().ToUpper(),
-                  family.Trim().ToUpper(),data,field);
+                  family.Trim().ToUpper(),data.Trim(),field.Trim());
                 DataTable dt = new DataTable();
                 dt = funtion.returnDataTable(query);
                 if (dt.Rows.Count > 0)
@@ -855,7 +855,7 @@ namespace MVCApp.Common
                     down.TractorAutoid,down.PLANTCODE,down.FAMILYCODE
                     ));
                     down.PrintMMYYFormat = funtion.get_Col_Value("select ONLINE_SCREEN  from " +
-                    " XXES_Stage_Master where plant_code='" + down.PLANTCODE + "' and family_code='" + down.FAMILYCODE + "' and OFFLINE_KEYCODE='" + down.STAGE_Code + "'");
+                    "XXES_Stage_Master where plant_code='" + down.PLANTCODE + "' and family_code='" + down.FAMILYCODE + "' and OFFLINE_KEYCODE='" + down.STAGE_Code + "'");
                     down.Prefix_4 = Convert.ToString(dt.Rows[0]["Prefix_4"]);
 
                 }

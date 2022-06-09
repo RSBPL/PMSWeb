@@ -1254,6 +1254,8 @@
     <Content Include="Views\Setting\GridEmails.cshtml" />
     <Content Include="Views\Report\GrdWEEKLY_OIL_FILTRATION.cshtml" />
     <Content Include="Views\TyrePrinting\Index.cshtml" />
+    <Content Include="Views\MRNDisplaySheet\Empty.cshtml" />
+    <Content Include="Views\Report\WeeklyReportsDateWise.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

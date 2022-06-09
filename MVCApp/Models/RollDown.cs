@@ -13,6 +13,7 @@ namespace MVCApp.Models
         public String FAMILYCODE { get; set; }
         public String STAGE_Code { get; set; }
         public String JOBID { get; set; }
+        public String TYPE { get; set; }
         public string BatMake { get; set; }
         public string Transmission { get; set; }
         public string Transmission_srlno { get; set; }

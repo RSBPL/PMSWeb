@@ -74,22 +74,22 @@ namespace MVCApp.Controllers.Admin
                     query = string.Format(@"SELECT PARAMETERINFO,PARAMVALUE FROM XXES_SFT_SETTINGS WHERE PLANT_CODE = '{0}' AND 
                                             FAMILY_CODE = '{1}'", data.Plant.Trim(), data.Family.Trim());
                     dt = fun.returnDataTable(query);
-                    if(dt.Rows.Count > 0)
+                    if (dt.Rows.Count > 0)
                     {
-                        for(int i = 0; i<dt.Rows.Count; i++)
+                        for (int i = 0; i < dt.Rows.Count; i++)
                         {
                             if (Convert.ToString(dt.Rows[i]["PARAMETERINFO"]) == "SUCCESS_INTERVAL")
                                 sft.SuccessIntvl = Convert.ToString(dt.Rows[i]["PARAMVALUE"]);
-                            else if(Convert.ToString(dt.Rows[i]["PARAMETERINFO"]) == "ERROR_INTERVAL")
+                            else if (Convert.ToString(dt.Rows[i]["PARAMETERINFO"]) == "ERROR_INTERVAL")
                                 sft.ErrorIntvl = Convert.ToString(dt.Rows[i]["PARAMVALUE"]);
                             //if (Convert.ToString(dt.Rows[i]["PARAMETERINFO"]) == "PRINTQTY_LABEL")
                             //    sft.QtyVeriLbl = Convert.ToString(dt.Rows[i]["PARAMVALUE"]);
                             if (Convert.ToString(dt.Rows[i]["PARAMVALUE"]) == "A4")
-                                sft.A4Sheet =  true;                          
+                                sft.A4Sheet = true;
                             if (Convert.ToString(dt.Rows[i]["PARAMVALUE"]) == "BARCODE")
-                                sft.Barcode =  true;                        
+                                sft.Barcode = true;
                             if (Convert.ToString(dt.Rows[i]["PARAMVALUE"]) == "QUALITY")
-                                sft.Quality =  true;
+                                sft.Quality = true;
                             if (Convert.ToString(dt.Rows[i]["PARAMETERINFO"]) == "KANBAN_PRINT")
                                 sft.PrintingCategory = Convert.ToString(dt.Rows[i]["PARAMVALUE"]);
                             if (Convert.ToString(dt.Rows[i]["PARAMETERINFO"]) == "QC_FROMDAYS")
@@ -129,7 +129,7 @@ namespace MVCApp.Controllers.Admin
                                     CREATED_BY,TO_CHAR(CREATED_DATE,'DD-MON_YYYY HH24:MI:SS') CREATED_DATE
                                     FROM XXES_SFT_SETTINGS where PLANT_CODE = '{0}' AND FAMILY_CODE = '{1}'", data.Plant.Trim().ToUpper(), data.Family.Trim().ToUpper());
             DataTable dt = fun.returnDataTable(query);
-           
+
             ViewBag.DataSource = dt;
             return PartialView();
         }
@@ -159,7 +159,7 @@ namespace MVCApp.Controllers.Admin
                         var err = new { Msg = msg, ID = mstType, validation = status };
                         return Json(err, JsonRequestBehavior.AllowGet);
                     }
-                    if( j < 1)
+                    if (j < 1)
                     {
                         msg = "Minimum no. of QC days should be greater than 0 ..";
                         mstType = Validation.str1;
@@ -167,7 +167,7 @@ namespace MVCApp.Controllers.Admin
                         var err = new { Msg = msg, ID = mstType, validation = status };
                         return Json(err, JsonRequestBehavior.AllowGet);
                     }
-                    
+
                 }
 
 
@@ -209,7 +209,7 @@ namespace MVCApp.Controllers.Admin
         public JsonResult BindStage()
         {
             List<DDLTextValue> result = new List<DDLTextValue>();
-                result = fun.Fill_All_Stage();
+            result = fun.Fill_All_Stage();
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
@@ -231,12 +231,12 @@ namespace MVCApp.Controllers.Admin
                 }
                 if (string.IsNullOrEmpty(data.SMTPPSWORD))
                 {
-                    
-                        msg = "SMTP PASSWORD ENTER..";
-                        mstType = Validation.str1;
-                        status = Validation.str2;
-                        var err = new { Msg = msg, ID = mstType, validation = status };
-                        return Json(err, JsonRequestBehavior.AllowGet);
+
+                    msg = "SMTP PASSWORD ENTER..";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var err = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(err, JsonRequestBehavior.AllowGet);
 
                 }
 
@@ -251,7 +251,7 @@ namespace MVCApp.Controllers.Admin
                     fun.Insert_Into_ActivityLog("SMTP_DETAILS", "INSERT", data.SMTPServer.Trim(), query, "", "");
                     DataTable dataTable = new DataTable();
                     SMTPFinal = getSMTPData();
-                    
+
                     msg = "SMTP details saved Sucessfully !!";
                 }
 
@@ -323,7 +323,7 @@ namespace MVCApp.Controllers.Admin
             int j;
             if (string.IsNullOrEmpty(data.EmailTo.Trim()))
             {
-                msg= "Please enter Email address on which test mail need to send";
+                msg = "Please enter Email address on which test mail need to send";
                 return Json(new { Msg = msg, ID = mstType, validation = status }, JsonRequestBehavior.AllowGet);
             }
             MailMessage message = new MailMessage();
@@ -353,12 +353,12 @@ namespace MVCApp.Controllers.Admin
             string domain = "barcode4u.com";
             if (data.SMTPPORT.Trim() != "")
                 client.Port = Convert.ToInt32(data.SMTPPORT.Trim());
-                if (data.PRIORITY.Trim().ToUpper() == "NORMAL")
-                    message.Priority = MailPriority.Normal;
-                else if (data.PRIORITY.Trim().ToUpper() == "HIGH")
-                    message.Priority = MailPriority.High;
-                else if (data.PRIORITY.Trim().ToUpper() == "LOW")
-                    message.Priority = MailPriority.Low;
+            if (data.PRIORITY.Trim().ToUpper() == "NORMAL")
+                message.Priority = MailPriority.Normal;
+            else if (data.PRIORITY.Trim().ToUpper() == "HIGH")
+                message.Priority = MailPriority.High;
+            else if (data.PRIORITY.Trim().ToUpper() == "LOW")
+                message.Priority = MailPriority.Low;
             message.IsBodyHtml = true;
             client.Credentials = new System.Net.NetworkCredential(data.EmailTo.Trim(), data.SMTPPSWORD.Trim());
             client.UseDefaultCredentials = false;
@@ -397,14 +397,30 @@ namespace MVCApp.Controllers.Admin
             //    cmbOfflineItems.Focus();
             //    return;
             //}
+            if (data.NOTIFYMAILTIMING == null)
+            {
+                data.NOTIFYMAILTIMING = "10";
+            }
+            if (data.NOTIFYUSERNAME == null)
+            {
+                data.NOTIFYUSERNAME = "";
+            }
+            if (data.NOTIFYEMAILID == null)
+            {
+                data.NOTIFYEMAILID = "";
+            }
+            if (data.NOTIFYMOBILE == null)
+            {
+                data.NOTIFYMOBILE = "";
+            }
             query = string.Format(@"delete from XXES_STAGE_EMAILS where STAGE = '{0}'", Convert.ToString(data.STAGE));
             fun.EXEC_QUERY(query);
-            query = "insert into XXES_STAGE_EMAILS(STAGE,ITEM ,EMAIL,STAGE_DESC,USERNAME,MOBILE) values('" + Convert.ToString(data.STAGE) + "','','" + data.NOTIFYEMAILID.Trim() + "','" + data.STAGE.Trim() + "','" + data.NOTIFYUSERNAME.Trim() + "','" + data.NOTIFYMOBILE.Trim() + "')";
+            query = "insert into XXES_STAGE_EMAILS(STAGE,ITEM ,EMAIL,STAGE_DESC,USERNAME,MOBILE,MAILTIMING,TEMPLATEID,MESSAGE) values('" + Convert.ToString(data.STAGE) + "','','" + data.NOTIFYEMAILID.Trim() + "','" + data.STAGE.Trim() + "','" + data.NOTIFYUSERNAME.Trim() + "','" + data.NOTIFYMOBILE.Trim() + "','" + data.NOTIFYMAILTIMING.Trim() + "','" + data.NOTIFYTemplateID.Trim() + "','" + data.NOTIFYMessage.Trim() + "')";
             if (fun.EXEC_QUERY(query))
             {
                 fun.Insert_Into_ActivityLog("STAGE_MAIL", "INSERT", Convert.ToString(data.STAGE), query, "", "");
                 GridEmails(data);
-                msg= "Email Added Sucessfully !!";
+                msg = "Email Added Sucessfully !!";
             }
             return Json(new { Msg = msg, ID = mstType, validation = status }, JsonRequestBehavior.AllowGet);
 
@@ -414,26 +430,36 @@ namespace MVCApp.Controllers.Admin
         public JsonResult SaveIntegratetable(SftSetting data)
         {
             string msg = string.Empty; string mstType = string.Empty; string status = string.Empty; string query = string.Empty;
-
-            if (data.ChkPRINT_SERIAL_NUMBER == true) 
+            
+            if (fun.CheckExits("select count(*) from XXES_SFT_SETTINGS WHERE PARAMETERINFO='PRINT_SERIAL_NUMBER'"))
+            {
+                query = "delete from XXES_SFT_SETTINGS where PARAMETERINFO='PRINT_SERIAL_NUMBER'";
+                fun.EXEC_QUERY(query);
+            }
+            if (data.ChkPRINT_SERIAL_NUMBER == true)
                 query = "Insert into XXES_SFT_SETTINGS(PARAMETERINFO,STATUS) values('PRINT_SERIAL_NUMBER','Y')";
             else
                 query = "Insert into XXES_SFT_SETTINGS(PARAMETERINFO,STATUS) values('PRINT_SERIAL_NUMBER','N')";
             fun.EXEC_QUERY(query);
 
-            query = "delete from XXES_SFT_SETTINGS where PARAMETERINFO='SUB_ASSEMBLY_SERIAL_NUMBER'";
-            fun.EXEC_QUERY(query);
+            if (fun.CheckExits("select count(*) from XXES_SFT_SETTINGS where PARAMETERINFO='SUB_ASSEMBLY_SERIAL_NUMBER'"))
+            {
+                query = "delete from XXES_SFT_SETTINGS where PARAMETERINFO='SUB_ASSEMBLY_SERIAL_NUMBER'";
+                fun.EXEC_QUERY(query);
+            }
 
-            if (data.ChkSUB_ASSEMBLY_SERIAL_NUMBER== true)
+            if (data.ChkSUB_ASSEMBLY_SERIAL_NUMBER == true)
                 query = "Insert into XXES_SFT_SETTINGS(PARAMETERINFO,STATUS) values('SUB_ASSEMBLY_SERIAL_NUMBER','Y')";
             else
                 query = "Insert into XXES_SFT_SETTINGS(PARAMETERINFO,STATUS) values('SUB_ASSEMBLY_SERIAL_NUMBER','N')";
             fun.EXEC_QUERY(query);
             fun.Insert_Into_ActivityLog("INTEGRATION_TABLE", "INSERT", "SUB_ASSEMBLY_SERIAL_NUMBER", query, "", "");
 
-
-            query = "delete from XXES_SFT_SETTINGS where PARAMETERINFO='FAMILY_SERIAL'";
-            fun.EXEC_QUERY(query);
+            if (fun.CheckExits("select count(*) from XXES_SFT_SETTINGS where PARAMETERINFO='FAMILY_SERIAL'"))
+            {
+                query = "delete from XXES_SFT_SETTINGS where PARAMETERINFO='FAMILY_SERIAL'";
+                fun.EXEC_QUERY(query);
+            }
 
             if (data.ChkFAMILY_SERIAL == true)
                 query = "Insert into XXES_SFT_SETTINGS(PARAMETERINFO,STATUS) values('FAMILY_SERIAL','Y')";
@@ -442,9 +468,12 @@ namespace MVCApp.Controllers.Admin
             fun.EXEC_QUERY(query);
             fun.Insert_Into_ActivityLog("INTEGRATION_TABLE", "INSERT", "FAMILY_SERIAL", query, "", "");
 
+            if (fun.CheckExits("select count(*) from XXES_SFT_SETTINGS where PARAMETERINFO='OFF_TYRE_MAKE_CHECK'"))
+            {
+                query = "delete from XXES_SFT_SETTINGS where PARAMETERINFO='OFF_TYRE_MAKE_CHECK'";
+                fun.EXEC_QUERY(query);
+            }
 
-            query = "delete from XXES_SFT_SETTINGS where PARAMETERINFO='OFF_TYRE_MAKE_CHECK'";
-            fun.EXEC_QUERY(query);
 
             if (data.ChkSwitch_Of_Tyre_Make == true)
                 query = "Insert into XXES_SFT_SETTINGS(PARAMETERINFO,STATUS) values('OFF_TYRE_MAKE_CHECK','Y')";
@@ -465,6 +494,52 @@ namespace MVCApp.Controllers.Admin
 
             ViewBag.EmailDataSource = dt;
             return PartialView();
+        }
+        public List<SftSetting> getIntegrateData()
+        {
+            DataTable dt = new DataTable();
+            List<SftSetting> sftSettings = new List<SftSetting>();
+            try
+            {
+                dt = fun.returnDataTable("SELECT PARAMETERINFO,STATUS FROM XXES_SFT_SETTINGS WHERE PARAMETERINFO in ('PRINT_SERIAL_NUMBER', 'SUB_ASSEMBLY_SERIAL_NUMBER', 'FAMILY_SERIAL', 'OFF_TYRE_MAKE_CHECK') AND STATUS='Y'");
+
+                SftSetting SMTPDATA = new SftSetting();
+                SMTPDATA.ChkPRINT_SERIAL_NUMBER = false;
+                SMTPDATA.ChkSUB_ASSEMBLY_SERIAL_NUMBER = false;
+                SMTPDATA.ChkFAMILY_SERIAL = false;
+                SMTPDATA.ChkSwitch_Of_Tyre_Make = false;
+                if (Convert.ToString(dt.Rows[0]["PARAMETERINFO"]) == "PRINT_SERIAL_NUMBER" && Convert.ToString(dt.Rows[0]["STATUS"]) == "Y")
+                {
+                    SMTPDATA.ChkPRINT_SERIAL_NUMBER = true;
+
+                }
+                if (Convert.ToString(dt.Rows[0]["PARAMETERINFO"]) == "SUB_ASSEMBLY_SERIAL_NUMBER" && Convert.ToString(dt.Rows[0]["STATUS"]) == "Y")
+                {
+                    SMTPDATA.ChkSUB_ASSEMBLY_SERIAL_NUMBER = true;
+                }
+                if (Convert.ToString(dt.Rows[0]["PARAMETERINFO"]) == "FAMILY_SERIAL" && Convert.ToString(dt.Rows[0]["STATUS"]) == "Y")
+                {
+                    SMTPDATA.ChkFAMILY_SERIAL = true;
+                }
+                if (Convert.ToString(dt.Rows[0]["PARAMETERINFO"]) == "OFF_TYRE_MAKE_CHECK" && Convert.ToString(dt.Rows[0]["STATUS"]) == "Y")
+                {
+                    SMTPDATA.ChkSwitch_Of_Tyre_Make = true;
+                }
+                sftSettings.Add(SMTPDATA);
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+                throw;
+            }
+            return sftSettings;
+        }
+        [HttpGet]
+        public JsonResult Integratetable()
+        {
+            List<SftSetting> result = new List<SftSetting>();
+            result = getIntegrateData();
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
     }
 }

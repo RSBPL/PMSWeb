@@ -341,17 +341,37 @@
                                                     })
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <label for="ErrorIntvl" class="text-right control-label col-form-label"><strong>USER NAME</strong></label>
+                                        <div class="col-md-2">
+                                            <label for="ErrorIntvl" class="text-right control-label col-form-label"><strong>RECV NAME</strong></label>
                                             @Html.TextBoxFor(Model => Model.NOTIFYUSERNAME, null, new { @class = "form-control input-sm" })
                                         </div>
                                         <div class="col-md-3">
-                                            <label for="ErrorIntvl" class="text-right control-label col-form-label"><strong>EMAIL ID</strong></label>
+
+                                            <label for="ErrorIntvl" class="text-right control-label col-form-label">
+                                                <strong>EMAIL ID</strong>
+                                            </label>
+                                            @Html.CheckBoxFor(model => model.EMAILIDChk, new { @class = "form-control  input-sm", @style = "width: 4%!important;margin: -25px 0 -4px 90px;" })
+
                                             @Html.TextBoxFor(Model => Model.NOTIFYEMAILID, null, new { @class = "form-control input-sm" })
                                         </div>
                                         <div class="col-md-2">
+
                                             <label for="ErrorIntvl" class="text-right control-label col-form-label"><strong>MOBILE</strong></label>
+                                            @Html.CheckBoxFor(model => model.MOBILEChk, new { @class = "form-control  input-sm", @style = "width: 6%!important;margin: -25px 0 -4px 90px;" })
+
                                             @Html.TextBoxFor(Model => Model.NOTIFYMOBILE, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                        <div class="col-md-1">
+                                            <label for="ErrorIntvl" class="text-right control-label col-form-label"><strong>Shot Time</strong></label>
+                                            @Html.TextBoxFor(Model => Model.NOTIFYMAILTIMING, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="ErrorIntvl" class="text-right control-label col-form-label"><strong>Message</strong></label>
+                                            @Html.TextBoxFor(Model => Model.NOTIFYMessage, null, new { @class = "form-control input-sm" })
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label for="ErrorIntvl" class="text-right control-label col-form-label"><strong>Template ID</strong></label>
+                                            @Html.TextBoxFor(Model => Model.NOTIFYTemplateID, null, new { @class = "form-control input-sm" })
                                         </div>
                                         <div class="col-md-1" style="margin: 25px 0 0 0;">
                                             <button class="btn btn-success btn-sm" type="button" id="NotifyAdd"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
@@ -392,6 +412,7 @@
         DDLPlant();
         BindSMTP();
         BindEmailGrid();
+        GetIntegratetable();
 
     });
 
@@ -859,8 +880,21 @@
                 STAGE: $('#STAGE').val(),
                 NOTIFYMOBILE: $('#NOTIFYMOBILE').val(),
                 NOTIFYUSERNAME: $('#NOTIFYUSERNAME').val(),
+                NOTIFYMAILTIMING: $('#NOTIFYMAILTIMING').val(),
+                EMAILIDChk: $('#EMAILIDChk').prop("checked"),
+                MOBILEChk: $('#MOBILEChk').prop("checked"),
                 NOTIFYEMAILID: $('#NOTIFYEMAILID').val()
-            };
+           };
+           if (Data.EMAILIDChk == false && Data.MOBILEChk == false) {
+               $('#alert').append('<div class="alert" role = "alert"><strong>Please Check atleast One CheckBox</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+               /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+               setTimeout(function () {
+                   $.each($('.alert'), function () {
+                       closeAlert(this);
+                   });
+               }, 5000);
+               return;
+           }
             $.ajax({
                 url: '@Url.Action("SaveEmail", "Setting")',
                 data: JSON.stringify({ data: Data }),
@@ -932,10 +966,10 @@
             Switch_Of_Tyre_Make = false;
         }
             var Data = {
-                 PRINT_SERIAL_NUMBER : PRINT_SERIAL_NUMBER,
-                SUB_ASSEMBLY_SERIAL_NUMBER : SUB_ASSEMBLY_SERIAL_NUMBER,
-                FAMILY_SERIAL : FAMILY_SERIAL,
-                Switch_Of_Tyre_Make : Switch_Of_Tyre_Make
+                 ChkPRINT_SERIAL_NUMBER : PRINT_SERIAL_NUMBER,
+                ChkSUB_ASSEMBLY_SERIAL_NUMBER : SUB_ASSEMBLY_SERIAL_NUMBER,
+                ChkFAMILY_SERIAL : FAMILY_SERIAL,
+                ChkSwitch_Of_Tyre_Make : Switch_Of_Tyre_Make
             };
             $.ajax({
                 url: '@Url.Action("SaveIntegratetable", "Setting")',
@@ -1027,4 +1061,33 @@
     //});
 
 
+    function GetIntegratetable() {
+        $.ajax({
+            url: '@Url.Action("Integratetable", "Setting")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $("#ChkPRINT_SERIAL_NUMBER").is(":unchecked");
+                $("#ChkSUB_ASSEMBLY_SERIAL_NUMBER").is(":unchecked");
+                $("#ChkFAMILY_SERIAL").is(":unchecked");
+                $("#ChkSwitch_Of_Tyre_Make").is(":unchecked");
+                if (result[0].ChkPRINT_SERIAL_NUMBER == true) {
+                    $("#ChkPRINT_SERIAL_NUMBER").attr('checked');
+                }
+                if (result[0].ChkSUB_ASSEMBLY_SERIAL_NUMBER == true) {
+                    $("#ChkSUB_ASSEMBLY_SERIAL_NUMBER").attr('checked');
+                }
+                if (result[0].ChkSwitch_Of_Tyre_Make == true) {
+                    $("#ChkSwitch_Of_Tyre_Make").attr('checked');
+                }
+                if (result[0].ChkSwitch_Of_Tyre_Make == true) {
+                    $("#ChkSwitch_Of_Tyre_Make").attr('checked');
+                } 
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+        
+    }
 </script>

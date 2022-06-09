@@ -40,6 +40,11 @@ namespace MVCApp.Models
         public string NOTIFYEMAILID { get; set; }
         public string NOTIFYMOBILE { get; set; }
         public string NOTIFYUSERNAME { get; set; }
+        public string NOTIFYMAILTIMING { get; set; }
+        public string NOTIFYMessage { get; set; }
+        public string NOTIFYTemplateID { get; set; }
+        public bool EMAILIDChk { get; set; } = false;
+        public bool MOBILEChk { get; set; } = false;
 
 
 
