@@ -1212,11 +1212,11 @@ namespace MVCApp.Controllers.DCU
                 tyres.LOGINSTAGECODE.Trim().ToUpper());
                 DeCode2 = fun.get_Col_Value(query);
                 query = string.Format(@"select DCODE from XXES_PRINT_SERIALS XM where SRNO='{0}' and XM.PLANT_CODE='{1}' and XM.family_code='{2}'
-                and XM.OFFLINE_KEYCODE='{3}'", tyres.RIMSERIALLH.Trim().ToUpper(), tyres.PLANT.Trim().ToUpper(), tyres.FAMILY.Trim().ToUpper(),
+                and XM.OFFLINE_KEYCODE='{3}'", tyres.RIMSERIALLH, tyres.PLANT.Trim().ToUpper(), tyres.FAMILY.Trim().ToUpper(),
                 tyres.LOGINSTAGECODE.Trim().ToUpper());
                 DeCode3 = fun.get_Col_Value(query);
                 query = string.Format(@"select DCODE from XXES_PRINT_SERIALS XM where SRNO='{0}' and XM.PLANT_CODE='{1}' and XM.family_code='{2}'
-                and XM.OFFLINE_KEYCODE='{3}'", tyres.RIMSERIALRH.Trim().ToUpper(), tyres.PLANT.Trim().ToUpper(), tyres.FAMILY.Trim().ToUpper(),
+                and XM.OFFLINE_KEYCODE='{3}'", tyres.RIMSERIALRH, tyres.PLANT.Trim().ToUpper(), tyres.FAMILY.Trim().ToUpper(),
                 tyres.LOGINSTAGECODE.Trim().ToUpper());
                 DeCode4 = fun.get_Col_Value(query);
 
@@ -1417,7 +1417,7 @@ namespace MVCApp.Controllers.DCU
                 //query = string.Format(@"select ITEM_CODE,ITEM_DESCRIPTION,REARTYRE_MAKE,FRONTTYRE_MAKE,REARTYRE,REARTYRE_SRLNO1,REARTYRE_SRLNO2,FRONTTYRE,FRONTTYRE_SRLNO1,FRONTTYRE_SRLNO2 from XXES_JOB_STATUS where JOBID='{0}' and PLANT_CODE='{1}' and family_code='{2}'", tyres.JOB.Trim(), tyres.PLANT.Trim(), tyres.FAMILY.Trim());
                 query = string.Format(@"SELECT M.ITEM_CODE,M.ITEM_DESCRIPTION,S.REARTYRE_MAKE,S.FRONTTYRE_MAKE,S.REARTYRE,
                           S.REARTYRE_SRLNO1,S.REARTYRE_SRLNO2,S.FRONTTYRE,S.FRONTTYRE_SRLNO1,S.FRONTTYRE_SRLNO2,S.REARRIM_SRLNO1,
-                          S.FRONTRIM_SRLNO2,S.REARRIM_SRLNO2,S.REARRIM,S.FRONTRIM, S.FRONTRIM_SRLNO1, s.RH_FRONTTYRE , S.RH_REARTYRE,
+                          S.FRONTRIM_SRLNO2,S.REARRIM_SRLNO2,S.REARRIM,S.FRONTRIM, S.FRONTRIM_SRLNO1, S.RH_FRONTTYRE , S.RH_REARTYRE,
                           m.REAR_RIM,m.FRONT_RIM,m.REQ_FRONTRIM,m.REQ_REARRIM , M.REQ_RHFT, M.REQ_RHRT,M.REQUIRE_FRONTTYRE,
                           M.REQUIRE_REARTYRE from XXES_JOB_STATUS s,XXES_ITEM_MASTER m WHERE
                           JOBID='{0}' and M.ITEM_CODE=S.ITEM_CODE and M.PLANT_CODE=S.PLANT_CODE
