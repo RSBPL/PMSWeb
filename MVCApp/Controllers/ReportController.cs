@@ -114,7 +114,7 @@ namespace MVCApp.Controllers
                         else if (data.QCPRINT == "SCANDATE")
                             data.QCPRINT = "LOADER_SCAN";
                         else
-                            data.QCPRINT = "QCDATE";                  
+                            data.QCPRINT = "QCDATE";
 
                         if (data.LessFields)
                             data.ShowLess = "1";
@@ -147,7 +147,7 @@ namespace MVCApp.Controllers
                         return PartialView("GrdPRDBACKEND_T04");
                     }
                 }
-                
+
                 else if (Convert.ToString(data.ReportType) == "STORE_REPORT")
                 {
 
@@ -184,7 +184,7 @@ namespace MVCApp.Controllers
                     return PartialView("GRDStoreReport");
 
                 }
-                
+
                 else if (Convert.ToString(data.ReportType) == "PRDENGINES")
                 {
                     ViewBag.heading = "ENGINE PRODUCTION";
@@ -206,7 +206,7 @@ namespace MVCApp.Controllers
                     ViewBag.DataSource = dtMain;
                     return PartialView("GrdPRDENGINES");
                 }
-                
+
                 else if (Convert.ToString(data.ReportType) == "PRDTRANSMISSION")
                 {
                     ViewBag.heading = "TRANSMISSION PRODUCTION";
@@ -247,7 +247,7 @@ namespace MVCApp.Controllers
                     ViewBag.DataSource = dtMain;
                     return PartialView("GrdPRDHYDRAULIC");
                 }
-                
+
                 else if (Convert.ToString(data.ReportType) == "PRDREARAXEL")
                 {
                     ViewBag.heading = "REAR AXEL PRODUCTION";
@@ -268,7 +268,7 @@ namespace MVCApp.Controllers
                     ViewBag.DataSource = dtMain;
                     return PartialView("GrdPRDREARAXEL");
                 }
-                
+
 
                 else if (Convert.ToString(data.ReportType) == "TOT")
                 {
@@ -364,12 +364,12 @@ namespace MVCApp.Controllers
                 }
                 else if (Convert.ToString(data.ReportType) == "HYD")
                 {
-                    
+
                     ViewBag.heading = "DETAIL OF HYDRAULIC PRINTED";
                     query = "select DCODE, (select description  from " + schema + ".mtl_system_items where organization_id in ( " + orgid + ") and substr(segment1, 1, 1) in ('D','S') and segment1=DCODE and rownum=1 ) DESCRIPTION ,SRNO SERIAL_NUMBER, " +
                         " TO_CHAR(PRINTDATE,'dd-Mon-yyyy HH24:MI:SS') as PRINTDATE, (select fcode_srlno from xxes_job_status where hydraluic_srlno=SRNO and plant_code=s.plant_code and family_code=s.family_code) TRACTOR_SRLNO from XXES_PRINT_SERIALS s where OFFLINE_KEYCODE='HYD' and family_code='" + Convert.ToString(data.Family).Trim() + "' and plant_code='" + Convert.ToString(data.Plant) + "' and to_char(PRINTDATE,'dd-Mon-yyyy') >=to_date('" + data.FromDate + "','dd-Mon-yyyy') and  to_char(PRINTDATE,'dd-Mon-yyyy')<=to_date('" + data.ToDate + "','dd-Mon-yyyy') order by serial_number";
                     dtMain = fun.returnDataTable(query);
-                    
+
                     ViewBag.DataSource = dtMain;
                     ViewBag.Total = dtMain.Rows.Count;
                     return PartialView("GrdHYD");
@@ -831,7 +831,7 @@ namespace MVCApp.Controllers
                             string val = Convert.ToString(dtMain.Rows[i]["TOTAL_HOURS"]);
                             if (!string.IsNullOrEmpty(val))
                             {
-                                if(!string.IsNullOrEmpty(val.Split(':')[0]))
+                                if (!string.IsNullOrEmpty(val.Split(':')[0]))
                                 {
                                     totHours += Convert.ToDouble(val.Split(':')[0].Trim());
                                 }
@@ -840,7 +840,7 @@ namespace MVCApp.Controllers
                                     totMinutes += Convert.ToDouble(val.Split(':')[1].Trim());
                                 }
 
-                                
+
                             }
                         }
                         final = totHours * 60;
@@ -862,7 +862,7 @@ namespace MVCApp.Controllers
                 else if (Convert.ToString(data.ReportType) == "MAX_MIN")
                 {
                     ViewBag.heading = "MAXIMUM AND MINIMUM VEHICLE STAYS INSIDE";
-                    
+
 
                     DA = new OracleDataAdapter("USP_REPORTMASTER", fun.Connection());
                     DA.SelectCommand.CommandType = CommandType.StoredProcedure;
@@ -1002,14 +1002,14 @@ namespace MVCApp.Controllers
                     ViewBag.DataSource = dtMain;
                     return PartialView("GrdPRD");
                 }
-               
+
                 ////CREATED BY SARTHAK ON 24-MAY-2021
                 else if (Convert.ToString(data.ReportType) == "BULK_STORAGE_ITEMS")
                 {
-                    
+
                     ViewBag.heading = "BULK STORAGE ITEMS";
 
-                    
+
                     DA = new OracleDataAdapter("USP_REPORTMASTER", fun.Connection());
                     DA.SelectCommand.CommandType = CommandType.StoredProcedure;
                     DA.SelectCommand.Parameters.Add("pREPORT_TYPE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.ReportType;
@@ -1365,7 +1365,7 @@ namespace MVCApp.Controllers
                     else
                         return PartialView("GrdRollOut");
                 }
-                
+
                 else if (Convert.ToString(data.ReportType) == "ITEM_EXCCED_MAXINVENTORY")
                 {
                     ViewBag.heading = "ITEMS EXCEEDING MAX. INVENTORY";
@@ -1429,13 +1429,13 @@ namespace MVCApp.Controllers
 
                 else if (Convert.ToString(data.ReportType) == "MATERIAL_SHORT_BULK")
                 {
-                   //string SHORT_BULK = data.SHORT_BULK;
-                    if(string.IsNullOrEmpty(data.SHORT_BULK))
+                    //string SHORT_BULK = data.SHORT_BULK;
+                    if (string.IsNullOrEmpty(data.SHORT_BULK))
                     {
                         ViewBag.msg = "NUMBER OF TRACTORS NOT FOUND.....";
                         return PartialView("RecordNotFoundGrid");
                     }
-                    
+
                     ViewBag.heading = "MATERIAL SHORT  FOR 100 TRACTORS AT BULK LOCATION";
 
                     DA = new OracleDataAdapter("USP_REPORTMASTER", fun.Connection());
@@ -1448,7 +1448,7 @@ namespace MVCApp.Controllers
                     DA.SelectCommand.Parameters.Add("pSCHEMA", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
                     DA.SelectCommand.Parameters.Add("pCHECK_JOB", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
                     DA.SelectCommand.Parameters.Add("pGLE_JOBS", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
-                    DA.SelectCommand.Parameters.Add("pORG_ID", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.SHORT_BULK; 
+                    DA.SelectCommand.Parameters.Add("pORG_ID", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.SHORT_BULK;
 
                     DA.SelectCommand.Parameters.Add("pPlanDate", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
                     DA.SelectCommand.Parameters.Add("pShiftValue", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
@@ -1469,7 +1469,7 @@ namespace MVCApp.Controllers
                     //string SHORT_SUPERMKT = Convert.ToString(ConfigurationManager.AppSettings["SHORT_SUPERMKT"]);
                     if (string.IsNullOrEmpty(data.SHORT_BULK))
                     {
-                        ViewBag.msg = "NUMBER OF TRACTORS NOT FOUND....."; 
+                        ViewBag.msg = "NUMBER OF TRACTORS NOT FOUND.....";
                         return PartialView("RecordNotFoundGrid");
                     }
                     ViewBag.heading = "MATERIAL SHORT  FOR 20 TRACTORS AT SUPER MARKET";
@@ -1534,7 +1534,7 @@ namespace MVCApp.Controllers
                 }
                 else if (Convert.ToString(data.ReportType) == "MATERIAL_BULKTEMP")
                 {
-                    
+
 
                     ViewBag.heading = "MATERIAL AT TEMPORARY LOCATION IN BULK STORE";
 
@@ -1697,7 +1697,7 @@ namespace MVCApp.Controllers
                     DA.SelectCommand.Parameters.Add("RES", OracleDbType.RefCursor, ParameterDirection.Output);
                     DA.Fill(dtMain);
                     ViewBag.Total = dtMain.Rows.Count;
-                    ViewBag.Date = "("+data.FromDate + " Between " + data.ToDate+")";
+                    ViewBag.Date = "(" + data.FromDate + " Between " + data.ToDate + ")";
                     ViewBag.DataSource = dtMain;
                     return PartialView("GrdMaterialShortDaily");
                 }
@@ -1734,49 +1734,71 @@ namespace MVCApp.Controllers
                 else if (Convert.ToString(data.ReportType) == "WEEKLY_OIL_FILTRATION")
                 {
                     ViewBag.heading = "OIL FILTRATION";
+                    List<DateTime> dates = new List<DateTime>();
+                    DateTime fromdata = Convert.ToDateTime(data.FromDate);
+                    DateTime todata = Convert.ToDateTime(data.ToDate);
+                    int dayscount = Convert.ToInt32((todata - fromdata).TotalDays);
+                    DateTime count = todata.AddDays(1);
+                    DataTable dataTable = new DataTable();
+                    dataTable.Columns.Add("SRNO");
+                    dataTable.Columns.Add("TotalTractor");
+                    dataTable.Columns.Add("OILQTY");
+                    dataTable.Columns.Add("DateRange");
+                    if (dayscount > 7)
+                    {
+                        for (int j = 0; j < dayscount; j++)
+                        {
+                            dates.Add(fromdata);
+                            fromdata = fromdata.AddDays(1);
+                        }
+                    }
+                    int weeks = dates.Count / 7;
+                    int p = 0;
+                    int m = 6;
+                    int srno = 0;
+                    for (int i = 0; i < weeks; i++)
+                    {
 
-                    DA = new OracleDataAdapter("USP_REPORTMASTER", fun.Connection());
-                    DA.SelectCommand.CommandType = CommandType.StoredProcedure;
-                    DA.SelectCommand.Parameters.Add("pREPORT_TYPE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.ReportType;
-                    DA.SelectCommand.Parameters.Add("pPLANT", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.Plant;
-                    DA.SelectCommand.Parameters.Add("pFAMILY", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.Family;
-                    DA.SelectCommand.Parameters.Add("pFROM_DATE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.FromDate;
-                    DA.SelectCommand.Parameters.Add("pTO_DATE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.ToDate;
-                    DA.SelectCommand.Parameters.Add("pSCHEMA", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
-                    DA.SelectCommand.Parameters.Add("pCHECK_JOB", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
-                    DA.SelectCommand.Parameters.Add("pGLE_JOBS", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
-                    DA.SelectCommand.Parameters.Add("pORG_ID", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
-
-                    DA.SelectCommand.Parameters.Add("pPlanDate", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
-                    DA.SelectCommand.Parameters.Add("pShiftValue", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
-                    DA.SelectCommand.Parameters.Add("pStartTime", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
-                    DA.SelectCommand.Parameters.Add("pEndTime", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
-
-                    DA.SelectCommand.Parameters.Add("pChkShowLess", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
-                    DA.SelectCommand.Parameters.Add("pFilterBy", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
-
-                    DA.SelectCommand.Parameters.Add("RES", OracleDbType.RefCursor, ParameterDirection.Output);
-                    DA.Fill(dtMain);
-                    object sumObject;
-                    sumObject = dtMain.Compute("Sum(OILQTY)", string.Empty);
-                    ViewBag.SumQty = sumObject;
-                    ViewBag.Total = dtMain.Rows.Count;
-                    ViewBag.DataSource = dtMain;
+                        fromdata = dates[p];
+                        todata = dates[m];
+                        p = p + 7;
+                        m = m + 7;
+                        query = string.Format(@"SELECT COUNT(*) AS TotalTractor, SUM(NVL(to_number(TRIM(OIL)),0)) AS OILQTY FROM XXES_JOB_STATUS
+                      WHERE  PLANT_CODE='{0}' AND FAMILY_CODE='{1}' 
+                       AND to_char(FINAL_LABEL_DATE,'dd-Mon-yyyy')>=to_date('{2}','dd-Mon-yyyy') AND  
+                    to_char(FINAL_LABEL_DATE,'dd-Mon-yyyy')<=to_date('{3}','dd-Mon-yyyy') AND OIL  IS NOT NULL", data.Plant, data.Family, fromdata.ToString("dd-MMM-yyyy"), todata.ToString("dd-MMM-yyyy"));
+                        dtMain = fun.returnDataTable(query);
+                        if (dtMain.Rows[0]["OILQTY"].ToString() != "")
+                        {
+                            DataRow Dr = dataTable.NewRow();
+                            srno = srno + 1;
+                            Dr["SRNO"] = srno;
+                            Dr["TotalTractor"] = dtMain.Rows[0]["TotalTractor"].ToString();
+                            Dr["OILQTY"] = dtMain.Rows[0]["OILQTY"].ToString();
+                            Dr["DateRange"] = (fromdata.ToString("dd-MMM-yyyy") + " TO " + todata.ToString("dd-MMM-yyyy")).ToString();
+                            dataTable.Rows.Add(Dr);
+                        }
+                    }
+                    //object sumObject;
+                    //sumObject = dtMain.Compute("Sum(OILQTY)", string.Empty);
+                    //ViewBag.SumQty = sumObject;
+                    ViewBag.Total = dataTable.Rows.Count;
+                    ViewBag.DataSource = dataTable;
                     return PartialView("GrdWEEKLY_OIL_FILTRATION");
                 }
                 //CREATED BY RAJ ON 08-DEC-2021
                 else if (Convert.ToString(data.ReportType) == "DAILY_PART_SCANNING_EFFICIENCY")
-               {
-                   
-                   ViewBag.heading = "DAILY PART SCANNING EFFICIENCY";
-                   DataTable dt = fun.GridDailyaprtScanningEfficiency(data);
-                   ViewBag.Total = dt.Rows.Count;
-                   ViewBag.DataSource = dt;
-                   return PartialView("PartScanningEffGrid");
-               }
+                {
+
+                    ViewBag.heading = "DAILY PART SCANNING EFFICIENCY";
+                    DataTable dt = fun.GridDailyaprtScanningEfficiency(data);
+                    ViewBag.Total = dt.Rows.Count;
+                    ViewBag.DataSource = dt;
+                    return PartialView("PartScanningEffGrid");
+                }
                 else
                 {
-                    
+
                     ViewBag.msg = "Record Not Found.....";
                     return PartialView("RecordNotFoundGrid");
                 }
@@ -1793,7 +1815,18 @@ namespace MVCApp.Controllers
             }
         }
 
-
+        public int GetWeekNumberOfMonth(DateTime date)
+        {
+            date = date.Date;
+            DateTime firstMonthDay = new DateTime(date.Year, date.Month, 1);
+            DateTime firstMonthMonday = firstMonthDay.AddDays((DayOfWeek.Monday + 7 - firstMonthDay.DayOfWeek) % 7);
+            if (firstMonthMonday > date)
+            {
+                firstMonthDay = firstMonthDay.AddMonths(-1);
+                firstMonthMonday = firstMonthDay.AddDays((DayOfWeek.Monday + 7 - firstMonthDay.DayOfWeek) % 7);
+            }
+            return (date - firstMonthMonday).Days / 7 + 1;
+        }
         public string getProductionReport(ReportModel data)
         {
             try
@@ -1996,7 +2029,7 @@ namespace MVCApp.Controllers
 
         }
 
-        
+
 
         public JsonResult DDLFilJobs(ReportModel data)
         {
@@ -2013,26 +2046,26 @@ namespace MVCApp.Controllers
                         Jobid as JOB,FCODE_srlno as SRLNO from xxes_job_status 
                         where  family_code='" + Convert.ToString(data.Family).Trim() + "' and " +
                         "plant_code='" + Convert.ToString(data.Plant) + "' " +
-                        "and JOBID like '{0}%' order by ITEM_CODE,JOBID",data.gleJobs.Trim().ToUpper());
+                        "and JOBID like '{0}%' order by ITEM_CODE,JOBID", data.gleJobs.Trim().ToUpper());
 
-                    dtMain = new DataTable();
-                    dtMain = fun.returnDataTable(query);
-                    if (dtMain.Rows.Count > 0)
+                dtMain = new DataTable();
+                dtMain = fun.returnDataTable(query);
+                if (dtMain.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in dtMain.Rows)
                     {
-                        foreach (DataRow dr in dtMain.Rows)
+                        Item.Add(new DDLTextValue
                         {
-                            Item.Add(new DDLTextValue
-                            {
-                                Text = dr["JOB_DESCRIPTION"].ToString(),
-                                Value = dr["JOB"].ToString(),
-                            });
-                        }
+                            Text = dr["JOB_DESCRIPTION"].ToString(),
+                            Value = dr["JOB"].ToString(),
+                        });
                     }
-                    
+                }
+
                 //}
-                
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 fun.LogWrite(ex);
                 throw;
@@ -2059,6 +2092,93 @@ namespace MVCApp.Controllers
             String[] StrShift = Shift.Split(Spearator, StringSplitOptions.None);
             string SelectedShift = StrShift[0];
             return Json(SelectedShift, JsonRequestBehavior.AllowGet);
+        }
+
+        public PartialViewResult WeeklyReports(ReportModel data)
+        {
+            List<ReportModel> result = new List<ReportModel>();
+
+            data.ReportType = "WEEKLY_OIL_FILTRATION";
+            DataTable dt = new DataTable();
+            ViewBag.heading = "OIL FILTRATION ";
+            DA = new OracleDataAdapter("USP_REPORTMASTER", fun.Connection());
+            DA.SelectCommand.CommandType = CommandType.StoredProcedure;
+            DA.SelectCommand.Parameters.Add("pREPORT_TYPE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.ReportType;
+            DA.SelectCommand.Parameters.Add("pPLANT", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.Plant;
+            DA.SelectCommand.Parameters.Add("pFAMILY", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.Family;
+            DA.SelectCommand.Parameters.Add("pFROM_DATE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.FromDate;
+            DA.SelectCommand.Parameters.Add("pTO_DATE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.ToDate;
+            DA.SelectCommand.Parameters.Add("pSCHEMA", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+            DA.SelectCommand.Parameters.Add("pCHECK_JOB", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+            DA.SelectCommand.Parameters.Add("pGLE_JOBS", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+            DA.SelectCommand.Parameters.Add("pORG_ID", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+
+            DA.SelectCommand.Parameters.Add("pPlanDate", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+            DA.SelectCommand.Parameters.Add("pShiftValue", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+            DA.SelectCommand.Parameters.Add("pStartTime", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+            DA.SelectCommand.Parameters.Add("pEndTime", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+
+            DA.SelectCommand.Parameters.Add("pChkShowLess", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+            DA.SelectCommand.Parameters.Add("pFilterBy", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+
+            DA.SelectCommand.Parameters.Add("RES", OracleDbType.RefCursor, ParameterDirection.Output);
+            DA.Fill(dt);
+            ViewBag.DataSource = dt;
+            ViewBag.Total = dt.Rows.Count;
+            return PartialView("WeeklyReportsDateWise");
+
+            //return PartialView();
+        }
+        public JsonResult WeeklyReports1(ReportModel data)
+        {
+            List<ReportModel> result = new List<ReportModel>();
+            try
+            {
+                DataTable dt = new DataTable();
+                data.ReportType = "WEEKLY_OIL_FILTRATION";
+                DA = new OracleDataAdapter("USP_REPORTMASTER", fun.Connection());
+                DA.SelectCommand.CommandType = CommandType.StoredProcedure;
+                DA.SelectCommand.Parameters.Add("pREPORT_TYPE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.ReportType;
+                DA.SelectCommand.Parameters.Add("pPLANT", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.Plant;
+                DA.SelectCommand.Parameters.Add("pFAMILY", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.Family;
+                DA.SelectCommand.Parameters.Add("pFROM_DATE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.FromDate;
+                DA.SelectCommand.Parameters.Add("pTO_DATE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.ToDate;
+                DA.SelectCommand.Parameters.Add("pSCHEMA", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                DA.SelectCommand.Parameters.Add("pCHECK_JOB", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                DA.SelectCommand.Parameters.Add("pGLE_JOBS", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                DA.SelectCommand.Parameters.Add("pORG_ID", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+
+                DA.SelectCommand.Parameters.Add("pPlanDate", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                DA.SelectCommand.Parameters.Add("pShiftValue", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                DA.SelectCommand.Parameters.Add("pStartTime", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                DA.SelectCommand.Parameters.Add("pEndTime", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+
+                DA.SelectCommand.Parameters.Add("pChkShowLess", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                DA.SelectCommand.Parameters.Add("pFilterBy", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+
+                DA.SelectCommand.Parameters.Add("RES", OracleDbType.RefCursor, ParameterDirection.Output);
+                DA.Fill(dt);
+
+                if (dt.Rows.Count > 0)
+                {
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        ReportModel reportModel = new ReportModel();
+                        reportModel.ITEM_CODE = dt.Rows[i]["ITEM_CODE"].ToString();
+                        reportModel.ITEM_DESCRIPTION = dt.Rows[i]["ITEM_DESCRIPTION"].ToString();
+                        reportModel.OILQTY = dt.Rows[i]["OILQTY"].ToString();
+                        reportModel.ENTRYDATE = dt.Rows[i]["ENTRYDATE"].ToString();
+                        reportModel.FCODE_SRLNO = dt.Rows[i]["FCODE_SRLNO"].ToString();
+                        result.Add(reportModel);
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         public PartialViewResult BindFilterBy()

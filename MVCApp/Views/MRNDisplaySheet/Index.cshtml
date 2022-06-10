@@ -540,7 +540,7 @@
                         var mrnno = full.MRN_NO;
                         var itemCode = full.ITEMCODE;
                         //return '<button type="button" id="btnCustomPrint" class="btn btn-warning btn-sm"><i class="fa fa-arrow-left"></i>Print</button>'
-                        return '<a href="../ekidev/MRNDISPLAYSHEET/CrystalReportForMRN?MRN=' + mrnno + '&ItemCode=' + itemCode + '&PlantCode=' + $('#PLANT_CODE').val() + '&familyCode=' + $('#FAMILY_CODE').val() + '" target="_blank">Inspection Sheet</a> ';
+                        return '<a onclick=getCrystalReportForMRN("' + mrnno + '","' + itemCode + '")>Inspection Sheet</a> ';
                     }
                 },
                 { "data": "DOCK_QTY" },
@@ -602,7 +602,20 @@
 
         $("#divLoader").hide();
     }
-
+    function getCrystalReportForMRN(MRN, itemcode) {
+         var data = {
+             MRN_NO: MRN,
+             ITEMCODE: itemcode,
+             PLANT_CODE: $('#PLANT_CODE').val(),
+             FAMILY_CODE: $('#FAMILY_CODE').val()
+               };
+                if (data != '') {
+                 url = '@Url.Action("CrystalReportForMRN","MRNDISPLAYSHEET")'
+                    url = url + "?MRN=" + data.MRN_NO + "&ItemCode=" + data.ITEMCODE + "&PlantCode=" + data.PLANT_CODE + "&familyCode=" + data.FAMILY_CODE;
+                    window.open(url);
+               
+                 }
+    }
     $('#myTable tbody').on('click', '.btnSave', function () {
 
         var self = $(this);

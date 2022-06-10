@@ -1809,6 +1809,11 @@ namespace MVCApp.Controllers
                         else
                             tm.RopsChk = false;
 
+                        if (Convert.ToString(dt.Rows[0]["ELECTRIC_TRACTOR"]) == "Y")
+                            tm.ElectricMotorChk = true;
+                        else
+                            tm.ElectricMotorChk = false;
+
                         if (Convert.ToString(dt.Rows[0]["REQ_HYD_PUMP"]) == "Y")
                             tm.HydraulicPumpChk = true;
                         else
@@ -1843,9 +1848,6 @@ namespace MVCApp.Controllers
                             tm.SteeringCylinderChk = true;
                         else
                             tm.SteeringCylinderChk = false;
-
-
-
                         if (Convert.ToString(dt.Rows[0]["REQ_CLUSSTER"]) == "Y")
                             tm.ClusterAssemblyChk = true;
                         else
@@ -2984,29 +2986,57 @@ namespace MVCApp.Controllers
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.DomesticExport), Convert.ToString(TM.DomesticExport), Convert.ToString(tmold.DomesticExport), Convert.ToString(tmold.DomesticExport), Tab, TM.gleSearch, Convert.ToString(TM.DomesticExport), Convert.ToString(TM.DomesticExport), "Change_DomesticExport", TrnNo);
                 }
+                if (TM.NoOfBoltsFrontAxel == null)
+                {
+                    TM.NoOfBoltsFrontAxel = "";
+                }
                 if (Tmold.NoOfBoltsFrontAxel != TM.NoOfBoltsFrontAxel)
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.NoOfBoltsFrontAxel), Convert.ToString(TM.NoOfBoltsFrontAxel), Convert.ToString(tmold.NoOfBoltsFrontAxel), Convert.ToString(tmold.NoOfBoltsFrontAxel), Tab, TM.gleSearch, Convert.ToString(TM.NoOfBoltsFrontAxel), Convert.ToString(TM.NoOfBoltsFrontAxel), "Change_NoOfBoltsFrontAxel", TrnNo);
+                }
+                if (TM.NoOfBoltsHydraulic == null)
+                {
+                    TM.NoOfBoltsHydraulic = "";
                 }
                 if (Tmold.NoOfBoltsHydraulic != TM.NoOfBoltsHydraulic)
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.NoOfBoltsHydraulic), Convert.ToString(TM.NoOfBoltsHydraulic), Convert.ToString(tmold.NoOfBoltsHydraulic), Convert.ToString(tmold.NoOfBoltsHydraulic), Tab, TM.gleSearch, Convert.ToString(TM.NoOfBoltsHydraulic), Convert.ToString(TM.NoOfBoltsHydraulic), "Change_NoOfBoltsHydraulic", TrnNo);
                 }
+                if (TM.NoOfBoltsFrontTYre == null)
+                {
+                    TM.NoOfBoltsFrontTYre = "";
+                }
                 if (Tmold.NoOfBoltsFrontTYre != TM.NoOfBoltsFrontTYre)
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.NoOfBoltsFrontTYre), Convert.ToString(TM.NoOfBoltsFrontTYre), Convert.ToString(tmold.NoOfBoltsFrontTYre), Convert.ToString(tmold.NoOfBoltsFrontTYre), Tab, TM.gleSearch, Convert.ToString(TM.NoOfBoltsFrontTYre), Convert.ToString(TM.NoOfBoltsFrontTYre), "Change_NoOfBoltsFrontTYre", TrnNo);
+                }
+                if (TM.NoOfBoltsRearTYre == null)
+                {
+                    TM.NoOfBoltsRearTYre = "";
                 }
                 if (Tmold.NoOfBoltsRearTYre != TM.NoOfBoltsRearTYre)
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.NoOfBoltsRearTYre), Convert.ToString(TM.NoOfBoltsRearTYre), Convert.ToString(tmold.NoOfBoltsRearTYre), Convert.ToString(tmold.NoOfBoltsRearTYre), Tab, TM.gleSearch, Convert.ToString(TM.NoOfBoltsRearTYre), Convert.ToString(TM.NoOfBoltsRearTYre), "Change_NoOfBoltsRearTYre", TrnNo);
                 }
+                if (TM.NoOfBoltsEnToruqe1 == null)
+                {
+                    TM.NoOfBoltsEnToruqe1 = "";
+                }
                 if (Tmold.NoOfBoltsEnToruqe1 != TM.NoOfBoltsEnToruqe1)
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.NoOfBoltsEnToruqe1), Convert.ToString(TM.NoOfBoltsEnToruqe1), Convert.ToString(tmold.NoOfBoltsEnToruqe1), Convert.ToString(tmold.NoOfBoltsEnToruqe1), Tab, TM.gleSearch, Convert.ToString(TM.NoOfBoltsEnToruqe1), Convert.ToString(TM.NoOfBoltsEnToruqe1), "Change_NoOfBoltsEnToruqe1", TrnNo);
                 }
+                if (TM.NoOfBoltsEnToruqe2 == null)
+                {
+                    TM.NoOfBoltsEnToruqe2 = "";
+                }
                 if (Tmold.NoOfBoltsEnToruqe2 != TM.NoOfBoltsEnToruqe2)
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.NoOfBoltsEnToruqe2), Convert.ToString(TM.NoOfBoltsEnToruqe2), Convert.ToString(tmold.NoOfBoltsEnToruqe2), Convert.ToString(tmold.NoOfBoltsEnToruqe2), Tab, TM.gleSearch, Convert.ToString(TM.NoOfBoltsEnToruqe2), Convert.ToString(TM.NoOfBoltsEnToruqe2), "Change_NoOfBoltsEnToruqe2", TrnNo);
+                }
+                if (TM.NoOfBoltsEnToruqe3 == null)
+                {
+                    TM.NoOfBoltsEnToruqe3 = "";
                 }
                 if (Tmold.NoOfBoltsEnToruqe3 != TM.NoOfBoltsEnToruqe3)
                 {
@@ -3738,6 +3768,7 @@ namespace MVCApp.Controllers
         {
             string Email_To = string.Empty; string Email_CC = string.Empty; string Username = string.Empty;
             Email_To = fun.get_Col_Value("select EMAIL as EMAIL  from XXES_STAGE_EMAILS WHERE STAGE='TRACTOR_BOM'");
+            Username = fun.get_Col_Value("select USERNAME from XXES_STAGE_EMAILS WHERE STAGE='TRACTOR_BOM'");
             string sendMail = fun.SendMails(Type, mailbody, "Tractor Changes", Email_To, Email_CC, Username);
             return sendMail;
         }
@@ -6078,16 +6109,23 @@ namespace MVCApp.Controllers
             {
                 string[] item = StringSpliter(data.ItemCode);
                 data.ItemCode = item[0].Trim();
+                string orgid = fun.getOrgId(Convert.ToString(data.Plant).Trim().ToUpper(), Convert.ToString(data.Family).Trim().ToUpper());
+                query = string.Format(@"select CAS_NUMBER from apps.mtl_system_items where organization_id='{0}' and segment1='{1}'", orgid, data.ItemCode);
+                string Prefix2 = fun.get_Col_Value(query);
                 data.ItemCode_Desc = replaceApostophi(item[1].Trim());
                 query = string.Format(@"SELECT COUNT(*) FROM XXES_ITEM_MASTER xim WHERE xim.PLANT_CODE='{0}' AND xim.FAMILY_CODE='{1}' 
                         AND xim.ITEM_CODE='{2}'", data.Plant, data.Family, data.ItemCode);
                 if (!fun.CheckExits(query))
                 {
                     data.Prefix1 = "T05";
+                    if (data.ItemCode.Substring(0, 2) == "F2")
+                    {
+                        data.Prefix2 = Prefix2;
+                    }
                     string Prefix1 = data.Prefix1;
                     mstType = Validation.str1;
                     status = Validation.str2;
-                    var err = new { Msg = Prefix1, ID = mstType, validation = status };
+                    var err = new { Msg = Prefix1 + ',' + Prefix2, ID = mstType, validation = status };
                     return Json(err, JsonRequestBehavior.AllowGet);
                 }
 

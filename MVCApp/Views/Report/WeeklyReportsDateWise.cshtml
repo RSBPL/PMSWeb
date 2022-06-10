@@ -1,0 +1,234 @@
+﻿<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+        .table-wrapper {
+            margin: 10px 70px 70px;
+            box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );
+        }
+
+        .fl-table {
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: normal;
+            border: none;
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 100%;
+            white-space: nowrap;
+            background-color: white;
+        }
+
+            .fl-table td, .fl-table th {
+                text-align: center;
+                padding: 8px;
+            }
+
+            .fl-table td {
+                border-right: 1px solid #f8f8f8;
+                font-size: 12px;
+            }
+
+            .fl-table thead th {
+                color: #ffffff;
+                background: #4FC3A1;
+            }
+
+
+                .fl-table thead th:nth-child(odd) {
+                    color: #ffffff;
+                    background: #324960;
+                }
+
+            .fl-table tr:nth-child(even) {
+                background: #F8F8F8;
+            }
+
+        /* Responsive */
+
+        @@media (max-width: 767px) {
+            .fl-table {
+                display: block;
+                width: 100%;
+            }
+
+            .table-wrapper:before {
+                content: "Scroll horizontally >";
+                display: block;
+                text-align: right;
+                font-size: 11px;
+                color: white;
+                padding: 0 0 10px;
+            }
+
+            .fl-table thead, .fl-table tbody, .fl-table thead th {
+                display: block;
+            }
+
+                .fl-table thead th:last-child {
+                    border-bottom: none;
+                }
+
+            .fl-table thead {
+                float: left;
+            }
+
+            .fl-table tbody {
+                width: auto;
+                position: relative;
+                overflow-x: auto;
+            }
+
+            .fl-table td, .fl-table th {
+                padding: 20px .625em .625em .625em;
+                height: 60px;
+                vertical-align: middle;
+                box-sizing: border-box;
+                overflow-x: hidden;
+                overflow-y: auto;
+                width: 120px;
+                font-size: 13px;
+                text-overflow: ellipsis;
+            }
+
+            .fl-table thead th {
+                text-align: left;
+                border-bottom: 1px solid #f7f7f9;
+            }
+
+            .fl-table tbody tr {
+                display: table-cell;
+            }
+
+                .fl-table tbody tr:nth-child(odd) {
+                    background: none;
+                }
+
+            .fl-table tr:nth-child(even) {
+                background: transparent;
+            }
+
+            .fl-table tr td:nth-child(odd) {
+                background: #F8F8F8;
+                border-right: 1px solid #E6E4E4;
+            }
+
+            .fl-table tr td:nth-child(even) {
+                border-right: 1px solid #E6E4E4;
+            }
+
+            .fl-table tbody td {
+                display: block;
+                text-align: center;
+            }
+        }
+        body {
+            padding-top: 50px;
+        }
+
+        .modal.modal-fullscreen .modal-dialog,
+        .modal.modal-fullscreen .modal-content {
+            bottom: 0;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        .modal.modal-fullscreen .modal-dialog {
+            margin: 0;
+            width: 100%;
+            animation-duration: 0.6s;
+        }
+
+        .modal.modal-fullscreen .modal-content {
+            border: none;
+            -moz-border-radius: 0;
+            border-radius: 0;
+            -webkit-box-shadow: inherit;
+            -moz-box-shadow: inherit;
+            -o-box-shadow: inherit;
+            box-shadow: inherit;
+        }
+
+        .modal.modal-fullscreen.force-fullscreen .modal-body {
+            padding: 0;
+        }
+
+        .modal.modal-fullscreen.force-fullscreen .modal-header,
+        .modal.modal-fullscreen.force-fullscreen .modal-footer {
+            left: 0;
+            position: absolute;
+            right: 0;
+        }
+
+        .modal.modal-fullscreen.force-fullscreen .modal-header {
+            top: 0;
+        }
+
+        .modal.modal-fullscreen.force-fullscreen .modal-footer {
+            bottom: 0;
+        }
+
+
+    </style>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bg-primary" style="padding-top:5px; padding-left:5px;">
+                <center>
+                    <label style="color:white;">@ViewBag.heading</label>
+                    <label style="color: white;padding-right: 10px;" class="pull-right"><strong>Total Tractor Produced  : @ViewBag.Total </strong></label>
+                </center>
+            </div>
+        </div>
+    </div>
+    <div class="fl-table table-responsive" >
+        @(Html.EJS().Grid("WeeklyReportsDateWise").DataSource((System.Data.DataTable)ViewBag.DataSource).
+            AllowPaging(true).Height("400").
+            PageSettings(Page => Page.PageSize(20)).
+            AllowSelection(false).
+            AllowResizing().
+            AllowExcelExport().
+            ToolbarClick("toolbarClick").
+            AllowFiltering().
+            //AllowGrouping().
+            AllowSorting().
+            Columns(col =>
+            {
+                col.Field("ITEM_CODE").HeaderText("ITEM_CODE").Width("130").Add();
+                col.Field("ITEM_DESCRIPTION").HeaderText("ITEM DESCRIPTION").Width("250").Add();
+                col.Field("OILQTY").HeaderText("Oil Qty").Width("75").Add();
+                col.Field("ENTRYDATE").HeaderText("FINAL DATE").Width("120").Add();
+                col.Field("FCODE_SRLNO").HeaderText("FCODE SRLNO").Width("150").Add();
+
+
+            }).
+            Toolbar(new List<string>() { "ExcelExport" }).SelectionSettings(select => select.Type(Syncfusion.EJ2.Grids.SelectionType.Multiple)).CommandClick("commandClick").
+            Render())
+        <script>
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("WeeklyReportsDateWise").ej2_instances[0];
+                gridObj.excelExport();
+            }
+           
+
+
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()
+
+
+
+
+

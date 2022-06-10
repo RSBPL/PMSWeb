@@ -41,6 +41,11 @@ namespace MVCApp.Models
         public bool ShiftC { get; set; }
         public string OrgID { get; set; }
         public string ShowLess { get; set; }
+        public string ITEM_CODE { get; set; }
+        public string ITEM_DESCRIPTION { get; set; }
+        public string OILQTY { get; set; }
+        public string ENTRYDATE { get; set; }
+        public string FCODE_SRLNO { get; set; }
         public string STFilterBy { get; set; }
 
 

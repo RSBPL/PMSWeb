@@ -76,6 +76,9 @@
         max-height: 400px;
         overflow: auto;
     }
+    #T05EngineBackend{
+        display:none;
+    }
 </style>
 <div id="divLoader" style="display:none;">
     <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:10%; margin-left:38%" />
@@ -98,7 +101,7 @@
     <div id="SearchItem" style="background-color: #6fb3e0; margin: 0px 5px 0px 5px; padding: 5px;">
         <div class="row">
             <div class="col-md-12 text-center">
-                <strong style="font-size: 19px;color:white;">ROLL DOWN</strong>
+                <strong style="font-size: 19px;color:white;">JOB LABEL</strong>
                 <hr class="hr1">
             </div>
 
@@ -128,20 +131,21 @@
                             @Html.DropDownListFor(model => model.FAMILYCODE, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
                             <strong>@Html.ValidationMessageFor(model => model.FAMILYCODE, "", new { @class = "text-danger" })</strong>
                         </div>
+                        
                         <div class="col-md-6">
-                            <label for="fname" class="text-right control-label col-form-label"><strong>scan job</strong></label>
+                            <label for="fname" class="text-right control-label col-form-label"><strong>SCAN JOB</strong></label>
                             @Html.TextBoxFor(Model => Model.JOBID, null, new { @class = "form-control input-sm" })
                         </div>
                         @*<div class="col-md-1">
-                            <div style="MARGIN-TOP: 25px;">
-                                <button class="btn btn-success btn-sm" type="button" id="Show"><i class="ace-icon fa fa-search-plus bigger-110"></i><strong>SHOW</strong></button>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <div style="MARGIN-TOP: 25px;">
-                                <button class="btn btn-success btn-sm" type="button" id="Save"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
-                            </div>
-                        </div>*@
+            <div style="MARGIN-TOP: 25px;">
+                <button class="btn btn-success btn-sm" type="button" id="Show"><i class="ace-icon fa fa-search-plus bigger-110"></i><strong>SHOW</strong></button>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div style="MARGIN-TOP: 25px;">
+                <button class="btn btn-success btn-sm" type="button" id="Save"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+            </div>
+        </div>*@
                     </div>
                 </fieldset>
             </div>
@@ -151,87 +155,91 @@
                 <div class="row">
                     <div class="col-md-2">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Transmission</strong></label>
-                        @Html.TextBoxFor(Model => Model.Transmission, null, new { @class = "form-control input-sm" })
+                        @Html.TextBoxFor(Model => Model.Transmission, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
                     <div class="col-md-2">
                         <label for="fname" class="text-right control-label col-form-label"><strong>RearAxel</strong></label>
-                        @Html.TextBoxFor(Model => Model.RearAxel, null, new { @class = "form-control input-sm" })
+                        @Html.TextBoxFor(Model => Model.RearAxel, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Hydraulic</strong></label>
-                        @Html.TextBoxFor(Model => Model.Hydraulic, null, new { @class = "form-control input-sm" })
+                        @Html.TextBoxFor(Model => Model.Hydraulic, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Engine</strong></label>
-                        @Html.TextBoxFor(Model => Model.Engine, null, new { @class = "form-control input-sm" })
+                        @Html.TextBoxFor(Model => Model.Engine, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2" id="T04Skid">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Skid</strong></label>
-                        @Html.TextBoxFor(Model => Model.Skid, null, new { @class = "form-control input-sm" })
+                        @Html.TextBoxFor(Model => Model.Skid, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                    </div>
+                    <div class="col-md-2" id="T05EngineBackend">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Backend</strong></label>
+                        @Html.TextBoxFor(Model => Model.Backend, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
                     <div class="col-md-6">
-                        <fieldset>
+                        <fieldset style="margin: 0 0 0 -10px;">
                             <legend>Rear Tyre</legend>
                             <div class="col-md-4">
-                                <label for="fname" class="text-right control-label col-form-label"><strong>Srn.no 1</strong></label>
-                                @Html.TextBoxFor(Model => Model.RearSrnn1, null, new { @class = "form-control input-sm" })
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Sr.no 1</strong></label>
+                                @Html.TextBoxFor(Model => Model.RearSrnn1, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                             </div>
                             <div class="col-md-4">
                                 <label for="fname" class="text-right control-label col-form-label"><strong>RIM1</strong></label>
-                                @Html.TextBoxFor(Model => Model.RearRIM1, null, new { @class = "form-control input-sm" })
+                                @Html.TextBoxFor(Model => Model.RearRIM1, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                             </div>
                             <div class="col-md-4">
                                 <label for="fname" class="text-right control-label col-form-label"><strong>Tyre1</strong></label>
-                                @Html.TextBoxFor(Model => Model.RearTyre1, null, new { @class = "form-control input-sm" })
+                                @Html.TextBoxFor(Model => Model.RearTyre1, null, new { @class = "form-control input-sm", @Style = "width: 178px;margin: 0px 0 0 7px; ", @readonly = "readonly" })
                             </div>
 
                         </fieldset>
                     </div>
                     <div class="col-md-6">
-                        <fieldset>
+                        <fieldset style="margin: 0 0 0 -10px;">
                             <legend>Font Tyre</legend>
                             <div class="col-md-4">
-                                <label for="fname" class="text-right control-label col-form-label"><strong>Srn.no 1</strong></label>
-                                @Html.TextBoxFor(Model => Model.FrontSrnn1, null, new { @class = "form-control input-sm" })
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Sr.no 1</strong></label>
+                                @Html.TextBoxFor(Model => Model.FrontSrnn1, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                             </div>
                             <div class="col-md-4">
                                 <label for="fname" class="text-right control-label col-form-label"><strong>RIM1</strong></label>
-                                @Html.TextBoxFor(Model => Model.FrontRIM1, null, new { @class = "form-control input-sm" })
+                                @Html.TextBoxFor(Model => Model.FrontRIM1, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                             </div>
                             <div class="col-md-4">
                                 <label for="fname" class="text-right control-label col-form-label"><strong>Tyre1</strong></label>
-                                @Html.TextBoxFor(Model => Model.FrontTyre1_srlno1, null, new { @class = "form-control input-sm" })
+                                @Html.TextBoxFor(Model => Model.FrontTyre1_srlno1, null, new { @class = "form-control input-sm", @Style = "width: 178px;margin: 0px 0 0 7px; ", @readonly = "readonly" })
                             </div>
                         </fieldset>
                     </div>
                     <div class="col-md-2">
-                        <label for="fname" class="text-right control-label col-form-label"><strong>Srn.no 2</strong></label>
-                        @Html.TextBoxFor(Model => Model.RearSrnn2, null, new { @class = "form-control input-sm" })
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Sr.no 2</strong></label>
+                        @Html.TextBoxFor(Model => Model.RearSrnn2, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
                     <div class="col-md-2">
                         <label for="fname" class="text-right control-label col-form-label"><strong>RIM2</strong></label>
-                        @Html.TextBoxFor(Model => Model.RearRIM2, null, new { @class = "form-control input-sm" })
+                        @Html.TextBoxFor(Model => Model.RearRIM2, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
                     <div class="col-md-2">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Tyre2</strong></label>
-                        @Html.TextBoxFor(Model => Model.RearTyre2_srlno2, null, new { @class = "form-control input-sm" })
+                        @Html.TextBoxFor(Model => Model.RearTyre2_srlno2, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
 
                     <div class="col-md-2">
-                        <label for="fname" class="text-right control-label col-form-label"><strong>Srn.no 2</strong></label>
-                        @Html.TextBoxFor(Model => Model.FrontSrnn2, null, new { @class = "form-control input-sm" })
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Sr.no 2</strong></label>
+                        @Html.TextBoxFor(Model => Model.FrontSrnn2, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
                     <div class="col-md-2">
                         <label for="fname" class="text-right control-label col-form-label"><strong>RIM2</strong></label>
-                        @Html.TextBoxFor(Model => Model.FrontRIM2, null, new { @class = "form-control input-sm" })
+                        @Html.TextBoxFor(Model => Model.FrontRIM2, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
                     <div class="col-md-2">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Tyre2</strong></label>
-                        @Html.TextBoxFor(Model => Model.FrontTyre2_srlno2, null, new { @class = "form-control input-sm" })
+                        @Html.TextBoxFor(Model => Model.FrontTyre2_srlno2, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Battery</strong></label>
-                        @Html.TextBoxFor(Model => Model.Battery, null, new { @class = "form-control input-sm" })
+                        @Html.TextBoxFor(Model => Model.Battery, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
                     <div class="col-md-3" style="margin: 8px 0 0 0;">
                         <label for="fname" class="text-right control-label col-form-label"><strong></strong></label>
@@ -241,88 +249,78 @@
 
                     </div>
                     <div class="col-md-3">
-                        <label for="fname" class="text-right control-label col-form-label"><strong>hydrualic Pump</strong></label>
-                        @Html.TextBoxFor(Model => Model.HydrualicPump, null, new { @class = "form-control input-sm" })
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Hydrualic Pump</strong></label>
+                        @Html.TextBoxFor(Model => Model.HydrualicPump, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Radiator</strong></label>
-                        @Html.TextBoxFor(Model => Model.Radiator, null, new { @class = "form-control input-sm" })
+                        @Html.TextBoxFor(Model => Model.Radiator, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Power Steering Cylinder</strong></label>
-                        @Html.TextBoxFor(Model => Model.SteeringCylinder, null, new { @class = "form-control input-sm" })
+                        @Html.TextBoxFor(Model => Model.SteeringCylinder, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Steering Motor</strong></label>
-                        @Html.TextBoxFor(Model => Model.SteeringMotor, null, new { @class = "form-control input-sm" })
+                        @Html.TextBoxFor(Model => Model.SteeringMotor, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
                     <div class="col-md-3">
-                        <label for="fname" class="text-right control-label col-form-label"><strong>Steering Motor</strong></label>
-                        @Html.TextBoxFor(Model => Model.SteeringAssem, null, new { @class = "form-control input-sm" })
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Steering Assembly</strong></label>
+                        @Html.TextBoxFor(Model => Model.SteeringAssem, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Alternator</strong></label>
-                        @Html.TextBoxFor(Model => Model.Alternator, null, new { @class = "form-control input-sm" })
+                        @Html.TextBoxFor(Model => Model.Alternator, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Cluster Assembly</strong></label>
-                        @Html.TextBoxFor(Model => Model.Cluster, null, new { @class = "form-control input-sm" })
+                        @Html.TextBoxFor(Model => Model.Cluster, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Starter Motor</strong></label>
-                        @Html.TextBoxFor(Model => Model.Motor, null, new { @class = "form-control input-sm" })
+                        @Html.TextBoxFor(Model => Model.Motor, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
 
-                    <div class="col-md-3">                    </div>
-
                     <div class="col-md-3">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>ROPS Srno</strong></label>
+                        @Html.TextBoxFor(Model => Model.ROPSrno, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                    </div>
+                    <div class="col-md-2">
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Oil Qty</strong></label>
+                        @Html.TextBoxFor(Model => Model.OilQty, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                    </div>
+
+                    <div class="col-md-1">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Quantity</strong></label>
                         @Html.TextBoxFor(Model => Model.Quantity, null, new { @class = "form-control input-sm" })
                     </div>
 
                     <div class="col-md-2">
-                        <label for="fname" class="text-right control-label col-form-label"><strong>Srn.no </strong></label>
-                        @Html.TextBoxFor(Model => Model.Srno, null, new { @class = "form-control input-sm" })
+                        <label for="fname" class="text-right control-label col-form-label"><strong>Sr.no </strong></label>
+                        @Html.TextBoxFor(Model => Model.Srno, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
                     <div class="col-md-2">
                         <label for="fname" class="text-right control-label col-form-label"><strong>IMEI</strong></label>
-                        @Html.TextBoxFor(Model => Model.IMEI, null, new { @class = "form-control input-sm" })
+                        @Html.TextBoxFor(Model => Model.IMEI, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
                     <div class="col-md-2">
                         <label for="fname" class="text-right control-label col-form-label"><strong>MOBILE</strong></label>
-                        @Html.TextBoxFor(Model => Model.MOBILE, null, new { @class = "form-control input-sm" })
-                    </div>
-                    <div class="col-md-3">
-                        <label for="fname" class="text-right control-label col-form-label"><strong>ROPS Srno</strong></label>
-                        @Html.TextBoxFor(Model => Model.ROPSrno, null, new { @class = "form-control input-sm" })
+                        @Html.TextBoxFor(Model => Model.MOBILE, null, new { @class = "form-control input-sm", @readonly = "readonly" })
                     </div>
                     <div class="col-md-2">
-                        <label for="fname" class="text-right control-label col-form-label"><strong>Oil Qty</strong></label>
-                        @Html.TextBoxFor(Model => Model.OilQty, null, new { @class = "form-control input-sm" })
-                    </div>
-                    <div class="col-md-3">
-                        <label for="fname" class="text-right control-label col-form-label"><strong id="total"></strong></label>
-                        @*@Html.TextBoxFor(Model => Model.OilQty, null, new { @class = "form-control input-sm" })*@
-                    </div>
-                    <div class="col-md-2">
-                        <div style="MARGIN-TOP: 25px; display: none;">
-                            <button class="btn btn-success btn-sm" type="button" id="Savejob"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save Job</strong></button>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div style="MARGIN-TOP: 25px;display:none;">
-                            <button class="btn btn-success btn-sm" type="button" id="Deletejob"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Delete Job</strong></button>
-                        </div>
-                    </div>
-                    <div class="col-md-3" style="margin: 25px 0 0 0;">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Stage</strong></label>
                         @Html.DropDownListFor(model => model.STAGE_Code, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
                         <strong>@Html.ValidationMessageFor(model => model.STAGE_Code, "", new { @class = "text-danger" })</strong>
 
                     </div>
-                    <div class="col-md-1">
-                        <div style="MARGIN-TOP: 25px;">
+                    <div class="col-md-1" style="margin: 25px 4px 0 0;">
+                        <div>
                             <button class="btn btn-success btn-sm" type="button" id="Print"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Print</strong></button>
+                        </div>
+                    </div>
+                    <div class="col-md-1" style="margin: 25px 4px 0 0;">
+                        <div>
+                            <button class="btn btn-default btn-sm" type="button" id="CLEAR"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
                         </div>
                     </div>
                 </div>
@@ -347,10 +345,14 @@
         DDLPlant();
         BindStage();
         AutoComplete();
+        $("#T04Skid").show();
+        $("#T05EngineBackend").hide();
     });
 
 
     function AutoComplete() {
+        var itemCode = $('#JOBID').val();
+        const myArray = itemCode.split("#");
         $("#JOBID").autocomplete({
             source: function (request, response) {
 
@@ -368,7 +370,7 @@
                     success: function (data) {
                         response($.map(data, function (item) {
                             /*console.log(item.DESCRIPTION);*/
-                            return { label: item.Text, value: item.Value };
+                            return { label: item.Text, value: item.Text };
                         }))
                     },
 
@@ -379,7 +381,11 @@
                 });
 
             },
-
+            select: function (event, ui) {
+                if (ui.item.value != undefined) {
+                    gleSearch_EditValueChanged();
+                }
+            },
             minLength: 4
 
         });
@@ -405,6 +411,7 @@
             type: "GET",
             contentType: "application/json;charset=UTF-8",
             success: function (result) {
+                $("#PLANTCODE").html(null);
                 $.each(result, function (i) {
                     var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
                     $("#PLANTCODE").append(optionhtml);
@@ -422,12 +429,22 @@
         var plantselectedValue = $("#PLANTCODE").val();
         var familyselectedValue = $("#FAMILYCODE").val();
         //$("#divLoader").show();
-        $.ajax({
+     if (plantselectedValue == "T05") {
+            $("#T05EngineBackend").show();
+            $("#T04Skid").hide();
+        } else {
+            $("#T04Skid").show();
+            $("#T05EngineBackend").hide();
+        }
+        if (plantselectedValue != null && plantselectedValue != "" && familyselectedValue != null && familyselectedValue != "")
+        {
+            $.ajax({
             url: '@Url.Action("BindStages", "RollDown")',
             type: "POST",
             contentType: "application/json;charset=UTF-8",
             data: JSON.stringify({ Plant: plantselectedValue, family: familyselectedValue }),
-            success: function (result) {
+                success: function (result) {
+                    $("#STAGE_Code").html(null);
                 $.each(result, function (i) {
                     var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
                     $("#STAGE_Code").append(optionhtml);
@@ -437,7 +454,8 @@
             error: function (errormessage) {
             //alert(errormessage.responseText);
             }
-        });
+            });
+        }
     };
     //Function to bind Family by Plant
     function DDLFamilyByPlant() {
@@ -454,7 +472,7 @@
                     var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
                     $("#FAMILYCODE").append(optionhtml);
                 });
-                //BindGrid();
+                BindStage();
         },
             error: function (errormessage) {
             //alert(errormessage.responseText);
@@ -462,10 +480,10 @@
         });
     };
 
-    $('#JOBID').on("change", function () {
-        gleSearch_EditValueChanged();
-        //NewTractorCode();
-    });
+    //$('#JOBID').on("change", function () {
+    //    gleSearch_EditValueChanged();
+    //    //NewTractorCode();
+    //});
 
 
     function gleSearch_EditValueChanged() {
@@ -473,146 +491,193 @@
         if ($('#JOBID').val() != "") {
             var itemCode = $('#JOBID').val();
             const myArray = itemCode.split("#");
+            var jobid = myArray[3];
+            if (myArray.length < 2) {
+                jobid = myArray[0];
+            }
             var Data = {
                 PLANTCODE: $('#PLANTCODE').val(),
                 FAMILYCODE: $('#FAMILYCODE').val(),
-                JOBID: itemCode
+                JOBID: jobid
             };
         } else {
             return;
         }
+        if (Data.JOBID != null) {
+            $.ajax({
+                url: '@Url.Action("BindData", "RollDown")',
+                data: JSON.stringify({ obj: Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
 
-        $.ajax({
-            url: '@Url.Action("BindData", "RollDown")',
-            data: JSON.stringify({ obj: Data }),
-            type: "POST",
-            contentType: "application/json;charset=utf-8",
-            dataType: "json",
-            success: function (data) {
 
+                    if (data.Msg != "") {
+                        $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 
-                if (data.Msg != "") {
-                    $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
 
-                    setTimeout(function () {
-                        $.each($('.alert'), function () {
-                            closeAlert(this);
-                        });
-                    }, 5000);
+                    }
+                    else {
+
+                        if (data.Result.Transmission != "" && data.Result.Transmission != null) {
+                            $("#Transmission").val(data.Result.Transmission);
+                        }
+                        if (data.Result.RearAxel != "" && data.Result.RearAxel != null) {
+                            $("#RearAxel").val(data.Result.RearAxel);
+                        }
+                        if (data.Result.Engine != "" && data.Result.Engine != null) {
+                            $("#Engine").val(data.Result.Engine);
+                        }
+                        if (data.Result.Backend != "" && data.Result.Backend != null) {
+                            $("#Backend").val(data.Result.Backend);
+                        }
+                        if (data.Result.Hydraulic != "" && data.Result.Hydraulic != null) {
+                            $("#Hydraulic").val(data.Result.Hydraulic);
+                        }
+                        if (data.Result.RearSrnn1 != "" && data.Result.RearSrnn1 != null) {
+                            $("#RearSrnn1").val(data.Result.RearSrnn1);
+                        }
+                        if (data.Result.RearSrnn2 != "" && data.Result.RearSrnn2 != null) {
+                            $("#RearSrnn2").val(data.Result.RearSrnn2);
+                        }
+                        if (data.Result.FrontSrnn1 != "" && data.Result.FrontSrnn1 != null) {
+                            $("#FrontSrnn1").val(data.Result.FrontSrnn1);
+                        }
+                        if (data.Result.FrontSrnn2 != "" && data.Result.FrontSrnn2 != null) {
+                            $("#FrontSrnn2").val(data.Result.FrontSrnn2);
+                        }
+                        if (data.Result.Battery != "" && data.Result.Battery != null) {
+                            $("#Battery").val(data.Result.Battery);
+                        }
+                        if (data.Result.HydrualicPump != "" && data.Result.HydrualicPump != null) {
+                            $("#HydrualicPump").val(data.Result.HydrualicPump);
+                        }
+                        if (data.Result.SteeringMotor != "" && data.Result.SteeringMotor != null) {
+                            $("#SteeringMotor").val(data.Result.SteeringMotor);
+                        }
+                        if (data.Result.SteeringAssem != "" && data.Result.SteeringAssem != null) {
+                            $("#SteeringAssem").val(data.Result.SteeringAssem);
+                        }
+                        if (data.Result.SteeringCylinder != "" && data.Result.SteeringCylinder != null) {
+                            $("#SteeringCylinder").val(data.Result.SteeringCylinder);
+                        }
+                        if (data.Result.Radiator != "" && data.Result.Radiator != null) {
+                            $("#Radiator").val(data.Result.Radiator);
+                        }
+                        if (data.Result.Cluster != "" && data.Result.Cluster != null) {
+                            $("#Cluster").val(data.Result.Cluster);
+                        }
+                        if (data.Result.Alternator != "" && data.Result.Alternator != null) {
+                            $("#Alternator").val(data.Result.Alternator);
+                        }
+                        if (data.Result.Motor != "" && data.Result.Motor != null) {
+                            $("#Motor").val(data.Result.Motor);
+                        }
+                        if (data.Result.RearRIM1 != "" && data.Result.RearRIM1 != null) {
+                            $("#RearRIM1").val(data.Result.RearRIM1);
+                        }
+                        if (data.Result.RearRIM2 != "" && data.Result.RearRIM2 != null) {
+                            $("#RearRIM2").val(data.Result.RearRIM2);
+                        }
+                        if (data.Result.FrontRIM1 != "" && data.Result.FrontRIM1 != null) {
+                            $("#FrontRIM1").val(data.Result.FrontRIM1);
+                        }
+                        if (data.Result.FrontRIM2 != "" && data.Result.FrontRIM2 != null) {
+                            $("#FrontRIM2").val(data.Result.FrontRIM2);
+                        }
+                        if (data.Result.RearTyre1 != "" && data.Result.RearTyre1 != null) {
+                            $("#RearTyre1").val(data.Result.RearTyre1);
+                        }
+                        if (data.Result.RearTyre2_srlno2 != "" && data.Result.RearTyre2_srlno2 != null) {
+                            $("#RearTyre2_srlno2").val(data.Result.RearTyre2_srlno2);
+                        }
+                        if (data.Result.FrontTyre1 != "" && data.Result.FrontTyre1 != null) {
+                            $("#FrontTyre1").val(data.Result.FrontTyre1);
+                        }
+                        if (data.Result.FrontTyre2_srlno2 != "" && data.Result.FrontTyre2_srlno2 != null) {
+                            $("#FrontTyre2_srlno2").val(data.Result.FrontTyre2_srlno2);
+                        }
+                        if (data.Result.Srno != "" && data.Result.Srno != null) {
+                            $("#Srno").val(data.Result.Srno);
+                        }
+                        if (data.Result.IMEI != "" && data.Result.IMEI != null) {
+                            $("#IMEI").val(data.Result.IMEI);
+                        }
+                        if (data.Result.MOBILE != "" && data.Result.MOBILE != null) {
+                            $("#MOBILE").val(data.Result.MOBILE);
+                        }
+                        if (data.Result.IMEI != "" && data.Result.IMEI != null) {
+                            $("#IMEI").val(data.Result.IMEI);
+                        }
+                        if (data.Result.IMEI != "" && data.Result.IMEI != null) {
+                            $("#IMEI").val(data.Result.IMEI);
+                        }
+                        if (data.Result.TractorStagePrint != "" && data.Result.TractorStagePrint != null) {
+                            $("#TractorStagePrint").val(data.Result.TractorStagePrint);
+                        }
+                        if (data.Result.TractorAutoid != "" && data.Result.TractorAutoid != null) {
+                            $("#TractorAutoid").val(data.Result.TractorAutoid);
+                        }
+                        //$('input').attr('readonly', true);
+                    }
+
+                },
+                error: function (errormessage) {
 
                 }
-                else {
+            });
+        } else {
+            $('#alert').append('<div class="alert alert-danger role = "alert"><strong>Please Select Job</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 
-                    if (data.Result.Transmission != "" && data.Result.Transmission != null) {
-                        $("#Transmission").val(data.Result.Transmission);
-                    }
-                    if (data.Result.RearAxel != "" && data.Result.RearAxel != null) {
-                        $("#RearAxel").val(data.Result.RearAxel);
-                    }
-                    if (data.Result.Engine != "" && data.Result.Engine != null) {
-                        $("#Engine").val(data.Result.Engine);
-                    }
-                    if (data.Result.Backend != "" && data.Result.Backend != null) {
-                        $("#Backend").val(data.Result.Backend);
-                    }
-                    if (data.Result.Hydraulic != "" && data.Result.Hydraulic != null) {
-                        $("#Hydraulic").val(data.Result.Hydraulic);
-                    }
-                    if (data.Result.RearSrnn1 != "" && data.Result.RearSrnn1 != null) {
-                        $("#RearSrnn1").val(data.Result.RearSrnn1);
-                    }
-                    if (data.Result.RearSrnn2 != "" && data.Result.RearSrnn2 != null) {
-                        $("#RearSrnn2").val(data.Result.RearSrnn2);
-                    }
-                    if (data.Result.FrontSrnn1 != "" && data.Result.FrontSrnn1 != null) {
-                        $("#FrontSrnn1").val(data.Result.FrontSrnn1);
-                    }
-                    if (data.Result.FrontSrnn2 != "" && data.Result.FrontSrnn2 != null) {
-                        $("#FrontSrnn2").val(data.Result.FrontSrnn2);
-                    }
-                    if (data.Result.Battery != "" && data.Result.Battery != null) {
-                        $("#Battery").val(data.Result.Battery);
-                    }
-                    if (data.Result.HydrualicPump != "" && data.Result.HydrualicPump != null) {
-                        $("#HydrualicPump").val(data.Result.HydrualicPump);
-                    }
-                    if (data.Result.SteeringMotor != "" && data.Result.SteeringMotor != null) {
-                        $("#SteeringMotor").val(data.Result.SteeringMotor);
-                    }
-                    if (data.Result.SteeringAssem != "" && data.Result.SteeringAssem != null) {
-                        $("#SteeringAssem").val(data.Result.SteeringAssem);
-                    }
-                    if (data.Result.SteeringCylinder != "" && data.Result.SteeringCylinder != null) {
-                        $("#SteeringCylinder").val(data.Result.SteeringCylinder);
-                    }
-                    if (data.Result.Radiator != "" && data.Result.Radiator != null) {
-                        $("#Radiator").val(data.Result.Radiator);
-                    }
-                    if (data.Result.Cluster != "" && data.Result.Cluster != null) {
-                        $("#Cluster").val(data.Result.Cluster);
-                    }
-                    if (data.Result.Alternator != "" && data.Result.Alternator != null) {
-                        $("#Alternator").val(data.Result.Alternator);
-                    }
-                    if (data.Result.Motor != "" && data.Result.Motor != null) {
-                        $("#Motor").val(data.Result.Motor);
-                    }
-                    if (data.Result.RearRIM1 != "" && data.Result.RearRIM1 != null) {
-                        $("#RearRIM1").val(data.Result.RearRIM1);
-                    }
-                    if (data.Result.RearRIM2 != "" && data.Result.RearRIM2 != null) {
-                        $("#RearRIM2").val(data.Result.RearRIM2);
-                    }
-                    if (data.Result.FrontRIM1 != "" && data.Result.FrontRIM1 != null) {
-                        $("#FrontRIM1").val(data.Result.FrontRIM1);
-                    }
-                    if (data.Result.FrontRIM2 != "" && data.Result.FrontRIM2 != null) {
-                        $("#FrontRIM2").val(data.Result.FrontRIM2);
-                    }
-                    if (data.Result.RearTyre1 != "" && data.Result.RearTyre1 != null) {
-                        $("#RearTyre1").val(data.Result.RearTyre1);
-                    }
-                    if (data.Result.RearTyre2_srlno2 != "" && data.Result.RearTyre2_srlno2 != null) {
-                        $("#RearTyre2_srlno2").val(data.Result.RearTyre2_srlno2);
-                    }
-                    if (data.Result.FrontTyre1 != "" && data.Result.FrontTyre1 != null) {
-                        $("#FrontTyre1").val(data.Result.FrontTyre1);
-                    }
-                    if (data.Result.FrontTyre2_srlno2 != "" && data.Result.FrontTyre2_srlno2 != null) {
-                        $("#FrontTyre2_srlno2").val(data.Result.FrontTyre2_srlno2);
-                    }
-                    if (data.Result.Srno != "" && data.Result.Srno != null) {
-                        $("#Srno").val(data.Result.Srno);
-                    }
-                    if (data.Result.IMEI != "" && data.Result.IMEI != null) {
-                        $("#IMEI").val(data.Result.IMEI);
-                    }
-                    if (data.Result.MOBILE != "" && data.Result.MOBILE != null) {
-                        $("#MOBILE").val(data.Result.MOBILE);
-                    }
-                    if (data.Result.IMEI != "" && data.Result.IMEI != null) {
-                        $("#IMEI").val(data.Result.IMEI);
-                    }
-                    if (data.Result.IMEI != "" && data.Result.IMEI != null) {
-                        $("#IMEI").val(data.Result.IMEI);
-                    }
-                    if (data.Result.TractorStagePrint != "" && data.Result.TractorStagePrint != null) {
-                        $("#TractorStagePrint").val(data.Result.TractorStagePrint);
-                    }
-                    if (data.Result.TractorAutoid != "" && data.Result.TractorAutoid != null) {
-                        $("#TractorAutoid").val(data.Result.TractorAutoid);
-                    }
-                    $('input').attr('readonly', true);
-                }
-
-            },
-            error: function (errormessage) {
-
-            }
-        });
-
+        }
     };
 
+    $('#CLEAR').on('click', function () {
+        CLearData();
+        //NewTractorCode();
+    });
+    function CLearData() {
+            $("#Transmission").val("");
+            $("#JOBID").val("");
+            $("#RearAxel").val("");
+            $("#Engine").val("");
+            $("#Backend").val("");
+            $("#Hydraulic").val("");
+            $("#RearSrnn1").val("");
+            $("#RearSrnn2").val("");
+            $("#FrontSrnn1").val("");
+            $("#FrontSrnn2").val("");
+            $("#Battery").val("");
+            $("#HydrualicPump").val("");
+            $("#SteeringMotor").val("");
+            $("#SteeringAssem").val("");
+            $("#SteeringCylinder").val("");
+            $("#Radiator").val("");
+            $("#Cluster").val("");
+            $("#Alternator").val("");
+            $("#Motor").val("");
+            $("#RearRIM1").val("");
+            $("#RearRIM2").val("");
+            $("#FrontRIM1").val("");
+            $("#FrontRIM2").val("");
+            $("#RearTyre1").val("");
+            $("#RearTyre2_srlno2").val("");
+            $("#FrontTyre1").val("");
+            $("#FrontTyre2_srlno2").val("");
+            $("#Srno").val("");
+            $("#IMEI").val("");
+            $("#MOBILE").val("");
+            $("#IMEI").val("");
+            $("#TractorStagePrint").val("");
+        $("#TractorAutoid").val("");
+        return;
+    }
     $('#Print').on('click', function () {
         printData();
         //NewTractorCode();
@@ -621,6 +686,7 @@
 
         if ($('#JOBID').val() != "") {
             var jOBID = $('#JOBID').val();
+            const myArray = jOBID.split("#");
             var stagecode = $("#STAGE_Code").val();
             if (stagecode == undefined && stagecode == "") {
                 $('#alert').append('<div class="alert alert-danger role = "alert"><strong>Please Select Stage</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -633,7 +699,7 @@
                 FAMILYCODE: $('#FAMILYCODE').val(),
                 STAGE_Code: stagecode,
                 Quantity: $('#Quantity').val(),
-                JOBID: $('#JOBID').val()
+                JOBID: myArray[3]
             };
         } else {
             return;
@@ -646,17 +712,22 @@
             dataType: "json",
             success: function (data) {
 
-
-                if (data.Msg != "") {
+                if (data.Msg != "successfully Printed") {
                     $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                    setTimeout(function () { $("#alert").hide(); }, 5000);
+                }
 
-                    setTimeout(function () {
-                        $.each($('.alert'), function () {
-                            closeAlert(this);
-                        });
-                    }, 5000);
-
-                }               
+                else {
+                    $('#alert').append('<div class="alert alert-success role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () { $("#alert").hide(); }, 5000);
+                    /* $('#VendorName').val("");*/
+                    /*  $('#VendorName').val("");*/
+                    $('#ItemCode').val("");
+                    $('#DeviationQty').val("");
+                    $('#AprovedBy').val("");
+                    BindGrid();
+                }
 
             },
             error: function (errormessage) {

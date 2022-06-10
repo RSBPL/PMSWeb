@@ -2016,6 +2016,7 @@ function gleSearch_EditValueChanged() {
                 $("#AlternatorChk").prop('checked', data.Result.AlternatorChk);
                 $("#EnableCarButtonChk").prop('checked', data.Result.EnableCarButtonChk);
                 $("#GenerateSerialNoChk").prop('checked', data.Result.GenerateSerialNoChk);
+                $("#ElectricMotorChk").prop('checked', data.Result.ElectricMotorChk);
                 $("#Seq_Not_RequireChk").prop('checked', data.Result.Seq_Not_RequireChk);
                 if ($("#ElectricMotorChk").prop('checked', data.Result.ElectricMotorChk)) {
                     if (data.Result.ElectricMotorChk == true) {
@@ -2029,7 +2030,7 @@ function gleSearch_EditValueChanged() {
                 }
 
                 $('[name="DomesticExport"]').removeAttr('checked');
-                if (data.Result.DomesticExport !== "" && data.Result.DomesticExport != null) {
+                if (data.Result.DomesticExport !== "" && data.Result.DomesticExport !== null) {
                     if ("Domestic" == data.Result.DomesticExport) {
                         $('#Dom').prop('checked', true);
                     }
@@ -2126,6 +2127,7 @@ function ChkPassword() {
 };
 
 function NewTractorCode() {
+    var tsts = $('#ItemCode').val().substr(0, 2);
     var data = {
         Plant: $('#Plant').val(),
         Family: $('#Family').val(),
@@ -2139,7 +2141,12 @@ function NewTractorCode() {
         contentType: "application/json;charset=utf-8",
         dataType: "json",
         success: function (data) {
-            $("#Prefix1").val(data.Msg);
+            const MESSAGE = data.Msg.split(",");
+            $("#Prefix1").val(MESSAGE[0]);
+            if ("F2" == tsts) {
+                $('#Exp').prop('checked', true);
+                $("#Prefix2").val(MESSAGE[1]);
+             }
             if (data.Msg != "") {
                 $('#GenerateSerialNoChk').prop("checked", true);
                 $('#Add').show();
