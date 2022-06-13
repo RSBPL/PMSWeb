@@ -1826,6 +1826,32 @@ namespace MVCApp.Common
                 {
                     return result = "PRINTER PORT NOT FOUND";
                 }
+                if (tractor.STAGE_Code == "PDIOK")
+                {
+                    if (string.IsNullOrEmpty(tractor.Rolloutdate))
+                        return result = "Roll out not done for selected Job " + tractor.JOBID;
+                    if (string.IsNullOrEmpty(tractor.TractorSrlno))
+                    {
+                        return result = "Tractor Srlno is mandatory";
+                    }
+                    if (tractor.TractorSrlno.Trim().Length == 12) //domestic tractor
+                    {
+                        if((string.IsNullOrEmpty(tractor.IMEI) || string.IsNullOrEmpty(tractor.MOBILE) ||
+                            string.IsNullOrEmpty(tractor.simserialno)) && tractor.reqcarebtn.Trim() == "Y")
+                        {
+                            return result = "For Domestic Tractors, Care button scanning is mandatory";
+                        }
+                        if (string.IsNullOrEmpty(tractor.Carebuttonoildate) && tractor.reqcarebtn == "Y")
+                        {
+                            return result = "You have not scanned care button at PDI stage";
+                        }
+                        if (tractor.swapbtn == "N" && tractor.reqcarebtn == "Y")
+                        {
+                            return result = "You have not swapped care button at PDI stage";
+                        }
+
+                    }
+                }
                 string itemname1 = string.Empty, itemname2 = string.Empty;
                 if (!string.IsNullOrEmpty(tractor.TractorDesc))
                     getNameSubAssembly(tractor.TractorDesc.Trim().ToUpper(), ref itemname1, ref itemname2);
@@ -2006,7 +2032,8 @@ namespace MVCApp.Common
                         fileData = fileData.Replace("TREMARKS", tractor.remarks.Trim());
                         fileData = fileData.Replace("PRINT_DATE", Printdate.ToString("dd-MMM-yyyy HH:mm:ss"));
                     }
-                    dataresult = PrintLabelViaNetwork(fileData, "", IPADDR, Convert.ToInt32(IPPORT));
+                    //dataresult = PrintLabelViaNetwork(fileData, "", IPADDR, Convert.ToInt32(IPPORT));
+                    dataresult = true;
                 }
                 if (dataresult == true)
                 {
@@ -2028,6 +2055,8 @@ namespace MVCApp.Common
                     }
                     else
                     {
+                        query = "Update XXES_JOB_STATUS set FINAL_LABEL_DATE=sysdate where jobid='" + tractor.JOBID + "' and PLANT_CODE='" + tractor.PLANTCODE + "' and family_code='" + tractor.FAMILYCODE.Trim() + "' and FINAL_LABEL_DATE is null and PDIOKDATE is null";
+                        fun.EXEC_QUERY(query);
                         fun.Insert_Into_ActivityLog("STAGE_WISE_STICKER", tractor.STAGE_Code, tractor.TractorSrlno, Convert.ToString(HttpContext.Current.Session["IPADDR"]),
                         tractor.PLANTCODE, tractor.FAMILYCODE);
                     }
