@@ -413,6 +413,14 @@ namespace MVCApp.Controllers.Admin
             {
                 data.NOTIFYMOBILE = "";
             }
+            if (data.NOTIFYTemplateID == null)
+            {
+                data.NOTIFYTemplateID = "";
+            }
+            if (data.NOTIFYMessage == null)
+            {
+                data.NOTIFYMessage = "";
+            }
             query = string.Format(@"delete from XXES_STAGE_EMAILS where STAGE = '{0}'", Convert.ToString(data.STAGE));
             fun.EXEC_QUERY(query);
             query = "insert into XXES_STAGE_EMAILS(STAGE,ITEM ,EMAIL,STAGE_DESC,USERNAME,MOBILE,MAILTIMING,TEMPLATEID,MESSAGE) values('" + Convert.ToString(data.STAGE) + "','','" + data.NOTIFYEMAILID.Trim() + "','" + data.STAGE.Trim() + "','" + data.NOTIFYUSERNAME.Trim() + "','" + data.NOTIFYMOBILE.Trim() + "','" + data.NOTIFYMAILTIMING.Trim() + "','" + data.NOTIFYTemplateID.Trim() + "','" + data.NOTIFYMessage.Trim() + "')";
