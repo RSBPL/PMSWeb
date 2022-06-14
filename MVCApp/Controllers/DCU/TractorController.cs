@@ -1163,6 +1163,22 @@ namespace MVCApp.Controllers.DCU
             }
         }
         [HttpPost]
+        public string TyreDecodedetails(Tyres tyres)
+        {
+            try
+            {
+                query = string.Format(@"SELECT M.FRONTTYRE ||'#'|| M.RH_FRONTTYRE ||'#'|| M.REARTYRE ||'#'|| M.RH_REARTYRE ||'#'|| m.FRONT_RIM ||'#'|| m.REAR_RIM FROM  XXES_JOB_STATUS xjs ,XXES_ITEM_MASTER m 
+                        WHERE M.ITEM_CODE=XJS.ITEM_CODE AND M.PLANT_CODE=XJS.PLANT_CODE AND M.FAMILY_CODE=XJS.FAMILY_CODE 
+                        AND XJS.PLANT_CODE='{0}' AND XJS.FAMILY_CODE='{1}' AND XJS.JOBID='{2}'", tyres.PLANT.ToUpper().Trim(), tyres.FAMILY.ToUpper().Trim() , tyres.JOB.Trim());
+                return fun.get_Col_Value(query);
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+                return "ERROR:" + ex.Message;
+            }
+        }
+        [HttpPost]
         public string UpdateTyres(Tyres tyres)
         {
 

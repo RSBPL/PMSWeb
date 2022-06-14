@@ -52,7 +52,12 @@ namespace MVCApp.Common
         public bool OffTyreMakeCheck { get; set; }
         public string RIMSERIALLH { get; set; }
         public string RIMSERIALRH { get; set; }
-
+        public string LH_FRONTTYRE { get; set; }
+        public string RH_FRONTTYRE { get; set; }
+        public string LH_REARTYRE { get; set; }
+        public string RH_REARTYRE { get; set; }
+        public string FRONT_RIM { get; set; }
+        public string REAR_RIM { get; set; }
 
     }
     public class SLTALT
