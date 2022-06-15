@@ -1411,21 +1411,21 @@ namespace MVCApp.Controllers.DCU
                     fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", tyres.LOGINSTAGECODE.Trim(), tyres.JOB.Trim(), "ONE OF THE SERIAL NO ALREADY SCANNED. SCANNED SERIAL NO ARE " + tyres.LHSERIALNO.Trim().ToUpper() + " And " + tyres.RHSERIALNO.Trim().ToUpper() + "", tyres.PLANT.Trim(), tyres.FAMILY.Trim(), tyres.CREATEDBY);
                     return "Tyre Serial No Already Scanned";
                 }
-                if (tyres.LOGINSTAGECODE == "FT")
-                {
-                    query = string.Format(@"select count(*) from XXES_JOB_STATUS where FRONTRIM_SRLNO1='{0}' or FRONTRIM_SRLNO2='{1}'
-                                          or FRONTRIM_SRLNO1='{1}' or FRONTRIM_SRLNO2='{0}'", tyres.RIMSERIALLH, tyres.RIMSERIALRH);
-                }
-                else if (tyres.LOGINSTAGECODE == "RT")
-                {
-                    query = string.Format(@"select count(*) from XXES_JOB_STATUS where REARRIM_SRLNO1='{0}' or REARRIM_SRLNO2='{1}'
-                                          or REARRIM_SRLNO1='{1}' or REARRIM_SRLNO2='{0}'", tyres.RIMSERIALLH, tyres.RIMSERIALRH);
-                }
-                if (fun.CheckExits(query))
-                {
-                    fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", tyres.LOGINSTAGECODE.Trim(), tyres.JOB.Trim(), "ONE OF THE SERIAL NO ALREADY SCANNED. SCANNED SERIAL NO ARE " + tyres.RIMSERIALLH.Trim().ToUpper() + " And " + tyres.RIMSERIALRH.Trim().ToUpper() + "", tyres.PLANT.Trim(), tyres.FAMILY.Trim(), tyres.CREATEDBY);
-                    return "RIM Serial No Already Scanned";
-                }
+                //if (tyres.LOGINSTAGECODE == "FT")
+                //{
+                //    query = string.Format(@"select count(*) from XXES_JOB_STATUS where FRONTRIM_SRLNO1='{0}' or FRONTRIM_SRLNO2='{1}'
+                //                          or FRONTRIM_SRLNO1='{1}' or FRONTRIM_SRLNO2='{0}'", tyres.RIMSERIALLH, tyres.RIMSERIALRH);
+                //}
+                //else if (tyres.LOGINSTAGECODE == "RT")
+                //{
+                //    query = string.Format(@"select count(*) from XXES_JOB_STATUS where REARRIM_SRLNO1='{0}' or REARRIM_SRLNO2='{1}'
+                //                          or REARRIM_SRLNO1='{1}' or REARRIM_SRLNO2='{0}'", tyres.RIMSERIALLH, tyres.RIMSERIALRH);
+                //}
+                //if (fun.CheckExits(query))
+                //{
+                //    fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", tyres.LOGINSTAGECODE.Trim(), tyres.JOB.Trim(), "ONE OF THE SERIAL NO ALREADY SCANNED. SCANNED SERIAL NO ARE " + tyres.RIMSERIALLH.Trim().ToUpper() + " And " + tyres.RIMSERIALRH.Trim().ToUpper() + "", tyres.PLANT.Trim(), tyres.FAMILY.Trim(), tyres.CREATEDBY);
+                //    return "RIM Serial No Already Scanned";
+                //}
                 string JOB_REARTYRE_MAKE = string.Empty, JOB_FRONTTYRE_MAKE = string.Empty;
                 //query = string.Format(@"select ITEM_CODE,ITEM_DESCRIPTION,REARTYRE_MAKE,FRONTTYRE_MAKE,REARTYRE,REARTYRE_SRLNO1,REARTYRE_SRLNO2,FRONTTYRE,FRONTTYRE_SRLNO1,FRONTTYRE_SRLNO2 from XXES_JOB_STATUS where JOBID='{0}' and PLANT_CODE='{1}' and family_code='{2}'", tyres.JOB.Trim(), tyres.PLANT.Trim(), tyres.FAMILY.Trim());
                 query = string.Format(@"SELECT M.ITEM_CODE,M.ITEM_DESCRIPTION,S.REARTYRE_MAKE,S.FRONTTYRE_MAKE,S.REARTYRE,

@@ -62,16 +62,22 @@
                             <label for="Family" class="text-right control-label col-form-label"><strong>FAMILY</strong></label>
                             @Html.DropDownListFor(model => model.Family, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
                             <strong>@Html.ValidationMessageFor(model => model.Family, "", new { @class = "text-danger" })</strong>
-                        </div>                        
+                        </div>
                         <div class="col-md-3" id="Item1">
                             <label for="ItemCode" class="text-right control-label col-form-label"><strong>ITEM CODE</strong></label>
                             @Html.DropDownListFor(model => model.ItemCode, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
                             <strong>@Html.ValidationMessageFor(model => model.ItemCode, "", new { @class = "text-danger" })</strong>
-                        
+
+                        </div>
+                        <div class="col-md-3" id="Item1">
+                            <label for="JobId" class="text-right control-label col-form-label"><strong>JOB</strong></label>
+                            @Html.DropDownListFor(model => model.JobId, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.JobId, "", new { @class = "text-danger" })</strong>
+
                         </div>
                         <div class="col-md-3">
                             <label for="TransmissionSrno" class="text-right control-label col-form-label"><strong>TRANSMISSION SRNO</strong></label>
-                            @Html.TextBoxFor(Model => Model.TransmissionSrno, null, new { @class = "form-control input-sm", @autocomplete = "off"})
+                            @Html.TextBoxFor(Model => Model.TransmissionSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
                             <strong>@Html.ValidationMessageFor(model => model.TransmissionSrno, "", new { @class = "text-danger" })</strong>
                         </div>
                         <div class="col-md-3">
@@ -80,7 +86,7 @@
                             <strong>@Html.ValidationMessageFor(model => model.RearAxleSrno, "", new { @class = "text-danger" })</strong>
                         </div>
                         <div class="col-md-1" style="padding-top: 23px;">
-                            <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>SAVE</strong></button> 
+                            <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>SAVE</strong></button>
                         </div>
 
                         <div class="col-md-1" style="padding-top: 23px;">
@@ -107,6 +113,7 @@
     $(document).ready(function () {
         DDLPlant();
         BindTractor();
+        BindJob();
        /* AutoComplete();*/
     });
 
@@ -127,7 +134,7 @@
 
                     $("#ItemCode").append(optionhtml);
                 });
-                
+
         },
             error: function (errormessage) {
             //alert(errormessage.responseText);
@@ -185,6 +192,32 @@
                     $("#Family").append(optionhtml);
                 });
                 BindTractor();
+                BindJob();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    function BindJob() {
+        var Data = {
+            Plant: $("#Plant").val(),
+            Family: $("#Family").val()
+        };
+        $.ajax({
+            url: '@Url.Action("BindJob", "BuckleUpFT")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify(Data),
+            success: function (result) {
+                $("#JobId").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#JobId").append(optionhtml);
+                });
+
         },
             error: function (errormessage) {
             //alert(errormessage.responseText);
@@ -193,16 +226,19 @@
     };
 
 
-
     $("#Plant").select2({
         allowClear: true,
         width: '100%',
-    }); 
+    });
     $("#Family").select2({
         allowClear: true,
         width: '100%',
     });
     $("#ItemCode").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#JobId").select2({
         allowClear: true,
         width: '100%',
     });
