@@ -265,6 +265,7 @@
     <Compile Include="Controllers\Admin\SettingController.cs" />
     <Compile Include="Controllers\Admin\UserMasterController.cs" />
     <Compile Include="Controllers\Assembly\BackendPartModificationController.cs" />
+    <Compile Include="Controllers\Assembly\BuckleUpFTController.cs" />
     <Compile Include="Controllers\Assembly\RollDownController.cs" />
     <Compile Include="Controllers\Assembly\HookUpAndDownController.cs" />
     <Compile Include="Controllers\Assembly\ImportExportController.cs" />
@@ -379,6 +380,7 @@
     <Compile Include="Models\Barcode.cs" />
     <Compile Include="Models\BeforePaintAssemblyModel.cs" />
     <Compile Include="Models\BEFOREPAINTLCDGRID.cs" />
+    <Compile Include="Models\BuckleUPFT.cs" />
     <Compile Include="Models\BulkLayout.cs" />
     <Compile Include="Models\BulkStorage.cs" />
     <Compile Include="Models\CommonModel.cs" />
@@ -1257,6 +1259,7 @@
     <Content Include="Views\MRNDisplaySheet\Empty.cshtml" />
     <Content Include="Views\Report\WeeklyReportsDateWise.cshtml" />
     <Content Include="Views\Setting\GridSMSAPIs.cshtml" />
+    <Content Include="Views\BUCKLEUPFT\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

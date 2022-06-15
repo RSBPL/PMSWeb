@@ -15,6 +15,7 @@ namespace MVCApp.Controllers.DCU
 {
     public class TractorController : ApiController
     {
+        
         string query = string.Empty, JSONObj = string.Empty;
         Function fun = new Function();
         public static string orConnstring = ConfigurationManager.ConnectionStrings["CON"].ConnectionString;
@@ -1162,11 +1163,27 @@ namespace MVCApp.Controllers.DCU
             }
         }
         [HttpPost]
+        public string TyreDecodedetails(Tyres tyres)
+        {
+            try
+            {
+                query = string.Format(@"SELECT M.FRONTTYRE ||'#'|| M.RH_FRONTTYRE ||'#'|| M.REARTYRE ||'#'|| M.RH_REARTYRE ||'#'|| m.FRONT_RIM ||'#'|| m.REAR_RIM FROM  XXES_JOB_STATUS xjs ,XXES_ITEM_MASTER m 
+                        WHERE M.ITEM_CODE=XJS.ITEM_CODE AND M.PLANT_CODE=XJS.PLANT_CODE AND M.FAMILY_CODE=XJS.FAMILY_CODE 
+                        AND XJS.PLANT_CODE='{0}' AND XJS.FAMILY_CODE='{1}' AND XJS.JOBID='{2}'", tyres.PLANT.ToUpper().Trim(), tyres.FAMILY.ToUpper().Trim() , tyres.JOB.Trim());
+                return fun.get_Col_Value(query);
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+                return "ERROR:" + ex.Message;
+            }
+        }
+        [HttpPost]
         public string UpdateTyres(Tyres tyres)
         {
 
             string REAR_RIM, FRONT_RIM, REARRIM_SRLNO1, REARRIM_SRLNO2, FRONTRIM_SRLNO1, FRONTRIM_SRLNO2, RH_FRONTTYRE, RH_REARTYRE,
-            LH_REARTYRE, LH_FRONTTYRE, DeCode1, DeCode2, DeCode3, DeCode4 = string.Empty;
+            LH_REARTYRE, LH_FRONTTYRE, DeCode1, DeCode2, DeCode3, DeCode4 , itemcode = string.Empty;
             bool isREQ_RHFT = false, isREQ_RHRT = false, isLHREQUIRE_FRONTTYRE = false, isLHREQUIRE_REARTYRE, isREQ_FRONTRIM, isREQ_REARRIM = false;
             try
             {
@@ -1202,6 +1219,7 @@ namespace MVCApp.Controllers.DCU
                 REAR_RIM = Convert.ToString(dt.Rows[0]["REAR_RIM"]);
                 isREQ_FRONTRIM = (Convert.ToString(dt.Rows[0]["REQ_FRONTRIM"]) == "Y" ? true : false);
                 FRONT_RIM = Convert.ToString(dt.Rows[0]["FRONT_RIM"]);
+                itemcode = Convert.ToString(dt.Rows[0]["ITEM_CODE"]);
 
                 query = string.Format(@"select DCODE from XXES_PRINT_SERIALS XM where SRNO='{0}' and XM.PLANT_CODE='{1}' and XM.family_code='{2}'
                 and XM.OFFLINE_KEYCODE='{3}'", tyres.LHSERIALNO.Trim().ToUpper(), tyres.PLANT.Trim().ToUpper(), tyres.FAMILY.Trim().ToUpper(),
@@ -1211,14 +1229,9 @@ namespace MVCApp.Controllers.DCU
                 and XM.OFFLINE_KEYCODE='{3}'", tyres.RHSERIALNO.Trim().ToUpper(), tyres.PLANT.Trim().ToUpper(), tyres.FAMILY.Trim().ToUpper(),
                 tyres.LOGINSTAGECODE.Trim().ToUpper());
                 DeCode2 = fun.get_Col_Value(query);
-                query = string.Format(@"select DCODE from XXES_PRINT_SERIALS XM where SRNO='{0}' and XM.PLANT_CODE='{1}' and XM.family_code='{2}'
-                and XM.OFFLINE_KEYCODE='{3}'", tyres.RIMSERIALLH, tyres.PLANT.Trim().ToUpper(), tyres.FAMILY.Trim().ToUpper(),
-                tyres.LOGINSTAGECODE.Trim().ToUpper());
+                query = string.Format(@"SELECT FRONT_RIM ||'#'|| REAR_RIM FROM XXES_ITEM_MASTER  WHERE PLANT_CODE='{0}' AND FAMILY_CODE='{1}' AND ITEM_CODE='{2}'",
+                      tyres.PLANT.Trim().ToUpper(), tyres.FAMILY.Trim().ToUpper(), itemcode);
                 DeCode3 = fun.get_Col_Value(query);
-                query = string.Format(@"select DCODE from XXES_PRINT_SERIALS XM where SRNO='{0}' and XM.PLANT_CODE='{1}' and XM.family_code='{2}'
-                and XM.OFFLINE_KEYCODE='{3}'", tyres.RIMSERIALRH, tyres.PLANT.Trim().ToUpper(), tyres.FAMILY.Trim().ToUpper(),
-                tyres.LOGINSTAGECODE.Trim().ToUpper());
-                DeCode4 = fun.get_Col_Value(query);
 
                 if (tyres.LOGINSTAGECODE == "FT")
                 {
@@ -1277,7 +1290,7 @@ namespace MVCApp.Controllers.DCU
                             return "ERROR : RIM DCODE NOT FOUND  : " + FRONT_RIM;
                         }
 
-                        if (DeCode3.Trim().ToUpper() != FRONT_RIM.ToUpper().Trim())
+                        if (DeCode3.Split('#')[0].Trim().ToUpper() != FRONT_RIM.ToUpper().Trim())
                         {
                             fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", tyres.LOGINSTAGECODE, tyres.JOB.Trim(),
                             "RIM DCODE MISMATCH " + tyres.RIMSERIALLH.Trim() + " WITH DCODE : " + FRONT_RIM, tyres.PLANT, tyres.FAMILY,
@@ -1285,7 +1298,7 @@ namespace MVCApp.Controllers.DCU
                             return "ERROR : MISMATCH !! RIM DCODE : " + FRONT_RIM;
                         }
 
-                        if (DeCode4.Trim().ToUpper() != FRONT_RIM.ToUpper().Trim())
+                        if (DeCode3.Split('#')[0].Trim().ToUpper() != FRONT_RIM.ToUpper().Trim())
                         {
                             fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", tyres.LOGINSTAGECODE, tyres.JOB.Trim(),
                             "RIM DCODE MISMATCH " + tyres.RIMSERIALRH.Trim() + " WITH DCODE : " + FRONT_RIM, tyres.PLANT, tyres.FAMILY,
@@ -1352,7 +1365,7 @@ namespace MVCApp.Controllers.DCU
                             return "ERROR : RIM DCODE NOT FOUND  : " + REAR_RIM;
                         }
 
-                        if (DeCode3.Trim().ToUpper() != REAR_RIM.ToUpper().Trim())
+                        if (DeCode3.Split('#')[1].Trim().ToUpper() != REAR_RIM.ToUpper().Trim())
                         {
                             fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", tyres.LOGINSTAGECODE, tyres.JOB.Trim(),
                             "RIM DCODE MISMATCH " + tyres.RIMSERIALLH.Trim() + " WITH DCODE : " + REAR_RIM, tyres.PLANT, tyres.FAMILY,
@@ -1360,7 +1373,7 @@ namespace MVCApp.Controllers.DCU
                             return "ERROR : MISMATCH !! RIM DCODE : " + REAR_RIM;
                         }
 
-                        if (DeCode4.Trim().ToUpper() != REAR_RIM.ToUpper().Trim())
+                        if (DeCode3.Split('#')[1].Trim().ToUpper() != REAR_RIM.ToUpper().Trim())
                         {
                             fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", tyres.LOGINSTAGECODE, tyres.JOB.Trim(),
                             "RIM DCODE MISMATCH " + tyres.RIMSERIALRH.Trim() + " WITH DCODE : " + REAR_RIM, tyres.PLANT, tyres.FAMILY,
@@ -1570,7 +1583,7 @@ namespace MVCApp.Controllers.DCU
                             af.InsertIntoScannedStages(tyres.PLANT.Trim(), tyres.FAMILY.Trim(),
                                 fcode.Trim(), tyres.JOB.Trim(), tyres.LOGINSTAGECODE.Trim(),
                                 tyres.CREATEDBY);
-                            return "OK # Matched..";
+                            return "OK#MATCHED SUCCESSFULLY..";
                         }
                     }
                     else
@@ -3008,7 +3021,7 @@ namespace MVCApp.Controllers.DCU
                     comm.CommandType = CommandType.StoredProcedure;
                     comm.Parameters.Add("PLANT", engine.Plant.Trim().ToUpper());
                     comm.Parameters.Add("FAMILY", engine.Family.Trim().ToUpper());
-                    comm.Parameters.Add("ENGINESRNO", engine.Fcode.Trim().ToUpper());
+                    comm.Parameters.Add("ENGINESRNO", engine.Fcode);
                     comm.Parameters.Add("JOB_ID", engine.JobId.Trim().ToUpper());
                     comm.Parameters.Add("STAGE", engine.StageCode.Trim().ToUpper());
                     comm.Parameters.Add("STAGEID", engine.LoginStage.Trim().ToUpper());
