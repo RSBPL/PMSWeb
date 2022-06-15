@@ -2817,6 +2817,14 @@ namespace MVCApp.Controllers
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.Battery, TM.Battery, tmold.Battery, tmold.Battery_Desc, Tab, TM.gleSearch, TM.Battery, TM.Battery_Desc, "Change_Battery", TrnNo);
                 }
+                if (TM.Prefix1 == null)
+                {
+                    TM.Prefix1 = "";
+                }
+                if (TM.Prefix2 == null)
+                {
+                    TM.Prefix2 = "";
+                }
                 if (Tmold.Prefix1 != TM.Prefix1)
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.Prefix1, TM.Prefix1, tmold.Prefix1, "", Tab, TM.gleSearch, TM.Prefix1, "", "Change_Prefix1", TrnNo);
@@ -3780,13 +3788,13 @@ namespace MVCApp.Controllers
                                             WHERE Remarks1='{0}' AND Remarks2='{1}' AND TRANSACTION_NUMBER={2}", TransctionType.Trim(), FCode.Trim(), Transaction);
             data_table = fun.returnDataTable(query);
 
-            string textBody = " <table border=" + 1 + " cellpadding=" + 0 + " cellspacing=" + 0 + " width = " + 600 + ">";
-            textBody += " <tr><th colspan='7'>" + Heading + " </th></tr><tr><th>CHanges Flied Name</th><th>OldCode</th><th>Old Name</th><th>New Code</th><th>New Name</th><th>ENTRY Date</th><th>ENTRY BY</th><th>SYSTEM ID</th></tr>";
+            string textBody = " <table width='750'>";
+            textBody += "<thead><tr><th colspan='6' style='background-color: #087f5b;color: #fff;width: 25%;'>" + Heading + " </th></tr> <tr><th style='background-color: #087f5b;color: #fff;width: 50%;' colspan='2'>ENTRY DATE :- " + data_table.Rows[0]["ENTRYDATE"] + " </th><th style='background-color: #087f5b;color: #fff;width: 50%;' colspan='2'>ENTRY BY :- " + data_table.Rows[0]["LOGIN_USER"] + "</th><th style='background-color: #087f5b;color: #fff;width: 50%;' colspan='2'>SYSTEM :- " + data_table.Rows[0]["SYSTEM"] + "</th><tr><th style='background-color: #087f5b;color: #fff;width: 25%;'>Flied Name </th>Flied Name </th><th style='background-color: #087f5b;color: #fff;width: 25%;'>OldCode</th><th style='background-color: #087f5b;color: #fff;width: 25%;'>Old Name</th><th style='background-color: #087f5b;color: #fff;width: 25%;'>New Code</th><th style='background-color: #087f5b;color: #fff;width: 25%;'>New Name</th></tr></thead><tbody>";
             for (int loopCount = 0; loopCount < data_table.Rows.Count; loopCount++)
             {
-                textBody += "<tr><td>" + data_table.Rows[loopCount]["PART_DESC"] + "</td><td> " + data_table.Rows[loopCount]["PART_ITEM_CODE"] + "</td><td> " + data_table.Rows[loopCount]["OLD_PART_DESC"] + "</td><td> " + data_table.Rows[loopCount]["PART_NEW_ITEMCODE"] + "</td><td> " + data_table.Rows[loopCount]["NEW_PART_DESC"] + "</td><td> " + data_table.Rows[loopCount]["ENTRYDATE"] + "</td><td> " + data_table.Rows[loopCount]["LOGIN_USER"] + "</td> <td> " + data_table.Rows[loopCount]["SYSTEM"] + "</td> </tr>";
+                textBody += "<tr><td style='background-color:gray;color:white;font-size:bold'>" + data_table.Rows[loopCount]["PART_DESC"] + "</td><td style='background-color: #8080808f;'> " + data_table.Rows[loopCount]["PART_ITEM_CODE"] + "</td><td style='background-color: #8080808f;'> " + data_table.Rows[loopCount]["OLD_PART_DESC"] + "</td><td style='color:red;background-color: #8080808f;'> " + data_table.Rows[loopCount]["PART_NEW_ITEMCODE"] + "</td><td style='color:red;background-color: #8080808f;'> " + data_table.Rows[loopCount]["NEW_PART_DESC"] + "</td></tr>";
             }
-            textBody += "</table>";
+            textBody += " </tbody></table>";
             return textBody;
         }
         public string replaceApostophi(string chkstr)

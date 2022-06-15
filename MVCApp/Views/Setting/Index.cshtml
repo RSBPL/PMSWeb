@@ -283,6 +283,38 @@
                                             </fieldset>
                                         </div>
                                     </div>
+
+                                    <div class="row m-top">
+                                        <div class="col-md-12">
+                                            <fieldset class="the-fieldset bg-info">
+                                                <legend class="le">Save SMS API</legend>
+                                                <div class="row">
+                                                    <div class="col-md-1">
+                                                        <label for="SuccessIntvl" class="text-right control-label col-form-label" style="margin: 30px 0 0 11px;"><strong>SMS API</strong></label>
+                                                      </div>
+                                                    <div class="col-md-7">
+                                                        @*@Html.TextBoxFor(Model => Model.SMSAPI, null, new { @class = "form-control input-sm", cols = "55", rows = "10" })*@
+                                                        <textarea cols="85" id="SMSAPI" name="SMSAPI" rows="4"></textarea>
+
+                                                    </div> 
+                                                    <div class="col-md-1">
+                                                        <label for="Quality" class="text-right control-label col-form-label" style="margin: 28px 0 0 -55px;"><strong>Status</strong></label>
+                                                        @Html.CheckBoxFor(model => model.ISActiveSMS, new { @class = "form-control  input-sm",@Style= "width: 18%!important;margin: -25px 0 0 0;" })
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="col-md-1" style="padding-top: 25px;">
+                                                            <button class="btn btn-success btn-sm" type="button" id="SMSAPIAdd"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                                                        </div>
+                                                        <div class="col-md-3" style="padding-top: 25px; margin: 0 0 0 105px;">
+                                                            <button class="btn btn-default btn-sm" type="button" id="ClearSMSAPI"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>CLEAR</strong></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </fieldset>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div id="Menu3" class="tab-pane fade ">
                                     <div class="row">
@@ -413,16 +445,19 @@
         BindSMTP();
         BindEmailGrid();
         GetIntegratetable();
+        BindSMSGrid();
 
     });
 
 
     $("#Plant").on("change", function () {
         DDLFamilyByPlant();
+        BindSMSGrid();
 
     });
     $("#Family").on("change", function () {
         BindExistingRecord();
+        BindSMSGrid();
         /*BindGrid();*/
     });
 
@@ -875,7 +910,7 @@
             });
        });
 
-       $("#NotifyAdd").on("click", function () {
+    $("#NotifyAdd").on("click", function () {
             var Data = {
                 STAGE: $('#STAGE').val(),
                 NOTIFYMOBILE: $('#NOTIFYMOBILE').val(),
@@ -883,7 +918,9 @@
                 NOTIFYMAILTIMING: $('#NOTIFYMAILTIMING').val(),
                 EMAILIDChk: $('#EMAILIDChk').prop("checked"),
                 MOBILEChk: $('#MOBILEChk').prop("checked"),
-                NOTIFYEMAILID: $('#NOTIFYEMAILID').val()
+                NOTIFYEMAILID: $('#NOTIFYEMAILID').val(),
+                NOTIFYMessage: $('#NOTIFYMessage').val(),
+                NOTIFYTemplateID: $('#NOTIFYTemplateID').val()
            };
            if (Data.EMAILIDChk == false && Data.MOBILEChk == false) {
                $('#alert').append('<div class="alert" role = "alert"><strong>Please Check atleast One CheckBox</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -1072,22 +1109,109 @@
                 $("#ChkFAMILY_SERIAL").is(":unchecked");
                 $("#ChkSwitch_Of_Tyre_Make").is(":unchecked");
                 if (result[0].ChkPRINT_SERIAL_NUMBER == true) {
-                    $("#ChkPRINT_SERIAL_NUMBER").attr('checked');
+                    $("#ChkPRINT_SERIAL_NUMBER").prop("checked", true);
                 }
                 if (result[0].ChkSUB_ASSEMBLY_SERIAL_NUMBER == true) {
-                    $("#ChkSUB_ASSEMBLY_SERIAL_NUMBER").attr('checked');
+                    $("#ChkSUB_ASSEMBLY_SERIAL_NUMBER").prop("checked", true);
                 }
                 if (result[0].ChkSwitch_Of_Tyre_Make == true) {
-                    $("#ChkSwitch_Of_Tyre_Make").attr('checked');
+                    $("#ChkSwitch_Of_Tyre_Make").prop("checked", true);
                 }
-                if (result[0].ChkSwitch_Of_Tyre_Make == true) {
-                    $("#ChkSwitch_Of_Tyre_Make").attr('checked');
-                } 
+                if (result[0].ChkFAMILY_SERIAL == true) {
+                    $("#ChkFAMILY_SERIAL").prop("checked", true);
+                }
         },
             error: function (errormessage) {
             //alert(errormessage.responseText);
             }
         });
-        
+
     }
+
+    $("#SMSAPIAdd").on("click", function () {
+        var isActiveSMS = false;
+        if ($("#ISActiveSMS").prop('checked') == true) {
+            isActiveSMS = true;
+        }
+        var Data = {
+            SMSAPI: $('#SMSAPI').val(),
+             Plant: $("#Plant").val(),
+             Family: $("#Family").val(),
+             ISActiveSMS: isActiveSMS
+         };
+         if (Data.SMSAPI == "" && Data.SMSAPI == null) {
+               $('#alert').append('<div class="alert" role = "alert"><strong>Please Enter Api</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+               /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+               setTimeout(function () {
+                   $.each($('.alert'), function () {
+                       closeAlert(this);
+                   });
+               }, 5000);
+               return;
+           }
+            $.ajax({
+                url: '@Url.Action("SaveSMSAPI", "Setting")',
+                data: JSON.stringify({ data: Data }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+
+                    $("#divLoader").hide();
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+
+                    }
+                    BindSMSAPI(data);
+                },
+                error: function (errormessage) {
+                    $("#divLoader").hide();
+                    $('#alert').append('<div class="alert ' + errormessage.ID + '"role = "alert"><strong>' + errormessage.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+
+                }
+            });
+    });
+    function BindSMSGrid() {   
+        $("#divLoader").show();
+          var Data = {
+              Plant: $("#Plant").val(),
+              Family: $("#Family").val()
+                };
+        $.ajax({
+            url: '@Url.Action("GridSMSAPIs", "Setting")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (data) {
+                $("#SMSAPI").val(data.SMSAPI);
+                if (data.ISActiveSMS == true) {
+                    $("#ISActiveSMS").prop("checked", data.ISActiveSMS);
+                }
+                $("#divLoader").hide();
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
 </script>

@@ -45,6 +45,8 @@ namespace MVCApp.Models
         public string NOTIFYTemplateID { get; set; }
         public bool EMAILIDChk { get; set; } = false;
         public bool MOBILEChk { get; set; } = false;
+        public bool ISActiveSMS { get; set; } = false;
+        public string SMSAPI { get; set; }
 
 
 
