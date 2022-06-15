@@ -1,5 +1,6 @@
 ﻿using MVCApp.Common;
 using MVCApp.CommonFunction;
+using MVCApp.Controllers.DCU;
 using MVCApp.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
@@ -33,7 +34,7 @@ namespace MVCApp.Controllers.Assembly
                 return RedirectToAction("Login", "Account");
             }
             else
-            {              
+            {
                 return View();
             }
         }
@@ -47,6 +48,7 @@ namespace MVCApp.Controllers.Assembly
         [HttpPost]
         public JsonResult BindFamily(string Plant)
         {
+
             List<DDLTextValue> result = new List<DDLTextValue>();
             if (!string.IsNullOrEmpty(Plant))
             {
@@ -59,35 +61,26 @@ namespace MVCApp.Controllers.Assembly
         public JsonResult BindItemCode(string Plant, string Family)
         {
             List<DDLTextValue> _Item = new List<DDLTextValue>();
-            DataTable dt = new DataTable();
+            //DataTable dt = new DataTable();
             try
             {
+                COMMONDATA cOMMONDATA = new COMMONDATA();
+                cOMMONDATA.PLANT = Plant;
+                cOMMONDATA.FAMILY = Family;
                 if (af == null)
                     af = new Assemblyfunctions();
-                ShiftDetail shiftDetail = af.getshift();
-                if (!string.IsNullOrEmpty(Plant) && !string.IsNullOrEmpty(Family) && !string.IsNullOrEmpty(shiftDetail.Shiftcode) && shiftDetail.Plandate != null)
-                {
-                    query = string.Format(@"select distinct  xt.ITEM_CODE || ' # ' || substr( REPLACE( REPLACE(xt.ITEM_DESC , 'TRACTOR FARMTRAC', 'FT'),'TRACTOR POWERTRAC','PT'),1,25) || '#' || xt.AUTOID as TEXT,xt.ITEM_CODE,
-                        xm.PLAN_ID,xt.AUTOID,xt.ITEM_CODE || '#' || xt.AUTOID as ITEMCODE,xt.seq_no from XXES_DAILY_PLAN_MASTER xm,XXES_DAILY_PLAN_TRAN xt,XXES_DAILY_PLAN_JOB jt
-                        where xm.Plan_id=xt.Plan_id and xm.plant_code='{0}' and xm.family_code='{1}' 
-                        and to_char(xm.PLAN_DATE,'dd-Mon-yyyy')='{2}' and xt.AUTOID=jt.FCODE_AUTOID and jt.JOBID not in (select S.JOBID from XXES_JOB_STATUS S)", Plant, Family, shiftDetail.Plandate.ToString("dd-MMM-yyyy"));
-                    //DataTable dt = new DataTable();
-                    //query = string.Format(@"select ITEM_CODE  || '(' || SUBSTR(ITEM_DESCRIPTION,0,30)  || ')' as DESCRIPTION , ITEM_CODE 
-                    //    from XXES_ITEM_MASTER where  plant_code='{0}' and family_code='{1}' order by Item_code", Plant, Family);
-                    dt = fun.returnDataTable(query);
-                    if (dt.Rows.Count > 0)
+                DataTable dataTable = af.GetFcodes(cOMMONDATA);
+                    if (dataTable.Rows.Count > 0)
                     {
-                        foreach (DataRow dr in dt.AsEnumerable())
+                        foreach (DataRow dr in dataTable.AsEnumerable())
                         {
                             _Item.Add(new DDLTextValue
                             {
                                 Text = Convert.ToString(dr["TEXT"]),
-                                Value = Convert.ToString(dr["ITEM_CODE"])
+                                Value = Convert.ToString(dr["AUTOID"])
                             });
                         }
                     }
-                }
-
             }
             catch (Exception ex)
             {
@@ -97,41 +90,32 @@ namespace MVCApp.Controllers.Assembly
         }
 
         [HttpPost]
-        public JsonResult BindJob(string Plant,string Family)
+        public JsonResult BindJob(string Plant, string Family,string autoid)
         {
             List<DDLTextValue> result = new List<DDLTextValue>();
-            DataTable dt = new DataTable();
             try
             {
+
+                COMMONDATA cOMMONDATA = new COMMONDATA();
+                cOMMONDATA.PLANT = Plant;
+                cOMMONDATA.FAMILY = Family;
+                cOMMONDATA.REMARKS = autoid;
+                cOMMONDATA.LOCATION = "BUCKLEUP";
                 if (af == null)
                     af = new Assemblyfunctions();
-                ShiftDetail shiftDetail = af.getshift();
-                if (!string.IsNullOrEmpty(Plant) && !string.IsNullOrEmpty(Family) && !string.IsNullOrEmpty(shiftDetail.Shiftcode) && shiftDetail.Plandate != null)
+                DataTable dataTable = af.BindJobs(cOMMONDATA);
+                if (dataTable.Rows.Count > 0)
                 {
-                    query = string.Format(@"select distinct  xt.ITEM_CODE || ' # ' || substr( REPLACE( REPLACE(xt.ITEM_DESC , 'TRACTOR FARMTRAC', 'FT'),'TRACTOR POWERTRAC','PT'),1,25) || '#' || xt.AUTOID as TEXT,xt.ITEM_CODE,
-                        xm.PLAN_ID,xt.AUTOID,xt.ITEM_CODE || '#' || xt.AUTOID as ITEMCODE,xt.seq_no from XXES_DAILY_PLAN_MASTER xm,XXES_DAILY_PLAN_TRAN xt,XXES_DAILY_PLAN_JOB jt
-                        where xm.Plan_id=xt.Plan_id and xm.plant_code='{0}' and xm.family_code='{1}' 
-                        and to_char(xm.PLAN_DATE,'dd-Mon-yyyy')='{2}' and xt.AUTOID=jt.FCODE_AUTOID and jt.JOBID not in (select S.JOBID from XXES_JOB_STATUS S)", Plant, Family, shiftDetail.Plandate.ToString("dd-MMM-yyyy"));
-                    string data = fun.get_Col_Value(query);
-                    if(!string.IsNullOrEmpty(data))
+                    foreach (DataRow dr in dataTable.AsEnumerable())
                     {
-                        planid = data.Split('#')[2].Trim().ToUpper();
-                    }
-                    query = string.Format(@"select JOBID as TEXT,JOBID as CODE  from XXES_DAILY_PLAN_JOB where FCODE_AUTOID = '{0}' 
-                            and JOBID not in (select JOBID from XXES_JOB_STATUS) and plant_code ='{1}' and family_code ='{2}' order by JOBID", planid, Plant, Family);
-                    dt = fun.returnDataTable(query);
-                    if (dt.Rows.Count > 0)
-                    {
-                        foreach (DataRow dr in dt.AsEnumerable())
+                        result.Add(new DDLTextValue
                         {
-                            result.Add(new DDLTextValue
-                            {
-                                Text = Convert.ToString(dr["TEXT"]),
-                                Value = Convert.ToString(dr["CODE"])
-                            });
-                        }
+                            Text = Convert.ToString(dr["TEXT"]),
+                            Value = Convert.ToString(dr["CODE"])
+                        });
                     }
                 }
+
             }
             catch (Exception ex)
             {
@@ -140,19 +124,35 @@ namespace MVCApp.Controllers.Assembly
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        //[HttpPost]
-        //public JsonResult Print(FTBuckleup fTBuckleup)
-        //{
-        //    try
-        //    {
-                
-        //        tractor.FarmTractorBuckleUp();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        fun.LogWrite(ex);
-        //    }
-        //}
-        
+        [HttpPost]
+        public JsonResult Print(BuckleUPFT data)
+        {
+            string msg = string.Empty; string mstType = string.Empty; string status = string.Empty;
+            try
+            {
+                TractorController tractor = new TractorController();
+                FTBuckleup fTBuckleup = new FTBuckleup();
+                fTBuckleup.PLANT = data.Plant.Trim().ToUpper();
+                fTBuckleup.FAMILY = data.Family.Trim().ToUpper();
+                fTBuckleup.ITEMCODE = data.ItemCode.Split('#')[0].Trim().ToUpper();
+                fTBuckleup.JOBID = data.JobId.Trim().ToUpper();
+                fTBuckleup.TRANSMISSIONSRLNO = data.TransmissionSrno;
+                fTBuckleup.REARAXELSRLNO = data.RearAxleSrno;
+                tractor.FarmTractorBuckleUp(fTBuckleup);
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+            }
+            var myResult = new
+            {
+                //Result = data,
+                Msg = msg,
+                ID = mstType,
+                validation = status
+            };
+            return Json(myResult, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }
