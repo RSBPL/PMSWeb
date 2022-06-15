@@ -433,12 +433,45 @@ namespace MVCApp.Controllers.Admin
             return Json(new { Msg = msg, ID = mstType, validation = status }, JsonRequestBehavior.AllowGet);
 
         }
+        [HttpPost]
+        public JsonResult SaveSMSAPI(SftSetting data)
+        {
+            string msg = string.Empty; string mstType = string.Empty; string status = string.Empty; string query = string.Empty;
+            //if (string.IsNullOrEmpty(data.NOTIFYEMAILID.Trim()))
+            //{
+            //     msg = "Please enter email id";
+            //    return Json(new { Msg = msg, ID = mstType, validation = status }, JsonRequestBehavior.AllowGet);
+            //}
+            //else if (string.IsNullOrEmpty(cmbOfflineItems.Text.Trim()) || cmbOfflineItems.SelectedIndex < 0)
+            //{
+            //    MessageBox.Show("Please select stage");
+            //    cmbOfflineItems.Focus();
+            //    return;
+            //}
+            string Status = "N";
+            if (data.ISActiveSMS == true)
+            {
+                Status = "Y";
+            }
+            query = string.Format(@"delete from XXES_SFT_SETTINGS where PLANT_CODE = '{0}' and FAMILY_CODE = '{0}' And PARAMETERINFO = '{0}'", Convert.ToString(data.Plant), Convert.ToString(data.Family), "SMS_API");
+            fun.EXEC_QUERY(query);
+            query = "insert into XXES_SFT_SETTINGS(PLANT_CODE,FAMILY_CODE ,PARAMETERINFO,PARAMVALUE,STATUS) values('" + Convert.ToString(data.Plant) + "','" + data.Family.Trim() + "','SMS_API','" + data.SMSAPI.Trim() + "','" + Status.Trim() + "')";
+            if (fun.EXEC_QUERY(query))
+            {
+                fun.Insert_Into_ActivityLog("SMSAPI", "INSERT", Convert.ToString(data.SMSAPI), query, "", "");
+
+                GridEmails(data);
+                msg = "SMS API Added Sucessfully !!";
+            }
+            return Json(new { Msg = msg, ID = mstType, validation = status }, JsonRequestBehavior.AllowGet);
+
+        }
 
         [HttpPost]
         public JsonResult SaveIntegratetable(SftSetting data)
         {
             string msg = string.Empty; string mstType = string.Empty; string status = string.Empty; string query = string.Empty;
-            
+
             if (fun.CheckExits("select count(*) from XXES_SFT_SETTINGS WHERE PARAMETERINFO='PRINT_SERIAL_NUMBER'"))
             {
                 query = "delete from XXES_SFT_SETTINGS where PARAMETERINFO='PRINT_SERIAL_NUMBER'";
@@ -548,6 +581,25 @@ namespace MVCApp.Controllers.Admin
             List<SftSetting> result = new List<SftSetting>();
             result = getIntegrateData();
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GridSMSAPIs(SftSetting data)
+        {
+            query = string.Format(@"select PARAMVALUE As SMSAPI , STATUS from XXES_SFT_SETTINGS where PLANT_CODE = '{0}' And FAMILY_CODE ='{1}' And PARAMETERINFO='{2}'", Convert.ToString(data.Plant), Convert.ToString(data.Family), "SMS_API");
+            DataTable dt = fun.returnDataTable(query);
+            if (dt.Rows.Count > 0)
+            {
+                data.SMSAPI = dt.Rows[0]["SMSAPI"].ToString();
+                if (dt.Rows[0]["STATUS"].ToString() == "Y")
+                {
+                    data.ISActiveSMS = true;
+                }
+                else
+                {
+                    data.ISActiveSMS = false;
+                }
+            }
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -2032,8 +2032,8 @@ namespace MVCApp.Common
                         fileData = fileData.Replace("TREMARKS", tractor.remarks.Trim());
                         fileData = fileData.Replace("PRINT_DATE", Printdate.ToString("dd-MMM-yyyy HH:mm:ss"));
                     }
-                    //dataresult = PrintLabelViaNetwork(fileData, "", IPADDR, Convert.ToInt32(IPPORT));
-                    dataresult = true;
+                    dataresult = PrintLabelViaNetwork(fileData, "", IPADDR, Convert.ToInt32(IPPORT));
+                    //dataresult = true;
                 }
                 if (dataresult == true)
                 {

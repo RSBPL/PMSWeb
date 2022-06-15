@@ -714,13 +714,22 @@
 
                 if (data.Msg != "successfully Printed") {
                     $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                    /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
-                    setTimeout(function () { $("#alert").hide(); }, 5000);
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    //setTimeout(function () { $("#alert").hide(); }, 5000)
                 }
 
                 else {
                     $('#alert').append('<div class="alert alert-success role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                    setTimeout(function () { $("#alert").hide(); }, 5000);
+                    //setTimeout(function () { $("#alert").hide(); }, 5000);
+                    setTimeout(function () { $(".alert").alert('close'); }, 5000); setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
                     /* $('#VendorName').val("");*/
                     /*  $('#VendorName').val("");*/
                     $('#ItemCode').val("");
@@ -728,7 +737,6 @@
                     $('#AprovedBy').val("");
                     BindGrid();
                 }
-
             },
             error: function (errormessage) {
 
@@ -736,7 +744,10 @@
         });
 
     };
+    function closeAlert(alert) {
 
+        $(alert).hide();
+    };
     $("#PLANTCODE,#FAMILYCODE,#STAGE_Code").select2({
         allowClear: true,
         width: '180px',

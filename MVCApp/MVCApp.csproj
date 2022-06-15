@@ -1256,6 +1256,7 @@
     <Content Include="Views\TyrePrinting\Index.cshtml" />
     <Content Include="Views\MRNDisplaySheet\Empty.cshtml" />
     <Content Include="Views\Report\WeeklyReportsDateWise.cshtml" />
+    <Content Include="Views\Setting\GridSMSAPIs.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
