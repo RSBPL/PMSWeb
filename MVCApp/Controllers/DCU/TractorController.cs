@@ -3307,7 +3307,7 @@ namespace MVCApp.Controllers.DCU
                     return "Job:" + fTBuckleup.JOB + " already buckled up";
                 }
                 string Filename = "";
-                if (fTBuckleup.IsPrintLabel == "0")
+                if (fTBuckleup.IsPrintLabel == "1")
                 {
                     if (string.IsNullOrEmpty(fTBuckleup.IPADDR.Trim()))
                     {
@@ -3339,14 +3339,14 @@ namespace MVCApp.Controllers.DCU
                         }
                         else
                         {
-                            return "OK # Matched and but not printed successfully !! ";
+                            return "OK # Matched but not printed successfully !! ";
                         }
                     }
                 }
                 else
                     //    return "OK # Matched but print not enabled";
 
-                    return "OK : RECORD SAVE SUCCESSFULLY ";
+                    return "OK # RECORD SAVE SUCCESSFULLY ";
 
             }
             catch (Exception ex)

@@ -135,18 +135,61 @@ namespace MVCApp.Controllers.Assembly
                 fTBuckleup.PLANT = data.Plant.Trim().ToUpper();
                 fTBuckleup.FAMILY = data.Family.Trim().ToUpper();
                 fTBuckleup.ITEMCODE = data.ItemCode.Split('#')[0].Trim().ToUpper();
-                fTBuckleup.JOBID = data.JobId.Trim().ToUpper();
+                fTBuckleup.TRACTOR_DESC = data.ItemCode.Split('#')[1].Trim().ToUpper();
+                fTBuckleup.JOB = data.JobId.Trim().ToUpper();
+                fTBuckleup.FCODEID = data.ItemCode.Split('#')[2].Trim().ToUpper();
                 fTBuckleup.TRANSMISSIONSRLNO = data.TransmissionSrno;
                 fTBuckleup.REARAXELSRLNO = data.RearAxleSrno;
-                tractor.FarmTractorBuckleUp(fTBuckleup);
+                fTBuckleup.CREATEDBY = Convert.ToString(Session["Login_User"]);
+                fTBuckleup.STAGE = "BK";
+                fTBuckleup.SYSUSER = fTBuckleup.CREATEDBY;
+                fTBuckleup.SYSTEMNAME = fun.GetUserIP();
+                query = string.Format(@"select * from xxes_stage_master where offline_keycode='{2}' and plant_code='{0}'
+                and family_code='{1}'",fTBuckleup.PLANT,fTBuckleup.FAMILY, fTBuckleup.LoginStageCode);
+                dt = new DataTable();
+                dt = fun.returnDataTable(query);
+                if(dt.Rows.Count>0)
+                {
+                    fTBuckleup.PrintMMYYFormat = Convert.ToString(dt.Rows[0]["ONLINE_SCREEN"]);
+                    fTBuckleup.IsPrintLabel = Convert.ToString(dt.Rows[0]["PRINT_LABEL"]);
+                    fTBuckleup.IPADDR = Convert.ToString(dt.Rows[0]["ipaddr"]);
+                    fTBuckleup.IPPORT = Convert.ToString(dt.Rows[0]["IPPORT"]);
+                    fTBuckleup.SUFFIX = fun.get_Col_Value(@"select MY_CODE from XXES_SUFFIX_CODE where
+                                            MON_YYYY='" + fun.GetServerDateTime().ToString("MMM-yyyy").ToUpper() + "' and TYPE='QRDOMESTIC' and plant='" + fTBuckleup.PLANT + "'");
+                }
+                string response  = tractor.FarmTractorBuckleUp(fTBuckleup);
+                if(!string.IsNullOrEmpty(response))
+                {
+                    if(response.StartsWith("OK"))
+                    {
+                        msg = response.Split('#')[1].Trim().ToUpper();
+                        mstType = "alert-success";
+                        status = Validation.str2;
+                    }
+                    else
+                    {
+                        msg = response.Trim().ToUpper();
+                        mstType = "alert-danger";
+                        status = Validation.str2;
+                    }
+                }
+                else
+                {
+                    msg = "SOMETHING WENT WRONG !! ";
+                    mstType = "alert-danger";
+                    status = Validation.str2;
+                }
             }
             catch (Exception ex)
             {
                 fun.LogWrite(ex);
+                msg = ex.Message;
+                mstType = Validation.str1;
+                status = Validation.str2;
             }
             var myResult = new
             {
-                //Result = data,
+                Result = data,
                 Msg = msg,
                 ID = mstType,
                 validation = status
