@@ -26,6 +26,20 @@
      .ui-autocomplete {
         height: 400px;
     }
+    #PawordPopUp .modal-lg {
+        max-width: 30% !important;
+        border-radius: 8px;
+    }
+    #SerialNoPopUp .modal-lg {
+        max-width: 40% !important;
+    }
+    .important {
+        opacity: -0.5;
+    }
+
+    .test {
+        overflow: auto
+    }
 </style>
 <div id="divLoader" style="display:none;">
     <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:10%; margin-left:38%" />
@@ -64,7 +78,7 @@
                             <strong>@Html.ValidationMessageFor(model => model.Family, "", new { @class = "text-danger" })</strong>
                         </div>
                         <div class="col-md-3" id="Item1">
-                            <label for="ItemCode" class="text-right control-label col-form-label"><strong>ITEM CODE</strong></label>
+                            <label for="ItemCode" class="text-right control-label col-form-label"><strong>FCODE</strong></label>
                             @Html.DropDownListFor(model => model.ItemCode, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
                             <strong>@Html.ValidationMessageFor(model => model.ItemCode, "", new { @class = "text-danger" })</strong>
 
@@ -75,22 +89,31 @@
                             <strong>@Html.ValidationMessageFor(model => model.JobId, "", new { @class = "text-danger" })</strong>
 
                         </div>
-                        <div class="col-md-3">
-                            <label for="TransmissionSrno" class="text-right control-label col-form-label"><strong>TRANSMISSION SRNO</strong></label>
+                        <div class="col-md-3" id="Transsrno">
+                            <label for="TransmissionSrno" class="text-right control-label col-form-label"><strong>TRANSMISSION  </strong></label>
+                            <label for="Transmission" id="lblTransmission" style="color:red"></label>
                             @Html.TextBoxFor(Model => Model.TransmissionSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
                             <strong>@Html.ValidationMessageFor(model => model.TransmissionSrno, "", new { @class = "text-danger" })</strong>
                         </div>
-                        <div class="col-md-3">
-                            <label for="RearAxleSrno" class="text-right control-label col-form-label"><strong>REARAXLESRNO</strong></label>
+                        <div class="col-md-3" id="Rearsrno">
+                            <label for="RearAxleSrno" class="text-right control-label col-form-label"><strong>REARAXLE  </strong></label>
+                            <label for="RearAxle" id="lblRearAxle" style="color:red"></label>
                             @Html.TextBoxFor(Model => Model.RearAxleSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
                             <strong>@Html.ValidationMessageFor(model => model.RearAxleSrno, "", new { @class = "text-danger" })</strong>
                         </div>
-                        <div class="col-md-1" style="padding-top: 23px;">
-                            <button class="btn btn-success btn-sm" type="button" id="Add"><i class="ace-icon fa fa-print bigger-11"></i><strong>PRINT</strong></button>
+                        <div class="col-md-3" id="bksrno" >
+                            <label for="BackendSrno" class="text-right control-label col-form-label"><strong>BACKEND  </strong></label>
+                            @Html.TextBoxFor(Model => Model.BackendSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.BackendSrno, "", new { @class = "text-danger" })</strong>
                         </div>
-
+                        <div class="col-md-1" style="padding-top: 23px; ">
+                            <button class="btn btn-success btn-sm" type="button" id="Add" style="border-radius: 8px; "><i class="ace-icon fa fa-print bigger-11"></i><strong>Print</strong></button>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 23px; ">
+                            <button class="btn btn-success btn-sm" type="button" id="Reprint" style="border-radius: 8px;" data-toggle="modal" data-target="#PawordPopUp"><i class="ace-icon fa fa-print bigger-110"></i><strong>Reprint</strong></button>
+                        </div>
                         <div class="col-md-1" style="padding-top: 23px;">
-                            <button class="btn btn-default btn-sm" type="button" id="Clear"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>CLEAR</strong></button>
+                            <button class="btn btn-default btn-sm" type="button" id="Clear" style="border-radius: 8px;"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
                         </div>
                     </div>
 
@@ -98,10 +121,62 @@
             </div>
 
         }
-       
+
     </div>
 </div>
+<div class="modal fade" id="PawordPopUp" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Enter Password</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="ORDERBY" class="col-form-label">Password</label>
+                            @Html.TextBoxFor(Model => Model.Password, null, new { @class = "form-control input-sm", type = "password" })
 
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="PawordSubmit" class="btn btn-primary" data-toggle="modal" data-target="#SerialNoPopUp">Submit</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="SerialNoPopUp" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Reprint</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        
+                        <div class="col-md-4">
+                            <label for="Job" class="control-label col-form-label"><strong>Job</strong></label>
+                            @Html.TextBoxFor(Model => Model.Job, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.Job, "", new { @class = "text-danger" })</strong>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="PopUpPrint" class="btn btn-primary">Print</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
 <script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
 <script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
 <link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
@@ -112,10 +187,13 @@
 <script>
 
     $(document).ready(function () {
+        $('#bksrno').hide();
+        $('#lblTransmission').hide();
+        $('#lblRearAxle').hide();
         DDLPlant();
         BindTractor();
         BindJob();
-       /* AutoComplete();*/
+        
     });
 
   function BindTractor() {
@@ -135,7 +213,9 @@
 
                     $("#ItemCode").append(optionhtml);
                 });
+                VisibleBuckleupModal();
                 BindJob();
+               
         },
             error: function (errormessage) {
             //alert(errormessage.responseText);
@@ -145,12 +225,12 @@
 
     $("#Plant").on("change", function () {
         DDLFamilyByPlant();
-
+       
     });
-    //$("#Family").on("change", function () {
-    //    BindTractor();
-
-    //});
+    $("#ItemCode").on("change", function () {
+        VisibleBuckleupModal();
+        BindJob();
+    });
     $("#Clear").on("click", function () {
         location.reload(true);
     });
@@ -232,10 +312,11 @@
             var data = {
                 Plant: $('#Plant').val(),
                 Family: $('#Family').val(),
-                ItemCode: $('#ItemCode').text(),
+                ItemCode: $('#ItemCode').val(),
                 JobId: $("#JobId").val(),
                 TransmissionSrno: $("#TransmissionSrno").val(),
-                RearAxleSrno: $("#RearAxleSrno").val()
+                RearAxleSrno: $("#RearAxleSrno").val(),
+                BackendSrno: $("#BackendSrno").val()
             };
             $.ajax({
                 url: '@Url.Action("Print", "BuckleUpFT")',
@@ -275,6 +356,141 @@
 
     });
 
+     function VisibleBuckleupModal() {
+        //$("#divLoader").show();
+         var Data = {
+             Plant: $('#Plant').val(),
+             Family: $('#Family').val(),
+             item: $('#ItemCode').val()
+         };
+        $.ajax({
+            url: '@Url.Action("GetDcode", "BuckleUpFT")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (Result) {
+                var status = Result.split("#")[0];
+                if (status == "Y") {
+                    $('#bksrno').show();
+                    $('#Transsrno').hide();
+                    $('#Rearsrno').hide();
+                    //$('#lblTransmission').show();
+                    //$('#lblRearAxle').show();
+                }
+                else if (status == "N") {
+                    $('#bksrno').hide();
+                    $('#Transsrno').show();
+                    $('#Rearsrno').show();
+                    $('#lblTransmission').show();
+                    $('#lblRearAxle').show();
+                    $('#lblTransmission').text(Result.split("#")[1]);
+                    $('#lblRearAxle').text(Result.split("#")[2]);
+                }
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    /////////////////////////////////////Reprint///////////////////////////////////////////////
+
+
+
+    $("#PawordSubmit").on("click", function () {
+        /* localStorage.setItem("IsTabChange", true);*/
+        ChkPassword();
+    });
+    function ChkPassword() {
+        $("#divLoader").show();
+        var data = {
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val(),
+            Password: $('#Password').val()
+        };
+        $.ajax({
+            url: '@Url.Action("PasswordPopup", "BuckleUpFT")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#PawordPopUp").hide();
+                $(".modal-backdrop").hide();
+                $(".modal-backdrop").addClass("important");
+                $("#divLoader").hide();
+                if (data.Msg == "Valid Password") {
+                    var chk = confirm("Are you sure you want to Reprint this?");
+                    if (chk == true) {
+                        $('body').addClass("test");
+                        $(window).scrollTop(0);
+                       /* Update();*/
+                    }
+                } else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    $('body').addClass("test");
+                    $(window).scrollTop(0);
+                }
+            },
+            error: function (errormessage) {
+
+            }
+        });
+
+    };
+     $("#PopUpPrint").on("click", function () {
+        $("#divLoader").show();
+            var data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                Job: $("#Job").val()
+            };
+            $.ajax({
+                url: '@Url.Action("Reprint", "BuckleUpFT")',
+                data: JSON.stringify(data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+
+                    $("#divLoader").hide();
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+
+                        //$('#RearAxleSrno').val("");
+                        //$('#TransmissionSrno').val("");
+                    }
+
+                },
+                error: function (errormessage) {
+
+                }
+            });
+
+     });
+
+      /////////////////////////////////////End Reprint///////////////////////////////////////////////
     $("#Plant").select2({
         allowClear: true,
         width: '100%',

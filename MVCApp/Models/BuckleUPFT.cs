@@ -13,6 +13,13 @@ namespace MVCApp.Models
         public string JobId { get; set; }
         public string TransmissionSrno { get; set; }
         public string RearAxleSrno { get; set; }
+        public string BackendSrno { get; set; }
+        public string Password { get; set; }
+        public string Job { get; set; }
+        public string lblTransmission { get; set; }
+        public string lblRearAxle { get; set; }
+
+
 
     }
 }
