@@ -198,36 +198,40 @@ namespace MVCApp.Controllers.Assembly
                 query = string.Format(@"SELECT REQUIRE_BACKEND FROM XXES_ITEM_MASTER WHERE ITEM_CODE='{0}' and PLANT_CODE='{1}' and 
                      FAMILY_CODE='{2}'", line.Split('#')[0].Trim().ToUpper(), data.Plant, data.Family);
                 isBackEndRequire = fun.get_Col_Value(query);
-                if (isBackEndRequire == "N")
+                if(!data.isbypass == true)
                 {
-                    if (string.IsNullOrEmpty(data.TransmissionSrno))
+                    if (isBackEndRequire == "N")
                     {
-                        msg = "Please Enter Transmission Srno..";
-                        mstType = Validation.str1;
-                        status = Validation.str2;
-                        var resul = new { Msg = msg, ID = mstType, validation = status };
-                        return Json(resul, JsonRequestBehavior.AllowGet);
+                        if (string.IsNullOrEmpty(data.TransmissionSrno))
+                        {
+                            msg = "Please Enter Transmission Srno..";
+                            mstType = Validation.str1;
+                            status = Validation.str2;
+                            var resul = new { Msg = msg, ID = mstType, validation = status };
+                            return Json(resul, JsonRequestBehavior.AllowGet);
+                        }
+                        if (string.IsNullOrEmpty(data.RearAxleSrno))
+                        {
+                            msg = "Please Enter RearAxle Srno..";
+                            mstType = Validation.str1;
+                            status = Validation.str2;
+                            var resul = new { Msg = msg, ID = mstType, validation = status };
+                            return Json(resul, JsonRequestBehavior.AllowGet);
+                        }
                     }
-                    if (string.IsNullOrEmpty(data.RearAxleSrno))
+                    else
                     {
-                        msg = "Please Enter RearAxle Srno..";
-                        mstType = Validation.str1;
-                        status = Validation.str2;
-                        var resul = new { Msg = msg, ID = mstType, validation = status };
-                        return Json(resul, JsonRequestBehavior.AllowGet);
+                        if (string.IsNullOrEmpty(data.BackendSrno))
+                        {
+                            msg = "Please Enter RearAxle Srno..";
+                            mstType = Validation.str1;
+                            status = Validation.str2;
+                            var resul = new { Msg = msg, ID = mstType, validation = status };
+                            return Json(resul, JsonRequestBehavior.AllowGet);
+                        }
                     }
                 }
-                else
-                {
-                    if (string.IsNullOrEmpty(data.BackendSrno))
-                    {
-                        msg = "Please Enter RearAxle Srno..";
-                        mstType = Validation.str1;
-                        status = Validation.str2;
-                        var resul = new { Msg = msg, ID = mstType, validation = status };
-                        return Json(resul, JsonRequestBehavior.AllowGet);
-                    }
-                }
+                
 
                 TractorController tractor = new TractorController();
                 FTBuckleup fTBuckleup = new FTBuckleup();
@@ -244,6 +248,10 @@ namespace MVCApp.Controllers.Assembly
                 fTBuckleup.STAGE = "BK";
                 fTBuckleup.SYSUSER = fTBuckleup.CREATEDBY;
                 fTBuckleup.SYSTEMNAME = fun.GetUserIP();
+                if (data.isbypass == true)
+                    fTBuckleup.BYPASS = "Y";
+                else
+                    fTBuckleup.BYPASS = "";
                 query = string.Format(@"select * from xxes_stage_master where offline_keycode='{2}' and plant_code='{0}'
                 and family_code='{1}'",fTBuckleup.PLANT,fTBuckleup.FAMILY, fTBuckleup.STAGE);
                 dt = new DataTable();

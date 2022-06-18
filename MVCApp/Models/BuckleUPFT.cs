@@ -18,8 +18,7 @@ namespace MVCApp.Models
         public string Job { get; set; }
         public string lblTransmission { get; set; }
         public string lblRearAxle { get; set; }
-
-
+        public bool isbypass { get; set; }
 
     }
 }

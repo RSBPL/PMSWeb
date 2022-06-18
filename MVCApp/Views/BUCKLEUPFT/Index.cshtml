@@ -101,18 +101,24 @@
                             @Html.TextBoxFor(Model => Model.RearAxleSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
                             <strong>@Html.ValidationMessageFor(model => model.RearAxleSrno, "", new { @class = "text-danger" })</strong>
                         </div>
-                        <div class="col-md-3" id="bksrno" >
+                        <div class="col-md-3" id="bksrno">
                             <label for="BackendSrno" class="text-right control-label col-form-label"><strong>BACKEND  </strong></label>
                             @Html.TextBoxFor(Model => Model.BackendSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
                             <strong>@Html.ValidationMessageFor(model => model.BackendSrno, "", new { @class = "text-danger" })</strong>
                         </div>
-                        <div class="col-md-1" style="padding-top: 23px; ">
+                        <div class="col-md-3">
+                            <label for="isbypass" class="text-right control-label col-form-label"><strong>IS BYPASS MODE ?</strong></label>
+                            <div class="form-check">
+                                @Html.CheckBoxFor(Model => Model.isbypass, new { @class = "largerCheckbox" })
+                            </div>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 26px; ">
                             <button class="btn btn-success btn-sm" type="button" id="Add" style="border-radius: 8px; "><i class="ace-icon fa fa-print bigger-11"></i><strong>Print</strong></button>
                         </div>
-                        <div class="col-md-1" style="padding-top: 23px; ">
+                        <div class="col-md-1" style="padding-top: 26px; ">
                             <button class="btn btn-success btn-sm" type="button" id="Reprint" style="border-radius: 8px;" data-toggle="modal" data-target="#PawordPopUp"><i class="ace-icon fa fa-print bigger-110"></i><strong>Reprint</strong></button>
                         </div>
-                        <div class="col-md-1" style="padding-top: 23px;">
+                        <div class="col-md-1" style="padding-top: 26px;">
                             <button class="btn btn-default btn-sm" type="button" id="Clear" style="border-radius: 8px;"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
                         </div>
                     </div>
@@ -238,6 +244,21 @@
     function closeAlert(alert) {
         $(alert).hide();
     };
+    $(function () {
+        $("#isbypass").click(function () {
+            if ($(this).is(":checked")) {              
+                $('#bksrno').show();
+                $('#Transsrno').hide();
+                $('#Rearsrno').hide();
+
+            } else {
+                $('#bksrno').hide();
+                $('#Transsrno').show();
+                $('#Rearsrno').show();
+
+            }
+        });
+    });
     //Function to bind Plant
     function DDLPlant() {
         $.ajax({
@@ -308,7 +329,15 @@
     };
 
     $("#Add").on("click", function () {
+       /* var itemCode = "";*/
         $("#divLoader").show();
+        if ($("#isbypass").prop('checked') == true) {
+            chkbox = true;
+        }
+        else {
+            chkbox = false;
+           /* itemCode = $('#Item').val();*/
+        }
             var data = {
                 Plant: $('#Plant').val(),
                 Family: $('#Family').val(),
@@ -316,7 +345,8 @@
                 JobId: $("#JobId").val(),
                 TransmissionSrno: $("#TransmissionSrno").val(),
                 RearAxleSrno: $("#RearAxleSrno").val(),
-                BackendSrno: $("#BackendSrno").val()
+                BackendSrno: $("#BackendSrno").val(),
+                isbypass: chkbox
             };
             $.ajax({
                 url: '@Url.Action("Print", "BuckleUpFT")',
@@ -344,10 +374,18 @@
                                 closeAlert(this);
                             });
                         }, 5000);
-                        //$('#RearAxleSrno').val("");
-                        //$('#TransmissionSrno').val("");
+                        if ($("#isbypass").prop('checked') == true) {
+                            $("#isbypass").prop(false)
+                        }
+                        else {
+                            $("#isbypass").prop(false)
+                        }
+                        $('#TransmissionSrno').val("");
+                        $('#RearAxleSrno').val("");
+                        $('#BackendSrno').val("");
+                        BindTractor();
                     }
-
+                   
                 },
                 error: function (errormessage) {
 
@@ -478,8 +516,6 @@
                             });
                         }, 5000);
 
-                        //$('#RearAxleSrno').val("");
-                        //$('#TransmissionSrno').val("");
                     }
 
                 },
