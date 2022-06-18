@@ -3112,43 +3112,47 @@ namespace MVCApp.Controllers.DCU
                 {
                     return "Fcode not found On This Job";
                 }
-                if (string.IsNullOrEmpty(fTBuckleup.BYPASS) == false)
+                if(fTBuckleup.BYPASS == "N")
                 {
-                    fTBuckleup.TRANSMISSIONSRLNO = "";
-                }
-                if (string.IsNullOrEmpty(fTBuckleup.TRANSMISSIONSRLNO) && isTransRequire == true)
-                {
-                    return "ERROR : Please scan Transmission";
+                    if (string.IsNullOrEmpty(fTBuckleup.BYPASS) == false)
+                    {
+                        fTBuckleup.TRANSMISSIONSRLNO = "";
+                    }
+                    if (string.IsNullOrEmpty(fTBuckleup.TRANSMISSIONSRLNO) && isTransRequire == true)
+                    {
+                        return "ERROR : Please scan Transmission";
+                    }
+
+                    if (string.IsNullOrEmpty(fTBuckleup.BYPASS) == false)
+                    {
+                        fTBuckleup.REARAXELSRLNO = "";
+                    }
+                    else if (string.IsNullOrEmpty(fTBuckleup.REARAXELSRLNO) && isRearAxelRequire == true)
+                    {
+                        return "ERROR : Please scan RearAxle";
+                    }
+                    if (string.IsNullOrEmpty(fTBuckleup.BYPASS) == false)
+                    {
+                        fTBuckleup.BackendSrlno = "";
+                    }
+                    else if (string.IsNullOrEmpty(fTBuckleup.BackendSrlno) && isBackEndRequire == true)
+                    {
+                        return "ERROR : Please scan Backend";
+                    }
+                    if (af == null)
+                        af = new Assemblyfunctions();
+                    if (fun == null)
+                        fun = new Function();
+
+                    if (fTBuckleup.TRANSMISSIONSRLNO == fTBuckleup.REARAXELSRLNO
+                        && isTransRequire == true && isRearAxelRequire == true)
+                    {
+                        return "Both SrNo should not be same";
+                    }
                 }
 
-                if (string.IsNullOrEmpty(fTBuckleup.BYPASS) == false)
-                {
-                    fTBuckleup.REARAXELSRLNO = "";
-                }
-                else if (string.IsNullOrEmpty(fTBuckleup.REARAXELSRLNO) && isRearAxelRequire == true)
-                {
-                    return "ERROR : Please scan RearAxle";
-                }
-                if (string.IsNullOrEmpty(fTBuckleup.BYPASS) == false)
-                {
-                    fTBuckleup.BackendSrlno = "";
-                }
-                else if (string.IsNullOrEmpty(fTBuckleup.BackendSrlno) && isBackEndRequire == true)
-                {
-                    return "ERROR : Please scan Backend";
-                }
 
-
-                if (af == null)
-                    af = new Assemblyfunctions();
-                if (fun == null)
-                    fun = new Function();
-
-                if(fTBuckleup.TRANSMISSIONSRLNO == fTBuckleup.REARAXELSRLNO
-                    && isTransRequire == true && isRearAxelRequire == true)
-                {
-                    return "Both SrNo should not be same";
-                }
+               
                 if(isBackEndRequire)
                 {
                     query = string.Format(@"select transmission_srlno || '#' || rearaxel_srlno from  XXES_BACKEND_STATUS
@@ -3315,11 +3319,11 @@ namespace MVCApp.Controllers.DCU
                     }
                     else
                     {
-                        //if (TractorType == "EXPORT")
+                        if (isByPass == true || isBackEndRequire == true)
+                            Filename = "FBD.TXT";
+                        else
                             Filename = "BK.txt";
-                        //Filename = "BD17.txt";
-                        //else
-                        //    Filename = "BK.txt";
+
                         if (fTBuckleup.PrintMMYYFormat.Trim() != "1")
                         {
                             fTBuckleup.SUFFIX = string.Empty;
