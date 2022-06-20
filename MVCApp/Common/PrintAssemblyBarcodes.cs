@@ -763,13 +763,13 @@ namespace MVCApp.Common
                     if (isTransRequire == false && isBackEndRequire == false)
                         query = query.Replace("TRANS_VAL", "NA");
                     else
-                        query = query.Replace("TRANS_VAL", fTBuckleup.TRANSMISSIONSRLNO.Trim());
+                        query = query.Replace("TRANS_VAL", fTBuckleup.TRANSMISSIONSRLNO);
                     if (isRearAxelRequire == false && isBackEndRequire == false)
                         query = query.Replace("REAR_VAL", "NA");
                     else
-                        query = query.Replace("REAR_VAL", fTBuckleup.REARAXELSRLNO.Trim());
+                        query = query.Replace("REAR_VAL", fTBuckleup.REARAXELSRLNO);
                     if (isBackEndRequire == true)
-                        query = query.Replace("BACKEND_VAL", fTBuckleup.BackendSrlno.Trim());
+                        query = query.Replace("BACKEND_VAL", fTBuckleup.BackendSrlno);
                     else
                         query = query.Replace("BACKEND_VAL", "NA");
                     if (TractorType == "DOMESTIC")
