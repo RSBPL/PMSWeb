@@ -3320,7 +3320,7 @@ namespace MVCApp.Controllers.DCU
                     }
                     else
                     {
-                        if (fTBuckleup.BYPASS == "Y" || isBackEndRequire == true)
+                        if (isBackEndRequire == true)
                             Filename = "FBD.TXT";
                         else
                             Filename = "BK.txt";
@@ -3397,7 +3397,7 @@ namespace MVCApp.Controllers.DCU
                     isRearAxelRequire = fun.CheckExits(query);
                     TractorType = fun.get_Col_Value("select TYPE from xxes_daily_plan_TRAN where item_code='" + fTBuckleup.ITEMCODE + "' and autoid='" + fTBuckleup.FCODEID + "' and plant_code='" + fTBuckleup.PLANT.Trim() + "' and family_code='" + fTBuckleup.FAMILY.Trim() + "'");
                     if (TractorType == "EXPORT")
-                        Filename = "BD17.txt";
+                        Filename = "BK.txt";
                     else
                         Filename = "BK.txt";
                     string[] itemname = new string[8];

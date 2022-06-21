@@ -1,0 +1,529 @@
+﻿
+@model MVCApp.Models.PTBUCKlUP 
+<style>
+    #divLoader {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: @Url.Content("~/Image/Loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 10000000;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* For IE8 and earlier */
+    }
+    .ui-autocomplete {
+        max-height: 400px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+
+     .ui-autocomplete {
+        height: 400px;
+    }
+    #PawordPopUp .modal-lg {
+        max-width: 30% !important;
+        border-radius: 8px;
+    }
+    #SerialNoPopUp .modal-lg {
+        max-width: 40% !important;
+    }
+    .important {
+        opacity: -0.5;
+    }
+
+    .test {
+        overflow: auto
+    }
+</style>
+<div id="divLoader" style="display:none;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:10%; margin-left:38%" />
+</div>
+<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+        </li>
+        <li>
+            <a href="#">BulkleUp PT</a>
+        </li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="container" style="width:100%!important">
+        <div id="alert"></div>
+    </div>
+    @*--------Form------------*@
+    <div class="container" style="width:100%!important">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal form-group">
+                <fieldset class="the-fieldset bg-info">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="Plant" class="text-right control-label col-form-label"><strong>PLANT</strong></label>
+                            @Html.DropDownListFor(model => model.Plant, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.Plant, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="Family" class="text-right control-label col-form-label"><strong>FAMILY</strong></label>
+                            @Html.DropDownListFor(model => model.Family, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.Family, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3" id="Item1">
+                            <label for="ItemCode" class="text-right control-label col-form-label"><strong>FCODE</strong></label>
+                            @Html.DropDownListFor(model => model.ItemCode, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.ItemCode, "", new { @class = "text-danger" })</strong>
+
+                        </div>
+                        <div class="col-md-3" id="Item1">
+                            <label for="JobId" class="text-right control-label col-form-label"><strong>JOB</strong></label>
+                            @Html.DropDownListFor(model => model.JobId, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.JobId, "", new { @class = "text-danger" })</strong>
+
+                        </div>
+                        <div class="col-md-3" id="Transsrno">
+                            <label for="BackendSrno" class="text-right control-label col-form-label"><strong>BACKEND  </strong></label>
+                            <label for="Backend" id="lblBackend" style="color:red"></label>
+                            @Html.TextBoxFor(Model => Model.BackendSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.BackendSrno, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3" id="Rearsrno">
+                            <label for="EngineSrno" class="text-right control-label col-form-label"><strong>ENGINE  </strong></label>
+                            <label for="Engine" id="lblEngine" style="color:red"></label>
+                            @Html.TextBoxFor(Model => Model.EngineSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.EngineSrno, "", new { @class = "text-danger" })</strong>
+                        </div>
+                       
+                        <div class="col-md-3">
+                            <label for="isbypass" class="text-right control-label col-form-label"><strong>IS BYPASS MODE ?</strong></label>
+                            <div class="form-check">
+                                @Html.CheckBoxFor(Model => Model.isbypass, new { @class = "largerCheckbox" })
+                            </div>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 26px; ">
+                            <button class="btn btn-success btn-sm" type="button" id="Add" style="border-radius: 8px; "><i class="ace-icon fa fa-print bigger-11"></i><strong>Print</strong></button>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 26px; ">
+                            <button class="btn btn-success btn-sm" type="button" id="Reprint" style="border-radius: 8px;" data-toggle="modal" data-target="#PawordPopUp"><i class="ace-icon fa fa-print bigger-110"></i><strong>Reprint</strong></button>
+                        </div>
+                        <div class="col-md-1" style="padding-top: 26px;">
+                            <button class="btn btn-default btn-sm" type="button" id="Clear" style="border-radius: 8px;"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </div>
+
+        }
+
+    </div>
+</div>
+<div class="modal fade" id="PawordPopUp" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Enter Password</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="ORDERBY" class="col-form-label">Password</label>
+                            @Html.TextBoxFor(Model => Model.Password, null, new { @class = "form-control input-sm", type = "password" })
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="PawordSubmit" class="btn btn-primary" data-toggle="modal" data-target="#SerialNoPopUp">Submit</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="SerialNoPopUp" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Reprint</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <label for="Job" class="control-label col-form-label"><strong>Job</strong></label>
+                            @Html.TextBoxFor(Model => Model.Job, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.Job, "", new { @class = "text-danger" })</strong>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="PopUpPrint" class="btn btn-primary">Print</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+<script src="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.js")"></script>
+<link href="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.css")" rel="stylesheet" />
+
+<script>
+
+    $(document).ready(function () {
+      /*  $('#bksrno').hide();*/
+        $('#lblBackend').hide();
+        $('#lblEngine').hide();
+        DDLPlant();
+        BindTractor();
+        BindJob();
+
+    });
+
+  function BindTractor() {
+        var Data = {
+            Plant: $("#Plant").val(),
+            Family: $("#Family").val()
+        };
+        $.ajax({
+            url: '@Url.Action("BindItemCode", "PTBuckleUP")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify(Data),
+            success: function (result) {
+                $("#ItemCode").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#ItemCode").append(optionhtml);
+                });
+                VisibleBuckleupModal();
+                BindJob();
+
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    $("#Plant").on("change", function () {
+        DDLFamilyByPlant();
+
+    });
+    $("#ItemCode").on("change", function () {
+        VisibleBuckleupModal();
+        BindJob();
+    });
+    $("#Clear").on("click", function () {
+        location.reload(true);
+    });
+
+    function closeAlert(alert) {
+        $(alert).hide();
+    };
+    //$(function () {
+    //    $("#isbypass").click(function () {
+    //        if ($(this).is(":checked")) {
+    //           /* $('#bksrno').show();*/
+    //            $('#Transsrno').hide();
+    //            $('#Rearsrno').hide();
+
+    //        } else {
+    //          /*  $('#bksrno').hide();*/
+    //            $('#Transsrno').show();
+    //            $('#Rearsrno').show();
+
+    //        }
+    //    });
+    //});
+    //Function to bind Plant
+    function DDLPlant() {
+        $.ajax({
+            url: '@Url.Action("BindPlant", "PTBuckleUP")',
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            success: function (result) {
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#Plant").append(optionhtml);
+                });
+                DDLFamilyByPlant();
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    //Function to bind Family by Plant
+    function DDLFamilyByPlant() {
+        var selectedValue = $("#Plant").val();
+        $.ajax({
+            url: '@Url.Action("BindFamily", "PTBuckleUP")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ Plant: selectedValue }),
+            success: function (result) {
+                $("#Family").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#Family").append(optionhtml);
+                });
+                BindTractor();
+              /*  BindJob();*/
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    function BindJob() {
+        var Data = {
+            Plant: $("#Plant").val(),
+            Family: $("#Family").val(),
+            autoid: $("#ItemCode").val()
+        };
+        $.ajax({
+            url: '@Url.Action("BindJob", "PTBuckleUP")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify(Data),
+            success: function (result) {
+                $("#JobId").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+
+                    $("#JobId").append(optionhtml);
+                });
+
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    $("#Add").on("click", function () {
+       /* var itemCode = "";*/
+        $("#divLoader").show();
+        if ($("#isbypass").prop('checked') == true) {
+            chkbox = true;
+        }
+        else {
+            chkbox = false;
+           /* itemCode = $('#Item').val();*/
+        }
+            var data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                ItemCode: $('#ItemCode').val(),
+                JobId: $("#JobId").val(),
+                BackendSrno: $("#BackendSrno").val(),
+                EngineSrno: $("#EngineSrno").val(),
+                isbypass: chkbox
+            };
+            $.ajax({
+                url: '@Url.Action("Print", "PTBuckleUP")',
+                data: JSON.stringify(data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#divLoader").hide();
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                        if ($("#isbypass").prop('checked') == true) {
+                            $("#isbypass").prop(false)
+                        }
+                        else {
+                            $("#isbypass").prop(false)
+                        }
+                        $('#BackendSrno').val("");
+                        $('#EngineSrno').val("");
+                        BindTractor();
+                    }
+
+                },
+                error: function (errormessage) {
+
+                }
+            });
+
+    });
+
+     function VisibleBuckleupModal() {
+        //$("#divLoader").show();
+         var Data = {
+             Plant: $('#Plant').val(),
+             Family: $('#Family').val(),
+             item: $('#ItemCode').val()
+         };
+        $.ajax({
+            url: '@Url.Action("GetDcode", "PTBuckleUP")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (Result) {
+                $('#lblBackend').show();
+                $('#lblEngine').show();
+                $('#lblBackend').text(Result.split("#")[0]);
+                $('#lblEngine').text(Result.split("#")[1]); 
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+
+    /////////////////////////////////////Reprint///////////////////////////////////////////////
+
+
+
+    $("#PawordSubmit").on("click", function () {
+        /* localStorage.setItem("IsTabChange", true);*/
+        ChkPassword();
+    });
+    function ChkPassword() {
+        $("#divLoader").show();
+        var data = {
+            Plant: $('#Plant').val(),
+            Family: $('#Family').val(),
+            Password: $('#Password').val()
+        };
+        $.ajax({
+            url: '@Url.Action("PasswordPopup", "PTBuckleUP")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#PawordPopUp").hide();
+                $(".modal-backdrop").hide();
+                $(".modal-backdrop").addClass("important");
+                $("#divLoader").hide();
+                if (data.Msg == "Valid Password") {
+                    var chk = confirm("Are you sure you want to Reprint this?");
+                    if (chk == true) {
+                        $('body').addClass("test");
+                        $(window).scrollTop(0);
+                       /* Update();*/
+                    }
+                } else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    $('body').addClass("test");
+                    $(window).scrollTop(0);
+                }
+            },
+            error: function (errormessage) {
+
+            }
+        });
+
+    };
+     $("#PopUpPrint").on("click", function () {
+        $("#divLoader").show();
+            var data = {
+                Plant: $('#Plant').val(),
+                Family: $('#Family').val(),
+                Job: $("#Job").val()
+            };
+            $.ajax({
+                url: '@Url.Action("Reprint", "PTBuckleUP")',
+                data: JSON.stringify(data),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+
+                    $("#divLoader").hide();
+                    if (data.validation.includes("error")) {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+
+                    else {
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+
+                    }
+
+                },
+                error: function (errormessage) {
+
+                }
+            });
+
+     });
+
+      /////////////////////////////////////End Reprint///////////////////////////////////////////////
+    $("#Plant").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#Family").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#ItemCode").select2({
+        allowClear: true,
+        width: '100%',
+    });
+    $("#JobId").select2({
+        allowClear: true,
+        width: '100%',
+    });
+
+</script>
+
+
