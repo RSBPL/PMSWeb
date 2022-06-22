@@ -859,6 +859,71 @@ namespace MVCApp.Controllers
                     ViewBag.DataSource = dtMain;
                     return PartialView("GrdAVG_TIME");
                 }
+                else if (Convert.ToString(data.ReportType) == "VEHICLE_IN_OUT")
+                {
+                    string heading = "VEHICLE IN AND OUT REPORT";
+
+                    DA = new OracleDataAdapter("USP_REPORTMASTER", fun.Connection());
+                    DA.SelectCommand.CommandType = CommandType.StoredProcedure;
+                    DA.SelectCommand.Parameters.Add("pREPORT_TYPE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.ReportType;
+                    DA.SelectCommand.Parameters.Add("pPLANT", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.Plant;
+                    DA.SelectCommand.Parameters.Add("pFAMILY", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.Family;
+                    DA.SelectCommand.Parameters.Add("pFROM_DATE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.FromDate;
+                    DA.SelectCommand.Parameters.Add("pTO_DATE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.ToDate;
+                    DA.SelectCommand.Parameters.Add("pSCHEMA", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pCHECK_JOB", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pGLE_JOBS", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pORG_ID", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+
+                    DA.SelectCommand.Parameters.Add("pPlanDate", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pShiftValue", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pStartTime", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pEndTime", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+
+                    DA.SelectCommand.Parameters.Add("pChkShowLess", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pFilterBy", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+
+                    DA.SelectCommand.Parameters.Add("RES", OracleDbType.RefCursor, ParameterDirection.Output);
+                    DA.Fill(dtMain);
+
+                    double totHours = 0, totMinutes = 0, final = 0;
+                    string hours = string.Empty;
+                    try
+                    {
+                        for (int i = 0; i < dtMain.Rows.Count; i++)
+                        {
+                            //string val = Convert.ToString(gridView1.GetRowCellValue(i, "TOTAL_HOURS"));
+                            string val = Convert.ToString(dtMain.Rows[i]["TOTAL_HOURS"]);
+                            if (!string.IsNullOrEmpty(val))
+                            {
+                                if (!string.IsNullOrEmpty(val.Split(':')[0]))
+                                {
+                                    totHours += Convert.ToDouble(val.Split(':')[0].Trim());
+                                }
+                                if (!string.IsNullOrEmpty(val.Split(':')[1]))
+                                {
+                                    totMinutes += Convert.ToDouble(val.Split(':')[1].Trim());
+                                }
+
+
+                            }
+                        }
+                        final = totHours * 60;
+                        final += totMinutes;
+                        final = final / dtMain.Rows.Count;
+                        TimeSpan spWorkMin = TimeSpan.FromMinutes(final);
+                        hours = string.Format("{0:00}:{1:00}", (int)spWorkMin.TotalHours, spWorkMin.Minutes);
+                    }
+                    catch (Exception ex)
+                    {
+                        ViewBag.msg = ex.Message;
+                        return PartialView("RecordNotFoundGrid");
+                    }
+                    ViewBag.heading = heading + " " + hours;
+                    ViewBag.Total = dtMain.Rows.Count;
+                    ViewBag.DataSource = dtMain;
+                    return PartialView("GrdVehicle_INOUT");
+                }
                 else if (Convert.ToString(data.ReportType) == "MAX_MIN")
                 {
                     ViewBag.heading = "MAXIMUM AND MINIMUM VEHICLE STAYS INSIDE";
