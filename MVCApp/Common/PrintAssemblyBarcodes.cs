@@ -622,8 +622,8 @@ namespace MVCApp.Common
                     if (isEngineRequire == false)
                         query = query.Replace("ENGG_VAL", "NA");
                     else
-                        query = query.Replace("ENGG_VAL", pTbuckelup.ENGINESRLNO.Trim());
-                    query = query.Replace("BACKEND_VAL", pTbuckelup.BACKENDSRLNO.Trim().ToUpper());
+                        query = query.Replace("ENGG_VAL", pTbuckelup.ENGINESRLNO);
+                    query = query.Replace("BACKEND_VAL", pTbuckelup.BACKENDSRLNO);
                     if (!string.IsNullOrEmpty(pTbuckelup.TSN))
                     {
                         if (pTbuckelup.TSN.Trim().Length == 17)
