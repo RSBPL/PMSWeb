@@ -1910,7 +1910,7 @@ AND FAMILY_CODE='{5}')
                         }
                         else
                         {
-                            dtStage = returnDataTable(@"select *  from XXES_Stage_Master
+                            dtStage = returnDataTable(@"select *  from  XXES_Stage_Master
                             where plant_code='" + appLogin.Login_Unit.Trim().ToUpper() + "' and family_code='" + appLogin.LoginFamily.Trim().ToUpper() + "' " +
                                 " and stage_id='" + appLogin.LoginStage.Trim().ToUpper() + "'");
 
@@ -2008,6 +2008,7 @@ AND FAMILY_CODE='{5}')
                     case "FTRT":
                     case "HOOK_UP":
                     case "FIPNO":
+                    case "INJ_SCAN":
                         controller = "Tractor";
                         break;
                     default:

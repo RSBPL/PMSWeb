@@ -3843,6 +3843,114 @@ namespace MVCApp.Controllers.DCU
                 Content = new StringContent(response, System.Text.Encoding.UTF8, "application/json")
             };
         }
+        [HttpPost]
+        public string INJEngineDetails(ENGINEINJECTORData data)
+        {
+            try
+            {
+                query = string.Format(@"SELECT nvl(p.dcode,'') || '#' || nvl(ITEM_DESC,'') || '#' ||nvl(INJECTOR,'') || '#' || m.fuel_injection_pump || '#' || m.NO_OF_INJECTORS FROM  
+                        XXES_PRINT_SERIALS p,XXES_ENGINE_MASTER m   WHERE p.dcode=m.item_code and p.SRNO='{0}'", data.engine_srlno);
+                return fun.get_Col_Value(query);
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+                return "ERROR:" + ex.Message;
+            }
+        }
+        [HttpPost]
+        public string ValidateFIP(ENGINEINJECTORData data)
+        {
+            string result = string.Empty;
+            try
+            {
+                query = string.Format(@"SELECT * FROM xxes_engine_barcode_data WHERE ENGINE_SRLNO='{0}' AND BARCODE_DATA='{1}'",
+                                     data.engine_srlno.Trim(), data.fipsrlno.Trim());
+                string engineCode = fun.get_Col_Value(query);
+                if(string.IsNullOrEmpty(engineCode))
+                {
+                    result = "ERROR # INVALID ENGINESRNO OR DCODE NOT FOUND";
+                }
+                if(data.injector == "Y")
+                {
+                    query = string.Format(@"Select ITEM_CODE FROM XXES_FIPMODEL_CODE WHERE MODEL_CODE_NO='{0}", data.fipsrlno.Substring(0, 4).Trim());
+                    data.fipdcode = fun.get_Col_Value(query);
+                    data.splitSerialno = data.fipsrlno.Substring(4, 10);
+                }
+                else
+                {
+                    query = string.Format(@"Select ITEM_CODE FROM XXES_FIPMODEL_CODE WHERE MODEL_CODE_NO='{0}'", data.fipsrlno.Substring(0, 10).Trim());
+                    data.fipdcode = fun.get_Col_Value(query);
+                    data.splitSerialno = data.fipsrlno.Substring(10);
+                }
+                if(string.IsNullOrEmpty(data.fipdcode))
+                {
+                    result = "ERROR # FIP DCODE NOT FOUND IN BARCODE" + data.fipsrlno;
+                }
+                query = string.Format(@"SELECT COUNT(*) FROM XXES_ENGINE_STATUS WHERE FUEL_INJECTION_PUMP_SRNO='{0}' AND ENGINE_SRNO='{1}'", 
+                         data.fipsrlno.Trim(), data.engine_srlno.Trim());
+                if (!fun.CheckExits(query))
+                {
+                    result = "OK # VALID FIP";
+                }
+                else
+                {
+                    result = "ERROR # ALREAD INJECT IN THIS ENGINE AND FIP";
+                }
+            }
+            catch (Exception ex)
+            {
 
+                result = "ERROR # " + ex.Message;
+            }
+            return result;
+        }
+
+        [HttpPost]
+        public string SaveInjector(ENGINEINJECTORData data)
+        {
+            string result = string.Empty;
+            try
+            {
+                if(string.IsNullOrEmpty(data.engine_srlno))
+                {
+                    result = "ERROR # PLEASE SCAN ENGINE";
+                }
+                if(string.IsNullOrEmpty(data.fipsrlno))
+                {
+                    result = "ERROR # PLEASE SCAN FIP";
+                }
+                query = string.Format(@"select ITEM_CODE from XXES_ENGINE_STATUS where FUEL_INJECTION_PUMP_SRNO='{0}' and ENGINE_SRNO<>'{1}'", data.fipsrlno.Trim(), data.engine_srlno.Trim());
+                string line = fun.get_Col_Value(query);
+                if(!string.IsNullOrEmpty(line))
+                {
+                    result = "ERROR # FIP SRNO ALREADY USED ON ENGINE : " + line;
+                }
+                if(!string.IsNullOrEmpty(data.engine_srlno) && !string.IsNullOrEmpty(data.fipsrlno))
+                {
+                    if(data.plantcode == "T04")
+                    {
+                        data.familycode = "ENGINE FTD";
+                    }
+                    else if(data.plantcode == "T05")
+                    {
+                        data.familycode = "ENGINE TD";
+                    }
+                    query = string.Format(@"insert into XXES_ENGINE_STATUS(plant_code,family_code,item_code,engine_srno,FUEL_INJECTION_PUMP_SRNO,
+                            INJECTOR1,INJECTOR2,INJECTOR3,INJECTOR4,ENTRYDATE) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}',SYSDATE)", data.plantcode.Trim().ToUpper(),
+                            data.familycode.Trim().ToUpper(), data.engine, data.engine_srlno, data.fipsrlno, data.injector1, data.injector2, data.injector3, data.injector4);
+                    if(fun.EXEC_QUERY(query))
+                    {
+                        result = "OK # SAVED SUCESSFULLY !!";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+                return "ERROR:" + ex.Message;
+            }
+            return result;
+        }
     }
 }
