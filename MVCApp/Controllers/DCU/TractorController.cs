@@ -1411,21 +1411,21 @@ namespace MVCApp.Controllers.DCU
                     fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", tyres.LOGINSTAGECODE.Trim(), tyres.JOB.Trim(), "ONE OF THE SERIAL NO ALREADY SCANNED. SCANNED SERIAL NO ARE " + tyres.LHSERIALNO.Trim().ToUpper() + " And " + tyres.RHSERIALNO.Trim().ToUpper() + "", tyres.PLANT.Trim(), tyres.FAMILY.Trim(), tyres.CREATEDBY);
                     return "Tyre Serial No Already Scanned";
                 }
-                if (tyres.LOGINSTAGECODE == "FT")
-                {
-                    query = string.Format(@"select count(*) from XXES_JOB_STATUS where FRONTRIM_SRLNO1='{0}' or FRONTRIM_SRLNO2='{1}'
-                                          or FRONTRIM_SRLNO1='{1}' or FRONTRIM_SRLNO2='{0}'", tyres.RIMSERIALLH, tyres.RIMSERIALRH);
-                }
-                else if (tyres.LOGINSTAGECODE == "RT")
-                {
-                    query = string.Format(@"select count(*) from XXES_JOB_STATUS where REARRIM_SRLNO1='{0}' or REARRIM_SRLNO2='{1}'
-                                          or REARRIM_SRLNO1='{1}' or REARRIM_SRLNO2='{0}'", tyres.RIMSERIALLH, tyres.RIMSERIALRH);
-                }
-                if (fun.CheckExits(query))
-                {
-                    fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", tyres.LOGINSTAGECODE.Trim(), tyres.JOB.Trim(), "ONE OF THE SERIAL NO ALREADY SCANNED. SCANNED SERIAL NO ARE " + tyres.RIMSERIALLH.Trim().ToUpper() + " And " + tyres.RIMSERIALRH.Trim().ToUpper() + "", tyres.PLANT.Trim(), tyres.FAMILY.Trim(), tyres.CREATEDBY);
-                    return "RIM Serial No Already Scanned";
-                }
+                //if (tyres.LOGINSTAGECODE == "FT")
+                //{
+                //    query = string.Format(@"select count(*) from XXES_JOB_STATUS where FRONTRIM_SRLNO1='{0}' or FRONTRIM_SRLNO2='{1}'
+                //                          or FRONTRIM_SRLNO1='{1}' or FRONTRIM_SRLNO2='{0}'", tyres.RIMSERIALLH, tyres.RIMSERIALRH);
+                //}
+                //else if (tyres.LOGINSTAGECODE == "RT")
+                //{
+                //    query = string.Format(@"select count(*) from XXES_JOB_STATUS where REARRIM_SRLNO1='{0}' or REARRIM_SRLNO2='{1}'
+                //                          or REARRIM_SRLNO1='{1}' or REARRIM_SRLNO2='{0}'", tyres.RIMSERIALLH, tyres.RIMSERIALRH);
+                //}
+                //if (fun.CheckExits(query))
+                //{
+                //    fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", tyres.LOGINSTAGECODE.Trim(), tyres.JOB.Trim(), "ONE OF THE SERIAL NO ALREADY SCANNED. SCANNED SERIAL NO ARE " + tyres.RIMSERIALLH.Trim().ToUpper() + " And " + tyres.RIMSERIALRH.Trim().ToUpper() + "", tyres.PLANT.Trim(), tyres.FAMILY.Trim(), tyres.CREATEDBY);
+                //    return "RIM Serial No Already Scanned";
+                //}
                 string JOB_REARTYRE_MAKE = string.Empty, JOB_FRONTTYRE_MAKE = string.Empty;
                 //query = string.Format(@"select ITEM_CODE,ITEM_DESCRIPTION,REARTYRE_MAKE,FRONTTYRE_MAKE,REARTYRE,REARTYRE_SRLNO1,REARTYRE_SRLNO2,FRONTTYRE,FRONTTYRE_SRLNO1,FRONTTYRE_SRLNO2 from XXES_JOB_STATUS where JOBID='{0}' and PLANT_CODE='{1}' and family_code='{2}'", tyres.JOB.Trim(), tyres.PLANT.Trim(), tyres.FAMILY.Trim());
                 query = string.Format(@"SELECT M.ITEM_CODE,M.ITEM_DESCRIPTION,S.REARTYRE_MAKE,S.FRONTTYRE_MAKE,S.REARTYRE,
@@ -3088,10 +3088,10 @@ namespace MVCApp.Controllers.DCU
             try
             {
                 string Transmission_Srlno = string.Empty, RearAxel_Srlno = string.Empty;
-                bool isRearAxelRequire = false;
+                bool isRearAxelRequire = false; string remarks = "";
                 bool isTransRequire = false;
                 bool isBackEndRequire = false;
-                bool isByPass = false;
+                bool isByPass = false; string RearAxle = "", Trans = "", ActualAxle = "", ActualTrans = "", Data = "", job = "";
                 bool isRePrint = false; string response = string.Empty; bool printStatus = false;
                 query = string.Format(@"select Require_RearAxel || '#' || Require_Trans || '#' || Require_Backend 
                         from XXES_ITEM_MASTER where ITEM_CODE='{0}'and PLANT_CODE='{1}' and family_code='{2}'",
@@ -3112,153 +3112,158 @@ namespace MVCApp.Controllers.DCU
                 {
                     return "Fcode not found On This Job";
                 }
-                if (string.IsNullOrEmpty(fTBuckleup.BYPASS) == false)
+                if (fTBuckleup.BYPASS == "N")
                 {
-                    fTBuckleup.TRANSMISSIONSRLNO = "";
-                }
-                if (string.IsNullOrEmpty(fTBuckleup.TRANSMISSIONSRLNO) && isTransRequire == true)
-                {
-                    return "ERROR : Please scan Transmission";
-                }
+                    if (string.IsNullOrEmpty(fTBuckleup.BYPASS) == false)
+                    {
+                        fTBuckleup.TRANSMISSIONSRLNO = "";
+                    }
+                    if (string.IsNullOrEmpty(fTBuckleup.TRANSMISSIONSRLNO) && isTransRequire == true)
+                    {
+                        return "ERROR : Please scan Transmission";
+                    }
 
-                if (string.IsNullOrEmpty(fTBuckleup.BYPASS) == false)
-                {
-                    fTBuckleup.REARAXELSRLNO = "";
-                }
-                else if (string.IsNullOrEmpty(fTBuckleup.REARAXELSRLNO) && isRearAxelRequire == true)
-                {
-                    return "ERROR : Please scan RearAxle";
-                }
-                if (string.IsNullOrEmpty(fTBuckleup.BYPASS) == false)
-                {
-                    fTBuckleup.BackendSrlno = "";
-                }
-                else if (string.IsNullOrEmpty(fTBuckleup.BackendSrlno) && isBackEndRequire == true)
-                {
-                    return "ERROR : Please scan Backend";
-                }
+                    if (string.IsNullOrEmpty(fTBuckleup.BYPASS) == false)
+                    {
+                        fTBuckleup.REARAXELSRLNO = "";
+                    }
+                    else if (string.IsNullOrEmpty(fTBuckleup.REARAXELSRLNO) && isRearAxelRequire == true)
+                    {
+                        return "ERROR : Please scan RearAxle";
+                    }
+                    if (string.IsNullOrEmpty(fTBuckleup.BYPASS) == false)
+                    {
+                        fTBuckleup.BackendSrlno = "";
+                    }
+                    else if (string.IsNullOrEmpty(fTBuckleup.BackendSrlno) && isBackEndRequire == true)
+                    {
+                        return "ERROR : Please scan Backend";
+                    }
+                    if (af == null)
+                        af = new Assemblyfunctions();
+                    if (fun == null)
+                        fun = new Function();
+
+                    if (fTBuckleup.TRANSMISSIONSRLNO == fTBuckleup.REARAXELSRLNO
+                        && isTransRequire == true && isRearAxelRequire == true)
+                    {
+                        return "Both SrNo should not be same";
+                    }
 
 
-                if (af == null)
-                    af = new Assemblyfunctions();
-                if (fun == null)
-                    fun = new Function();
 
-                if(fTBuckleup.TRANSMISSIONSRLNO == fTBuckleup.REARAXELSRLNO
-                    && isTransRequire == true && isRearAxelRequire == true)
-                {
-                    return "Both SrNo should not be same";
-                }
-                if(isBackEndRequire)
-                {
-                    query = string.Format(@"select transmission_srlno || '#' || rearaxel_srlno from  XXES_BACKEND_STATUS
+
+                    if (isBackEndRequire)
+                    {
+                        query = string.Format(@"select transmission_srlno || '#' || rearaxel_srlno from  XXES_BACKEND_STATUS
                             where backend_srlno='{0}'", fTBuckleup.BackendSrlno);
-                    line = fun.get_Col_Value(query);
-                    string TransSrlno = "", AxelSrlNo = "";
-                    if (!string.IsNullOrEmpty(line))
-                    {
-                        TransSrlno  = line.Split('#')[0].Trim().ToUpper();
-                        AxelSrlNo  = line.Split('#')[1].Trim().ToUpper();
+                        line = fun.get_Col_Value(query);
+                        string TransSrlno = "", AxelSrlNo = "";
+                        if (!string.IsNullOrEmpty(line))
+                        {
+                            TransSrlno = line.Split('#')[0].Trim().ToUpper();
+                            AxelSrlNo = line.Split('#')[1].Trim().ToUpper();
+                        }
                     }
-                }
-                string TractorType = fun.get_Col_Value("select TYPE from xxes_daily_plan_TRAN where item_code ='" + fTBuckleup.ITEMCODE.Trim() + "' and autoid='" + fTBuckleup.FCODEID + "' and plant_code='" + fTBuckleup.PLANT.Trim() + "' and family_code='" + fTBuckleup.FAMILY.Trim() + "'");
-                if (string.IsNullOrEmpty(TractorType))
-                {
-                    fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), "TRACTOR TYPE NOT FOUND. i.e DOMESTIC OR EXPORT " + fTBuckleup.ITEMCODE + "", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
-                    return "Tractor type not found. i.e Domestic or Export";
-                }
-
-                string RearAxle = "", Trans = "", ActualAxle = "", ActualTrans = "", Data = "", job = "";
-                if (isTransRequire == true)
-                {
-                    Trans = fun.get_Col_Value("select ITEM_CODE from PRINT_SERIAL_NUMBER where SERIAL_NUMBER='" + fTBuckleup.TRANSMISSIONSRLNO + "'");
-                    if (string.IsNullOrEmpty(Trans))
+                    string TractorType = fun.get_Col_Value("select TYPE from xxes_daily_plan_TRAN where item_code ='" + fTBuckleup.ITEMCODE.Trim() + "' and autoid='" + fTBuckleup.FCODEID + "' and plant_code='" + fTBuckleup.PLANT.Trim() + "' and family_code='" + fTBuckleup.FAMILY.Trim() + "'");
+                    if (string.IsNullOrEmpty(TractorType))
                     {
-                        fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), "TRANSMISSION NOT FOUND IN PRINT_SERIAL_NUMBER TABLE.SCANNED SERIAL NO ARE " + fTBuckleup.TRANSMISSIONSRLNO + "", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
-                        return " Transmission Not Found";
-                    }
-                    query = "select JOBID from XXES_JOB_STATUS where TRANSMISSION_SRLNO='" + fTBuckleup.TRANSMISSIONSRLNO + "'";
-                    job = fun.get_Col_Value(query);
-                    if (!string.IsNullOrEmpty(job.Trim()))
-                    {
-                        fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), "TRANSMISSION SERIAL NUMBER ALREADY SCANNED ON JOB " + job.Trim() + " .SCANNED SERIAL NO ARE " + fTBuckleup.TRANSMISSIONSRLNO + "", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
-                        return "Trans SrlNo Already Scanned On Job : " + job.Trim().ToUpper();
-
-                    }
-                }
-                if (isRearAxelRequire == true)
-                {
-                    RearAxle = fun.get_Col_Value("select ITEM_CODE from PRINT_SERIAL_NUMBER where SERIAL_NUMBER='" + fTBuckleup.REARAXELSRLNO + "'");
-                    if (string.IsNullOrEmpty(RearAxle))
-                    {
-                        fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), "REARAXEL NOT FOUND IN PRINT_SERIAL_NUMBER TABLE.SCANNED SERIAL NO ARE " + fTBuckleup.REARAXELSRLNO + "", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
-                        return " RearAxle Not Found";
-                    }
-                    job = "";
-                    query = "select JOBID from XXES_JOB_STATUS where REARAXEL_SRLNO='" + fTBuckleup.REARAXELSRLNO + "'";
-                    job = fun.get_Col_Value(query);
-                    if (!string.IsNullOrEmpty(job.Trim()))
-                    {
-                        fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), "REARAXEL SERIAL NUMBER ALREADY SCANNED ON JOB " + job.Trim() + ".SCANNED SERIAL NO ARE " + fTBuckleup.REARAXELSRLNO + " ", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
-                        return " RearAxel SrlNo Already Scanned On Job" + job.Trim().ToUpper();
-                    }
-                }
-                if(isBackEndRequire == true)
-                {
-                    query = string.Format(@"select JOBID from XXES_JOB_STATUS where BACKEND_SRLNO='{0}'", fTBuckleup.BackendSrlno);
-                    job = fun.get_Col_Value(query);
-                    if (!string.IsNullOrEmpty(job.Trim()))
-                    {
-                        fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), "REARAXEL SERIAL NUMBER ALREADY SCANNED ON JOB " + job.Trim() + ".SCANNED SERIAL NO ARE " + fTBuckleup.REARAXELSRLNO + " ", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
-                        return "Backend SrlNo Already Scanned On Job" + job.Trim().ToUpper();
+                        fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), "TRACTOR TYPE NOT FOUND. i.e DOMESTIC OR EXPORT " + fTBuckleup.ITEMCODE + "", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
+                        return "Tractor type not found. i.e Domestic or Export";
                     }
 
-                }
 
-                query = string.Format(@"select TRANSMISSION || '#' || REARAXEL || '#' || TRANSMISSION_DESCRIPTION || '#' || REARAXEL_DESCRIPTION  
+                    if (isTransRequire == true)
+                    {
+                        Trans = fun.get_Col_Value("select ITEM_CODE from PRINT_SERIAL_NUMBER where SERIAL_NUMBER='" + fTBuckleup.TRANSMISSIONSRLNO + "'");
+                        if (string.IsNullOrEmpty(Trans))
+                        {
+                            fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), "TRANSMISSION NOT FOUND IN PRINT_SERIAL_NUMBER TABLE.SCANNED SERIAL NO ARE " + fTBuckleup.TRANSMISSIONSRLNO + "", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
+                            return " Transmission Not Found";
+                        }
+                        query = "select JOBID from XXES_JOB_STATUS where TRANSMISSION_SRLNO='" + fTBuckleup.TRANSMISSIONSRLNO + "'";
+                        job = fun.get_Col_Value(query);
+                        if (!string.IsNullOrEmpty(job.Trim()))
+                        {
+                            fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), "TRANSMISSION SERIAL NUMBER ALREADY SCANNED ON JOB " + job.Trim() + " .SCANNED SERIAL NO ARE " + fTBuckleup.TRANSMISSIONSRLNO + "", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
+                            return "Trans SrlNo Already Scanned On Job : " + job.Trim().ToUpper();
+
+                        }
+                    }
+                    if (isRearAxelRequire == true)
+                    {
+                        RearAxle = fun.get_Col_Value("select ITEM_CODE from PRINT_SERIAL_NUMBER where SERIAL_NUMBER='" + fTBuckleup.REARAXELSRLNO + "'");
+                        if (string.IsNullOrEmpty(RearAxle))
+                        {
+                            fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), "REARAXEL NOT FOUND IN PRINT_SERIAL_NUMBER TABLE.SCANNED SERIAL NO ARE " + fTBuckleup.REARAXELSRLNO + "", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
+                            return " RearAxle Not Found";
+                        }
+                        job = "";
+                        query = "select JOBID from XXES_JOB_STATUS where REARAXEL_SRLNO='" + fTBuckleup.REARAXELSRLNO + "'";
+                        job = fun.get_Col_Value(query);
+                        if (!string.IsNullOrEmpty(job.Trim()))
+                        {
+                            fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), "REARAXEL SERIAL NUMBER ALREADY SCANNED ON JOB " + job.Trim() + ".SCANNED SERIAL NO ARE " + fTBuckleup.REARAXELSRLNO + " ", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
+                            return " RearAxel SrlNo Already Scanned On Job" + job.Trim().ToUpper();
+                        }
+                    }
+                    if (isBackEndRequire == true)
+                    {
+                        query = string.Format(@"select JOBID from XXES_JOB_STATUS where BACKEND_SRLNO='{0}'", fTBuckleup.BackendSrlno);
+                        job = fun.get_Col_Value(query);
+                        if (!string.IsNullOrEmpty(job.Trim()))
+                        {
+                            fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), "REARAXEL SERIAL NUMBER ALREADY SCANNED ON JOB " + job.Trim() + ".SCANNED SERIAL NO ARE " + fTBuckleup.REARAXELSRLNO + " ", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
+                            return "Backend SrlNo Already Scanned On Job" + job.Trim().ToUpper();
+                        }
+
+                    }
+
+                    query = string.Format(@"select TRANSMISSION || '#' || REARAXEL || '#' || TRANSMISSION_DESCRIPTION || '#' || REARAXEL_DESCRIPTION  
                      from XXES_ITEM_MASTER where trim(ITEM_CODE)='{0}' and PLANT_CODE='{1}' and family_code='{2}'",
-                     fTBuckleup.ITEMCODE, fTBuckleup.PLANT.Trim().ToUpper(), fTBuckleup.FAMILY.Trim().ToUpper());            
-                Data = fun.get_Col_Value(query);
-                if (Data.Trim().IndexOf('#') != -1)
-                {
-                    if (!isBackEndRequire)
+                         fTBuckleup.ITEMCODE, fTBuckleup.PLANT.Trim().ToUpper(), fTBuckleup.FAMILY.Trim().ToUpper());
+                    Data = fun.get_Col_Value(query);
+                    if (Data.Trim().IndexOf('#') != -1)
                     {
-                        ActualTrans = Data.Split('#')[0].Trim().ToUpper();
-                        ActualAxle = Data.Split('#')[1].Trim().ToUpper();
-                        if (isTransRequire == true && string.IsNullOrEmpty(ActualTrans))
+                        if (!isBackEndRequire)
                         {
-                            return " Transmission ItemCode Not Found in MES";
+                            ActualTrans = Data.Split('#')[0].Trim().ToUpper();
+                            ActualAxle = Data.Split('#')[1].Trim().ToUpper();
+                            if (isTransRequire == true && string.IsNullOrEmpty(ActualTrans))
+                            {
+                                return " Transmission ItemCode Not Found in MES";
+                            }
+                            if (isRearAxelRequire == true && string.IsNullOrEmpty(ActualAxle))
+                            {
+                                return " RearAxle ItemCode Not Found in MES";
+                            }
+                            if ((RearAxle.Trim().ToUpper() != ActualAxle.Trim().ToUpper() || Trans.Trim().ToUpper() != ActualTrans.Trim().ToUpper()) && isRearAxelRequire == true && isTransRequire == true && !string.IsNullOrEmpty(ActualTrans) && !string.IsNullOrEmpty(ActualAxle))
+                            {
+                                fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), "MISMATCH AXEL AND TRANSMISSION.SCANNED SERIAL NO ARE " + fTBuckleup.REARAXELSRLNO + "AND " + fTBuckleup.TRANSMISSIONSRLNO + " ", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
+                                return " MisMatch !! Actual Trans : " + ActualTrans + "\n" + "Actual Axle : " + ActualAxle;
+                            }
+                            else if (RearAxle.Trim().ToUpper() != ActualAxle.Trim().ToUpper() && isRearAxelRequire == true && isTransRequire == false && !string.IsNullOrEmpty(ActualAxle))
+                            {
+                                fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), " MISMATCH AXEL.SCANNED SERIAL NO ARE " + fTBuckleup.REARAXELSRLNO + " ", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
+                                return " Axel MisMatch !! Actual Trans : " + ActualTrans;
+                            }
+                            else if (Trans.Trim().ToUpper() != ActualTrans.Trim().ToUpper() && isRearAxelRequire == false && isTransRequire == true && !string.IsNullOrEmpty(ActualTrans))
+                            {
+                                fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), " MISMATCH TRANSMISSION.SCANNED SERIAL NO ARE " + fTBuckleup.TRANSMISSIONSRLNO + " ", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
+                                return " Trans MisMatch !! Actual Trans : " + ActualTrans;
+                            }
                         }
-                        if (isRearAxelRequire == true && string.IsNullOrEmpty(ActualAxle))
+                        query = string.Format(@"SELECT FCODE_AUTOID FROM XXES_DAILY_PLAN_JOB WHERE JOBID='{0}'", fTBuckleup.JOB);
+                        if (string.IsNullOrEmpty(fTBuckleup.FCODEID))
                         {
-                            return " RearAxle ItemCode Not Found in MES";
+                            fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), "INVALID JOB FOR SELECTED MODEL " + fTBuckleup.ITEMCODE.Trim() + " ", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
+                            return "Invalid Job for selected model : " + fTBuckleup.ITEMCODE;
                         }
-                        if ((RearAxle.Trim().ToUpper() != ActualAxle.Trim().ToUpper() || Trans.Trim().ToUpper() != ActualTrans.Trim().ToUpper()) && isRearAxelRequire == true && isTransRequire == true && !string.IsNullOrEmpty(ActualTrans) && !string.IsNullOrEmpty(ActualAxle))
+                        if (fun.get_Col_Value(query).Trim() != fTBuckleup.FCODEID.Trim())
                         {
-                            fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), "MISMATCH AXEL AND TRANSMISSION.SCANNED SERIAL NO ARE " + fTBuckleup.REARAXELSRLNO + "AND " + fTBuckleup.TRANSMISSIONSRLNO + " ", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
-                            return " MisMatch !! Actual Trans : " + ActualTrans + "\n" + "Actual Axle : " + ActualAxle;
+                            fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), "INVALID JOB FOR SELECTED MODEL " + fTBuckleup.ITEMCODE.Trim() + " ", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
+                            return "Invalid Job for selected model : " + fTBuckleup.ITEMCODE;
                         }
-                        else if (RearAxle.Trim().ToUpper() != ActualAxle.Trim().ToUpper() && isRearAxelRequire == true && isTransRequire == false && !string.IsNullOrEmpty(ActualAxle))
-                        {
-                            fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), " MISMATCH AXEL.SCANNED SERIAL NO ARE " + fTBuckleup.REARAXELSRLNO + " ", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
-                            return " Axel MisMatch !! Actual Trans : " + ActualTrans;
-                        }
-                        else if (Trans.Trim().ToUpper() != ActualTrans.Trim().ToUpper() && isRearAxelRequire == false && isTransRequire == true && !string.IsNullOrEmpty(ActualTrans))
-                        {
-                            fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), " MISMATCH TRANSMISSION.SCANNED SERIAL NO ARE " + fTBuckleup.TRANSMISSIONSRLNO + " ", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
-                            return " Trans MisMatch !! Actual Trans : " + ActualTrans;
-                        }
-                    }
-                    query = string.Format(@"SELECT FCODE_AUTOID FROM XXES_DAILY_PLAN_JOB WHERE JOBID='{0}'", fTBuckleup.JOB);
-                    if(string.IsNullOrEmpty(fTBuckleup.FCODEID))
-                    {
-                        fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), "INVALID JOB FOR SELECTED MODEL " + fTBuckleup.ITEMCODE.Trim() + " ", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
-                        return "Invalid Job for selected model : " + fTBuckleup.ITEMCODE;
-                    }
-                    if(fun.get_Col_Value(query).Trim() != fTBuckleup.FCODEID.Trim())
-                    {
-                        fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), "INVALID JOB FOR SELECTED MODEL " + fTBuckleup.ITEMCODE.Trim() + " ", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
-                        return "Invalid Job for selected model : " + fTBuckleup.ITEMCODE;
                     }
                 }
                 query = "";
@@ -3277,10 +3282,10 @@ namespace MVCApp.Controllers.DCU
                         ActualAxle = "";
                         fTBuckleup.REARAXELSRLNO = "";
                     }
-                    string remarks = "";                
+                    //string remarks = "";                
                     if (!isBackEndRequire)
                     {
-                        if (isByPass == true)
+                        if (fTBuckleup.BYPASS == "Y")
                             remarks = "AXEL_TRANS_BYPASS";
                         else if (isRearAxelRequire == false && isTransRequire == true)
                             remarks = "AXEL_NOTENABLE_TRANS_ENABLE";
@@ -3307,7 +3312,7 @@ namespace MVCApp.Controllers.DCU
                     return "Job:" + fTBuckleup.JOB + " already buckled up";
                 }
                 string Filename = "";
-                if (fTBuckleup.IsPrintLabel == "0")
+                if (fTBuckleup.IsPrintLabel == "1")
                 {
                     if (string.IsNullOrEmpty(fTBuckleup.IPADDR.Trim()))
                     {
@@ -3315,11 +3320,11 @@ namespace MVCApp.Controllers.DCU
                     }
                     else
                     {
-                        //if (TractorType == "EXPORT")
+                        if (isBackEndRequire == true)
+                            Filename = "FBD.TXT";
+                        else
                             Filename = "BK.txt";
-                        //Filename = "BD17.txt";
-                        //else
-                        //    Filename = "BK.txt";
+
                         if (fTBuckleup.PrintMMYYFormat.Trim() != "1")
                         {
                             fTBuckleup.SUFFIX = string.Empty;
@@ -3339,14 +3344,14 @@ namespace MVCApp.Controllers.DCU
                         }
                         else
                         {
-                            return "OK # Matched and but not printed successfully !! ";
+                            return "OK # Matched but not printed successfully !! ";
                         }
                     }
                 }
                 else
                     //    return "OK # Matched but print not enabled";
 
-                    return "OK : RECORD SAVE SUCCESSFULLY ";
+                    return "OK # RECORD SAVE SUCCESSFULLY ";
 
             }
             catch (Exception ex)
@@ -3392,7 +3397,7 @@ namespace MVCApp.Controllers.DCU
                     isRearAxelRequire = fun.CheckExits(query);
                     TractorType = fun.get_Col_Value("select TYPE from xxes_daily_plan_TRAN where item_code='" + fTBuckleup.ITEMCODE + "' and autoid='" + fTBuckleup.FCODEID + "' and plant_code='" + fTBuckleup.PLANT.Trim() + "' and family_code='" + fTBuckleup.FAMILY.Trim() + "'");
                     if (TractorType == "EXPORT")
-                        Filename = "BD17.txt";
+                        Filename = "BK.txt";
                     else
                         Filename = "BK.txt";
                     string[] itemname = new string[8];
@@ -3838,6 +3843,114 @@ namespace MVCApp.Controllers.DCU
                 Content = new StringContent(response, System.Text.Encoding.UTF8, "application/json")
             };
         }
+        [HttpPost]
+        public string INJEngineDetails(ENGINEINJECTORData data)
+        {
+            try
+            {
+                query = string.Format(@"SELECT nvl(p.dcode,'') || '#' || nvl(ITEM_DESC,'') || '#' ||nvl(INJECTOR,'') || '#' || m.fuel_injection_pump || '#' || m.NO_OF_INJECTORS FROM  
+                        XXES_PRINT_SERIALS p,XXES_ENGINE_MASTER m   WHERE p.dcode=m.item_code and p.SRNO='{0}'", data.engine_srlno);
+                return fun.get_Col_Value(query);
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+                return "ERROR:" + ex.Message;
+            }
+        }
+        [HttpPost]
+        public string ValidateFIP(ENGINEINJECTORData data)
+        {
+            string result = string.Empty;
+            try
+            {
+                query = string.Format(@"SELECT * FROM xxes_engine_barcode_data WHERE ENGINE_SRLNO='{0}' AND BARCODE_DATA='{1}'",
+                                     data.engine_srlno.Trim(), data.fipsrlno.Trim());
+                string engineCode = fun.get_Col_Value(query);
+                if(string.IsNullOrEmpty(engineCode))
+                {
+                    result = "ERROR # INVALID ENGINESRNO OR DCODE NOT FOUND";
+                }
+                if(data.injector == "Y")
+                {
+                    query = string.Format(@"Select ITEM_CODE FROM XXES_FIPMODEL_CODE WHERE MODEL_CODE_NO='{0}", data.fipsrlno.Substring(0, 4).Trim());
+                    data.fipdcode = fun.get_Col_Value(query);
+                    data.splitSerialno = data.fipsrlno.Substring(4, 10);
+                }
+                else
+                {
+                    query = string.Format(@"Select ITEM_CODE FROM XXES_FIPMODEL_CODE WHERE MODEL_CODE_NO='{0}'", data.fipsrlno.Substring(0, 10).Trim());
+                    data.fipdcode = fun.get_Col_Value(query);
+                    data.splitSerialno = data.fipsrlno.Substring(10);
+                }
+                if(string.IsNullOrEmpty(data.fipdcode))
+                {
+                    result = "ERROR # FIP DCODE NOT FOUND IN BARCODE" + data.fipsrlno;
+                }
+                query = string.Format(@"SELECT COUNT(*) FROM XXES_ENGINE_STATUS WHERE FUEL_INJECTION_PUMP_SRNO='{0}' AND ENGINE_SRNO='{1}'", 
+                         data.fipsrlno.Trim(), data.engine_srlno.Trim());
+                if (!fun.CheckExits(query))
+                {
+                    result = "OK # VALID FIP";
+                }
+                else
+                {
+                    result = "ERROR # ALREAD INJECT IN THIS ENGINE AND FIP";
+                }
+            }
+            catch (Exception ex)
+            {
 
+                result = "ERROR # " + ex.Message;
+            }
+            return result;
+        }
+
+        [HttpPost]
+        public string SaveInjector(ENGINEINJECTORData data)
+        {
+            string result = string.Empty;
+            try
+            {
+                if(string.IsNullOrEmpty(data.engine_srlno))
+                {
+                    result = "ERROR # PLEASE SCAN ENGINE";
+                }
+                if(string.IsNullOrEmpty(data.fipsrlno))
+                {
+                    result = "ERROR # PLEASE SCAN FIP";
+                }
+                query = string.Format(@"select ITEM_CODE from XXES_ENGINE_STATUS where FUEL_INJECTION_PUMP_SRNO='{0}' and ENGINE_SRNO<>'{1}'", data.fipsrlno.Trim(), data.engine_srlno.Trim());
+                string line = fun.get_Col_Value(query);
+                if(!string.IsNullOrEmpty(line))
+                {
+                    result = "ERROR # FIP SRNO ALREADY USED ON ENGINE : " + line;
+                }
+                if(!string.IsNullOrEmpty(data.engine_srlno) && !string.IsNullOrEmpty(data.fipsrlno))
+                {
+                    if(data.plantcode == "T04")
+                    {
+                        data.familycode = "ENGINE FTD";
+                    }
+                    else if(data.plantcode == "T05")
+                    {
+                        data.familycode = "ENGINE TD";
+                    }
+                    query = string.Format(@"insert into XXES_ENGINE_STATUS(plant_code,family_code,item_code,engine_srno,FUEL_INJECTION_PUMP_SRNO,
+                            INJECTOR1,INJECTOR2,INJECTOR3,INJECTOR4,ENTRYDATE) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}',SYSDATE)", data.plantcode.Trim().ToUpper(),
+                            data.familycode.Trim().ToUpper(), data.engine, data.engine_srlno, data.fipsrlno, data.injector1, data.injector2, data.injector3, data.injector4);
+                    if(fun.EXEC_QUERY(query))
+                    {
+                        result = "OK # SAVED SUCESSFULLY !!";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+                return "ERROR:" + ex.Message;
+            }
+            return result;
+        }
     }
 }

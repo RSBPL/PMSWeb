@@ -1,6 +1,5 @@
 ﻿
-
-@model MVCApp.Models.BuckleUPFT
+@model MVCApp.Models.PTBUCKlUP 
 <style>
     #divLoader {
         position: fixed;
@@ -51,7 +50,7 @@
             <a href="@Url.Action("Index", "Home")">Home</a>
         </li>
         <li>
-            <a href="#">BulkleUp FT</a>
+            <a href="#">BulkleUp PT</a>
         </li>
     </ul>
 </div>
@@ -67,12 +66,12 @@
             <div class="form-horizontal form-group">
                 <fieldset class="the-fieldset bg-info">
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label for="Plant" class="text-right control-label col-form-label"><strong>PLANT</strong></label>
                             @Html.DropDownListFor(model => model.Plant, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
                             <strong>@Html.ValidationMessageFor(model => model.Plant, "", new { @class = "text-danger" })</strong>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label for="Family" class="text-right control-label col-form-label"><strong>FAMILY</strong></label>
                             @Html.DropDownListFor(model => model.Family, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
                             <strong>@Html.ValidationMessageFor(model => model.Family, "", new { @class = "text-danger" })</strong>
@@ -87,27 +86,26 @@
                             <label for="JobId" class="text-right control-label col-form-label"><strong>JOB</strong></label>
                             @Html.DropDownListFor(model => model.JobId, Enumerable.Empty<SelectListItem>(), new { @class = "form-control  input-sm" })
                             <strong>@Html.ValidationMessageFor(model => model.JobId, "", new { @class = "text-danger" })</strong>
-
+                        </div>
+                        <div class="col-md-2">
+                            <label for="tractorno" class="text-right control-label col-form-label"><strong>TRACTOR SRNO</strong></label>
+                            <label for="tractorno" id="lbltractorno" style="color:red"></label>
                         </div>
                         <div class="col-md-3" id="Transsrno">
-                            <label for="TransmissionSrno" class="text-right control-label col-form-label"><strong>TRANSMISSION  </strong></label>
-                            <label for="Transmission" id="lblTransmission" style="color:red"></label>
-                            @Html.TextBoxFor(Model => Model.TransmissionSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
-                            <strong>@Html.ValidationMessageFor(model => model.TransmissionSrno, "", new { @class = "text-danger" })</strong>
-                        </div>
-                        <div class="col-md-3" id="Rearsrno">
-                            <label for="RearAxleSrno" class="text-right control-label col-form-label"><strong>REARAXLE  </strong></label>
-                            <label for="RearAxle" id="lblRearAxle" style="color:red"></label>
-                            @Html.TextBoxFor(Model => Model.RearAxleSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
-                            <strong>@Html.ValidationMessageFor(model => model.RearAxleSrno, "", new { @class = "text-danger" })</strong>
-                        </div>
-                        <div class="col-md-3" id="bksrno">
                             <label for="BackendSrno" class="text-right control-label col-form-label"><strong>BACKEND  </strong></label>
+                            <label for="Backend" id="lblBackend" style="color:red"></label>
                             @Html.TextBoxFor(Model => Model.BackendSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
                             <strong>@Html.ValidationMessageFor(model => model.BackendSrno, "", new { @class = "text-danger" })</strong>
                         </div>
+                        <div class="col-md-3" id="Rearsrno">
+                            <label for="EngineSrno" class="text-right control-label col-form-label"><strong>ENGINE  </strong></label>
+                            <label for="Engine" id="lblEngine" style="color:red"></label>
+                            @Html.TextBoxFor(Model => Model.EngineSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.EngineSrno, "", new { @class = "text-danger" })</strong>
+                        </div>
+
                         <div class="col-md-3">
-                            <label for="isbypass" class="text-right control-label col-form-label"><strong>IS BYPASS MODE ?</strong></label>
+                            <label for="isbypass" class="text-right control-label col-form-label"><strong>IS BYPASS MODE?</strong></label>
                             <div class="form-check">
                                 @Html.CheckBoxFor(Model => Model.isbypass, new { @class = "largerCheckbox" })
                             </div>
@@ -165,11 +163,11 @@
             <div class="modal-body">
                 <div class="container-fluid">
                     <div class="row">
-                        
+
                         <div class="col-md-4">
-                            <label for="Job" class="control-label col-form-label"><strong>Job</strong></label>
-                            @Html.TextBoxFor(Model => Model.Job, null, new { @class = "form-control input-sm", @autocomplete = "off" })
-                            <strong>@Html.ValidationMessageFor(model => model.Job, "", new { @class = "text-danger" })</strong>
+                            <label for="TractorSrno" class="control-label col-form-label"><strong>Tractor Srno</strong></label>
+                            @Html.TextBoxFor(Model => Model.TractorSrno, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+                            <strong>@Html.ValidationMessageFor(model => model.TractorSrno, "", new { @class = "text-danger" })</strong>
                         </div>
                     </div>
                 </div>
@@ -193,13 +191,13 @@
 <script>
 
     $(document).ready(function () {
-        $('#bksrno').hide();
-        $('#lblTransmission').hide();
-        $('#lblRearAxle').hide();
+      /*  $('#bksrno').hide();*/
+        $('#lblBackend').hide();
+        $('#lblEngine').hide();
         DDLPlant();
         BindTractor();
         BindJob();
-        
+
     });
 
   function BindTractor() {
@@ -208,7 +206,7 @@
             Family: $("#Family").val()
         };
         $.ajax({
-            url: '@Url.Action("BindItemCode", "BuckleUpFT")',
+            url: '@Url.Action("BindItemCode", "PTBuckleUP")',
             type: "POST",
             contentType: "application/json;charset=UTF-8",
             data: JSON.stringify(Data),
@@ -221,7 +219,7 @@
                 });
                 VisibleBuckleupModal();
                 BindJob();
-               
+                GetTractorNo();
         },
             error: function (errormessage) {
             //alert(errormessage.responseText);
@@ -231,7 +229,7 @@
 
     $("#Plant").on("change", function () {
         DDLFamilyByPlant();
-       
+
     });
     $("#ItemCode").on("change", function () {
         VisibleBuckleupModal();
@@ -244,25 +242,25 @@
     function closeAlert(alert) {
         $(alert).hide();
     };
-    $(function () {
-        $("#isbypass").click(function () {
-            if ($(this).is(":checked")) {              
-                $('#bksrno').show();
-                $('#Transsrno').hide();
-                $('#Rearsrno').hide();
+    //$(function () {
+    //    $("#isbypass").click(function () {
+    //        if ($(this).is(":checked")) {
+    //           /* $('#bksrno').show();*/
+    //            $('#Transsrno').hide();
+    //            $('#Rearsrno').hide();
 
-            } else {
-                $('#bksrno').hide();
-                $('#Transsrno').show();
-                $('#Rearsrno').show();
+    //        } else {
+    //          /*  $('#bksrno').hide();*/
+    //            $('#Transsrno').show();
+    //            $('#Rearsrno').show();
 
-            }
-        });
-    });
+    //        }
+    //    });
+    //});
     //Function to bind Plant
     function DDLPlant() {
         $.ajax({
-            url: '@Url.Action("BindPlant", "BuckleUpFT")',
+            url: '@Url.Action("BindPlant", "PTBuckleUP")',
             type: "GET",
             contentType: "application/json;charset=UTF-8",
             success: function (result) {
@@ -282,7 +280,7 @@
     function DDLFamilyByPlant() {
         var selectedValue = $("#Plant").val();
         $.ajax({
-            url: '@Url.Action("BindFamily", "BuckleUpFT")',
+            url: '@Url.Action("BindFamily", "PTBuckleUP")',
             type: "POST",
             contentType: "application/json;charset=UTF-8",
             data: JSON.stringify({ Plant: selectedValue }),
@@ -309,7 +307,7 @@
             autoid: $("#ItemCode").val()
         };
         $.ajax({
-            url: '@Url.Action("BindJob", "BuckleUpFT")',
+            url: '@Url.Action("BindJob", "PTBuckleUP")',
             type: "POST",
             contentType: "application/json;charset=UTF-8",
             data: JSON.stringify(Data),
@@ -343,13 +341,12 @@
                 Family: $('#Family').val(),
                 ItemCode: $('#ItemCode').val(),
                 JobId: $("#JobId").val(),
-                TransmissionSrno: $("#TransmissionSrno").val(),
-                RearAxleSrno: $("#RearAxleSrno").val(),
                 BackendSrno: $("#BackendSrno").val(),
+                EngineSrno: $("#EngineSrno").val(),
                 isbypass: chkbox
             };
             $.ajax({
-                url: '@Url.Action("Print", "BuckleUpFT")',
+                url: '@Url.Action("Print", "PTBuckleUP")',
                 data: JSON.stringify(data),
                 type: "POST",
                 contentType: "application/json;charset=utf-8",
@@ -380,12 +377,11 @@
                         else {
                             $("#isbypass").prop(false)
                         }
-                        $('#TransmissionSrno').val("");
-                        $('#RearAxleSrno').val("");
                         $('#BackendSrno').val("");
+                        $('#EngineSrno').val("");
                         BindTractor();
                     }
-                   
+
                 },
                 error: function (errormessage) {
 
@@ -402,28 +398,35 @@
              item: $('#ItemCode').val()
          };
         $.ajax({
-            url: '@Url.Action("GetDcode", "BuckleUpFT")',
+            url: '@Url.Action("GetDcode", "PTBuckleUP")',
             data: JSON.stringify(Data),
             type: "POST",
             contentType: "application/json;charset=UTF-8",
             success: function (Result) {
-                var status = Result.split("#")[0];
-                if (status == "Y") {
-                    $('#bksrno').show();
-                    $('#Transsrno').hide();
-                    $('#Rearsrno').hide();
-                    //$('#lblTransmission').show();
-                    //$('#lblRearAxle').show();
-                }
-                else if (status == "N") {
-                    $('#bksrno').hide();
-                    $('#Transsrno').show();
-                    $('#Rearsrno').show();
-                    $('#lblTransmission').show();
-                    $('#lblRearAxle').show();
-                    $('#lblTransmission').text(Result.split("#")[1]);
-                    $('#lblRearAxle').text(Result.split("#")[2]);
-                }
+                $('#lblBackend').show();
+                $('#lblEngine').show();
+                $('#lblBackend').text(Result.split("#")[0]);
+                $('#lblEngine').text(Result.split("#")[1]);
+            },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+     function GetTractorNo() {
+        //$("#divLoader").show();
+         var Data = {
+             Plant: $('#Plant').val(),
+             Family: $('#Family').val()
+         };
+        $.ajax({
+            url: '@Url.Action("GetNextTractorNo", "PTBuckleUP")',
+            data: JSON.stringify(Data),
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            success: function (Result) {
+              /*  $('#lblBackend').show();*/
+                $('#lbltractorno').text(Result);
             },
             error: function (errormessage) {
             //alert(errormessage.responseText);
@@ -447,7 +450,7 @@
             Password: $('#Password').val()
         };
         $.ajax({
-            url: '@Url.Action("PasswordPopup", "BuckleUpFT")',
+            url: '@Url.Action("PasswordPopup", "PTBuckleUP")',
             data: JSON.stringify(data),
             type: "POST",
             contentType: "application/json;charset=utf-8",
@@ -486,10 +489,10 @@
             var data = {
                 Plant: $('#Plant').val(),
                 Family: $('#Family').val(),
-                Job: $("#Job").val()
+                TractorSrno: $("#TractorSrno").val()
             };
             $.ajax({
-                url: '@Url.Action("Reprint", "BuckleUpFT")',
+                url: '@Url.Action("Reprint", "PTBuckleUP")',
                 data: JSON.stringify(data),
                 type: "POST",
                 contentType: "application/json;charset=utf-8",
@@ -545,4 +548,5 @@
     });
 
 </script>
+
 

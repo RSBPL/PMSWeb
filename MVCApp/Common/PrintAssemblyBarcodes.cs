@@ -622,8 +622,8 @@ namespace MVCApp.Common
                     if (isEngineRequire == false)
                         query = query.Replace("ENGG_VAL", "NA");
                     else
-                        query = query.Replace("ENGG_VAL", pTbuckelup.ENGINESRLNO.Trim());
-                    query = query.Replace("BACKEND_VAL", pTbuckelup.BACKENDSRLNO.Trim().ToUpper());
+                        query = query.Replace("ENGG_VAL", pTbuckelup.ENGINESRLNO);
+                    query = query.Replace("BACKEND_VAL", pTbuckelup.BACKENDSRLNO);
                     if (!string.IsNullOrEmpty(pTbuckelup.TSN))
                     {
                         if (pTbuckelup.TSN.Trim().Length == 17)
@@ -763,13 +763,13 @@ namespace MVCApp.Common
                     if (isTransRequire == false && isBackEndRequire == false)
                         query = query.Replace("TRANS_VAL", "NA");
                     else
-                        query = query.Replace("TRANS_VAL", fTBuckleup.TRANSMISSIONSRLNO.Trim());
+                        query = query.Replace("TRANS_VAL", fTBuckleup.TRANSMISSIONSRLNO);
                     if (isRearAxelRequire == false && isBackEndRequire == false)
                         query = query.Replace("REAR_VAL", "NA");
                     else
-                        query = query.Replace("REAR_VAL", fTBuckleup.REARAXELSRLNO.Trim());
+                        query = query.Replace("REAR_VAL", fTBuckleup.REARAXELSRLNO);
                     if (isBackEndRequire == true)
-                        query = query.Replace("BACKEND_VAL", fTBuckleup.BackendSrlno.Trim());
+                        query = query.Replace("BACKEND_VAL", fTBuckleup.BackendSrlno);
                     else
                         query = query.Replace("BACKEND_VAL", "NA");
                     if (TractorType == "DOMESTIC")

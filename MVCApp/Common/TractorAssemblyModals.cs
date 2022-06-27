@@ -350,4 +350,22 @@ namespace MVCApp.Common
         public string engine { get; set; }
         public string itemdesc { get; set; }
     }
+    public class ENGINEINJECTORData
+    {
+        public string plantcode { get; set; }
+        public string familycode { get; set; }
+        public string engine { get; set; }
+        public string engine_srlno { get; set; }
+        public string fipsrlno { get; set; }
+        public string fipdcode { get; set; }
+        public string injector1 { get; set; }
+        public string injector2 { get; set; }
+        public string injector3 { get; set; }
+        public string injector4 { get; set; }
+        public string No_Of_Injector { get; set; }
+        public string splitSerialno { get; set; }
+        public string injector { get; set; }
+        public string orgid { get; set; }
+        public string LoginStageCode { get; set; }
+    }
 }

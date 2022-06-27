@@ -14,7 +14,7 @@ using System.Web.Mvc;
 namespace MVCApp.Controllers.Assembly
 {
     [Authorize]
-    public class BuckleUpFTController : Controller
+    public class FTBuckleUpController : Controller
     {
         // GET: BuckleUpFT
 
@@ -143,8 +143,8 @@ namespace MVCApp.Controllers.Assembly
                     string line = tractor.GetTransmissionRearAxel(cOMMONDATA);
                     if (!string.IsNullOrEmpty(line))
                     {
-                        AxleDcode = line.Split('#')[0].Trim() + " (" + line.Split('#')[4].Trim() + ")";
-                        TransDcode = line.Split('#')[1].Trim() + " (" + line.Split('#')[3].Trim() + ")";
+                        TransDcode = line.Split('#')[0].Trim() + " (" + line.Split('#')[4].Trim() + ")";
+                        AxleDcode = line.Split('#')[1].Trim() + " (" + line.Split('#')[3].Trim() + ")";
                         TRACTOR_DESC = line.Split('#')[2].Trim();
                         isBackEndRequire = (line.Split('#')[5].Trim() == "Y" ? true : false);
                         Not_Require_seq = line.Split('#')[6].Trim();
@@ -223,7 +223,7 @@ namespace MVCApp.Controllers.Assembly
                     {
                         if (string.IsNullOrEmpty(data.BackendSrno))
                         {
-                            msg = "Please Enter RearAxle Srno..";
+                            msg = "Please Enter Backend Srno..";
                             mstType = Validation.str1;
                             status = Validation.str2;
                             var resul = new { Msg = msg, ID = mstType, validation = status };
@@ -306,7 +306,7 @@ namespace MVCApp.Controllers.Assembly
         }
 
         [HttpPost]
-        public JsonResult PasswordPopup(TyrePrinting data)
+        public JsonResult PasswordPopup(BuckleUPFT data)
         {
             string msg = string.Empty; string mstType = string.Empty; string status = string.Empty;
             try

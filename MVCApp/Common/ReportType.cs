@@ -152,7 +152,8 @@ namespace MVCApp
                           new ReportCode(){Code="MRNITEM",Text="ITEM WISE MRN DETAIL"},
                           new ReportCode(){Code="REPRINT_LABEL",Text="REPRINT LABEL"},
                           new ReportCode(){Code="STORE_REPORT",Text="STORE REPORT"},
-                          new ReportCode(){Code="CRITICIAL_VENDOR_MRN",Text="CRITICIAL VENDOR MRN REPORT"}
+                          new ReportCode(){Code="CRITICIAL_VENDOR_MRN",Text="CRITICIAL VENDOR MRN REPORT"},
+                          new ReportCode(){Code="VEHICLE_IN_OUT",Text="VEHICLE IN AND OUT REPORT"}
                      };
                 return al;
             }

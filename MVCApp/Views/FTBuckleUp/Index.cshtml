@@ -208,7 +208,7 @@
             Family: $("#Family").val()
         };
         $.ajax({
-            url: '@Url.Action("BindItemCode", "BuckleUpFT")',
+            url: '@Url.Action("BindItemCode", "FTBuckleUp")',
             type: "POST",
             contentType: "application/json;charset=UTF-8",
             data: JSON.stringify(Data),
@@ -262,7 +262,7 @@
     //Function to bind Plant
     function DDLPlant() {
         $.ajax({
-            url: '@Url.Action("BindPlant", "BuckleUpFT")',
+            url: '@Url.Action("BindPlant", "FTBuckleUp")',
             type: "GET",
             contentType: "application/json;charset=UTF-8",
             success: function (result) {
@@ -282,7 +282,7 @@
     function DDLFamilyByPlant() {
         var selectedValue = $("#Plant").val();
         $.ajax({
-            url: '@Url.Action("BindFamily", "BuckleUpFT")',
+            url: '@Url.Action("BindFamily", "FTBuckleUp")',
             type: "POST",
             contentType: "application/json;charset=UTF-8",
             data: JSON.stringify({ Plant: selectedValue }),
@@ -309,7 +309,7 @@
             autoid: $("#ItemCode").val()
         };
         $.ajax({
-            url: '@Url.Action("BindJob", "BuckleUpFT")',
+            url: '@Url.Action("BindJob", "FTBuckleUp")',
             type: "POST",
             contentType: "application/json;charset=UTF-8",
             data: JSON.stringify(Data),
@@ -349,7 +349,7 @@
                 isbypass: chkbox
             };
             $.ajax({
-                url: '@Url.Action("Print", "BuckleUpFT")',
+                url: '@Url.Action("Print", "FTBuckleUp")',
                 data: JSON.stringify(data),
                 type: "POST",
                 contentType: "application/json;charset=utf-8",
@@ -402,7 +402,7 @@
              item: $('#ItemCode').val()
          };
         $.ajax({
-            url: '@Url.Action("GetDcode", "BuckleUpFT")',
+            url: '@Url.Action("GetDcode", "FTBuckleUp")',
             data: JSON.stringify(Data),
             type: "POST",
             contentType: "application/json;charset=UTF-8",
@@ -447,7 +447,7 @@
             Password: $('#Password').val()
         };
         $.ajax({
-            url: '@Url.Action("PasswordPopup", "BuckleUpFT")',
+            url: '@Url.Action("PasswordPopup", "FTBuckleUp")',
             data: JSON.stringify(data),
             type: "POST",
             contentType: "application/json;charset=utf-8",
@@ -489,7 +489,7 @@
                 Job: $("#Job").val()
             };
             $.ajax({
-                url: '@Url.Action("Reprint", "BuckleUpFT")',
+                url: '@Url.Action("Reprint", "FTBuckleUp")',
                 data: JSON.stringify(data),
                 type: "POST",
                 contentType: "application/json;charset=utf-8",

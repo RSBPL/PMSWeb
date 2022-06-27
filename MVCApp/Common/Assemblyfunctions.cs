@@ -35,8 +35,12 @@ namespace MVCApp.Common
             DataTable dataTable = new DataTable();
             try
             {
-                if (cOMMONDATA.REMARKS.Contains("#"))
-                    cOMMONDATA.REMARKS = cOMMONDATA.REMARKS.Split('#')[2].Trim();
+                if (!string.IsNullOrEmpty(cOMMONDATA.REMARKS))
+                {
+                    if (cOMMONDATA.REMARKS.Contains("#"))
+                        cOMMONDATA.REMARKS = cOMMONDATA.REMARKS.Split('#')[2].Trim();
+                }
+                
                 if (cOMMONDATA.LOCATION == "BUCKLEUP")
                 {
                     query = string.Format(@"select JOBID as TEXT,JOBID as CODE  from XXES_DAILY_PLAN_JOB where FCODE_AUTOID = '{0}' 
