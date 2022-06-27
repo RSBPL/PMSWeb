@@ -274,6 +274,7 @@
     <Compile Include="Controllers\BarcodePrinting\TracktorSubAssemblyController.cs" />
     <Compile Include="Controllers\BarcodePrinting\SubAssemblyController.cs" />
     <Compile Include="Controllers\BarcodePrinting\GateEntryController.cs" />
+    <Compile Include="Controllers\DCU\EngineAssemblyController.cs" />
     <Compile Include="Controllers\LCD\AfterPaintLCD2Controller.cs" />
     <Compile Include="Controllers\LCD\BuckleUpController.cs" />
     <Compile Include="Controllers\LCD\BuckleUpPTController.cs" />

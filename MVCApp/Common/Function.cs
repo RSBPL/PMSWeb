@@ -118,7 +118,7 @@ namespace MVCApp.CommonFunction
 
         public Boolean CheckExits(string SqlQuery)
         {
-            //WriteLog(SqlQuery);
+            WriteLog(SqlQuery);
 
             string ORACLE_CONNECTION_STRING = ConfigurationManager.ConnectionStrings["CON"].ConnectionString;
             Boolean returnValue = false;

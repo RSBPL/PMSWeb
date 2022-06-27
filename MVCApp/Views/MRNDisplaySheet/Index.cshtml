@@ -18,22 +18,36 @@
     .textaligncenter {
         text-align: center;
     }
-    #myTable_wrapper{
-        overflow:auto;
+    /*th {
+        background: white;
+        position: sticky;
+        top: 0;*/ /* Don't forget this, required for the stickiness */
+    /*}*/
+    /*.details-control {
+        position: sticky;
+        position: -webkit-sticky;
+        left: 0;
+        background: #569CA8;
+        z-index: 1;
+        width: 100px;*/ /* How can I make this dynamic? */
+    /*}*/
+    .myclasstest {
+        position: sticky;
+        position: -webkit-sticky;
+        left: 0;
+        background: #569CA8;
+        color: white;
+        z-index: 1;
+        width: 100px; /* How can I make this dynamic? */
     }
-    #myTable thead tr {
-        background: #438eb961;
-        text-align:center;
-    }
-    .dataTable > thead > tr > th[class*=sorting_] {
-        color: black;
-        font-size: 14px;
-        /*font-weight: 600;
-        font-size: 15px;*/
+    table.dataTable td.focus {
+        outline: 1px solid #ac1212;
+        outline-offset: -3px;
+        background-color: #f8e6e6 !important;
     }
 </style>
-<div id="divLoader" style="display:none;">
-    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:10%; margin-left:38%" />
+<div id="divLoader" style="display: none; top: 200px;">
+    <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin: 69px 0 0 0 !important;" />
 </div>
 
 <div class="breadcrumbs ace-save-state" id="breadcrumbs">
@@ -113,12 +127,9 @@
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th colspan="4" class="textaligncenter">Plant Stock</th>
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th> </th>
-                    <th> </th>
                     <th colspan="4" class="textaligncenter">ISIR Status</th>
                 </tr>
                 <tr>
@@ -251,10 +262,6 @@
                     <th>MRN Ageing Status</th>
                     <th>Print Incoming Part</th>
 
-                    <th>Dock</th>
-                    <th>Paint Shop</th>
-                    <th>Line</th>
-                    <th>Storage Location</th>
 
 
                     <th>PO Revision</th>
@@ -282,6 +289,20 @@
 <link href="~/Scripts/DataTable/jquery.dataTables.min.css" rel="stylesheet" />
 <script src="~/Scripts/DataTable/jquery.dataTables.min.js"></script>
 <link href="~/Scripts/DataTable/Custom.css" rel="stylesheet" />
+
+@*<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>*@
+<script type="text/javascript" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/keytable/2.7.0/js/dataTables.keyTable.min.js"></script>
+
+<link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+
 <script>
     $(document).ready(function () {
         $.noConflict();
@@ -308,6 +329,7 @@
 
         $(alert).hide();
     };
+
        //Function to bind Plant
     function DDLPlant() {
         $.ajax({
@@ -350,26 +372,32 @@
             }
         });
     };
-     //Function to bind Grid
-
     function BindGrid() {
         $('#myTable').DataTable().destroy();
 
 
         var dtable = $("#myTable").DataTable({
            /* "scrollX": true,*/
-
+            dom: 'Bfrtip',
             "autoWidth": true,
             "lengthChange": false,
             "pageLength": 20,
+            "scrollY": 550,
+            "scrollX": 1200,
+            "keys": true,
+            "fixedColumns": true,
+            "fixedHeader": true,
+            "scrollCollapse": true,
             "ordering": false,
             "processing": true,
             "serverSide": true,
-            "filter": false,
+            "filter": true,
             "orderMulti": false,
-            "language":
-            {
-                "processing": "<img style='width:50px; height:50px;margin: -26px 0 0 0;' src='/ekidev/Image/Loader.gif' />"
+            language: {
+                search: "SEARCH BY",
+                searchPlaceholder: "Enter min 3 characters",
+                width: "250PX",
+                processing: "<img style='width:50px; height:50px;margin: 65px 0 0 0;' src='/ekidev/Image/Loader.gif' />"
             },
             "ajax": {
 
@@ -390,6 +418,7 @@
 
             "columns": [
                 {
+                    "className": "myclasstest",
                     "render": function (data, type, full, meta) {
                         return '<input type="button" value="Save" class="btnSave btn btn-danger">';
                     }
@@ -543,11 +572,7 @@
                         return '<a onclick=getCrystalReportForMRN("' + mrnno + '","' + itemCode + '")>Inspection Sheet</a> ';
                     }
                 },
-                { "data": "DOCK_QTY" },
 
-                { "data": "PAINTSHOP_QTY" },
-                { "data": "LINE_QTY" },
-                { "data": "STORELOC_QTY" },
                 { "data": "PO_REV" },
                 { "data": "BOM_REVISION" },
                 { "data": "PLANT_CODE" },
@@ -560,22 +585,38 @@
 
 
             ],
+            columnDefs: [{
+                "orderable": true, "targets": 0,
+                'createdCell': function (td, cellData, rowData, row, col) {
+                    $(td).addClass('myclass');
+                    $(td).css('background-color', '#87B87F'),
+                        $(td).css('color', 'white'),
+                        $(td).css('font-size', '14px'),
+                        $(td).css('text-align', 'center')
+                    // $(td).parent('tr').attr('data-id', rowData[0]); // adds the data attribute to the parent this cell row
+                }
+            }],
             columnDefs: [
                 {
-                    "targets": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,92,93,94,95,96,97,98,99,100,101,102],
+
+                    "targets": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,92,93,94,95,96,97,98],
                     "createdCell": function (td, cellData, rowData, row, col) {
                         $(td).css('background-color', '#87B87F'),
                             $(td).css('color', 'white'),
                             $(td).css('font-size', '14px'),
                             $(td).css('text-align', 'center')
-
-
+                            //$(td).css('position','sticky')
+                            //$(td).css('position','-webkit-sticky')
+                            //$(td).css('left','0')
+                            //$(td).css('z-index','1')
                     }
                 }
 
 
+            ],
+            buttons: [
+                'excelHtml5'
             ]
-
 
             //"columnDefs": [
             //    { "width": "3%", "targets": 0, "className": "text-center"},
@@ -598,6 +639,20 @@
             //]
 
         });
+        $(".dataTables_filter input")
+            .unbind() // Unbind previous default bindings
+            .bind("input", function (e) { // Bind our desired behavior
+                // If the length is 3 or more characters, or the user pressed ENTER, search
+                if (this.value.length >= 3 || e.keyCode == 13) {
+                    // Call the API search function
+                    dtable.search(this.value).draw();
+                }
+                // Ensure we clear the search if they backspace far enough
+                if (this.value == "") {
+                    dtable.search("").draw();
+                }
+                return;
+            });
 
 
         $("#divLoader").hide();
@@ -613,7 +668,7 @@
                  url = '@Url.Action("CrystalReportForMRN","MRNDISPLAYSHEET")'
                     url = url + "?MRN=" + data.MRN_NO + "&ItemCode=" + data.ITEMCODE + "&PlantCode=" + data.PLANT_CODE + "&familyCode=" + data.FAMILY_CODE;
                     window.open(url);
-               
+
                  }
     }
     $('#myTable tbody').on('click', '.btnSave', function () {

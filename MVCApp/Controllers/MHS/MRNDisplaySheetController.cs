@@ -63,6 +63,7 @@ namespace MVCApp.Controllers.MHS
             DataTable dt = new DataTable();
             List<MRNQCVIEWMODEL> MRNList = null;
             int recordsTotal = 0;
+            obj.P_Search = Request.Form.GetValues("search[value]").FirstOrDefault();
 
             try
             {
@@ -89,8 +90,7 @@ namespace MVCApp.Controllers.MHS
             double TotalDIM, TotalMT;
             try
             {
-                if (!string.IsNullOrEmpty(data.DIMOK_QTY0))
-                {
+                
                     if (addMRN.IsNumber(data.DIMOK_QTY0, out DIMOKQTY0))
                     {
                         IsDIMEmpty = true;
@@ -103,9 +103,6 @@ namespace MVCApp.Controllers.MHS
                         var resul = new { Msg = msg, ID = mstType, validation = status };
                         return Json(resul, JsonRequestBehavior.AllowGet);
                     }
-                }
-                if (!string.IsNullOrEmpty(data.DIMREJ_QTY0))
-                {
                     if (addMRN.IsNumber(data.DIMREJ_QTY0, out DIMREJQTY0))
                     {
                         IsDIMEmpty = true;
@@ -118,9 +115,6 @@ namespace MVCApp.Controllers.MHS
                         var resul = new { Msg = msg, ID = mstType, validation = status };
                         return Json(resul, JsonRequestBehavior.AllowGet);
                     }
-                }
-                if (!string.IsNullOrEmpty(data.DIMOK_DEV0))
-                {
                     if (addMRN.IsNumber(data.DIMOK_DEV0, out DIMOKDEV0))
                     {
                         IsDIMEmpty = true;
@@ -133,9 +127,6 @@ namespace MVCApp.Controllers.MHS
                         var resul = new { Msg = msg, ID = mstType, validation = status };
                         return Json(resul, JsonRequestBehavior.AllowGet);
                     }
-                }
-                if (!string.IsNullOrEmpty(data.DIMOK_AFTERSEG0))
-                {
                     if (addMRN.IsNumber(data.DIMOK_AFTERSEG0, out DIMOKAFTERSEG0))
                     {
                         IsDIMEmpty = true;
@@ -148,9 +139,6 @@ namespace MVCApp.Controllers.MHS
                         var resul = new { Msg = msg, ID = mstType, validation = status };
                         return Json(resul, JsonRequestBehavior.AllowGet);
                     }
-                }
-                if (!string.IsNullOrEmpty(data.DIMOK_AFTEREWORK0))
-                {
                     if (addMRN.IsNumber(data.DIMOK_AFTEREWORK0, out DIMOKAFTEREWORK0))
                     {
                         IsDIMEmpty = true;
@@ -163,9 +151,6 @@ namespace MVCApp.Controllers.MHS
                         var resul = new { Msg = msg, ID = mstType, validation = status };
                         return Json(resul, JsonRequestBehavior.AllowGet);
                     }
-                }
-                if (!string.IsNullOrEmpty(data.DIMHOLD_QTY0))
-                {
                     if (addMRN.IsNumber(data.DIMHOLD_QTY0, out DIMHOLDQTY0))
                     {
                         IsDIMEmpty = true;
@@ -178,10 +163,6 @@ namespace MVCApp.Controllers.MHS
                         var resul = new { Msg = msg, ID = mstType, validation = status };
                         return Json(resul, JsonRequestBehavior.AllowGet);
                     }
-                }
-
-                if (!string.IsNullOrEmpty(data.MTOK_QTY0))
-                {
                     if (addMRN.IsNumber(data.MTOK_QTY0, out MTOKQTY0))
                     {
                         IsMTEmpty = true;
@@ -194,9 +175,6 @@ namespace MVCApp.Controllers.MHS
                         var resul = new { Msg = msg, ID = mstType, validation = status };
                         return Json(resul, JsonRequestBehavior.AllowGet);
                     }
-                }
-                if (!string.IsNullOrEmpty(data.MTREJ_QTY0))
-                {
                     if (addMRN.IsNumber(data.MTREJ_QTY0, out MTREJQTY0))
                     {
                         IsMTEmpty = true;
@@ -209,9 +187,6 @@ namespace MVCApp.Controllers.MHS
                         var resul = new { Msg = msg, ID = mstType, validation = status };
                         return Json(resul, JsonRequestBehavior.AllowGet);
                     }
-                }
-                if (!string.IsNullOrEmpty(data.MTOK_DEV0))
-                {
                     if (addMRN.IsNumber(data.MTOK_DEV0, out MTOKDEV0))
                     {
                         IsMTEmpty = true;
@@ -224,9 +199,6 @@ namespace MVCApp.Controllers.MHS
                         var resul = new { Msg = msg, ID = mstType, validation = status };
                         return Json(resul, JsonRequestBehavior.AllowGet);
                     }
-                }
-                if (!string.IsNullOrEmpty(data.MTOK_AFTERSEG0))
-                {
                     if (addMRN.IsNumber(data.MTOK_AFTERSEG0, out MTOKAFTERSEG0))
                     {
                         IsMTEmpty = true;
@@ -239,9 +211,6 @@ namespace MVCApp.Controllers.MHS
                         var resul = new { Msg = msg, ID = mstType, validation = status };
                         return Json(resul, JsonRequestBehavior.AllowGet);
                     }
-                }
-                if (!string.IsNullOrEmpty(data.MTOK_AFTEREWORK0))
-                {
                     if (addMRN.IsNumber(data.MTOK_AFTEREWORK0, out MTOKAFTEREWORK0))
                     {
                         IsMTEmpty = true;
@@ -254,9 +223,6 @@ namespace MVCApp.Controllers.MHS
                         var resul = new { Msg = msg, ID = mstType, validation = status };
                         return Json(resul, JsonRequestBehavior.AllowGet);
                     }
-                }
-                if (!string.IsNullOrEmpty(data.MTHOLD_QTY0))
-                {
                     if (addMRN.IsNumber(data.MTHOLD_QTY0, out MTHOLDQTY0))
                     {
                         IsMTEmpty = true;
@@ -269,7 +235,6 @@ namespace MVCApp.Controllers.MHS
                         var resul = new { Msg = msg, ID = mstType, validation = status };
                         return Json(resul, JsonRequestBehavior.AllowGet);
                     }
-                }
 
                 quantity = Convert.ToDouble(data.QUANTITY);
                 if (IsDIMEmpty)

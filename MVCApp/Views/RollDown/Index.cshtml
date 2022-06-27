@@ -79,6 +79,13 @@
     #T05EngineBackend{
         display:none;
     }
+    #PawordPopUp .modal-lg {
+        max-width: 30% !important;
+    }
+
+    #PawordPopUpTab2 .modal-lg {
+        max-width: 30% !important;
+    }
 </style>
 <div id="divLoader" style="display:none;">
     <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:10%; margin-left:38%" />
@@ -155,91 +162,92 @@
                 <div class="row">
                     <div class="col-md-2">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Transmission</strong></label>
-                        @Html.TextBoxFor(Model => Model.Transmission, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                        @Html.TextBoxFor(Model => Model.Transmission, null, new { @class = "form-control input-sm" })
                     </div>
                     <div class="col-md-2">
                         <label for="fname" class="text-right control-label col-form-label"><strong>RearAxel</strong></label>
-                        @Html.TextBoxFor(Model => Model.RearAxel, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                        @Html.TextBoxFor(Model => Model.RearAxel, null, new { @class = "form-control input-sm" })
                     </div>
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Hydraulic</strong></label>
-                        @Html.TextBoxFor(Model => Model.Hydraulic, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                        @Html.TextBoxFor(Model => Model.Hydraulic, null, new { @class = "form-control input-sm" })
                     </div>
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Engine</strong></label>
-                        @Html.TextBoxFor(Model => Model.Engine, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                        @Html.TextBoxFor(Model => Model.Engine, null, new { @class = "form-control input-sm" })
                     </div>
                     <div class="col-md-2" id="T04Skid">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Skid</strong></label>
-                        @Html.TextBoxFor(Model => Model.Skid, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                        @Html.TextBoxFor(Model => Model.Skid, null, new { @class = "form-control input-sm" })
+                    </div>
+                    <div class="col-md-6" style="padding-bottom: 30px; margin-top: 20px;">
+                        <fieldset style="box-shadow: 0 0 8px #000; height: 135px;">
+                            <legend>Rear Tyre</legend>
+                            <div class="col-md-3">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Left Side Srlno</strong></label>
+                                @Html.TextBoxFor(Model => Model.RearSrnn1, null, new { @class = "form-control input-sm" })
+                            </div>
+                            <div class="col-md-3">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Right Side Srlno</strong></label>
+                                @Html.TextBoxFor(Model => Model.RearSrnn2, null, new { @class = "form-control input-sm" })
+                            </div>
+                            <div class="col-md-3">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Left Side RIM</strong></label>
+                                @Html.TextBoxFor(Model => Model.RearRIM1, null, new { @class = "form-control input-sm" })
+                            </div>
+                            <div class="col-md-3">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Right SIde RIM</strong></label>
+                                @Html.TextBoxFor(Model => Model.RearRIM2, null, new { @class = "form-control input-sm" })
+                            </div>
+                            @*<div class="col-md-4">
+                    <label for="fname" class="text-right control-label col-form-label"><strong>Tyre1</strong></label>
+                    @Html.TextBoxFor(Model => Model.RearTyre1, null, new { @class = "form-control input-sm", @Style = "width: 178px;margin: 0px 0 0 7px; "  })
+                </div>*@
+
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6" style="padding-bottom: 30px; margin-top: 20px;">
+                        <fieldset style="box-shadow: 0 0 8px #000; height: 135px;">
+                            <legend>Font Tyre</legend>
+                            <div class="col-md-3">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Left Side Srlno</strong></label>
+                                @Html.TextBoxFor(Model => Model.FrontSrnn1, null, new { @class = "form-control input-sm" })
+                            </div>
+                            <div class="col-md-3">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Right Side Srlno</strong></label>
+                                @Html.TextBoxFor(Model => Model.FrontSrnn2, null, new { @class = "form-control input-sm" })
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Left Side RIM</strong></label>
+                                @Html.TextBoxFor(Model => Model.FrontRIM1, null, new { @class = "form-control input-sm" })
+                            </div>
+                            <div class="col-md-3">
+                                <label for="fname" class="text-right control-label col-form-label"><strong>Right Side RIM</strong></label>
+                                @Html.TextBoxFor(Model => Model.FrontRIM2, null, new { @class = "form-control input-sm" })
+                            </div>
+                            @*<div class="col-md-4">
+                    <label for="fname" class="text-right control-label col-form-label"><strong>Tyre1</strong></label>
+                    @Html.TextBoxFor(Model => Model.FrontTyre1_srlno1, null, new { @class = "form-control input-sm", @Style = "width: 178px;margin: 0px 0 0 7px; "  })
+                </div>*@
+                        </fieldset>
                     </div>
                     <div class="col-md-2" id="T05EngineBackend">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Backend</strong></label>
-                        @Html.TextBoxFor(Model => Model.Backend, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                        @Html.TextBoxFor(Model => Model.Backend, null, new { @class = "form-control input-sm" })
                     </div>
-                    <div class="col-md-6">
-                        <fieldset style="margin: 0 0 0 -10px;">
-                            <legend>Rear Tyre</legend>
-                            <div class="col-md-4">
-                                <label for="fname" class="text-right control-label col-form-label"><strong>Sr.no 1</strong></label>
-                                @Html.TextBoxFor(Model => Model.RearSrnn1, null, new { @class = "form-control input-sm", @readonly = "readonly" })
-                            </div>
-                            <div class="col-md-4">
-                                <label for="fname" class="text-right control-label col-form-label"><strong>RIM1</strong></label>
-                                @Html.TextBoxFor(Model => Model.RearRIM1, null, new { @class = "form-control input-sm", @readonly = "readonly" })
-                            </div>
-                            <div class="col-md-4">
-                                <label for="fname" class="text-right control-label col-form-label"><strong>Tyre1</strong></label>
-                                @Html.TextBoxFor(Model => Model.RearTyre1, null, new { @class = "form-control input-sm", @Style = "width: 178px;margin: 0px 0 0 7px; ", @readonly = "readonly" })
-                            </div>
+                    @*<div class="col-md-2">
+            <label for="fname" class="text-right control-label col-form-label"><strong>Tyre2</strong></label>
+            @Html.TextBoxFor(Model => Model.RearTyre2_srlno2, null, new { @class = "form-control input-sm"  })
+        </div>*@
 
-                        </fieldset>
-                    </div>
-                    <div class="col-md-6">
-                        <fieldset style="margin: 0 0 0 -10px;">
-                            <legend>Font Tyre</legend>
-                            <div class="col-md-4">
-                                <label for="fname" class="text-right control-label col-form-label"><strong>Sr.no 1</strong></label>
-                                @Html.TextBoxFor(Model => Model.FrontSrnn1, null, new { @class = "form-control input-sm", @readonly = "readonly" })
-                            </div>
-                            <div class="col-md-4">
-                                <label for="fname" class="text-right control-label col-form-label"><strong>RIM1</strong></label>
-                                @Html.TextBoxFor(Model => Model.FrontRIM1, null, new { @class = "form-control input-sm", @readonly = "readonly" })
-                            </div>
-                            <div class="col-md-4">
-                                <label for="fname" class="text-right control-label col-form-label"><strong>Tyre1</strong></label>
-                                @Html.TextBoxFor(Model => Model.FrontTyre1_srlno1, null, new { @class = "form-control input-sm", @Style = "width: 178px;margin: 0px 0 0 7px; ", @readonly = "readonly" })
-                            </div>
-                        </fieldset>
-                    </div>
-                    <div class="col-md-2">
-                        <label for="fname" class="text-right control-label col-form-label"><strong>Sr.no 2</strong></label>
-                        @Html.TextBoxFor(Model => Model.RearSrnn2, null, new { @class = "form-control input-sm", @readonly = "readonly" })
-                    </div>
-                    <div class="col-md-2">
-                        <label for="fname" class="text-right control-label col-form-label"><strong>RIM2</strong></label>
-                        @Html.TextBoxFor(Model => Model.RearRIM2, null, new { @class = "form-control input-sm", @readonly = "readonly" })
-                    </div>
-                    <div class="col-md-2">
-                        <label for="fname" class="text-right control-label col-form-label"><strong>Tyre2</strong></label>
-                        @Html.TextBoxFor(Model => Model.RearTyre2_srlno2, null, new { @class = "form-control input-sm", @readonly = "readonly" })
-                    </div>
-
-                    <div class="col-md-2">
-                        <label for="fname" class="text-right control-label col-form-label"><strong>Sr.no 2</strong></label>
-                        @Html.TextBoxFor(Model => Model.FrontSrnn2, null, new { @class = "form-control input-sm", @readonly = "readonly" })
-                    </div>
-                    <div class="col-md-2">
-                        <label for="fname" class="text-right control-label col-form-label"><strong>RIM2</strong></label>
-                        @Html.TextBoxFor(Model => Model.FrontRIM2, null, new { @class = "form-control input-sm", @readonly = "readonly" })
-                    </div>
-                    <div class="col-md-2">
-                        <label for="fname" class="text-right control-label col-form-label"><strong>Tyre2</strong></label>
-                        @Html.TextBoxFor(Model => Model.FrontTyre2_srlno2, null, new { @class = "form-control input-sm", @readonly = "readonly" })
-                    </div>
+                    @*<div class="col-md-2">
+            <label for="fname" class="text-right control-label col-form-label"><strong>Tyre2</strong></label>
+            @Html.TextBoxFor(Model => Model.FrontTyre2_srlno2, null, new { @class = "form-control input-sm"  })
+        </div>*@
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Battery</strong></label>
-                        @Html.TextBoxFor(Model => Model.Battery, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                        @Html.TextBoxFor(Model => Model.Battery, null, new { @class = "form-control input-sm" })
                     </div>
                     <div class="col-md-3" style="margin: 8px 0 0 0;">
                         <label for="fname" class="text-right control-label col-form-label"><strong></strong></label>
@@ -250,62 +258,62 @@
                     </div>
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Hydrualic Pump</strong></label>
-                        @Html.TextBoxFor(Model => Model.HydrualicPump, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                        @Html.TextBoxFor(Model => Model.HydrualicPump, null, new { @class = "form-control input-sm" })
                     </div>
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Radiator</strong></label>
-                        @Html.TextBoxFor(Model => Model.Radiator, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                        @Html.TextBoxFor(Model => Model.Radiator, null, new { @class = "form-control input-sm" })
                     </div>
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Power Steering Cylinder</strong></label>
-                        @Html.TextBoxFor(Model => Model.SteeringCylinder, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                        @Html.TextBoxFor(Model => Model.SteeringCylinder, null, new { @class = "form-control input-sm" })
                     </div>
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Steering Motor</strong></label>
-                        @Html.TextBoxFor(Model => Model.SteeringMotor, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                        @Html.TextBoxFor(Model => Model.SteeringMotor, null, new { @class = "form-control input-sm" })
                     </div>
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Steering Assembly</strong></label>
-                        @Html.TextBoxFor(Model => Model.SteeringAssem, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                        @Html.TextBoxFor(Model => Model.SteeringAssem, null, new { @class = "form-control input-sm" })
                     </div>
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Alternator</strong></label>
-                        @Html.TextBoxFor(Model => Model.Alternator, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                        @Html.TextBoxFor(Model => Model.Alternator, null, new { @class = "form-control input-sm" })
                     </div>
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Cluster Assembly</strong></label>
-                        @Html.TextBoxFor(Model => Model.Cluster, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                        @Html.TextBoxFor(Model => Model.Cluster, null, new { @class = "form-control input-sm" })
                     </div>
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Starter Motor</strong></label>
-                        @Html.TextBoxFor(Model => Model.Motor, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                        @Html.TextBoxFor(Model => Model.Motor, null, new { @class = "form-control input-sm" })
                     </div>
 
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>ROPS Srno</strong></label>
-                        @Html.TextBoxFor(Model => Model.ROPSrno, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                        @Html.TextBoxFor(Model => Model.ROPSrno, null, new { @class = "form-control input-sm" })
                     </div>
                     <div class="col-md-2">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Oil Qty</strong></label>
-                        @Html.TextBoxFor(Model => Model.OilQty, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                        @Html.TextBoxFor(Model => Model.OilQty, null, new { @class = "form-control input-sm" })
                     </div>
 
                     <div class="col-md-1">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Quantity</strong></label>
-                        @Html.TextBoxFor(Model => Model.Quantity, null, new { @class = "form-control input-sm" })
+                        @Html.TextBoxFor(Model => Model.Quantity, null, new { @class = "form-check-input", @Style = "width: 80px;" })
                     </div>
 
                     <div class="col-md-2">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Sr.no </strong></label>
-                        @Html.TextBoxFor(Model => Model.Srno, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                        @Html.TextBoxFor(Model => Model.Srno, null, new { @class = "form-control input-sm" })
                     </div>
                     <div class="col-md-2">
                         <label for="fname" class="text-right control-label col-form-label"><strong>IMEI</strong></label>
-                        @Html.TextBoxFor(Model => Model.IMEI, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                        @Html.TextBoxFor(Model => Model.IMEI, null, new { @class = "form-control input-sm" })
                     </div>
                     <div class="col-md-2">
                         <label for="fname" class="text-right control-label col-form-label"><strong>MOBILE</strong></label>
-                        @Html.TextBoxFor(Model => Model.MOBILE, null, new { @class = "form-control input-sm", @readonly = "readonly" })
+                        @Html.TextBoxFor(Model => Model.MOBILE, null, new { @class = "form-control input-sm" })
                     </div>
                     <div class="col-md-2">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Stage</strong></label>
@@ -323,8 +331,45 @@
                             <button class="btn btn-default btn-sm" type="button" id="CLEAR"><i class="ace-icon fa fa-eraser bigger-110"></i><strong>Clear</strong></button>
                         </div>
                     </div>
+                    <div class="col-md-1" style="margin: 25px 4px 0 0;" id="ShowHideUpdate">
+                        <div>
+                            <button class="btn btn-success btn-sm" type="button" id="Updatepop" data-toggle="modal" data-target="#PawordPopUp"><strong>Update</strong></button>
+                        </div>
+                    </div>
+                    <div class="col-md-1" style="margin: 25px 4px 0 0;" id="RealUpdate">
+                        <div>
+                            <button class="btn btn-success btn-sm" type="button" id="Update"><strong>Update</strong></button>
+                        </div>
+                    </div>
                 </div>
             </fieldset>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="PawordPopUp" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Enter Password</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="ORDERBY" class="col-form-label">Password</label>
+                            @Html.TextBoxFor(Model => Model.Password, null, new { @class = "form-check-input", type = "password" })
+
+                            @*@Html.TextBoxFor(Model => Model.Password, null, new { @class = "form-control", @autocomplete = "off" })*@
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="PawordSubmit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+
         </div>
     </div>
 </div>
@@ -347,9 +392,147 @@
         AutoComplete();
         $("#T04Skid").show();
         $("#T05EngineBackend").hide();
+        $("#ShowHideUpdate").hide();
+        $("#RealUpdate").hide();
+    });
+
+    $("#PawordSubmit").on("click", function () {
+        /* localStorage.setItem("IsTabChange", true);*/
+        ChkPassword();
     });
 
 
+    function ChkPassword() {
+        $("#divLoader").show();
+        var data = {
+            PLANTCODE: $('#PLANTCODE').val(),
+            FAMILYCODE: $('#FAMILYCODE').val(),
+            Password: $('#Password').val()
+        };
+        $.ajax({
+            url: '@Url.Action("PasswordPopup", "RollDown")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#PawordPopUp").hide();
+                $(".modal-backdrop").hide();
+                $(".modal-backdrop").addClass("important");
+                $("#divLoader").hide();
+                if (data.Msg == "Valid Password") {
+                    var chk = confirm("Are you sure you want to Update this?");
+                    if (chk == true) {
+                        $('body').addClass("test");
+                        $(window).scrollTop(0);
+                        $('.form-control').attr('readonly', false);
+                        $("#ShowHideUpdate").hide();
+                        $("#RealUpdate").show();
+                    }
+                } else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                    $('body').addClass("test");
+                    $(window).scrollTop(0);
+                }
+            },
+            error: function (errormessage) {
+
+            }
+        });
+
+    };
+    $('#Update').on('click', function () {
+        Update();
+        //NewTractorCode();
+    });
+    function Update() {
+        $("#divLoader").show();
+        var itemCode = $('#JOBID').val();
+        const myArray = itemCode.split("#");
+        var tractorSrlno = myArray[0];
+        var jobid = myArray[3];
+        if (myArray.length < 2) {
+            jobid = myArray[0];
+        }
+        var itemCode = $('#ItemCode').val();
+
+        var Data = {
+            JOBID: jobid,
+            PLANTCODE: $('#PLANTCODE').val(),
+            FAMILYCODE: $('#FAMILYCODE').val(),
+            Engine:$("#Engine").val(),
+            Transmission:$("#Transmission").val(),
+            RearAxel:$("#RearAxel").val(),
+            Backend:$("#Backend").val(),
+            Hydraulic:$("#Hydraulic").val(),
+            RearSrnn1:$("#RearSrnn1").val(),
+            RearSrnn2:$("#RearSrnn2").val(),
+            FrontSrnn1:$("#FrontSrnn1").val(),
+            FrontSrnn2:$("#FrontSrnn2").val(),
+            Battery:$("#Battery").val(),
+            HydrualicPump:$("#HydrualicPump").val(),
+            SteeringMotor:$("#SteeringMotor").val(),
+            SteeringAssem:$("#SteeringAssem").val(),
+            SteeringCylinder:$("#SteeringCylinder").val(),
+            Radiator:$("#Radiator").val(),
+            Cluster:$("#Cluster").val(),
+            Alternator:$("#Alternator").val(),
+            Motor:$("#Motor").val(),
+            RearRIM1:$("#RearRIM1").val(),
+            RearRIM2:$("#RearRIM2").val(),
+            FrontRIM1:$("#FrontRIM1").val(),
+            FrontRIM2:$("#FrontRIM2").val(),
+            RearTyre1:$("#RearTyre1").val(),
+            RearTyre2_srlno2:$("#RearTyre2_srlno2").val(),
+            FrontTyre1:$("#FrontTyre1").val(),
+            FrontTyre2_srlno2:$("#FrontTyre2_srlno2").val(),
+            Srno:$("#Srno").val(),
+            IMEI:$("#IMEI").val(),
+            MOBILE:$("#MOBILE").val()
+
+        };
+        $.ajax({
+            url: '@Url.Action("Update", "RollDown")',
+            data: JSON.stringify({ obj: Data }),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#divLoader").hide();
+                if (data != "" || data != null) {
+                    if (data.includes("Update")) {
+                        $('#alert').append('<div class="alert alert-success role = "alert"><strong>' + data + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        //setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+
+                    }
+                    else {
+                        $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + data + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        //setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+
+                    }
+
+                }
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    };
     function AutoComplete() {
         var itemCode = $('#JOBID').val();
         const myArray = itemCode.split("#");
@@ -383,7 +566,7 @@
             },
             select: function (event, ui) {
                 if (ui.item.value != undefined) {
-                    gleSearch_EditValueChanged();
+                    gleSearch_EditValueChanged(ui.item.value);
                 }
             },
             minLength: 4
@@ -486,11 +669,17 @@
     //});
 
 
-    function gleSearch_EditValueChanged() {
+    function gleSearch_EditValueChanged(JObS) {
 
         if ($('#JOBID').val() != "") {
             var itemCode = $('#JOBID').val();
+            if (JObS != null) {
+                itemCode = JObS;
+            } else {
+                itemCode = $('#JOBID').val();
+            }
             const myArray = itemCode.split("#");
+            var tractorSrlno = myArray[0];
             var jobid = myArray[3];
             if (myArray.length < 2) {
                 jobid = myArray[0];
@@ -498,7 +687,8 @@
             var Data = {
                 PLANTCODE: $('#PLANTCODE').val(),
                 FAMILYCODE: $('#FAMILYCODE').val(),
-                JOBID: jobid
+                JOBID: jobid,
+                TractorSrlno: tractorSrlno
             };
         } else {
             return;
@@ -624,7 +814,8 @@
                         if (data.Result.TractorAutoid != "" && data.Result.TractorAutoid != null) {
                             $("#TractorAutoid").val(data.Result.TractorAutoid);
                         }
-                        //$('input').attr('readonly', true);
+                        $('.form-control').attr('readonly', true);
+                        $("#ShowHideUpdate").show();
                     }
 
                 },
