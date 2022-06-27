@@ -33,6 +33,7 @@ $(document).ready(function () {
     AC_FrontGrill();
     AC_MainHarnessBonnet();
     AC_Spindle();
+    AC_ECU();
     /*AC_Motor();*/
     AC_T4_ItemCode();
 
@@ -42,6 +43,7 @@ $(document).ready(function () {
     AC_FRBRH();
     AC_FRBLH();
     AC_FRASRB();
+  
     //------------------Add New Close-------------------
 });
 
@@ -1113,6 +1115,46 @@ function AC_FRASRB() {
 
     });
 }
+function AC_ECU() {
+    $("#ECU").autocomplete({
+        source: function (request, response) {
+
+            var Data = {
+                Plant: $('#T4_Plant').val(),
+                Family: $('#T4_Family').val(),
+                ECU: $('#ECU').val()
+            };
+            $.ajax({
+                url: ECUCODE,
+                type: "POST",
+                contentType: 'application/json;charset=utf-8',
+                dataType: "json",
+                data: JSON.stringify({ data: Data }),
+                success: function (data) {
+                    response($.map(data, function (item) {
+
+                        return { label: item.Text, value: item.Text };
+                    }))
+                },
+                error: function (err) {
+                    alert(err);
+                }
+            });
+        },
+
+        minLength: 3,
+        response: function (event, ui) {
+            if (!ui.content.length) {
+                var noResult = { value: "", label: "No results found" };
+                ui.content.push(noResult);
+
+            } else {
+                //$("#message").empty();
+            }
+        }
+
+    });
+}
 
 function AC_T4_ItemCode() {
     $("#T4_ItemCode").autocomplete({
@@ -1321,7 +1363,9 @@ function AddS() {
         FRB_RH: $("#FRB_RH").val(),
         FRB_LH: $("#FRB_LH").val(),
         FR_AS_RB: $("#FR_AS_RB").val(),
-        Slider_RH: $("#Slider_RH").val()
+        Slider_RH: $("#Slider_RH").val(),
+        ECUChk: $('#ECUChk').prop("checked"),
+        ECU: $("#ECU").val()
         
     };
     $.ajax({
@@ -1413,7 +1457,9 @@ function UpdateS() {
         FRB_RH: $("#FRB_RH").val(),
         FRB_LH: $("#FRB_LH").val(),
         FR_AS_RB: $("#FR_AS_RB").val(),
-        Slider_RH: $("#Slider_RH").val()
+        Slider_RH: $("#Slider_RH").val(),
+        ECUChk: $('#ECUChk').prop("checked"),
+        ECU: $("#ECU").val()
     };
     $.ajax({
         url: updateUpdateS,
@@ -1494,6 +1540,8 @@ function ClearS() {
     $("#MainHarnessBonnet").val("");
     $("#Spindle").val("");
     $("#Motor").val("");
+    $('#ECUChk').prop("checked", false);
+    $('#ECU').val("");
 };
 
 
@@ -1679,12 +1727,17 @@ function gleSearch_EditValueChangedTab2() {
                     $("#FR_AS_RB").val(data.Result.FR_AS_RB);
 
                 }
+                if (data.Result.ECU != "" && data.Result.ECU != null) {
+                    $("#ECU").val(data.Result.ECU);
+
+                }
               
                  //---------------------------Add New Start----------------------------------
 
                 /////////////////////checkboxes/////////////////////////
                 $("#FrontRimChk").prop('checked', data.Result.FrontRimChk);
                 $("#RearRimChk").prop('checked', data.Result.RearRimChk);
+                $("#ECUChk").prop('checked', data.Result.RearRimChk);
 
                 $('#AddS').hide();
                 $('#UpdateS').show();

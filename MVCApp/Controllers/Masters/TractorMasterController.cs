@@ -4830,6 +4830,43 @@ namespace MVCApp.Controllers
             }
             return Json(_FrontGrill, JsonRequestBehavior.AllowGet);
         }
+        public JsonResult FillECUCODE(TractorMster data)
+        {
+            List<DDLTextValue> _result = new List<DDLTextValue>();
+            try
+            {
+                string schema = Convert.ToString(ConfigurationSettings.AppSettings["Schema"]);
+                if (string.IsNullOrEmpty(schema) || string.IsNullOrEmpty(data.Plant) || string.IsNullOrEmpty(data.Family))
+                {
+                    return Json(null, JsonRequestBehavior.AllowGet);
+                }
+                string orgid = fun.getOrgId(Convert.ToString(data.Plant).Trim().ToUpper(), Convert.ToString(data.Family).Trim().ToUpper());
+                DataTable dt = new DataTable();
+                if (!string.IsNullOrEmpty(data.ECU))
+                {
+                    query = string.Format(@"select distinct segment1 || ' # ' || description as DESCRIPTION, segment1 as ITEM_CODE from " + schema + ".mtl_system_items " +
+                        "where organization_id in (" + orgid + ") and substr(segment1, 1, 1) in ('D','S') AND (SEGMENT1 LIKE '%{0}%' OR DESCRIPTION LIKE '%{1}%') order by segment1", data.ECU.Trim().ToUpper(), data.ECU.Trim().ToUpper());
+                }
+
+                dt = fun.returnDataTable(query);
+                if (dt.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in dt.AsEnumerable())
+                    {
+                        _result.Add(new DDLTextValue
+                        {
+                            Text = dr["DESCRIPTION"].ToString(),
+                            Value = dr["ITEM_CODE"].ToString(),
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+            }
+            return Json(_result, JsonRequestBehavior.AllowGet);
+        }
         public JsonResult FillMainHarnessBonnet(TractorMster data)
         {
             List<DDLTextValue> _MainHarnessBonnet = new List<DDLTextValue>();
@@ -4904,6 +4941,8 @@ namespace MVCApp.Controllers
             }
             return Json(_Spindle, JsonRequestBehavior.AllowGet);
         }
+
+     
         //public JsonResult FillMotor(TractorMster data)
         //{
         //    List<DDLTextValue> _Motor = new List<DDLTextValue>();
@@ -5196,6 +5235,12 @@ namespace MVCApp.Controllers
                     string[] item = StringSpliter(obj.FR_AS_RB);
                     obj.FR_AS_RB = item[0].Trim();
                     obj.FR_AS_RB_DESC = replaceApostophi(item[1].Trim());
+                }
+                if (!string.IsNullOrEmpty(obj.ECU))
+                {
+                    string[] item = StringSpliter(obj.ECU);
+                    obj.ECU = item[0].Trim();
+                    obj.ECU_DESC = replaceApostophi(item[1].Trim());
                 }
 
                 //----------------------------Add New end------------------------------
@@ -5506,7 +5551,12 @@ namespace MVCApp.Controllers
                     obj.FR_AS_RB = item[0].Trim();
                     obj.FR_AS_RB_DESC = replaceApostophi(item[1].Trim());
                 }
-
+                if (!string.IsNullOrEmpty(obj.ECU))
+                {
+                    string[] item = StringSpliter(obj.ECU);
+                    obj.ECU = item[0].Trim();
+                    obj.ECU_DESC = replaceApostophi(item[1].Trim());
+                }
                 //----------------------------Add New end------------------------------
 
                 #endregion
@@ -5701,7 +5751,10 @@ namespace MVCApp.Controllers
                         {
                             tm.FR_AS_RB = Convert.ToString(dt.Rows[0]["FR_AS_RB"]) + " # " + Convert.ToString(dt.Rows[0]["FR_AS_RB_DESC"]);
                         }
-
+                        if (!string.IsNullOrEmpty(Convert.ToString(dt.Rows[0]["ECU"])))
+                        {
+                            tm.ECU = Convert.ToString(dt.Rows[0]["ECU"]) + " # " + Convert.ToString(dt.Rows[0]["ECU_DESC"]);
+                        }
                         if (Convert.ToString(dt.Rows[0]["REQ_FRONTRIM"]) == "Y")
                             tm.FrontRimChk = true;
                         else
@@ -5710,6 +5763,10 @@ namespace MVCApp.Controllers
                             tm.RearRimChk = true;
                         else
                             tm.RearRimChk = false;
+                        if (Convert.ToString(dt.Rows[0]["REQ_ECU"]) == "Y")
+                            tm.ECUChk = true;
+                        else
+                            tm.ECUChk = false;
                         //---------------------------------Add New End-------------------------------------------
 
                         //if (!string.IsNullOrEmpty(Convert.ToString(dt.Rows[0]["MOTOR"])))
