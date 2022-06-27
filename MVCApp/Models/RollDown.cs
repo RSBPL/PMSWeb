@@ -102,6 +102,24 @@ namespace MVCApp.Models
         public string PrintMMYYFormat { get; set; }
         public string Prefix_4 { get; set; }
         public string avgHours { get; set; }
+        public string Password { get; set; }
+        public string ORG_ID { get; set; }
+        public bool isREQUIRE_REARTYRE { get; set; }
+        public bool isREQ_RHRT { get; set; }
+        public bool isREQUIRE_FRONTTYRE { get; set; }
+        public bool isREQUIRE_BATTERY { get; set; }
+        public bool isREQ_HYD_PUMP { get; set; }
+        public bool isREQ_RADIATOR { get; set; }
+        public bool isREQ_RHFT { get; set; }
+        public bool isREQ_CLUSSTER { get; set; }
+        public bool isREQ_ALTERNATOR { get; set; }
+        public bool isREQ_STEERING_ASSEMBLY { get; set; }
+        public bool isREQ_STERING_CYLINDER { get; set; }
+        public bool isREQ_ROPS { get; set; }
+        public bool isREQ_STARTER_MOTOR { get; set; }
+        public bool isREQ_STEERING_MOTOR { get; set; }
+        public bool isREQ_FRONTRIM { get; set; }
+        public bool isREQ_REARRIM { get; set; }
 
 
 

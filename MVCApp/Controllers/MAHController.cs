@@ -2011,6 +2011,9 @@ AND FAMILY_CODE='{5}')
                     case "INJ_SCAN":
                         controller = "Tractor";
                         break;
+                    case "INJ_SCAN":
+                        controller = "EngineAssembly";
+                        break;
                     default:
                         controller = "INVALID APP CONTROLLER";
                         break;

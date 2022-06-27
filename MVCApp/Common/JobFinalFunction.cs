@@ -246,13 +246,13 @@ namespace MVCApp.Common
         //public Tuple<bool, string, string, string, string> CheckEngine(string plant, string family, string EnggSrlno, string job, string fcode, bool isEngineRequire, bool isSrNoRequire, string TractorSrno, string Fcode_id)
         //{
         //    bool result = true; string msg = string.Empty, errorNo = string.Empty;
-        //    string FoundenggDcode = "",fcode_id = "";
+        //    string FoundenggDcode = "", fcode_id = "";
         //    try
         //    {
         //        if (isEngineRequire == true)
         //        {
         //            query = string.Format(@"select ITEM_CODE from PRINT_SERIAL_NUMBER where SERIAL_NUMBER='{0}' and 
-        //                        plant_code='{1}'",EnggSrlno.Trim().ToUpper(), plant.Trim().ToUpper());
+        //                        plant_code='{1}'", EnggSrlno.Trim().ToUpper(), plant.Trim().ToUpper());
         //            FoundenggDcode = fun.get_Col_Value(query);
         //            if (string.IsNullOrEmpty(FoundenggDcode))
         //            {
@@ -264,7 +264,7 @@ namespace MVCApp.Common
         //            }
 
         //            query = "select FCODE_SRLNO || '#' || ENGINE || '#' ||ENGINE_SRLNO || '#' || JOBID || '#' || FCODE_ID from XXES_JOB_STATUS where ENGINE_SRLNO='" + EnggSrlno.Trim().ToUpper() + "' and jobid<>'" + job.Trim() + "'";
-        //           string Misc = fun.get_Col_Value(query);
+        //            string Misc = fun.get_Col_Value(query);
         //            if (!string.IsNullOrEmpty(Misc.Trim()) && Misc.Trim().Contains('#'))
         //            {
         //                fcode_id = Misc.Split('#')[4].Trim();
@@ -381,7 +381,7 @@ namespace MVCApp.Common
 
         //    return new Tuple<bool, string, string, string, string>(result, errorNo, msg, DCODE_TRANS, DCODE_AXEL);
         //}
-       
+
         public Tuple<bool, string, string, string> ChecKHydraulic(TRACTOR data, string FCODE, bool isRequireHyrdraulic)
         {
             bool result = true; string msg = string.Empty, errorNo = string.Empty;

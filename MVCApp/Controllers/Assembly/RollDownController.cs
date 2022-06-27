@@ -74,8 +74,9 @@ namespace MVCApp.Controllers
                                     WHERE SM.PLANT_CODE='{0}' AND SM.family_code='{1}' AND IPADDR IS NOT NULL and offline_keycode not in ('QUALITY')", plant.Trim().ToUpper(), family.Trim().ToUpper(), fun.getUSERNAME());
 
                     }
-                    else { 
-                    query = string.Format(@"SELECT SM.stage_description description,SM.offline_keycode code FROM xxes_stage_master SM 
+                    else
+                    {
+                        query = string.Format(@"SELECT SM.stage_description description,SM.offline_keycode code FROM xxes_stage_master SM 
                                     inner join xxes_users_master UM ON SM.STAGE_ID=UM.STAGEID
                                     WHERE SM.PLANT_CODE='{0}' AND SM.family_code='{1}' AND UM.USRNAME='{2}' AND IPADDR IS NOT NULL and offline_keycode not in ('QUALITY')", plant.Trim().ToUpper(), family.Trim().ToUpper(), fun.getUSERNAME());
                     }
@@ -185,7 +186,7 @@ namespace MVCApp.Controllers
                     };
                     return Json(myResult1, JsonRequestBehavior.AllowGet);
                 }
-                query = @"select count(*) from XXES_JOB_STATUS where JOBID='" + obj.JOBID.Trim() + "' or  FCODE_SRLNO='" + obj.JOBID.Trim() + "' or  ITEM_CODE='" + obj.JOBID.Trim() + "' " +
+                query = @"select count(*) from XXES_JOB_STATUS where JOBID='" + obj.JOBID.Trim() + "' or  FCODE_SRLNO='" + obj.TractorSrlno.Trim() + "' or  ITEM_CODE='" + obj.JOBID.Trim() + "' " +
                     " and  plant_code='" + Convert.ToString(obj.PLANTCODE).Trim().ToUpper() + "' " +
                     " and family_code='" + Convert.ToString(obj.FAMILYCODE).Trim().ToUpper() + "'";
 
@@ -202,7 +203,7 @@ namespace MVCApp.Controllers
                 }
                 scanjob = obj.JOBID.Trim().ToUpper();
                 //displayJobDetails(obj.ITEM_CODE.Trim().ToUpper());
-                query = "select * from XXES_JOB_STATUS where JOBID='" + obj.JOBID.Trim() + "' or  FCODE_SRLNO='" + obj.JOBID.Trim() + "' or  ITEM_CODE='" + obj.JOBID.Trim() + "' and  plant_code='" + Convert.ToString(obj.PLANTCODE).Trim().ToUpper() + "' and family_code='" + Convert.ToString(obj.FAMILYCODE).Trim().ToUpper() + "'";
+                query = "select * from XXES_JOB_STATUS where JOBID='" + obj.JOBID.Trim() + "' or  FCODE_SRLNO='" + obj.TractorSrlno.Trim() + "' or  ITEM_CODE='" + obj.JOBID.Trim() + "' and  plant_code='" + Convert.ToString(obj.PLANTCODE).Trim().ToUpper() + "' and family_code='" + Convert.ToString(obj.FAMILYCODE).Trim().ToUpper() + "'";
                 dt = new DataTable();
                 dt = fun.returnDataTable(query);
                 if (dt.Rows.Count > 0)
@@ -399,9 +400,9 @@ namespace MVCApp.Controllers
                 {
                     rolldown.Quantity = "1";
                 }
-                    //MessageBox.Show("PDI OK sticker printed successfully !! ");
-                    msg = af.PrintAssemblyStagesSticker(rolldown, Convert.ToInt32(rolldown.Quantity));
-                 myResult = new
+                //MessageBox.Show("PDI OK sticker printed successfully !! ");
+                msg = af.PrintAssemblyStagesSticker(rolldown, Convert.ToInt32(rolldown.Quantity));
+                myResult = new
                 {
                     Result = result,
                     Msg = msg
@@ -422,115 +423,170 @@ namespace MVCApp.Controllers
             return Json(myResult, JsonRequestBehavior.AllowGet);
         }
 
-        //private void PrintSticker(RollDown option)
-        //{
-        //    try
-        //    {
-        //        if (string.IsNullOrEmpty(option.TractorStagePrint))
-        //        {
-        //            //MessageBox.Show("Selected job yet to be buckleup");
-        //            return;
-        //        }
-        //        else if (string.IsNullOrEmpty(Convert.ToString(option.JOBID)))
-        //        {
-        //            //MessageBox.Show("select valid job");
-        //            return;
-        //        }
-        //        else if (string.IsNullOrEmpty(Convert.ToString(option.PLANTCODE)))
-        //        {
-        //            //MessageBox.Show("select valid plant");
-        //            return;
-        //        }
-        //        else if (string.IsNullOrEmpty(Convert.ToString(option.FAMILYCODE)))
-        //        {
-        //            //MessageBox.Show("select valid family");
-        //            return;
-        //        }
-        //        if (option.STAGE_Code == "ROlldown")
-        //            PrintStageSticker(option);
-        //        else if (option.STAGE_Code == "PDI")
-        //        {
+        [HttpPost]
+        public JsonResult PasswordPopup(RollDown data)
+        {
+            string msg = string.Empty; string mstType = string.Empty; string status = string.Empty;
+            try
+            {
+                query = string.Format(@"SELECT COUNT(*) FROM XXES_STAGE_MASTER xss WHERE  XSS.PLANT_CODE='{0}'
+                       AND XSS.FAMILY_CODE='{1}' AND OFFLINE_KEYCODE='COM' And AD_PASSWORD='{2}'",
+                       data.PLANTCODE.Trim().ToUpper(), data.FAMILYCODE.Trim().ToUpper(), data.Password.Trim());
+                if (fun.CheckExits(query))
+                {
+                    msg = "Valid Password";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var reult = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(reult, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    msg = "Invalid Password..!!";
+                    mstType = Validation.str1;
+                    status = Validation.str2;
+                    var reult = new { Msg = msg, ID = mstType, validation = status };
+                    return Json(reult, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+            }
+            return Json(msg, JsonRequestBehavior.AllowGet);
+        }
 
-        //            string mode = "LOCAL", ip = string.Empty; int port = 0;
-        //            if (option.chkPrint == true)
-        //            {
-        //                string line = Convert.ToString(fun.get_Col_Value(@"select IPADDR || '#' || IPPORT  as IP 
-        //                from xxes_stage_master where FAMILY_CODE='" + Convert.ToString(option.FAMILYCODE).Trim() + "' and " +
-        //                 "plant_code='" + Convert.ToString(option.PLANTCODE).Trim() + "' and offline_keycode='" + Convert.ToString(option.STAGE_Code) + "'"));
-        //                ip = line.Split('#')[0].Trim();
-        //                port = Convert.ToInt32(line.Split('#')[1].Trim());
-        //                mode = "NETWORK";
-        //            }
-        //            PrintLabel printLabel = new PrintLabel();
-        //            Tractor tractor = new Tractor();
-        //            tractor.PLANT = Convert.ToString(option.PLANTCODE);
-        //            tractor.FAMILY = Convert.ToString(option.FAMILYCODE);
-        //            tractor.JOB = Convert.ToString(option.JOBID);
-        //            tractor.ITEMCODE = option.TractorStagePrint;
-        //            tractor.TSN = option.JOBID.Trim().Split('#')[4].Trim();
-        //            jobFinalFunction.RecordPDIOK(tractor);
+        public JsonResult Update(RollDown obj)
+        {
+            RollDown rollDown = new RollDown();
+            string msg = string.Empty;
+            try
+            {
+                if (string.IsNullOrEmpty(obj.PLANTCODE))
+                {
+                    msg = "Select Plant to continue.";
+                    return Json(msg, JsonRequestBehavior.AllowGet);
+                }
 
-        //            isEnableCarebutton = string.Empty;
-        //            query = string.Format("select req_CAREBTN from xxes_item_master where item_code='{0}'", TractorCode.Trim());
-        //            isEnableCarebutton = fun.get_Col_Value(query);
+                if (string.IsNullOrEmpty(obj.FAMILYCODE))
+                {
+                    msg = "Select family to continue.";
+                    return Json(msg, JsonRequestBehavior.AllowGet);
+                }
+                if (string.IsNullOrEmpty(obj.JOBID))
+                {
+                    msg = "Select item to continue.";
+                    return Json(msg, JsonRequestBehavior.AllowGet);
+                }
+                Assemblyfunctions assemblyfunctions = new Assemblyfunctions();
+                rollDown = assemblyfunctions.GetTractorDetails(obj.JOBID.Trim(), obj.PLANTCODE, obj.FAMILYCODE,
+                       "JOBID");
+                string status = ValidateJobforEmpty(rollDown, obj);
+                if (status != "OK")
+                {
+                    return Json(status, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                msg = "Error " + ex.Message;
+            }
+            finally { }
+            return Json(msg, JsonRequestBehavior.AllowGet);
 
-        //            string pdiline = string.Empty, avgHours = string.Empty;
-        //            query = string.Format(@"select to_char( FINAL_LABEL_DATE, 'dd-Mon-yyyy HH24:MI:SS' ) ||
-        //            '#' || to_char( PDIOKDATE, 'dd-Mon-yyyy HH24:MI:SS' ) ||
-        //            '#' || to_char( CAREBUTTONOIL, 'dd-Mon-yyyy HH24:MI:SS' )  from XXES_JOB_STATUS where 
-        //                JOBID='{0}' and  plant_code='{1}' and family_code='{2}'",
-        //                Convert.ToString(option.JOBID), Convert.ToString(option.PLANTCODE).Trim().ToUpper(),
-        //             Convert.ToString(option.FAMILYCODE).Trim().ToUpper());
-        //            pdiline = fun.get_Col_Value(query);
-        //            string finaldate = string.Empty, pdidate = string.Empty, CAREBUTTONOIL = string.Empty;
-        //            if (!string.IsNullOrEmpty(pdiline))
-        //            {
-        //                finaldate = pdiline.Split('#')[0].Trim();
-        //                pdidate = pdiline.Split('#')[1].Trim();
-        //                CAREBUTTONOIL = pdiline.Split('#')[2].Trim();
-        //                if (isEnableCarebutton == "Y")
-        //                {
-        //                    if (string.IsNullOrEmpty(CAREBUTTONOIL))
-        //                    {
-        //                        //MessageBox.Show("CARE BUTTON NOT SCANNED AT PDI STAGE", PubFun.AppName);
-        //                        return;
-        //                    }
-        //                    if (!string.IsNullOrEmpty(finaldate) && !string.IsNullOrEmpty(CAREBUTTONOIL))
-        //                    {
-        //                        TimeSpan span = Convert.ToDateTime(finaldate) - Convert.ToDateTime(CAREBUTTONOIL);
-        //                        span = new TimeSpan(Math.Abs(span.Ticks));
-        //                        avgHours = (int)span.TotalHours + span.ToString(@"\:mm\:ss");
-        //                    }
-        //                    tractor.avgHours = avgHours;
-        //                    tractor.pdidate = CAREBUTTONOIL;
-        //                }
-        //                else
-        //                {
-        //                    TimeSpan span = Convert.ToDateTime(finaldate) - Convert.ToDateTime(pdidate);
-        //                    span = new TimeSpan(Math.Abs(span.Ticks));
-        //                    avgHours = (int)span.TotalHours + span.ToString(@"\:mm\:ss");
-        //                    tractor.avgHours = avgHours;
-        //                    tractor.pdidate = pdidate;
-        //                }
+        }
+        public string ValidateJobforEmpty(RollDown tractormaster, RollDown updateTractor)
+        {
+            string foundjob = string.Empty,founddcode=string.Empty;
+            try
+            {
+                bool check = false;
+                Assemblyfunctions assemblyfunctions = new Assemblyfunctions();
+                if (tractormaster.isEngineRequire && string.IsNullOrEmpty(updateTractor.Engine))
+                {
+                    return "Engine srlno should not be blank ";
+                }
+                if (!string.IsNullOrEmpty(updateTractor.Engine))
+                {
+                    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Engine, "ENGINE_SRLNO", updateTractor.JOBID);
+                    if(!string.IsNullOrEmpty(foundjob))
+                    {
+                        return "Engine srlno already found on job " + foundjob;
+                    }
+                    founddcode = assemblyfunctions.getPartDcode(updateTractor.Engine, "EN");
+                    if(tractormaster.Engine.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                    {
+                        return "Engine Dcode mismatch. Master Dcode " + tractormaster.Engine + " and Serial No Dcode " + founddcode;
+                    }
+                }
 
-        //            }
-        //            //tractor.avgHours = avgHours;
-        //            //tractor.pdidate = CAREBUTTONOIL;
-        //            //{
-        //            if (printLabel.PrintPDIOK(tractor, 1, mode, ip, port, option.STAGE_Code))
-        //            {
-        //                //MessageBox.Show("PDI OK sticker printed successfully !! ");
-        //            }
-        //            //}
 
-        //        }
-        //    }
-        //    catch
-        //    {
-        //        throw;
-        //    }
-        //    finally { }
-        //}
 
+                if (tractormaster.isTransRequire && string.IsNullOrEmpty(updateTractor.Transmission))
+                    return "Transmission srlno should not be blank ";
+                if (tractormaster.isRearAxelRequire && string.IsNullOrEmpty(updateTractor.RearAxel))
+                    return "RearAxel srlno should not be blank ";
+                if (tractormaster.isREQ_HYD_PUMP && string.IsNullOrEmpty(updateTractor.Hydraulic))
+                    return "Hydraulic srlno should not be blank ";
+                if (tractormaster.isREQUIRE_REARTYRE && string.IsNullOrEmpty(updateTractor.RearSrnn1))
+                    return "RearSrnn1 srlno should not be blank ";
+                if (tractormaster.isREQ_RHRT && string.IsNullOrEmpty(updateTractor.RearSrnn2))
+                    return "RearSrnn2 srlno should not be blank ";
+                if (tractormaster.isREQUIRE_FRONTTYRE && string.IsNullOrEmpty(updateTractor.FrontSrnn1))
+                    return "FrontSrnn1 srlno should not be blank ";
+                if (tractormaster.isREQ_RHFT && string.IsNullOrEmpty(updateTractor.FrontSrnn2))
+                    return "FrontSrnn2 srlno should not be blank ";
+                if (tractormaster.isREQ_REARRIM && string.IsNullOrEmpty(updateTractor.RearRIM1) && string.IsNullOrEmpty(updateTractor.RearRIM2))
+                    return "Rear RIM1 And RIM2 srlno should not be blank ";
+                if (tractormaster.isREQ_FRONTRIM && string.IsNullOrEmpty(updateTractor.FrontRIM1) && string.IsNullOrEmpty(updateTractor.FrontRIM2))
+                    return "Front RIM1 And RIM2 should not be blank ";
+                if (tractormaster.isREQUIRE_BATTERY && string.IsNullOrEmpty(updateTractor.Battery))
+                    return "BATTERY srlno should not be blank ";
+                if (tractormaster.isREQ_HYD_PUMP && string.IsNullOrEmpty(updateTractor.HydrualicPump))
+                    return "Hydrualic Pump srlno should not be blank ";
+                if (tractormaster.isREQ_RADIATOR && string.IsNullOrEmpty(updateTractor.Radiator))
+                    return "Radiator srlno should not be blank ";
+                if (tractormaster.isREQ_STEERING_MOTOR && string.IsNullOrEmpty(updateTractor.SteeringCylinder))
+                    return "Steering Cylinder srlno should not be blank ";
+                if (tractormaster.isREQ_STARTER_MOTOR && string.IsNullOrEmpty(updateTractor.SteeringMotor))
+                    return "Steering Motor srlno should not be blank ";
+                if (tractormaster.isREQ_STEERING_ASSEMBLY && string.IsNullOrEmpty(updateTractor.SteeringAssem))
+                    return "STEERING ASSEMBLY srlno should not be blank ";
+                if (tractormaster.isREQ_ALTERNATOR && string.IsNullOrEmpty(updateTractor.Alternator))
+                    return "Alternator srlno should not be blank ";
+                if (tractormaster.isREQ_CLUSSTER && string.IsNullOrEmpty(updateTractor.Cluster))
+                    return "Cluster srlno should not be blank ";
+                if (tractormaster.isREQ_STARTER_MOTOR && string.IsNullOrEmpty(updateTractor.Motor))
+                    return "Motor srlno should not be blank ";
+                if (tractormaster.isREQ_ROPS && string.IsNullOrEmpty(updateTractor.ROPSrno))
+                    return "ROP srlno should not be blank ";
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return "OK";
+        }
+        public string[] StringSpliter(string str)
+        {
+            if (!string.IsNullOrEmpty(str))
+            {
+                string Strr = str;
+                string[] StrrArr = Strr.Split('#');
+                return StrrArr;
+            }
+            else
+            {
+                string[] StrrArr = { "", "" };
+                return StrrArr;
+            }
+        }
+        public string replaceApostophi(string chkstr)
+        {
+            chkstr = chkstr.Replace("\"", string.Empty).Trim(); //"
+            return chkstr.Replace("'", "''");  //'
+        }
     }
+
 }

@@ -223,6 +223,7 @@ namespace MVCApp.Models
 		public string STORAGE_LOC { get; set; }
         public string BOM_REVISION { get; set; }
         public string PO_REV { get; set; }
+		public string P_Search { get; set; }
 
 		public int draw { get; set; }
 		public int start { get; set; }
@@ -247,6 +248,7 @@ namespace MVCApp.Models
 			List<MRNQCVIEWMODEL> mrnList = new List<MRNQCVIEWMODEL>();
 			try
 			{
+				string search = Convert.ToString(obj.P_Search).Trim().ToUpper();
 				string orgid = fun.getOrgId(Convert.ToString(obj.PLANT_CODE).Trim().ToUpper(), Convert.ToString(obj.FAMILY_CODE).Trim().ToUpper());
 				obj.length = Convert.ToInt32(obj.start) + Convert.ToInt32(obj.length);
                 OracleDataAdapter DA = new OracleDataAdapter("USP_GETRIDATA", fun.Connection());
@@ -256,6 +258,7 @@ namespace MVCApp.Models
                 DA.SelectCommand.Parameters.Add("pFROM_DATE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = obj.FROMDATE;
                 DA.SelectCommand.Parameters.Add("pTO_DATE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = obj.TODATE;
                 DA.SelectCommand.Parameters.Add("pORG_ID", OracleDbType.NVarchar2, ParameterDirection.Input).Value = orgid;
+                DA.SelectCommand.Parameters.Add("pSEARCH", OracleDbType.NVarchar2, ParameterDirection.Input).Value = search;
 
                 DA.SelectCommand.Parameters.Add("RES", OracleDbType.RefCursor, ParameterDirection.Output);
                 DA.Fill(dt);
@@ -269,7 +272,7 @@ namespace MVCApp.Models
 						MRNQCVIEWMODEL BC = new MRNQCVIEWMODEL
 						{
 							TOTALCOUNT = Convert.ToInt32(dr["TOTALCOUNT"]),
-							TRANSACTION_DATE = Convert.ToString(dr["TRANSACTION_DATE"]),
+							TRANSACTION_DATE = Convert.ToString(dr["STORE_VERIFIEDDATE"]),
 							VENDOR_NAME = Convert.ToString(dr["VENDOR_NAME"]),
 							VENDOR_CODE = Convert.ToString(dr["VENDOR_CODE"]),
 							MRN_NO = Convert.ToString(dr["MRN_NO"]),

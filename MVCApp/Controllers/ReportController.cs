@@ -1806,9 +1806,9 @@ namespace MVCApp.Controllers
                     DateTime count = todata.AddDays(1);
                     DataTable dataTable = new DataTable();
                     dataTable.Columns.Add("SRNO");
-                    dataTable.Columns.Add("TotalTractor");
+                    dataTable.Columns.Add("TOTALTRACTOR");
                     dataTable.Columns.Add("OILQTY");
-                    dataTable.Columns.Add("DateRange");
+                    dataTable.Columns.Add("DATERANGE");
                     if (dayscount > 7)
                     {
                         for (int j = 0; j < dayscount; j++)
@@ -1838,9 +1838,9 @@ namespace MVCApp.Controllers
                             DataRow Dr = dataTable.NewRow();
                             srno = srno + 1;
                             Dr["SRNO"] = srno;
-                            Dr["TotalTractor"] = dtMain.Rows[0]["TotalTractor"].ToString();
-                            Dr["OILQTY"] = dtMain.Rows[0]["OILQTY"].ToString();
-                            Dr["DateRange"] = (fromdata.ToString("dd-MMM-yyyy") + " TO " + todata.ToString("dd-MMM-yyyy")).ToString();
+                            Dr["TOTALTRACTOR"] = dtMain.Rows[0]["TotalTractor"].ToString();
+                            Dr["OILQTY"] = Math.Round(Convert.ToDecimal(dtMain.Rows[0]["OILQTY"]),0).ToString();
+                            Dr["DATERANGE"] = (fromdata.ToString("dd-MMM-yyyy") + " TO " + todata.ToString("dd-MMM-yyyy")).ToString();
                             dataTable.Rows.Add(Dr);
                         }
                     }

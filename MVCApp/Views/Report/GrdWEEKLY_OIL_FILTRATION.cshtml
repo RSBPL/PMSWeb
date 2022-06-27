@@ -10,6 +10,36 @@
         .e-summarycell {
             background-color: #8fbfdc !important;
         }
+        .e-treegrid .e-rowcell.OILQTY {
+            background-color: grey;
+            font-family: 'ALGERIAN';
+            color: brown;
+            font-size: 20px;
+        }
+
+        .e-grid .e-rowcell.SRNO {
+            background-color: #ecedee;
+            color: black;
+            font-size: 30px;
+            font-weight: bold;
+        }
+        .e-grid .e-rowcell.TOTALTRACTOR {
+            background-color: #ecedee;
+            color: black;
+            font-size:30px;
+            font-weight: bold;
+        }
+        .e-grid .e-rowcell.OILQTY {
+            background-color: #ecedee;
+            color: black;
+            font-size: 30px;
+            font-weight: bold;
+        }
+        .e-grid .e-rowcell.DATERANGE {
+            background-color: #ecedee;
+            color: black;
+            font-size: 30px;
+        }
     </style>
     <div class="row">
         <div class="col-md-12">
@@ -24,7 +54,7 @@
     <div class="table-responsive">
         @{
             List<object> commands = new List<object>();
-            commands.Add(new { buttonOption = new { iconCss = "e-icons e-settings", cssClass = "edit" } });
+            commands.Add(new { buttonOption = new { iconCss = "e-icons e-edit", cssClass = "edit" } });
         }
         @(Html.EJS().Grid("GrdWEEKLY_OIL_FILTRATION").DataSource((System.Data.DataTable)ViewBag.DataSource).
             AllowPaging(true).Height("400").
@@ -38,11 +68,11 @@
             AllowSorting().
             Columns(col =>
             {
-                col.Field("SRNO").HeaderText("SR_NO").Add();
-                col.Field("TotalTractor").HeaderText("Total Tractor Produced").Add();
-                col.Field("OILQTY").HeaderText("Total Oil Qty").Add();
-                col.Field("DateRange").HeaderText("Date Range").Add();
-                col.HeaderText("Reports").Commands(commands).Width("75").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
+                col.Field("SRNO").HeaderText("SR_NO").CustomAttributes(new { @class = "SRNO" }).Width("75").Add();
+                col.Field("TOTALTRACTOR").HeaderText("TOTAL TRACTOR PRODUCED").CustomAttributes(new { @class = "TOTALTRACTOR" }).Add();
+                col.Field("OILQTY").HeaderText("TOTAL OIL QTY").CustomAttributes(new { @class = "OILQTY" }).Add();
+                col.Field("DATERANGE").HeaderText("DATE RANGE").CustomAttributes(new { @class = "DATERANGE" }).Add();
+                col.HeaderText("REPORTS").Commands(commands).Width("75").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Left).Add();
 
 
 
