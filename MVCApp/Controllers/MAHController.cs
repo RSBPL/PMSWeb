@@ -2008,7 +2008,7 @@ AND FAMILY_CODE='{5}')
                     case "FTRT":
                     case "HOOK_UP":
                     case "FIPNO":
-                    //case "INJ_SCAN":
+                    case "ECU_SCAN":
                         controller = "Tractor";
                         break;
                     case "INJ_SCAN":

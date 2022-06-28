@@ -3842,17 +3842,27 @@ namespace MVCApp.Controllers.DCU
         [HttpPost]
         public string INJEngineDetails(ENGINEINJECTORData data)
         {
+            string result = string.Empty;
             try
             {
+                query = string.Format(@"SELECT COUNT(*) FROM XXES_ENGINE_STATUS WHERE PLANT_CODE='{0}' AND FAMILY_CODE='{1}' AND ENGINE_SRNO='{2}'",
+                         data.plantcode.Trim(), data.familycode.Trim(), data.engine_srlno.Trim());
+                if (fun.CheckExits(query))
+                {
+                    result = "ERROR # ALREADY EXIST ENGINE ";
+                    return result;
+                }
                 query = string.Format(@"SELECT nvl(p.dcode,'') || '#' || nvl(ITEM_DESC,'') || '#' ||nvl(INJECTOR,'') || '#' || m.fuel_injection_pump || '#' || m.NO_OF_INJECTORS FROM  
                         XXES_PRINT_SERIALS p,XXES_ENGINE_MASTER m   WHERE p.dcode=m.item_code and p.SRNO='{0}'", data.engine_srlno);
                 return fun.get_Col_Value(query);
+
             }
             catch (Exception ex)
             {
                 fun.LogWrite(ex);
                 return "ERROR:" + ex.Message;
             }
+            return result;
         }
         [HttpPost]
         public string ValidateFIP(ENGINEINJECTORData data)
@@ -3882,15 +3892,15 @@ namespace MVCApp.Controllers.DCU
                 {
                     result = "ERROR # FIP DCODE NOT FOUND IN BARCODE" + data.fipsrlno;
                 }
-                query = string.Format(@"SELECT COUNT(*) FROM XXES_ENGINE_STATUS WHERE FUEL_INJECTION_PUMP_SRNO='{0}' AND ENGINE_SRNO='{1}'",
-                         data.fipsrlno.Trim(), data.engine_srlno.Trim());
+                query = string.Format(@"SELECT COUNT(*) FROM XXES_ENGINE_STATUS WHERE FUEL_INJECTION_PUMP_SRNO='{0}'",
+                         data.fipsrlno.Trim());
                 if (!fun.CheckExits(query))
                 {
                     result = "OK # VALID FIP";
                 }
                 else
                 {
-                    result = "ERROR # ALREAD INJECT IN THIS ENGINE AND FIP";
+                    result = "ERROR # ALREADY EXIST FIP : " + data.engine_srlno;
                 }
             }
             catch (Exception ex)
@@ -3940,9 +3950,15 @@ namespace MVCApp.Controllers.DCU
                             query = string.Format(@"INSERT INTO XXES_ENGINE_BARCODE_DATA ( PLANT_CODE, FAMILY_CODE, ENGINE_SRLNO, ITEM_CODE,SRNO, ENTRYDATE,  BARCODE_DATA)
                                 VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', SYSDATE, '{5}')", data.plantcode.Trim().ToUpper(), data.familycode.Trim().ToUpper(), data.engine_srlno,
                                 data.engine, data.fipsrlno.Trim().ToUpper().Substring(4, 10), data.fipsrlno.Trim().ToUpper());
-                            if (fun.EXEC_QUERY(query))
+                            if (Convert.ToBoolean(fun.EXEC_QUERY(query)))
                             {
-
+                                query = string.Format(@"insert into XXES_ENGINE_STATUS(plant_code,family_code,item_code,engine_srno,FUEL_INJECTION_PUMP_SRNO,
+                                       INJECTOR1,INJECTOR2,INJECTOR3,INJECTOR4,ENTRYDATE,fuel_injection_pump) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}',SYSDATE,'{9}')", data.plantcode.Trim().ToUpper(),
+                                       data.familycode.Trim().ToUpper(), data.engine, data.engine_srlno, data.fipsrlno.Trim().ToUpper().Substring(4, 10), data.injector1, data.injector2, data.injector3, data.injector4,data.fipdcode);
+                                        if (fun.EXEC_QUERY(query))
+                                        {
+                                            result = "OK # SAVED SUCESSFULLY !!";
+                                        }
                             }
                         }
                         else
@@ -3950,21 +3966,21 @@ namespace MVCApp.Controllers.DCU
                             query = string.Format(@"INSERT INTO XXES_ENGINE_BARCODE_DATA ( PLANT_CODE, FAMILY_CODE, ENGINE_SRLNO, ITEM_CODE,SRNO, ENTRYDATE,  BARCODE_DATA)
                                 VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', SYSDATE, '{5}')", data.plantcode.Trim().ToUpper(), data.familycode.Trim().ToUpper(), data.engine_srlno,
                                 data.engine, data.fipsrlno.Trim().ToUpper().Substring(11), data.fipsrlno.Trim().ToUpper());
-                            if (fun.EXEC_QUERY(query))
+                            if (Convert.ToBoolean(fun.EXEC_QUERY(query)))
                             {
-
+                                query = string.Format(@"insert into XXES_ENGINE_STATUS(plant_code,family_code,item_code,engine_srno,FUEL_INJECTION_PUMP_SRNO,
+                                       INJECTOR1,INJECTOR2,INJECTOR3,INJECTOR4,ENTRYDATE,fuel_injection_pump) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}',SYSDATE,'{9}')", data.plantcode.Trim().ToUpper(),
+                                      data.familycode.Trim().ToUpper(), data.engine, data.engine_srlno, data.fipsrlno, data.injector1, data.injector2, data.injector3, data.injector4, data.fipdcode);
+                                if (fun.EXEC_QUERY(query))
+                                {
+                                    result = "OK # SAVED SUCESSFULLY !!";
+                                }
                             }
                         }
                        
                            
                     }
-                    query = string.Format(@"insert into XXES_ENGINE_STATUS(plant_code,family_code,item_code,engine_srno,FUEL_INJECTION_PUMP_SRNO,
-                            INJECTOR1,INJECTOR2,INJECTOR3,INJECTOR4,ENTRYDATE) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}',SYSDATE)", data.plantcode.Trim().ToUpper(),
-                            data.familycode.Trim().ToUpper(), data.engine, data.engine_srlno, data.fipsrlno, data.injector1, data.injector2, data.injector3, data.injector4);
-                    if (fun.EXEC_QUERY(query))
-                    {
-                        result = "OK # SAVED SUCESSFULLY !!";
-                    }
+                    
                 }
             }
             catch (Exception ex)
