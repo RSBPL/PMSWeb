@@ -2179,7 +2179,7 @@ namespace MVCApp.Controllers.DCU
                 {
                     model.CraneName = crnName.Trim();
                 }
-
+               
                 double qty;
                 bool isDouble = TryParseDouble(_careBtn.OilValue, out qty);
                 if (!isDouble)
@@ -2187,7 +2187,16 @@ namespace MVCApp.Controllers.DCU
                     model.Msg = "FOCUS # INVALID OIL VALUE";
                     return Json(model);
                 }
-
+                if (_careBtn.OilValue.Length < 2)
+                {
+                    model.Msg = "FOCUS #  OIL VALUE MIN TWO DIGIT";
+                    return Json(model);
+                }
+                if (Convert.ToInt32(_careBtn.OilValue)  > 60)
+                {
+                    model.Msg = "FOCUS #  OIL VALUE MAX 60";
+                    return Json(model);
+                }
                 query = string.Format(@"update xxes_job_status set oil='{0}'
                         where fcode_srlno='{1}'", _careBtn.OilValue.Trim(), _careBtn.TractorSrNo.Trim().ToUpper());
                 if (fun.EXEC_QUERY(query))
