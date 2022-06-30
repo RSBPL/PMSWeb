@@ -3922,7 +3922,18 @@ namespace MVCApp.Controllers.DCU
                 }
                 if (af == null)
                     af = new Assemblyfunctions();
-               
+                query = string.Format(@"SELECT XIM.ITEM_CODE,XIM.ITEM_DESCRIPTION, XIM.REQ_ECU,XIM.ECU, XIM.ECU_DESC,XJS.ECU_SRNO FROM XXES_JOB_STATUS xjs, XXES_ITEM_MASTER xim
+                         WHERE XJS.JOBID='{0}' AND XJS.ITEM_CODE=XIM.ITEM_CODE AND XJS.PLANT_CODE=XIM.PLANT_CODE AND XJS.FAMILY_CODE=XIM.FAMILY_CODE
+                          AND XJS.PLANT_CODE='{1}' AND XJS.FAMILY_CODE='{2}'", data.JOB.Trim(), data.PLANT.Trim().ToUpper(), data.FAMILY.Trim().ToUpper());
+                dtMain = fun.returnDataTable(query);
+                if (dtMain.Rows.Count > 0)
+                {
+                    fcode = Convert.ToString(dtMain.Rows[0]["ITEM_CODE"]);
+                    fcode_desc = Convert.ToString(dtMain.Rows[0]["ITEM_DESCRIPTION"]);
+                    REQ_ECU = (Convert.ToString(dtMain.Rows[0]["REQ_ECU"]) == "Y" ? true : false);
+                    ecudcode = Convert.ToString(dtMain.Rows[0]["ECU"]);
+                    ecudesc = Convert.ToString(dtMain.Rows[0]["ECU_DESC"]);
+                }
                 query = string.Format(@"SELECT COUNT(*) FROM XXES_JOB_STATUS xjs WHERE XJS.PLANT_CODE='{0}' AND XJS.FAMILY_CODE='{1}' AND XJS.ECU_SRNO='{2}'"
                         , data.PLANT.Trim(), data.FAMILY.Trim(), data.ECUSRNO.Trim());
                 if(fun.CheckExits(query))
@@ -3936,7 +3947,7 @@ namespace MVCApp.Controllers.DCU
                 if(Convert.ToBoolean(fun.EXEC_QUERY(query)))
                 {
                     query = string.Format(@"Insert into XXES_SCAN_TIME(PLANT_CODE,FAMILY_CODE,ITEM_CODE,JOBID,STAGE,SCAN_DATE,SCANNED_BY) values('{0}','{1}','{2}','{3}','{4}',SYSDATE,'{5}')",
-                            data.PLANT.Trim().ToUpper(), data.FAMILY.Trim().ToUpper(), fcode, data.JOB.Trim().ToUpper(), data.LOGINSTAGECODE, data.CREATEDBY.Trim().ToUpper());
+                            data.PLANT.Trim().ToUpper(), data.FAMILY.Trim().ToUpper(), fcode, data.JOB, data.LOGINSTAGECODE, data.CREATEDBY);
                     if(fun.EXEC_QUERY(query))
                     {
                         result = "OK # RECORD SAVE SUCCESSFULLY";
