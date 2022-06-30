@@ -31,23 +31,7 @@ namespace MVCApp.Controllers.DCU
             string fcode = string.Empty, fcode_desc = string.Empty, ecudcode = string.Empty, ecudesc = string.Empty; bool REQ_ECU = false;
             try
             {
-                query = string.Format(@"SELECT XIM.ITEM_CODE,XIM.ITEM_DESCRIPTION, XIM.REQ_ECU,XIM.ECU, XIM.ECU_DESC,XJS.ECU_SRNO FROM XXES_JOB_STATUS xjs, XXES_ITEM_MASTER xim
-                         WHERE XJS.JOBID='{0}' AND XJS.ITEM_CODE=XIM.ITEM_CODE AND XJS.PLANT_CODE=XIM.PLANT_CODE AND XJS.FAMILY_CODE=XIM.FAMILY_CODE
-                          AND XJS.PLANT_CODE='{1}' AND XJS.FAMILY_CODE='{2}'", cOMMONDATA.JOB.Trim(), cOMMONDATA.PLANT.Trim().ToUpper(), cOMMONDATA.FAMILY.Trim().ToUpper());
-                dtMain = fun.returnDataTable(query);
-                if (dtMain.Rows.Count > 0)
-                {
-                    fcode = Convert.ToString(dtMain.Rows[0]["ITEM_CODE"]);
-                    fcode_desc = Convert.ToString(dtMain.Rows[0]["ITEM_DESCRIPTION"]);
-                    REQ_ECU = (Convert.ToString(dtMain.Rows[0]["REQ_ECU"]) == "Y" ? true : false);
-                    ecudcode = Convert.ToString(dtMain.Rows[0]["ECU"]);
-                    ecudesc = Convert.ToString(dtMain.Rows[0]["ECU_DESC"]);
-                }
-                if (REQ_ECU == false)
-                {
-                    result = "ERROR # ECU NOT REQUIRED : " + fcode;
-                    return result;
-                }
+                
                 query = string.Format(@"select count(*) from XXES_JOB_STATUS where JOBID='{0}' 
                                 and PLANT_CODE='{1}' and family_code='{2}'", cOMMONDATA.JOB.Trim(), cOMMONDATA.PLANT.Trim(), cOMMONDATA.FAMILY.Trim());
                 if (fun.CheckExits(query))
@@ -3732,6 +3716,8 @@ namespace MVCApp.Controllers.DCU
             }
             return response;
         }
+
+
         [HttpPost]
         public HttpResponseMessage UpdateFIP(FIP data)
         {
@@ -3872,6 +3858,50 @@ namespace MVCApp.Controllers.DCU
             };
         }
 
+
+        [HttpPost]
+        public string ValidateJobIDECU(COMMONDATA cOMMONDATA)
+        {
+            DataTable dtMain = new DataTable();
+            string result = string.Empty;
+            string fcode = string.Empty, fcode_desc = string.Empty, ecudcode = string.Empty, ecudesc = string.Empty; bool REQ_ECU = false;
+            try
+            {
+                query = string.Format(@"SELECT XIM.ITEM_CODE,XIM.ITEM_DESCRIPTION, XIM.REQ_ECU,XIM.ECU, XIM.ECU_DESC,XJS.ECU_SRNO FROM XXES_JOB_STATUS xjs, XXES_ITEM_MASTER xim
+                         WHERE XJS.JOBID='{0}' AND XJS.ITEM_CODE=XIM.ITEM_CODE AND XJS.PLANT_CODE=XIM.PLANT_CODE AND XJS.FAMILY_CODE=XIM.FAMILY_CODE
+                          AND XJS.PLANT_CODE='{1}' AND XJS.FAMILY_CODE='{2}'", cOMMONDATA.JOB.Trim(), cOMMONDATA.PLANT.Trim().ToUpper(), cOMMONDATA.FAMILY.Trim().ToUpper());
+                dtMain = fun.returnDataTable(query);
+                if (dtMain.Rows.Count > 0)
+                {
+                    fcode = Convert.ToString(dtMain.Rows[0]["ITEM_CODE"]);
+                    fcode_desc = Convert.ToString(dtMain.Rows[0]["ITEM_DESCRIPTION"]);
+                    REQ_ECU = (Convert.ToString(dtMain.Rows[0]["REQ_ECU"]) == "Y" ? true : false);
+                    ecudcode = Convert.ToString(dtMain.Rows[0]["ECU"]);
+                    ecudesc = Convert.ToString(dtMain.Rows[0]["ECU_DESC"]);
+                }
+                if (REQ_ECU == false)
+                {
+                    result = "ERROR # ECU NOT REQUIRED : " + fcode;
+                    return result;
+                }
+                query = string.Format(@"select count(*) from XXES_JOB_STATUS where JOBID='{0}' 
+                                and PLANT_CODE='{1}' and family_code='{2}'", cOMMONDATA.JOB.Trim(), cOMMONDATA.PLANT.Trim(), cOMMONDATA.FAMILY.Trim());
+                if (fun.CheckExits(query))
+                {
+                    result = "OK # VALID JOB";
+                }
+                else
+                {
+                    result = "ERROR # INVALID JOB";
+                }
+            }
+            catch (Exception ex)
+            {
+
+                result = "ERROR # " + ex.Message;
+            }
+            return result;
+        }
         [HttpPost]
         public string UpdateECU(ECUDATA data)
         {
