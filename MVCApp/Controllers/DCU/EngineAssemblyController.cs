@@ -4012,6 +4012,24 @@ namespace MVCApp.Controllers.DCU
             string result = string.Empty;
             try
             {
+                if (!string.IsNullOrEmpty(data.No_Of_Injector))
+                {
+                    if (Convert.ToInt32(data.No_Of_Injector) < 3)
+                    {
+                        if (string.IsNullOrEmpty(data.injector3))
+                        {
+                            data.injector3 = ".3333333_";
+                        }
+
+                    }
+                    if (Convert.ToInt32(data.No_Of_Injector) < 4)
+                    {
+                        if (string.IsNullOrEmpty(data.injector4))
+                        {
+                            data.injector4 = ".3333333_";
+                        }
+                    }
+                }
                 if (string.IsNullOrEmpty(data.engine_srlno))
                 {
                     result = "ERROR # PLEASE SCAN ENGINE";

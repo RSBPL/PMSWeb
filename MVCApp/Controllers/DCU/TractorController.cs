@@ -26,9 +26,28 @@ namespace MVCApp.Controllers.DCU
         [HttpPost]
         public string ValidateJobID(COMMONDATA cOMMONDATA)
         {
+            DataTable dtMain = new DataTable();
             string result = string.Empty;
+            string fcode = string.Empty, fcode_desc = string.Empty, ecudcode = string.Empty, ecudesc = string.Empty; bool REQ_ECU = false;
             try
             {
+                query = string.Format(@"SELECT XIM.ITEM_CODE,XIM.ITEM_DESCRIPTION, XIM.REQ_ECU,XIM.ECU, XIM.ECU_DESC,XJS.ECU_SRNO FROM XXES_JOB_STATUS xjs, XXES_ITEM_MASTER xim
+                         WHERE XJS.JOBID='{0}' AND XJS.ITEM_CODE=XIM.ITEM_CODE AND XJS.PLANT_CODE=XIM.PLANT_CODE AND XJS.FAMILY_CODE=XIM.FAMILY_CODE
+                          AND XJS.PLANT_CODE='{1}' AND XJS.FAMILY_CODE='{2}'", cOMMONDATA.JOB.Trim(), cOMMONDATA.PLANT.Trim().ToUpper(), cOMMONDATA.FAMILY.Trim().ToUpper());
+                dtMain = fun.returnDataTable(query);
+                if (dtMain.Rows.Count > 0)
+                {
+                    fcode = Convert.ToString(dtMain.Rows[0]["ITEM_CODE"]);
+                    fcode_desc = Convert.ToString(dtMain.Rows[0]["ITEM_DESCRIPTION"]);
+                    REQ_ECU = (Convert.ToString(dtMain.Rows[0]["REQ_ECU"]) == "Y" ? true : false);
+                    ecudcode = Convert.ToString(dtMain.Rows[0]["ECU"]);
+                    ecudesc = Convert.ToString(dtMain.Rows[0]["ECU_DESC"]);
+                }
+                if (REQ_ECU == false)
+                {
+                    result = "ERROR # ECU NOT REQUIRED : " + fcode;
+                    return result;
+                }
                 query = string.Format(@"select count(*) from XXES_JOB_STATUS where JOBID='{0}' 
                                 and PLANT_CODE='{1}' and family_code='{2}'", cOMMONDATA.JOB.Trim(), cOMMONDATA.PLANT.Trim(), cOMMONDATA.FAMILY.Trim());
                 if (fun.CheckExits(query))
@@ -3864,30 +3883,22 @@ namespace MVCApp.Controllers.DCU
                 if(string.IsNullOrEmpty(data.JOB))
                 {
                     result = "ERROR # PLEASE SCAN JOB";
+                    return result;
                 }
                 if(string.IsNullOrEmpty(data.ECUSRNO))
                 {
                     result = "ERROR # PLEASE SCAN ENGINE";
+                    return result;
                 }
                 if (af == null)
                     af = new Assemblyfunctions();
-                query = string.Format(@"SELECT XIM.ITEM_CODE,XIM.ITEM_DESCRIPTION, XIM.REQ_ECU,XIM.ECU, XIM.ECU_DESC,XJS.ECU_SRNO FROM XXES_JOB_STATUS xjs, XXES_ITEM_MASTER xim
-                         WHERE XJS.JOBID='{0}' AND XJS.ITEM_CODE=XIM.ITEM_CODE AND XJS.PLANT_CODE=XIM.PLANT_CODE AND XJS.FAMILY_CODE=XIM.FAMILY_CODE
-                          AND XJS.PLANT_CODE='{1}' AND XJS.FAMILY_CODE='{2}'", data.JOB.Trim(), data.PLANT.Trim().ToUpper(), data.FAMILY.Trim().ToUpper());
-                dtMain = fun.returnDataTable(query);
-                if(dtMain.Rows.Count > 0)
-                {
-                    fcode = Convert.ToString(dtMain.Rows[0]["ITEM_CODE"]);
-                    fcode_desc = Convert.ToString(dtMain.Rows[0]["ITEM_DESCRIPTION"]);
-                    REQ_ECU = (Convert.ToString(dtMain.Rows[0]["REQ_ECU"]) == "Y" ? true : false);
-                    ecudcode = Convert.ToString(dtMain.Rows[0]["ECU"]);
-                    ecudesc = Convert.ToString(dtMain.Rows[0]["ECU_DESC"]);
-                }
+               
                 query = string.Format(@"SELECT COUNT(*) FROM XXES_JOB_STATUS xjs WHERE XJS.PLANT_CODE='{0}' AND XJS.FAMILY_CODE='{1}' AND XJS.ECU_SRNO='{2}'"
                         , data.PLANT.Trim(), data.FAMILY.Trim(), data.ECUSRNO.Trim());
                 if(fun.CheckExits(query))
                 {
                     result = "ERROR # ECU SRNO ALREADY SCAN : " + data.JOB;
+                    return result;
                 }
                 query = "";
                 query = string.Format(@"UPDATE XXES_JOB_STATUS SET ECU='{0}' , ECU_SRNO='{1}',ECU_DESC='{5}' WHERE JOBID='{2}' AND PLANT_CODE='{3}' AND FAMILY_CODE='{4}'",
