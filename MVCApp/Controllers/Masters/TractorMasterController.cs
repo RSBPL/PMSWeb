@@ -2769,7 +2769,7 @@ namespace MVCApp.Controllers
             {
                 TM.Family = TM.T4_Family;
             }
-            string transactionNo = fun.get_Col_Value("SELECT NVL( MAX(TRANSACTION_NUMBER),0)+1 AS TRANSACTION_NUMBER FROM XXES_PARTS_AUDIT_DATA WHERE Remarks1 = 'TRACTOR_TAB_1' AND Remarks2 = 'F00000000'");
+            string transactionNo = fun.get_Col_Value("SELECT NVL( MAX(TRANSACTION_NUMBER),0)+1 AS TRANSACTION_NUMBER FROM XXES_PARTS_AUDIT_DATA WHERE Remarks1 = '"+ Tab + "'");
             TrnNo = Convert.ToInt32(transactionNo);
             if (Tab == "TRACTOR_TAB_1")
             {
@@ -3209,6 +3209,26 @@ namespace MVCApp.Controllers
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.FR_AS_RB, TM.FR_AS_RB, tmold.FR_AS_RB, tmold.FR_AS_RB_DESC, Tab, TM.gleSearch, TM.FR_AS_RB, TM.FR_AS_RB_DESC, " FR_AS_RB", TrnNo);
                 }
+                if (TM.ECU == null)
+                {
+                    TM.ECU = "";
+                }
+                if (Tmold.ECU == null)
+                {
+                    Tmold.ECU = "";
+                }
+                if (Tmold.ECU_DESC == null)
+                {
+                    Tmold.ECU_DESC = "";
+                }
+                if (TM.ECU_DESC == null)
+                {
+                    TM.ECU_DESC = "";
+                }
+                if (Tmold.ECU !=TM.ECU)
+                {
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.ECU, TM.ECU, tmold.ECU, tmold.ECU_DESC, Tab, TM.gleSearch, TM.ECU, TM.ECU_DESC, "ECU_DESC", TrnNo);
+                }
                 if (Tmold.FR_AS_RB != TM.FR_AS_RB)
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.FR_AS_RB), Convert.ToString(TM.FR_AS_RB), Convert.ToString(tmold.FR_AS_RB), Convert.ToString(tmold.FR_AS_RB), Tab, TM.gleSearch, Convert.ToString(TM.FR_AS_RB), Convert.ToString(TM.FR_AS_RB), " FR_AS_RB", TrnNo);
@@ -3220,6 +3240,19 @@ namespace MVCApp.Controllers
                 if (Tmold.RearRimChk != TM.RearRimChk)
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RearRimChk), Convert.ToString(TM.RearRimChk), Convert.ToString(tmold.RearRimChk), Convert.ToString(tmold.RearRimChk), Tab, TM.gleSearch, Convert.ToString(TM.RearRimChk), Convert.ToString(TM.RearRimChk), " RearRimChk", TrnNo);
+                }
+                if (Tmold.RearRimChk != TM.RearRimChk)
+                {
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RearRimChk), Convert.ToString(TM.RearRimChk), Convert.ToString(tmold.RearRimChk), Convert.ToString(tmold.RearRimChk), Tab, TM.gleSearch, Convert.ToString(TM.RearRimChk), Convert.ToString(TM.RearRimChk), " RearRimChk", TrnNo);
+                }
+                //Rajesh Add Some Fields  
+                if (TM.ECUChk == null)
+                {
+                    TM.ECUChk = false;
+                }
+                if (Tmold.ECUChk != TM.ECUChk)
+                {
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.ECUChk), Convert.ToString(TM.ECUChk), Convert.ToString(tmold.ECUChk), Convert.ToString(tmold.ECUChk), Tab, TM.gleSearch, Convert.ToString(TM.ECUChk), Convert.ToString(TM.ECUChk), " RearRimChk", TrnNo);
                 }
             }
             return TrnNo;
@@ -3787,7 +3820,7 @@ namespace MVCApp.Controllers
                                             FROM XXES_PARTS_AUDIT_DATA
                                             WHERE Remarks1='{0}' AND Remarks2='{1}' AND TRANSACTION_NUMBER={2}", TransctionType.Trim(), FCode.Trim(), Transaction);
             data_table = fun.returnDataTable(query);
-
+            
             string textBody = " <table width='750'>";
             textBody += "<thead><tr><th colspan='6' style='background-color: #087f5b;color: #fff;width: 25%;'>" + Heading + " </th></tr> <tr><th style='background-color: #087f5b;color: #fff;width: 50%;' colspan='2'>ENTRY DATE :- " + data_table.Rows[0]["ENTRYDATE"] + " </th><th style='background-color: #087f5b;color: #fff;width: 50%;' colspan='2'>ENTRY BY :- " + data_table.Rows[0]["LOGIN_USER"] + "</th><th style='background-color: #087f5b;color: #fff;width: 50%;' colspan='2'>SYSTEM :- " + data_table.Rows[0]["SYSTEM"] + "</th><tr><th style='background-color: #087f5b;color: #fff;width: 25%;'>Flied Name </th>Flied Name </th><th style='background-color: #087f5b;color: #fff;width: 25%;'>OldCode</th><th style='background-color: #087f5b;color: #fff;width: 25%;'>Old Name</th><th style='background-color: #087f5b;color: #fff;width: 25%;'>New Code</th><th style='background-color: #087f5b;color: #fff;width: 25%;'>New Name</th></tr></thead><tbody>";
             for (int loopCount = 0; loopCount < data_table.Rows.Count; loopCount++)

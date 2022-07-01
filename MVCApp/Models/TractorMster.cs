@@ -237,7 +237,6 @@ namespace MVCApp.Models
         public bool ECUChk { get; set; } = false;
         public string ECU { get; set; }
         public string ECU_DESC { get; set; }
-
     }
     public class TractorMsterOld
     {
@@ -464,7 +463,10 @@ namespace MVCApp.Models
 
         public string Password { get; set; }
         public string PasswordTab2 { get; set; }
-
+        //---------------------------------------Tab4 New Field-------------------------------------------------
+        public bool ECUChk { get; set; } = false;
+        public string ECU { get; set; }
+        public string ECU_DESC { get; set; }
 
     }
 

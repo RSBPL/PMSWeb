@@ -1737,7 +1737,7 @@ function gleSearch_EditValueChangedTab2() {
                 /////////////////////checkboxes/////////////////////////
                 $("#FrontRimChk").prop('checked', data.Result.FrontRimChk);
                 $("#RearRimChk").prop('checked', data.Result.RearRimChk);
-                $("#ECUChk").prop('checked', data.Result.RearRimChk);
+                $("#ECUChk").prop('checked', data.Result.ECUChk);
 
                 $('#AddS').hide();
                 $('#UpdateS').show();
