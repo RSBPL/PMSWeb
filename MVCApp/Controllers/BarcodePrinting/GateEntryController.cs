@@ -72,7 +72,7 @@ namespace MVCApp.Controllers.Masters
         public ActionResult PRINT(List<GateEntryModel> data)
         {
 
-            string msg = string.Empty; string mstType = string.Empty; string status = string.Empty;
+            string msg = string.Empty; string mstType = string.Empty; string status = string.Empty; int tranid = 0;
             MRNInvoice invoice = new MRNInvoice();
             string retvalue = string.Empty;
             bool rowFound = false;
@@ -122,6 +122,7 @@ namespace MVCApp.Controllers.Masters
                 invoice.INVOICE_DATE = item.INVOICE_DATE;
                 invoice.VEHICLE_NO = item.VEHICLE_NO;
                 invoice.STATUS = item.STATUS;
+                invoice.CITY = item.CITY;
                 invoice.TOTAL_ITEM = item.TOTAL_ITEM;
                 line = item.ITEM;
                 if (line.Contains("["))
@@ -142,11 +143,15 @@ namespace MVCApp.Controllers.Masters
                     if (!fun.CheckExits(query))
                     {
                         GEFun.UpdateRawMeterialMaster(invoice,item.FAMILYCODE);
+                        if (!string.IsNullOrEmpty(invoice.VEHICLE_NO))
+                        {
+                            tranid = GetTransactionID(invoice);
+                        }
                         query = "insert into ITEM_RECEIPT_DETIALS(PLANT_CODE,MRN_NO ,TRANSACTION_DATE ,SOURCE_DOCUMENT_CODE ,VENDOR_CODE ,VENDOR_NAME ,INVOICE_NO  ,VEHICLE_NO ,ITEM_CODE ," +
-                            "ITEM_DESCRIPTION ,PRINTED_ON,createdby,status,storage,TOTAL_ITEM,family_code) " +
+                            "ITEM_DESCRIPTION ,PRINTED_ON,createdby,status,storage,TOTAL_ITEM,family_code,tranid,CITY) " +
                             "values('" + invoice.PLANT_CODE + "','" + invoice.MRN_NO + "',TO_DATE('" + invoice.TRANSACTION_DATE.ToString("MM/dd/yyyy HH:mm:ss") + "', 'MM/DD/YYYY HH24:MI:SS'),'" + invoice.SOURCE_TYPE + "','" +
                             invoice.VENDOR_CODE + "','" + invoice.VENDOR_NAME + "','" + invoice.INVOICE_NO + "','" + invoice.VEHICLE_NO + "','" + invoice.ITEM_CODE + "','" +
-                              GEFun.replaceApostophi(invoice.ITEM_DESCRIPTION) + "',sysdate,'" + Login_User + "','" + invoice.STATUS + "','" + invoice.STORE_LOCATION + "'," + invoice.TOTAL_ITEM + ",'" + Convert.ToString(item.FAMILYCODE) + "')";
+                              GEFun.replaceApostophi(invoice.ITEM_DESCRIPTION) + "',sysdate,'" + Login_User + "','" + invoice.STATUS + "','" + invoice.STORE_LOCATION + "'," + invoice.TOTAL_ITEM + ",'" + Convert.ToString(item.FAMILYCODE) + "','" + tranid + "','" + invoice.CITY + "')";
                         if (fun.EXEC_QUERY(query))
                         {
                             GEFun.UpdateMrnDetails(invoice.PLANT_CODE, invoice.MRN_NO,item.FAMILYCODE);
@@ -258,7 +263,67 @@ namespace MVCApp.Controllers.Masters
             result = new { Msg = msg, ID = mstType, validation = status };
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+        private int GetTransactionID(MRNInvoice mRNInvoice)
+        {
+            int tranid = 0;
+            try
+            {
+                query = string.Format(@"SELECT trunc(nvl((SYSDATE-A.PRINTED_ON)*1440,0)) PRINTED_ON,TRANID  FROM 
+                    (
+                    SELECT I.PRINTED_ON,TRANID FROM ITEM_RECEIPT_DETIALS i WHERE I.VEHICLE_NO='{0}' AND I.TRANSACTION_DATE IS NOT NULL
+                    AND TRUNC(I.PRINTED_ON)=TRUNC(SYSDATE) 
+                    ORDER BY I.PRINTED_ON DESC
+                    )a WHERE ROWNUM=1", mRNInvoice.VEHICLE_NO);
+                DataTable dataTable = fun.returnDataTable(query);
+                if (dataTable.Rows.Count > 0)
+                {
+                    if (string.IsNullOrEmpty(Convert.ToString(dataTable.Rows[0]["PRINTED_ON"])))
+                        tranid = 1;
+                    else
+                    {
+                        if (fun.IsNumeric(Convert.ToString(dataTable.Rows[0]["PRINTED_ON"])))
+                        {
+                            if (Convert.ToInt32(dataTable.Rows[0]["PRINTED_ON"]) <= 60)
+                            {
+                                if (string.IsNullOrEmpty(Convert.ToString(dataTable.Rows[0]["TRANID"])))
+                                    tranid = 1;
+                                else
+                                {
+                                    if (fun.IsNumeric(Convert.ToString(dataTable.Rows[0]["TRANID"])))
+                                        tranid = Convert.ToInt32(dataTable.Rows[0]["TRANID"]);
+                                    else
+                                        tranid = 1;
+                                }
+                            }
+                            else
+                            {
+                                if (string.IsNullOrEmpty(Convert.ToString(dataTable.Rows[0]["TRANID"])))
+                                    tranid = 1;
+                                else
+                                {
+                                    if (fun.IsNumeric(Convert.ToString(dataTable.Rows[0]["TRANID"])))
+                                        tranid = Convert.ToInt32(dataTable.Rows[0]["TRANID"]) + 1;
+                                    else
+                                        tranid = 1;
+                                }
+                            }
+                        }
+                        else
+                            tranid = 1;
+                    }
+                }
+                else
+                {
+                    tranid = 1;
+                }
+            }
+            catch (Exception)
+            {
 
+                throw;
+            }
+            return tranid;
+        }
 
         //private string CheckduplicateInvoiceInMRN(string PLANT_CODE, string MRN_NO)
         //{

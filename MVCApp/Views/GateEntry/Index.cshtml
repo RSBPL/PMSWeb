@@ -122,6 +122,7 @@
                     <th>SOURCE_TYPE</th>
                     <th>ORGANIZATION_CODE</th>
                     <th>STATUS</th>
+                    <th>CITY</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -258,7 +259,8 @@ $("#RePrintDate").hide();
                 { "data": "TOTAL_ITEM"},
                 { "data": "SOURCE_TYPE"},
                 { "data": "ORGANIZATION_CODE"},
-                { "data": "STATUS"}
+                { "data": "STATUS"},
+                { "data": "CITY"}
 
 
             ],
@@ -275,7 +277,8 @@ $("#RePrintDate").hide();
                 { "width": "15%", "className": "text-center", "targets": 9 },
                 { "width": "15%", "className": "text-center", "targets": 10 },
                 { "width": "15%", "className": "text-center", "targets": 11 },
-                { "width": "15%", "className": "text-center", "targets": 12 }
+                { "width": "15%", "className": "text-center", "targets": 12 },
+                { "width": "15%", "className": "text-center", "targets": 13 }
 
             ]
 
@@ -343,7 +346,8 @@ $("#RePrintDate").hide();
                     FAMILYCODE: $('#FAMILYCODE').val(),
                     CheckboxReprint: reprintchecked,
                     CheckboxPrint2Label: print2labelchecked,
-                    STATUS: data['STATUS']
+                    STATUS: data['STATUS'],
+                    CITY: data['CITY']
                 };
                 Data.push(obj);
                 selectedMrn++;
