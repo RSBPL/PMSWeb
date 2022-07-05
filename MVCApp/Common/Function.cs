@@ -8804,8 +8804,7 @@ namespace MVCApp.CommonFunction
         public string SendMails(string Module, string MailBody, string MailSubject, string Email_To, string Email_CC,
        string Username)
         {
-            if (HttpContext.Current.Session["Login_User"].ToString() != "rs")
-            {
+           
                 string MAIL_PRIORITY = string.Empty;
                 string SMTP_SERVER = string.Empty;
                 string LOGIN_EMAIL = string.Empty;
@@ -8891,7 +8890,6 @@ namespace MVCApp.CommonFunction
                     pubfun.EXEC_QUERY(query);
                     return "Error" + ex.Message.ToString();
                 }
-            }
             return "";
         }
 

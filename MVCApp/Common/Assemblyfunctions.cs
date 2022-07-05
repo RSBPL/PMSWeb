@@ -834,21 +834,25 @@ namespace MVCApp.Common
             {
 
                 query = string.Format(@"select j.JOBID,j.ITEM_CODE FCODE ,
-                j.ENGINE_SRLNO,j.FCODE_SRLNO ,REARTYRE_SRLNO1,REARTYRE_SRLNO2,FRONTTYRE_SRLNO1,FRONTTYRE_SRLNO2,
+                j.ENGINE_SRLNO,j.FCODE_SRLNO ,j.CLUSSTER_SRLNO,j.ALTERNATOR_SRLNO,j.RTRIM1,j.FTRIM1,j.FTRIM2,j.STEERING_MOTOR_SRLNO
+                ,j.STARTER_MOTOR_SRLNO,j.HYD_PUMP_SRLNO,j.STERING_CYLINDER_SRLNO,
+                j.RADIATOR_SRLNO ,j.STEERING_ASSEMBLY_SRLNO ,j.RTRIM2,REARTYRE_SRLNO1,REARTYRE_SRLNO2,FRONTTYRE_SRLNO1,FRONTTYRE_SRLNO2,
                 SIM_SERIAL_NO,IMEI_NO,MOBILE,
+
+                M.TRANSMISSION,M.HYDRAULIC,M.REARAXEL REAR_AXLE,M.BATTERY,M.RADIATOR,M.HYD_PUMP,M.STEERING_MOTOR,M.STEERING_ASSEMBLY
+                ,M.STERING_CYLINDER,M.ALTERNATOR,M.CLUSSTER,M.STARTER_MOTOR,M.REQ_ROPS,
                  M.REQUIRE_ENGINE,M.REQUIRE_TRANS,M.REQUIRE_REARAXEL,M.REQUIRE_BACKEND,M.REQUIRE_HYD,M.REQUIRE_REARTYRE,M.REQ_RHRT
                 ,M.REQUIRE_FRONTTYRE,M.REQUIRE_BATTERY,M.REQ_HYD_PUMP,M.REQ_RADIATOR,M.REQ_RHFT
                 ,M.REQ_CLUSSTER,M.REQ_ALTERNATOR,M.REQ_STEERING_ASSEMBLY,M.REQ_STERING_CYLINDER,
-                M.REQ_ROPS,M.REQ_STARTER_MOTOR,M.REQ_STEERING_MOTOR,M.REQ_FRONTRIM,M.REQ_REARRIM                 
-                ,m.ITEM_DESCRIPTION
-                 DESCRIPTION,HYDRALUIC_SRLNO HYDRAULIC_LIFT,REARTYRE_MAKE TYRE_MAKE, 
-                j.REARAXEL REAR_AXLE,REARAXEL_SRLNO,j.BACKEND,j.BACKEND_SRLNO,j.TRANSMISSION,TRANSMISSION_SRLNO,m.ENGINE,BATTERY_MAKE,BATTERY_SRLNO,
+                M.REQ_ROPS,M.GEN_SRNO,M.ROPS_ITEM_CODE,M.REQ_STARTER_MOTOR,M.STARTER_MOTOR,M.REQ_STEERING_MOTOR,M.REQ_FRONTRIM,M.REQ_REARRIM                 
+                ,m.ITEM_DESCRIPTION DESCRIPTION,HYDRALUIC_SRLNO HYDRAULIC_LIFT,REARTYRE_MAKE TYRE_MAKE, 
+                j.REARAXEL REAR_AXLE,REARAXEL_SRLNO,j.BACKEND,j.BACKEND_SRLNO,TRANSMISSION_SRLNO,m.ENGINE,BATTERY_MAKE,BATTERY_SRLNO,
                 fcode_id,
                 REQ_CAREBTN CAREBUTTONREQ,to_char( FINAL_LABEL_DATE, 'dd-Mon-yyyy HH24:MI:SS' )  FINAL_LABEL_DATE,
                 to_char( PDIOKDATE, 'dd-Mon-yyyy HH24:MI:SS' ) PDIOKDATE,   
                 M.remarks,M.short_code ,to_char( CAREBUTTONOIL, 'dd-Mon-yyyy HH24:MI:SS' )  CAREBUTTONOIL,
-                 SWAPCAREBTN,j.HYDRALUIC_DESCRIPTION,j.REARTYRE_DESCRIPTION,j.FRONTTYRE_DESCRIPTION,Prefix_4,
-                j.HYDRALUIC,j.HYDRALUIC_SRLNO,ROPS_SRNO
+                 SWAPCAREBTN,j.HYDRALUIC_DESCRIPTION,j.REARTYRE_DESCRIPTION,j.FRONTTYRE_DESCRIPTION,Prefix_4
+                ,j.HYDRALUIC_SRLNO,ROPS_SRNO
                 from XXES_ITEM_MASTER m join xxes_job_status j on m.plant_code=j.plant_code
                 and m.family_code=j.family_code and m.item_code=j.item_code where 
                  j.plant_code='{0}' and j.family_code='{1}' and j.{3}='{2}'",
@@ -861,15 +865,38 @@ namespace MVCApp.Common
                     down.PLANTCODE = plant;
                     down.FAMILYCODE = family;
                     down.ROPSrno = Convert.ToString(dt.Rows[0]["ROPS_SRNO"]);
+                    down.ROPS = Convert.ToString(dt.Rows[0]["ROPS_ITEM_CODE"]);
                     down.Carebuttonoildate = Convert.ToString(dt.Rows[0]["CAREBUTTONOIL"]);
+                    down.Hydraulic = Convert.ToString(dt.Rows[0]["HYDRAULIC"]);
                     down.hydrualic_desc = Convert.ToString(dt.Rows[0]["HYDRALUIC_DESCRIPTION"]);
                     down.REARTYRE_DESCRIPTION = Convert.ToString(dt.Rows[0]["REARTYRE_DESCRIPTION"]);
                     down.FRONTTYRE_DESCRIPTION = Convert.ToString(dt.Rows[0]["FRONTTYRE_DESCRIPTION"]);
                     down.TractorCode = Convert.ToString(dt.Rows[0]["FCODE"]);
                     down.TractorSrlno = Convert.ToString(dt.Rows[0]["FCODE_SRLNO"]);
                     down.TractorDesc = Convert.ToString(dt.Rows[0]["DESCRIPTION"]);
-                    down.Hydraulic = Convert.ToString(dt.Rows[0]["HYDRALUIC"]);
                     down.Hydraulic_srlno = Convert.ToString(dt.Rows[0]["HYDRALUIC_SRLNO"]);
+                    
+                    down.RearRIM1= Convert.ToString(dt.Rows[0]["RTRIM1"]);
+                    down.RearRIM2= Convert.ToString(dt.Rows[0]["RTRIM2"]);
+                    down.FrontRIM1 = Convert.ToString(dt.Rows[0]["FTRIM1"]);
+                    down.FrontRIM2 = Convert.ToString(dt.Rows[0]["FTRIM2"]);
+                    down.HydrualicPump = Convert.ToString(dt.Rows[0]["HYD_PUMP"]);
+                    down.HydrualicPump_srlno = Convert.ToString(dt.Rows[0]["HYD_PUMP_SRLNO"]);
+                    down.Radiator = Convert.ToString(dt.Rows[0]["RADIATOR"]);
+                    down.Radiator_srlno = Convert.ToString(dt.Rows[0]["RADIATOR_SRLNO"]);
+                    down.SteeringCylinder_srlno = Convert.ToString(dt.Rows[0]["STERING_CYLINDER_SRLNO"]);
+                    down.SteeringCylinder = Convert.ToString(dt.Rows[0]["STERING_CYLINDER"]);
+                    down.SteeringMotor_srlno = Convert.ToString(dt.Rows[0]["STEERING_MOTOR_SRLNO"]);
+                    down.SteeringMotor = Convert.ToString(dt.Rows[0]["STEERING_MOTOR"]);
+                    down.SteeringAssem_srlno = Convert.ToString(dt.Rows[0]["STEERING_ASSEMBLY_SRLNO"]);
+                    down.SteeringAssem = Convert.ToString(dt.Rows[0]["STEERING_ASSEMBLY"]);
+                    down.Alternator = Convert.ToString(dt.Rows[0]["ALTERNATOR"]);
+                    down.Alternator_srlno = Convert.ToString(dt.Rows[0]["ALTERNATOR_SRLNO"]);
+                    down.Cluster = Convert.ToString(dt.Rows[0]["CLUSSTER"]);
+                    down.Cluster_srlno = Convert.ToString(dt.Rows[0]["CLUSSTER_SRLNO"]);
+                    down.Motor = Convert.ToString(dt.Rows[0]["STARTER_MOTOR"]);
+                    down.Motor_srlno = Convert.ToString(dt.Rows[0]["STARTER_MOTOR_SRLNO"]);
+
                     down.reartyremake = Convert.ToString(dt.Rows[0]["TYRE_MAKE"]);
                     down.RearAxel = Convert.ToString(dt.Rows[0]["REAR_AXLE"]);
                     down.RearAxel_srlno = Convert.ToString(dt.Rows[0]["REARAXEL_SRLNO"]);
@@ -880,7 +907,8 @@ namespace MVCApp.Common
                     down.Backend = Convert.ToString(dt.Rows[0]["backend"]);
                     down.Backend_srlno = Convert.ToString(dt.Rows[0]["BACKEND_SRLNO"]);
                     down.batterymake = Convert.ToString(dt.Rows[0]["BATTERY_MAKE"]);
-                    down.Battery = Convert.ToString(dt.Rows[0]["BATTERY_SRLNO"]);
+                    down.Battery_srlno = Convert.ToString(dt.Rows[0]["BATTERY_SRLNO"]);
+                    down.Battery = Convert.ToString(dt.Rows[0]["BATTERY"]);
                     down.TractorAutoid = Convert.ToString(dt.Rows[0]["FCODE_ID"]);
                     down.JOBID = Convert.ToString(dt.Rows[0]["JOBID"]);
                     down.simserialno = Convert.ToString(dt.Rows[0]["SIM_SERIAL_NO"]);
@@ -898,6 +926,7 @@ namespace MVCApp.Common
                     down.shortcode = Convert.ToString(dt.Rows[0]["short_code"]);
                     down.isEnableCarebutton = Convert.ToString(dt.Rows[0]["CAREBUTTONREQ"]);
                     down.Carebuttonoildate = Convert.ToString(dt.Rows[0]["CAREBUTTONOIL"]);
+                    down.isHydrualicRequire = (Convert.ToString(dt.Rows[0]["REQUIRE_HYD"]) == "Y" ? true : false); 
                     down.isRearAxelRequire = (Convert.ToString(dt.Rows[0]["REQUIRE_REARAXEL"]) == "Y" ? true : false);
                     down.isEngineRequire = (Convert.ToString(dt.Rows[0]["REQUIRE_ENGINE"]) == "Y" ? true : false);
                     down.isTransRequire = (Convert.ToString(dt.Rows[0]["REQUIRE_TRANS"]) == "Y" ? true : false);
@@ -916,9 +945,11 @@ namespace MVCApp.Common
                     down.isREQ_STERING_CYLINDER = (Convert.ToString(dt.Rows[0]["REQ_STERING_CYLINDER"]) == "Y" ? true : false);
                     down.isREQ_ROPS = (Convert.ToString(dt.Rows[0]["REQ_ROPS"]) == "Y" ? true : false);
                     down.isREQ_STARTER_MOTOR = (Convert.ToString(dt.Rows[0]["REQ_STARTER_MOTOR"]) == "Y" ? true : false);
+                    down.Motor = Convert.ToString(dt.Rows[0]["STARTER_MOTOR"]);
                     down.isREQ_STEERING_MOTOR = (Convert.ToString(dt.Rows[0]["REQ_STEERING_MOTOR"]) == "Y" ? true : false);
                     down.isREQ_FRONTRIM = (Convert.ToString(dt.Rows[0]["REQ_FRONTRIM"]) == "Y" ? true : false);
                     down.isREQ_REARRIM = (Convert.ToString(dt.Rows[0]["REQ_REARRIM"]) == "Y" ? true : false);
+                    down.isSrNoRequire = (Convert.ToString(dt.Rows[0]["GEN_SRNO"]) == "Y" ? true : false);
                     down.TractorType = funtion.get_Col_Value(String.Format(@"select TYPE from xxes_daily_plan_TRAN 
                     where autoid='{0}' and plant_code='{1}' and family_code='{2}'",
                     down.TractorAutoid, down.PLANTCODE, down.FAMILYCODE
@@ -929,7 +960,7 @@ namespace MVCApp.Common
 
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 throw;
@@ -964,5 +995,114 @@ namespace MVCApp.Common
             return dcode;
         }
 
+
+        public void GetROPSSrno(string plant, string family,  string ROPS_DCODE, out string ROPS_SRNO)
+        {
+            try
+            {
+                long Current_Serial_number = 0;
+                string toReturn = string.Empty;
+                ROPS_SRNO = "";
+
+                try
+                {
+
+                    string Query = string.Format(@"select start_serialno,end_serialno,current_serialno from xxes_torque_master 
+                                        where item_dcode ='{0}' and srno_req=1 and plant_code='{1}' and family_code='{2}'"
+                                    , ROPS_DCODE.Trim(), plant.Trim(), family.Trim());
+
+                    DataTable dt = funtion.returnDataTable(Query);
+
+                    if (dt.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in dt.Rows)
+                        {
+                            if (Convert.ToString(dr["current_serialno"]).Trim() == "" || Convert.ToString(dr["current_serialno"]).Trim() == "0")
+                                Current_Serial_number = Convert.ToInt32(Convert.ToString(Convert.ToString(dr["start_serialno"]).Trim())) + 1;
+                            else if (Convert.ToString(dr["current_serialno"]).Trim() != "")
+                            {
+                                Current_Serial_number = Convert.ToInt32(Convert.ToString(Convert.ToString(dr["current_serialno"]).Trim())) + 1;
+                            }
+                            if (Current_Serial_number > Convert.ToInt32(Convert.ToString(Convert.ToString(dr["end_serialno"]).Trim())))
+                            {
+                                Current_Serial_number = -99; //series full
+                                throw new Exception("ROPS SERIES FOR FCODE " + ROPS_DCODE + " REACHED ITS MAXIMUM LEVEL FOR PLANT " + plant + " FAMILY " + family);
+                            }
+                            toReturn = Convert.ToString(Current_Serial_number);
+                            while (toReturn.Trim().Length < Convert.ToString(dr["start_serialno"]).Trim().Length)
+                            {
+                                toReturn = "0" + toReturn;
+                            }
+
+                            if (string.IsNullOrEmpty(toReturn))
+                            {
+                                throw new Exception("UNABLE TO GET RUNNING NO. FOR ROPS DCODE " + ROPS_DCODE + ".CHECK ROPS MASTER");
+                            }
+
+                        }
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    funtion.LogWrite(ex);
+                    throw;
+                }
+                finally { }
+
+                ROPS_SRNO = toReturn;
+            }
+            catch (Exception ex)
+            {
+                ROPS_SRNO = "";
+                funtion.LogWrite(ex);
+                throw;
+            }
+            
+        }
+
+
+        public string makeTyre(string Stage, string Srno)
+        {
+            string result = string.Empty;
+            query = string.Format(@"Select Misc1 From xxes_print_serials Where SRNO='{0}' And offline_keycode='{1}'", Stage.Trim(), Srno.Trim());
+            result = funtion.get_Col_Value(query);
+            return result;
+        }
+        public List<DDLTextValue> Battery_Name()
+        {
+            DataTable dt = null;
+            try
+            {
+                List<DDLTextValue> Unit = new List<DDLTextValue>();
+                query = string.Format(@"select PARAMETERINFO as Name from XXES_SFT_SETTINGS where PARAMVALUE='BATT_MAN_NAME' 
+                                        order by PARAMETERINFO");
+                dt = funtion.returnDataTable(query);
+
+                if (dt.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in dt.AsEnumerable())
+                    {
+                        Unit.Add(new DDLTextValue
+                        {
+                            Text = dr["Name"].ToString(),
+                            Value = dr["Name"].ToString(),
+                        });
+                    }
+                }
+                return Unit;
+            }
+            catch (Exception ex)
+            {
+                funtion.LogWrite(ex);
+                throw;
+                //MessageBox.Show("Module Fill_Unit_Name: " + ex.Message, PubFun.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error); return TmpDs; 
+            }
+            finally
+            {
+                funtion.ConClose();
+            }
+        }
     }
 }

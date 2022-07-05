@@ -12,8 +12,11 @@ namespace MVCApp.Models
         public String PLANTCODE { get; set; }
         public String FAMILYCODE { get; set; }
         public String STAGE_Code { get; set; }
+        public String IPAddress { get; set; }
         public String JOBID { get; set; }
         public String TYPE { get; set; }
+        public String ROPS { get; set; }
+        
         public string BatMake { get; set; }
         public string Transmission { get; set; }
         public string Transmission_srlno { get; set; }
@@ -33,6 +36,11 @@ namespace MVCApp.Models
         public string RearTyre1 { get; set; }
         public string RearTyre1_srlno1 { get; set; }
         public string RearSrnn2 { get; set; }
+        public string reartyreleftsidemake1 { get; set; }
+        public string reartyrerightsidemake2 { get; set; }
+        public string fronttyreleftsidemake1 { get; set; }
+        public string fronttyrerightsidemake2 { get; set; }
+        public string reartyremake { get; set; }
         public string RearRIM2 { get; set; }
         public string RearTyre2_srlno2 { get; set; }
         public string FrontSrnn1 { get; set; }
@@ -44,14 +52,23 @@ namespace MVCApp.Models
 
 
         public string Battery { get; set; }
+        public string Battery_srlno { get; set; }
         public string HydrualicPump { get; set; }
+        public string HydrualicPump_srlno { get; set; }
+        public string Radiator_srlno { get; set; }
         public string Radiator { get; set; }
         public string SteeringCylinder { get; set; }
+        public string SteeringCylinder_srlno { get; set; }
         public string SteeringMotor { get; set; }
+        public string SteeringMotor_srlno { get; set; }
         public string SteeringAssem { get; set; }
+        public string SteeringAssem_srlno { get; set; }
         public string Alternator { get; set; }
+        public string Alternator_srlno { get; set; }
         public string Cluster { get; set; }
+        public string Cluster_srlno { get; set; }
         public string Motor { get; set; }
+        public string Motor_srlno { get; set; }
         public string Quantity { get; set; }
         public string Srno { get; set; }
         public string IMEI { get; set; }
@@ -80,7 +97,6 @@ namespace MVCApp.Models
         public string Pdidate { get; set; }
         public string Rolloutdate { get; set; }
         public string Carebuttonoildate { get; set; }
-        public string reartyremake { get; set; }
         public string batterymake { get; set; }
         public string simserialno { get; set; }
         public string reqcarebtn { get; set; }
@@ -93,6 +109,7 @@ namespace MVCApp.Models
         public bool isRearAxelRequire { get; set; }
         public bool isBackendRequire { get; set; }
         public bool isEngineRequire { get; set; }
+        public bool isSrNoRequire { get; set; }
         public string Suffix { get; set; }       
         public string TractorType { get; set; }
         public string hydrualic_desc { get; set; }
@@ -105,6 +122,7 @@ namespace MVCApp.Models
         public string Password { get; set; }
         public string ORG_ID { get; set; }
         public bool isREQUIRE_REARTYRE { get; set; }
+        public bool isHydrualicRequire { get; set; }
         public bool isREQ_RHRT { get; set; }
         public bool isREQUIRE_FRONTTYRE { get; set; }
         public bool isREQUIRE_BATTERY { get; set; }

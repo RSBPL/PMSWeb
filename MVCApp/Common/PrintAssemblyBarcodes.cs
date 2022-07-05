@@ -1810,8 +1810,12 @@ namespace MVCApp.Common
             string prnfilename = string.Empty, barcode = string.Empty, AppPath = string.Empty;
             try
             {
-
-                line = fun.getPrinterIp(tractor.STAGE_Code, tractor.PLANTCODE, tractor.FAMILYCODE);
+                if (string.IsNullOrEmpty(tractor.IPAddress))
+                {
+                    return result = "STAGE PRINTER IP ADDRESS AND PORT NOT FOUND";
+                }
+                line = tractor.IPAddress;
+                //line = fun.getPrinterIp(tractor.STAGE_Code, tractor.PLANTCODE, tractor.FAMILYCODE);
                 if (string.IsNullOrEmpty(line))
                 {
                     return result = "STAGE PRINTER IP ADDRESS AND PORT NOT FOUND";
