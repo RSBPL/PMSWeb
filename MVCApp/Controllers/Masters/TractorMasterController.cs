@@ -2209,9 +2209,10 @@ namespace MVCApp.Controllers
                     if (fun.InsertTractorMaster(obj))
                     {
                         int transactionNo = InsertSave(obj, "TRACTOR_TAB_1");
+                        string subject = "New Tractor added in MES with following details :- Tractor Code : " + obj.gleSearch + "";
                         string head = "New Tractor added in MES with following details :- Tractor Code : " + obj.gleSearch + "<br>" + obj.ItemCode_Desc + "";
                         string mailbody = MailBODY(transactionNo, obj.gleSearch, "TRACTOR_TAB_1", head);
-                        string mailsend = sendMail("Insert_Tractor", mailbody);
+                        string mailsend = sendMail("Insert_Tractor", mailbody, subject);
                         query = "select count(*) from ITEM_MASTER where trim(PLANT_CODE)='" + Convert.ToString(obj.Plant) + "' and trim(FAMILY_CODE)='" + Convert.ToString(obj.Family) + "' and trim(ITEM_CODE)='" + Convert.ToString(obj.ItemCode).Trim() + "'";
 
                         //fun.Insert_Into_ActivityLog("TRACTOR MASTER", "Insert_Update", Convert.ToString(obj.Plant) + " # " + Convert.ToString(obj.Family) + " # " + Convert.ToString(obj.ItemCode), query, Convert.ToString(obj.Plant).Trim().ToUpper(), Convert.ToString(obj.Family).Trim().ToUpper());
@@ -2785,6 +2786,11 @@ namespace MVCApp.Controllers
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.Backend, TM.Backend, tmold.Backend, tmold.Backend_Desc, Tab, TM.gleSearch, TM.Backend, TM.Backend_Desc, " Backend", TrnNo);
                 }
+                if (Tmold.Transmission == null)
+                {
+                    Tmold.Transmission = "";
+                    Tmold.Transmission = "";
+                }
                 if (Tmold.Transmission != TM.Transmission)
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.Transmission, TM.Transmission, tmold.Transmission, tmold.Transmission_Desc, Tab, TM.gleSearch, TM.Transmission, TM.Transmission_Desc, " Transmission", TrnNo);
@@ -2813,6 +2819,16 @@ namespace MVCApp.Controllers
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.RHRearTyre, TM.RHRearTyre, tmold.RHRearTyre, tmold.RHRearTyre_Desc, Tab, TM.gleSearch, TM.RHRearTyre, TM.RHRearTyre_Desc, " RHRearTyre", TrnNo);
                 }
+                if (Tmold.Battery == null)
+                {
+                    Tmold.Battery = "";
+                    Tmold.Battery_Desc = "";
+                }
+                if (TM.Battery == null)
+                {
+                    TM.Battery = "";
+                    TM.Battery_Desc = "";
+                }
                 if (Tmold.Battery != TM.Battery)
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.Battery, TM.Battery, tmold.Battery, tmold.Battery_Desc, Tab, TM.gleSearch, TM.Battery, TM.Battery_Desc, " Battery", TrnNo);
@@ -2825,6 +2841,7 @@ namespace MVCApp.Controllers
                 {
                     TM.Prefix2 = "";
                 }
+                tmold.Prefix1 = Tmold.Prefix1.Replace("\r\n", "");
                 if (Tmold.Prefix1 != TM.Prefix1)
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.Prefix1, TM.Prefix1, tmold.Prefix1, "", Tab, TM.gleSearch, TM.Prefix1, "", " Prefix1", TrnNo);
@@ -2858,21 +2875,71 @@ namespace MVCApp.Controllers
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.ShortDesc, TM.ShortDesc, tmold.ShortDesc, "", Tab, TM.gleSearch, TM.ShortDesc, "", " ShortDesc", TrnNo);
                 }
+                if (Tmold.HydraulicPump == null)
+                {
+                    Tmold.HydraulicPump = "";
+                    Tmold.HydraulicPump_Desc = "";
+                }
+                if (TM.HydraulicPump == null)
+                {
+                    TM.HydraulicPump = "";
+                    TM.HydraulicPump_Desc = "";
+                }
                 if (Tmold.HydraulicPump != TM.HydraulicPump)
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.HydraulicPump, TM.HydraulicPump, tmold.HydraulicPump, tmold.HydraulicPump_Desc, Tab, TM.gleSearch, TM.HydraulicPump, TM.HydraulicPump_Desc, " HydraulicPump", TrnNo);
+                }
+                if (Tmold.SteeringAssembly == null)
+                {
+                    Tmold.SteeringAssembly = "";
+                    Tmold.SteeringAssembly_Desc = "";
+                }
+                if (TM.SteeringAssembly == null)
+                {
+                    TM.SteeringAssembly = "";
+                    TM.SteeringAssembly_Desc = "";
                 }
                 if (Tmold.SteeringAssembly != TM.SteeringAssembly)
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.SteeringAssembly, TM.SteeringAssembly, tmold.SteeringAssembly, tmold.SteeringAssembly_Desc, Tab, TM.gleSearch, TM.SteeringAssembly, TM.SteeringAssembly_Desc, " SteeringAssembly", TrnNo);
                 }
+                if (Tmold.RadiatorAssembly == null)
+                {
+                    Tmold.RadiatorAssembly = "";
+                    Tmold.RadiatorAssembly_Desc = "";
+                }
+                if (TM.RadiatorAssembly == null)
+                {
+                    TM.RadiatorAssembly = "";
+                    TM.RadiatorAssembly_Desc = "";
+                }
                 if (Tmold.RadiatorAssembly != TM.RadiatorAssembly)
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.RadiatorAssembly, TM.RadiatorAssembly, tmold.RadiatorAssembly, tmold.RadiatorAssembly_Desc, Tab, TM.gleSearch, TM.RadiatorAssembly, TM.RadiatorAssembly_Desc, " RadiatorAssembly", TrnNo);
                 }
+                if (Tmold.Alternator == null)
+                {
+                    Tmold.Alternator = "";
+                    Tmold.Alternator_Desc = "";
+                }
+                if (TM.Alternator == null)
+                {
+                    TM.Alternator = "";
+                    TM.Alternator_Desc = "";
+                }
                 if (Tmold.Alternator != TM.Alternator)
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.Alternator, TM.Alternator, tmold.Alternator, tmold.Alternator_Desc, Tab, TM.gleSearch, TM.Alternator, TM.Alternator_Desc, " Alternator", TrnNo);
+                }
+                if (Tmold.BRAKE_PEDAL == null)
+                {
+                    Tmold.BRAKE_PEDAL = "";
+                    Tmold.BrakePedal_Desc = "";
+                }
+                if (TM.BRAKE_PEDAL == null)
+                {
+                    TM.BRAKE_PEDAL = "";
+                    TM.BrakePedal_Desc = "";
                 }
                 if (Tmold.BRAKE_PEDAL != TM.BRAKE_PEDAL)
                 {
@@ -3741,10 +3808,10 @@ namespace MVCApp.Controllers
                 string schema = Convert.ToString(ConfigurationSettings.AppSettings["Schema"]);
                 if (fun.UpdateTractorMaster(obj))
                 {
-
-                    string head = "Update Tractor in MES with following details :- Tractor Code : " + obj.gleSearch + "<br>" + obj.ItemCode_Desc + "";
+                    string Subject = "Alert ! Update in the tractor mapping page . F-code : " + obj.gleSearch + "";
+                    string head = "Alert ! Update in the tractor mapping page . F-code : " + obj.gleSearch + "<br> Model name :" + obj.ItemCode_Desc.Substring(0, 50) + "";
                     string mailbody = MailBODY(transaction, obj.gleSearch, "TRACTOR_TAB_1", head);
-                    string mailsend = sendMail("Update_Change", mailbody);
+                    string mailsend = sendMail("Update_Change", mailbody, Subject);
                     query = "select count(*) from ITEM_MASTER where trim(PLANT_CODE)='" + Convert.ToString(obj.Plant) + "' and trim(FAMILY_CODE)='" + Convert.ToString(obj.Family) + "' and trim(ITEM_CODE)='" + Convert.ToString(obj.ItemCode).Trim() + "'";
                     if (!fun.CheckExits(query))
                     {
@@ -3772,12 +3839,12 @@ namespace MVCApp.Controllers
             return Json(msg, JsonRequestBehavior.AllowGet);
 
         }
-        public string sendMail(string Type, string mailbody)
+        public string sendMail(string Type, string mailbody,string Subject)
         {
             string Email_To = string.Empty; string Email_CC = string.Empty; string Username = string.Empty;
             Email_To = fun.get_Col_Value("select EMAIL as EMAIL  from XXES_STAGE_EMAILS WHERE STAGE='TRACTOR_BOM'");
             Username = fun.get_Col_Value("select USERNAME from XXES_STAGE_EMAILS WHERE STAGE='TRACTOR_BOM'");
-            string sendMail = fun.SendMails(Type, mailbody, "Tractor Changes", Email_To, Email_CC, Username);
+            string sendMail = fun.SendMails(Type, mailbody, Subject, Email_To, Email_CC, Username);
             return sendMail;
         }
         public string MailBODY(int Transaction, string FCode, string TransctionType, string Heading)
@@ -3788,11 +3855,23 @@ namespace MVCApp.Controllers
                                             WHERE Remarks1='{0}' AND Remarks2='{1}' AND TRANSACTION_NUMBER={2}", TransctionType.Trim(), FCode.Trim(), Transaction);
             data_table = fun.returnDataTable(query);
 
-            string textBody = " <table width='750'>";
-            textBody += "<thead><tr><th colspan='6' style='background-color: #087f5b;color: #fff;width: 25%;'>" + Heading + " </th></tr> <tr><th style='background-color: #087f5b;color: #fff;width: 50%;' colspan='2'>ENTRY DATE :- " + data_table.Rows[0]["ENTRYDATE"] + " </th><th style='background-color: #087f5b;color: #fff;width: 50%;' colspan='2'>ENTRY BY :- " + data_table.Rows[0]["LOGIN_USER"] + "</th><th style='background-color: #087f5b;color: #fff;width: 50%;' colspan='2'>SYSTEM :- " + data_table.Rows[0]["SYSTEM"] + "</th><tr><th style='background-color: #087f5b;color: #fff;width: 25%;'>Flied Name </th>Flied Name </th><th style='background-color: #087f5b;color: #fff;width: 25%;'>OldCode</th><th style='background-color: #087f5b;color: #fff;width: 25%;'>Old Name</th><th style='background-color: #087f5b;color: #fff;width: 25%;'>New Code</th><th style='background-color: #087f5b;color: #fff;width: 25%;'>New Name</th></tr></thead><tbody>";
+            string textBody = " <table width='100%' style='border: 4px solid #1067b1;'>";
+            textBody += "<thead><tr><th colspan='6' style='background-color: #c1e3ff;'>" + Heading + " </th></tr> <tr><th style='background-color: #1067b1;color: #fff;width: 16%;'>SYSTEM :- " + data_table.Rows[0]["SYSTEM"] + "</th><th style='background-color: #1067b1;color: #fff;width: 46%;'>ENTRY DATE :- " + data_table.Rows[0]["ENTRYDATE"] + " </th><th style='background-color: #1067b1;color: #fff;width: 46%;'>ENTRY BY :- " + data_table.Rows[0]["LOGIN_USER"] + "</th><tr><th style='background-color: #1067b1;color: #fff;width: 12%;'></th><th style='background-color: #1067b1;color: #fff;width: 18%;'>Previous Name (Code)</th><th style='background-color: #1067b1;color: #fff;width: 18%;'>New Name (Code)</th></tr></thead><tbody>";
             for (int loopCount = 0; loopCount < data_table.Rows.Count; loopCount++)
             {
-                textBody += "<tr><td style='background-color:gray;color:white;font-size:bold'>" + data_table.Rows[loopCount]["PART_DESC"] + "</td><td style='background-color: #8080808f;'> " + data_table.Rows[loopCount]["PART_ITEM_CODE"] + "</td><td style='background-color: #8080808f;'> " + data_table.Rows[loopCount]["OLD_PART_DESC"] + "</td><td style='color:red;background-color: #8080808f;'> " + data_table.Rows[loopCount]["PART_NEW_ITEMCODE"] + "</td><td style='color:red;background-color: #8080808f;'> " + data_table.Rows[loopCount]["NEW_PART_DESC"] + "</td></tr>";
+                textBody += "<tr><td style='background-color:gray;color:white;font-size:bold;border: 2px solid #1067b1;'>" + data_table.Rows[loopCount]["PART_DESC"] + "</td>";
+                if (data_table.Rows[loopCount]["PART_ITEM_CODE"].ToString() != "")
+                {
+                    textBody += "<td style='background-color: #8080808f;border: 2px solid #1067b1;'>" + data_table.Rows[loopCount]["OLD_PART_DESC"] + "(" + data_table.Rows[loopCount]["PART_ITEM_CODE"] + ")</td>";
+
+                }
+                else
+                {
+                    textBody += "<td style='background-color: #8080808f;border: 2px solid #1067b1;'></td>";
+
+                }
+                textBody += "<td style='color:red;background-color: #8080808f;border: 2px solid #1067b1;'> " + data_table.Rows[loopCount]["NEW_PART_DESC"] + " (" + data_table.Rows[loopCount]["PART_NEW_ITEMCODE"] + ")</td>";
+                textBody += "</tr>";
             }
             textBody += " </tbody></table>";
             return textBody;
@@ -5216,9 +5295,10 @@ namespace MVCApp.Controllers
                 if (fun.InsertTractorMasterS(obj))
                 {
                     int transactionNo = InsertSave(obj, "TRACTOR_TAB_2");
-                    string head = "New Tractor added in MES with following details :- Tractor Code : " + obj.gleSearch + "<br>" + obj.ItemCode_Desc + "";
+                    string subject = "Alert ! Addition in the tractor mapping page . F-code : " + obj.gleSearch + "";
+                    string head = "Alert ! Addition in the tractor mapping page . F-code : " + obj.gleSearch + "<br> Model name :" + obj.ItemCode_Desc + "";
                     string mailbody = MailBODY(transactionNo, obj.gleSearch, "TRACTOR_TAB_1", head);
-                    string mailsend = sendMail("Insert_Tractor", mailbody);
+                    string mailsend = sendMail("Insert_Tractor", mailbody, subject);
                     query = "select count(*) from ITEM_MASTER where trim(PLANT_CODE)='" + Convert.ToString(obj.T4_Plant) + "' and trim(FAMILY_CODE)='" + Convert.ToString(obj.T4_Family) + "'and trim(ITEM_CODE)='" + Convert.ToString(obj.T4_ItemCode).Trim() + "' ";
 
                     //fun.Insert_Into_ActivityLog("TRACTOR MASTER", "Insert_Update", Convert.ToString(obj.Plant) + " # " + Convert.ToString(obj.Family) + " # " + Convert.ToString(obj.ItemCode), query, Convert.ToString(obj.Plant).Trim().ToUpper(), Convert.ToString(obj.Family).Trim().ToUpper());
@@ -5514,13 +5594,13 @@ namespace MVCApp.Controllers
                 int transaction = ChangeUpdate(tmold, obj, "TRACTOR_TAB_2");
                 obj.ORG_ID = fun.getOrgId(Convert.ToString(obj.T4_Plant).Trim().ToUpper(), Convert.ToString(obj.T4_Family).Trim().ToUpper());
                 string schema = Convert.ToString(ConfigurationSettings.AppSettings["Schema"]);
-
+                bool t = true;
                 if (fun.UpdateTractorMasterS(obj))
                 {
-
+                    string subject  = "Update TAb 2 Tractor in MES with following details :- Tractor Code : " + obj.gleSearch + "";
                     string head = "Update TAb 2 Tractor in MES with following details :- Tractor Code : " + obj.gleSearch + "<br>" + obj.ItemCode_Desc + "";
                     string mailbody = MailBODY(transaction, obj.gleSearch, "TRACTOR_TAB_2", head);
-                    string mailsend = sendMail("Update_Change_TAb2", mailbody);
+                    string mailsend = sendMail("Update_Change_TAb2", mailbody, subject);
                     query = "select count(*) from ITEM_MASTER where trim(PLANT_CODE)='" + Convert.ToString(obj.T4_Plant) + "' and trim(FAMILY_CODE)='" + Convert.ToString(obj.T4_Family) + "'and trim(ITEM_CODE)='" + Convert.ToString(obj.T4_ItemCode).Trim() + "' ";
 
                     //fun.Insert_Into_ActivityLog("TRACTOR MASTER", "Insert_Update", Convert.ToString(obj.Plant) + " # " + Convert.ToString(obj.Family) + " # " + Convert.ToString(obj.ItemCode), query, Convert.ToString(obj.Plant).Trim().ToUpper(), Convert.ToString(obj.Family).Trim().ToUpper());

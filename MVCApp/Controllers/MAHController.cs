@@ -2009,9 +2009,6 @@ AND FAMILY_CODE='{5}')
                     case "HOOK_UP":
                     case "FIPNO":
                     case "INJ_SCAN":
-                        controller = "Tractor";
-                        break;
-                    case "INJ_SCAN":
                         controller = "EngineAssembly";
                         break;
                     default:
