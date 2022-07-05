@@ -26,9 +26,12 @@ namespace MVCApp.Controllers.DCU
         [HttpPost]
         public string ValidateJobID(COMMONDATA cOMMONDATA)
         {
+            DataTable dtMain = new DataTable();
             string result = string.Empty;
+            string fcode = string.Empty, fcode_desc = string.Empty, ecudcode = string.Empty, ecudesc = string.Empty; bool REQ_ECU = false;
             try
             {
+                
                 query = string.Format(@"select count(*) from XXES_JOB_STATUS where JOBID='{0}' 
                                 and PLANT_CODE='{1}' and family_code='{2}'", cOMMONDATA.JOB.Trim(), cOMMONDATA.PLANT.Trim(), cOMMONDATA.FAMILY.Trim());
                 if (fun.CheckExits(query))
@@ -2179,7 +2182,7 @@ namespace MVCApp.Controllers.DCU
                 {
                     model.CraneName = crnName.Trim();
                 }
-
+               
                 double qty;
                 bool isDouble = TryParseDouble(_careBtn.OilValue, out qty);
                 if (!isDouble)
@@ -2187,7 +2190,16 @@ namespace MVCApp.Controllers.DCU
                     model.Msg = "FOCUS # INVALID OIL VALUE";
                     return Json(model);
                 }
-
+                if (_careBtn.OilValue.Length < 2)
+                {
+                    model.Msg = "FOCUS #  OIL VALUE MIN TWO DIGIT";
+                    return Json(model);
+                }
+                if (Convert.ToInt32(_careBtn.OilValue)  > 60)
+                {
+                    model.Msg = "FOCUS #  OIL VALUE MAX 60";
+                    return Json(model);
+                }
                 query = string.Format(@"update xxes_job_status set oil='{0}'
                         where fcode_srlno='{1}'", _careBtn.OilValue.Trim(), _careBtn.TractorSrNo.Trim().ToUpper());
                 if (fun.EXEC_QUERY(query))
@@ -3704,6 +3716,8 @@ namespace MVCApp.Controllers.DCU
             }
             return response;
         }
+
+
         [HttpPost]
         public HttpResponseMessage UpdateFIP(FIP data)
         {
@@ -3843,59 +3857,42 @@ namespace MVCApp.Controllers.DCU
                 Content = new StringContent(response, System.Text.Encoding.UTF8, "application/json")
             };
         }
+
+
         [HttpPost]
-        public string INJEngineDetails(ENGINEINJECTORData data)
+        public string ValidateJobIDECU(COMMONDATA cOMMONDATA)
         {
-            try
-            {
-                query = string.Format(@"SELECT nvl(p.dcode,'') || '#' || nvl(ITEM_DESC,'') || '#' ||nvl(INJECTOR,'') || '#' || m.fuel_injection_pump || '#' || m.NO_OF_INJECTORS FROM  
-                        XXES_PRINT_SERIALS p,XXES_ENGINE_MASTER m   WHERE p.dcode=m.item_code and p.SRNO='{0}'", data.engine_srlno);
-                return fun.get_Col_Value(query);
-            }
-            catch (Exception ex)
-            {
-                fun.LogWrite(ex);
-                return "ERROR:" + ex.Message;
-            }
-        }
-        [HttpPost]
-        public string ValidateFIP(ENGINEINJECTORData data)
-        {
+            DataTable dtMain = new DataTable();
             string result = string.Empty;
+            string fcode = string.Empty, fcode_desc = string.Empty, ecudcode = string.Empty, ecudesc = string.Empty; bool REQ_ECU = false;
             try
             {
-                query = string.Format(@"SELECT * FROM xxes_engine_barcode_data WHERE ENGINE_SRLNO='{0}' AND BARCODE_DATA='{1}'",
-                                     data.engine_srlno.Trim(), data.fipsrlno.Trim());
-                string engineCode = fun.get_Col_Value(query);
-                if(string.IsNullOrEmpty(engineCode))
+                query = string.Format(@"SELECT XIM.ITEM_CODE,XIM.ITEM_DESCRIPTION, XIM.REQ_ECU,XIM.ECU, XIM.ECU_DESC,XJS.ECU_SRNO FROM XXES_JOB_STATUS xjs, XXES_ITEM_MASTER xim
+                         WHERE XJS.JOBID='{0}' AND XJS.ITEM_CODE=XIM.ITEM_CODE AND XJS.PLANT_CODE=XIM.PLANT_CODE AND XJS.FAMILY_CODE=XIM.FAMILY_CODE
+                          AND XJS.PLANT_CODE='{1}' AND XJS.FAMILY_CODE='{2}'", cOMMONDATA.JOB.Trim(), cOMMONDATA.PLANT.Trim().ToUpper(), cOMMONDATA.FAMILY.Trim().ToUpper());
+                dtMain = fun.returnDataTable(query);
+                if (dtMain.Rows.Count > 0)
                 {
-                    result = "ERROR # INVALID ENGINESRNO OR DCODE NOT FOUND";
+                    fcode = Convert.ToString(dtMain.Rows[0]["ITEM_CODE"]);
+                    fcode_desc = Convert.ToString(dtMain.Rows[0]["ITEM_DESCRIPTION"]);
+                    REQ_ECU = (Convert.ToString(dtMain.Rows[0]["REQ_ECU"]) == "Y" ? true : false);
+                    ecudcode = Convert.ToString(dtMain.Rows[0]["ECU"]);
+                    ecudesc = Convert.ToString(dtMain.Rows[0]["ECU_DESC"]);
                 }
-                if(data.injector == "Y")
+                if (REQ_ECU == false)
                 {
-                    query = string.Format(@"Select ITEM_CODE FROM XXES_FIPMODEL_CODE WHERE MODEL_CODE_NO='{0}", data.fipsrlno.Substring(0, 4).Trim());
-                    data.fipdcode = fun.get_Col_Value(query);
-                    data.splitSerialno = data.fipsrlno.Substring(4, 10);
+                    result = "ERROR # ECU NOT REQUIRED : " + fcode;
+                    return result;
                 }
-                else
+                query = string.Format(@"select count(*) from XXES_JOB_STATUS where JOBID='{0}' 
+                                and PLANT_CODE='{1}' and family_code='{2}'", cOMMONDATA.JOB.Trim(), cOMMONDATA.PLANT.Trim(), cOMMONDATA.FAMILY.Trim());
+                if (fun.CheckExits(query))
                 {
-                    query = string.Format(@"Select ITEM_CODE FROM XXES_FIPMODEL_CODE WHERE MODEL_CODE_NO='{0}'", data.fipsrlno.Substring(0, 10).Trim());
-                    data.fipdcode = fun.get_Col_Value(query);
-                    data.splitSerialno = data.fipsrlno.Substring(10);
-                }
-                if(string.IsNullOrEmpty(data.fipdcode))
-                {
-                    result = "ERROR # FIP DCODE NOT FOUND IN BARCODE" + data.fipsrlno;
-                }
-                query = string.Format(@"SELECT COUNT(*) FROM XXES_ENGINE_STATUS WHERE FUEL_INJECTION_PUMP_SRNO='{0}' AND ENGINE_SRNO='{1}'", 
-                         data.fipsrlno.Trim(), data.engine_srlno.Trim());
-                if (!fun.CheckExits(query))
-                {
-                    result = "OK # VALID FIP";
+                    result = "OK # VALID JOB";
                 }
                 else
                 {
-                    result = "ERROR # ALREAD INJECT IN THIS ENGINE AND FIP";
+                    result = "ERROR # INVALID JOB";
                 }
             }
             catch (Exception ex)
@@ -3905,45 +3902,58 @@ namespace MVCApp.Controllers.DCU
             }
             return result;
         }
-
         [HttpPost]
-        public string SaveInjector(ENGINEINJECTORData data)
+        public string UpdateECU(ECUDATA data)
         {
             string result = string.Empty;
+            string fcode = string.Empty, fcode_desc = string.Empty, ecudcode = string.Empty, ecudesc = string.Empty; bool REQ_ECU = false; 
+            DataTable dtMain = new DataTable();
             try
             {
-                if(string.IsNullOrEmpty(data.engine_srlno))
+                if(string.IsNullOrEmpty(data.JOB))
+                {
+                    result = "ERROR # PLEASE SCAN JOB";
+                    return result;
+                }
+                if(string.IsNullOrEmpty(data.ECUSRNO))
                 {
                     result = "ERROR # PLEASE SCAN ENGINE";
+                    return result;
                 }
-                if(string.IsNullOrEmpty(data.fipsrlno))
+                if (af == null)
+                    af = new Assemblyfunctions();
+                query = string.Format(@"SELECT XIM.ITEM_CODE,XIM.ITEM_DESCRIPTION, XIM.REQ_ECU,XIM.ECU, XIM.ECU_DESC,XJS.ECU_SRNO FROM XXES_JOB_STATUS xjs, XXES_ITEM_MASTER xim
+                         WHERE XJS.JOBID='{0}' AND XJS.ITEM_CODE=XIM.ITEM_CODE AND XJS.PLANT_CODE=XIM.PLANT_CODE AND XJS.FAMILY_CODE=XIM.FAMILY_CODE
+                          AND XJS.PLANT_CODE='{1}' AND XJS.FAMILY_CODE='{2}'", data.JOB.Trim(), data.PLANT.Trim().ToUpper(), data.FAMILY.Trim().ToUpper());
+                dtMain = fun.returnDataTable(query);
+                if (dtMain.Rows.Count > 0)
                 {
-                    result = "ERROR # PLEASE SCAN FIP";
+                    fcode = Convert.ToString(dtMain.Rows[0]["ITEM_CODE"]);
+                    fcode_desc = Convert.ToString(dtMain.Rows[0]["ITEM_DESCRIPTION"]);
+                    REQ_ECU = (Convert.ToString(dtMain.Rows[0]["REQ_ECU"]) == "Y" ? true : false);
+                    ecudcode = Convert.ToString(dtMain.Rows[0]["ECU"]);
+                    ecudesc = Convert.ToString(dtMain.Rows[0]["ECU_DESC"]);
                 }
-                query = string.Format(@"select ITEM_CODE from XXES_ENGINE_STATUS where FUEL_INJECTION_PUMP_SRNO='{0}' and ENGINE_SRNO<>'{1}'", data.fipsrlno.Trim(), data.engine_srlno.Trim());
-                string line = fun.get_Col_Value(query);
-                if(!string.IsNullOrEmpty(line))
+                query = string.Format(@"SELECT COUNT(*) FROM XXES_JOB_STATUS xjs WHERE XJS.PLANT_CODE='{0}' AND XJS.FAMILY_CODE='{1}' AND XJS.ECU_SRNO='{2}'"
+                        , data.PLANT.Trim(), data.FAMILY.Trim(), data.ECUSRNO.Trim());
+                if(fun.CheckExits(query))
                 {
-                    result = "ERROR # FIP SRNO ALREADY USED ON ENGINE : " + line;
+                    result = "ERROR # ECU SRNO ALREADY SCAN : " + data.JOB;
+                    return result;
                 }
-                if(!string.IsNullOrEmpty(data.engine_srlno) && !string.IsNullOrEmpty(data.fipsrlno))
+                query = "";
+                query = string.Format(@"UPDATE XXES_JOB_STATUS SET ECU='{0}' , ECU_SRNO='{1}',ECU_DESC='{5}' WHERE JOBID='{2}' AND PLANT_CODE='{3}' AND FAMILY_CODE='{4}'",
+                        ecudcode, data.ECUSRNO.Trim().ToUpper(), data.JOB.Trim().ToUpper(), data.PLANT.Trim().ToUpper(), data.FAMILY.Trim().ToUpper(),ecudesc);
+                if(Convert.ToBoolean(fun.EXEC_QUERY(query)))
                 {
-                    if(data.plantcode == "T04")
-                    {
-                        data.familycode = "ENGINE FTD";
-                    }
-                    else if(data.plantcode == "T05")
-                    {
-                        data.familycode = "ENGINE TD";
-                    }
-                    query = string.Format(@"insert into XXES_ENGINE_STATUS(plant_code,family_code,item_code,engine_srno,FUEL_INJECTION_PUMP_SRNO,
-                            INJECTOR1,INJECTOR2,INJECTOR3,INJECTOR4,ENTRYDATE) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}',SYSDATE)", data.plantcode.Trim().ToUpper(),
-                            data.familycode.Trim().ToUpper(), data.engine, data.engine_srlno, data.fipsrlno, data.injector1, data.injector2, data.injector3, data.injector4);
+                    query = string.Format(@"Insert into XXES_SCAN_TIME(PLANT_CODE,FAMILY_CODE,ITEM_CODE,JOBID,STAGE,SCAN_DATE,SCANNED_BY) values('{0}','{1}','{2}','{3}','{4}',SYSDATE,'{5}')",
+                            data.PLANT.Trim().ToUpper(), data.FAMILY.Trim().ToUpper(), fcode, data.JOB, data.LOGINSTAGECODE, data.CREATEDBY);
                     if(fun.EXEC_QUERY(query))
                     {
-                        result = "OK # SAVED SUCESSFULLY !!";
+                        result = "OK # RECORD SAVE SUCCESSFULLY";
                     }
                 }
+
             }
             catch (Exception ex)
             {
@@ -3952,5 +3962,7 @@ namespace MVCApp.Controllers.DCU
             }
             return result;
         }
+
+
     }
 }

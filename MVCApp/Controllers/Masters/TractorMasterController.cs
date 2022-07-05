@@ -2770,7 +2770,7 @@ namespace MVCApp.Controllers
             {
                 TM.Family = TM.T4_Family;
             }
-            string transactionNo = fun.get_Col_Value("SELECT NVL( MAX(TRANSACTION_NUMBER),0)+1 AS TRANSACTION_NUMBER FROM XXES_PARTS_AUDIT_DATA WHERE Remarks1 = 'TRACTOR_TAB_1' AND Remarks2 = 'F00000000'");
+            string transactionNo = fun.get_Col_Value("SELECT NVL( MAX(TRANSACTION_NUMBER),0)+1 AS TRANSACTION_NUMBER FROM XXES_PARTS_AUDIT_DATA WHERE Remarks1 = '"+ Tab + "'");
             TrnNo = Convert.ToInt32(transactionNo);
             if (Tab == "TRACTOR_TAB_1")
             {
@@ -3276,6 +3276,26 @@ namespace MVCApp.Controllers
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.FR_AS_RB, TM.FR_AS_RB, tmold.FR_AS_RB, tmold.FR_AS_RB_DESC, Tab, TM.gleSearch, TM.FR_AS_RB, TM.FR_AS_RB_DESC, " FR_AS_RB", TrnNo);
                 }
+                if (TM.ECU == null)
+                {
+                    TM.ECU = "";
+                }
+                if (Tmold.ECU == null)
+                {
+                    Tmold.ECU = "";
+                }
+                if (Tmold.ECU_DESC == null)
+                {
+                    Tmold.ECU_DESC = "";
+                }
+                if (TM.ECU_DESC == null)
+                {
+                    TM.ECU_DESC = "";
+                }
+                if (Tmold.ECU !=TM.ECU)
+                {
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.ECU, TM.ECU, tmold.ECU, tmold.ECU_DESC, Tab, TM.gleSearch, TM.ECU, TM.ECU_DESC, "ECU_DESC", TrnNo);
+                }
                 if (Tmold.FR_AS_RB != TM.FR_AS_RB)
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.FR_AS_RB), Convert.ToString(TM.FR_AS_RB), Convert.ToString(tmold.FR_AS_RB), Convert.ToString(tmold.FR_AS_RB), Tab, TM.gleSearch, Convert.ToString(TM.FR_AS_RB), Convert.ToString(TM.FR_AS_RB), " FR_AS_RB", TrnNo);
@@ -3287,6 +3307,19 @@ namespace MVCApp.Controllers
                 if (Tmold.RearRimChk != TM.RearRimChk)
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RearRimChk), Convert.ToString(TM.RearRimChk), Convert.ToString(tmold.RearRimChk), Convert.ToString(tmold.RearRimChk), Tab, TM.gleSearch, Convert.ToString(TM.RearRimChk), Convert.ToString(TM.RearRimChk), " RearRimChk", TrnNo);
+                }
+                if (Tmold.RearRimChk != TM.RearRimChk)
+                {
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RearRimChk), Convert.ToString(TM.RearRimChk), Convert.ToString(tmold.RearRimChk), Convert.ToString(tmold.RearRimChk), Tab, TM.gleSearch, Convert.ToString(TM.RearRimChk), Convert.ToString(TM.RearRimChk), " RearRimChk", TrnNo);
+                }
+                //Rajesh Add Some Fields  
+                if (TM.ECUChk == null)
+                {
+                    TM.ECUChk = false;
+                }
+                if (Tmold.ECUChk != TM.ECUChk)
+                {
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.ECUChk), Convert.ToString(TM.ECUChk), Convert.ToString(tmold.ECUChk), Convert.ToString(tmold.ECUChk), Tab, TM.gleSearch, Convert.ToString(TM.ECUChk), Convert.ToString(TM.ECUChk), " RearRimChk", TrnNo);
                 }
             }
             return TrnNo;
@@ -4909,6 +4942,43 @@ namespace MVCApp.Controllers
             }
             return Json(_FrontGrill, JsonRequestBehavior.AllowGet);
         }
+        public JsonResult FillECUCODE(TractorMster data)
+        {
+            List<DDLTextValue> _result = new List<DDLTextValue>();
+            try
+            {
+                string schema = Convert.ToString(ConfigurationSettings.AppSettings["Schema"]);
+                if (string.IsNullOrEmpty(schema) || string.IsNullOrEmpty(data.Plant) || string.IsNullOrEmpty(data.Family))
+                {
+                    return Json(null, JsonRequestBehavior.AllowGet);
+                }
+                string orgid = fun.getOrgId(Convert.ToString(data.Plant).Trim().ToUpper(), Convert.ToString(data.Family).Trim().ToUpper());
+                DataTable dt = new DataTable();
+                if (!string.IsNullOrEmpty(data.ECU))
+                {
+                    query = string.Format(@"select distinct segment1 || ' # ' || description as DESCRIPTION, segment1 as ITEM_CODE from " + schema + ".mtl_system_items " +
+                        "where organization_id in (" + orgid + ") and substr(segment1, 1, 1) in ('D','S') AND (SEGMENT1 LIKE '%{0}%' OR DESCRIPTION LIKE '%{1}%') order by segment1", data.ECU.Trim().ToUpper(), data.ECU.Trim().ToUpper());
+                }
+
+                dt = fun.returnDataTable(query);
+                if (dt.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in dt.AsEnumerable())
+                    {
+                        _result.Add(new DDLTextValue
+                        {
+                            Text = dr["DESCRIPTION"].ToString(),
+                            Value = dr["ITEM_CODE"].ToString(),
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+            }
+            return Json(_result, JsonRequestBehavior.AllowGet);
+        }
         public JsonResult FillMainHarnessBonnet(TractorMster data)
         {
             List<DDLTextValue> _MainHarnessBonnet = new List<DDLTextValue>();
@@ -4983,6 +5053,8 @@ namespace MVCApp.Controllers
             }
             return Json(_Spindle, JsonRequestBehavior.AllowGet);
         }
+
+     
         //public JsonResult FillMotor(TractorMster data)
         //{
         //    List<DDLTextValue> _Motor = new List<DDLTextValue>();
@@ -5275,6 +5347,12 @@ namespace MVCApp.Controllers
                     string[] item = StringSpliter(obj.FR_AS_RB);
                     obj.FR_AS_RB = item[0].Trim();
                     obj.FR_AS_RB_DESC = replaceApostophi(item[1].Trim());
+                }
+                if (!string.IsNullOrEmpty(obj.ECU))
+                {
+                    string[] item = StringSpliter(obj.ECU);
+                    obj.ECU = item[0].Trim();
+                    obj.ECU_DESC = replaceApostophi(item[1].Trim());
                 }
 
                 //----------------------------Add New end------------------------------
@@ -5586,7 +5664,12 @@ namespace MVCApp.Controllers
                     obj.FR_AS_RB = item[0].Trim();
                     obj.FR_AS_RB_DESC = replaceApostophi(item[1].Trim());
                 }
-
+                if (!string.IsNullOrEmpty(obj.ECU))
+                {
+                    string[] item = StringSpliter(obj.ECU);
+                    obj.ECU = item[0].Trim();
+                    obj.ECU_DESC = replaceApostophi(item[1].Trim());
+                }
                 //----------------------------Add New end------------------------------
 
                 #endregion
@@ -5781,7 +5864,10 @@ namespace MVCApp.Controllers
                         {
                             tm.FR_AS_RB = Convert.ToString(dt.Rows[0]["FR_AS_RB"]) + " # " + Convert.ToString(dt.Rows[0]["FR_AS_RB_DESC"]);
                         }
-
+                        if (!string.IsNullOrEmpty(Convert.ToString(dt.Rows[0]["ECU"])))
+                        {
+                            tm.ECU = Convert.ToString(dt.Rows[0]["ECU"]) + " # " + Convert.ToString(dt.Rows[0]["ECU_DESC"]);
+                        }
                         if (Convert.ToString(dt.Rows[0]["REQ_FRONTRIM"]) == "Y")
                             tm.FrontRimChk = true;
                         else
@@ -5790,6 +5876,10 @@ namespace MVCApp.Controllers
                             tm.RearRimChk = true;
                         else
                             tm.RearRimChk = false;
+                        if (Convert.ToString(dt.Rows[0]["REQ_ECU"]) == "Y")
+                            tm.ECUChk = true;
+                        else
+                            tm.ECUChk = false;
                         //---------------------------------Add New End-------------------------------------------
 
                         //if (!string.IsNullOrEmpty(Convert.ToString(dt.Rows[0]["MOTOR"])))

@@ -15,7 +15,7 @@ namespace MVCApp.Controllers.DCU
 {
     public class EngineAssemblyController : ApiController
     {
-        
+
         string query = string.Empty, JSONObj = string.Empty;
         Function fun = new Function();
         public static string orConnstring = ConfigurationManager.ConnectionStrings["CON"].ConnectionString;
@@ -1169,7 +1169,7 @@ namespace MVCApp.Controllers.DCU
             {
                 query = string.Format(@"SELECT M.FRONTTYRE ||'#'|| M.RH_FRONTTYRE ||'#'|| M.REARTYRE ||'#'|| M.RH_REARTYRE ||'#'|| m.FRONT_RIM ||'#'|| m.REAR_RIM FROM  XXES_JOB_STATUS xjs ,XXES_ITEM_MASTER m 
                         WHERE M.ITEM_CODE=XJS.ITEM_CODE AND M.PLANT_CODE=XJS.PLANT_CODE AND M.FAMILY_CODE=XJS.FAMILY_CODE 
-                        AND XJS.PLANT_CODE='{0}' AND XJS.FAMILY_CODE='{1}' AND XJS.JOBID='{2}'", tyres.PLANT.ToUpper().Trim(), tyres.FAMILY.ToUpper().Trim() , tyres.JOB.Trim());
+                        AND XJS.PLANT_CODE='{0}' AND XJS.FAMILY_CODE='{1}' AND XJS.JOBID='{2}'", tyres.PLANT.ToUpper().Trim(), tyres.FAMILY.ToUpper().Trim(), tyres.JOB.Trim());
                 return fun.get_Col_Value(query);
             }
             catch (Exception ex)
@@ -1183,7 +1183,7 @@ namespace MVCApp.Controllers.DCU
         {
 
             string REAR_RIM, FRONT_RIM, REARRIM_SRLNO1, REARRIM_SRLNO2, FRONTRIM_SRLNO1, FRONTRIM_SRLNO2, RH_FRONTTYRE, RH_REARTYRE,
-            LH_REARTYRE, LH_FRONTTYRE, DeCode1, DeCode2, DeCode3, DeCode4 , itemcode = string.Empty;
+            LH_REARTYRE, LH_FRONTTYRE, DeCode1, DeCode2, DeCode3, DeCode4, itemcode = string.Empty;
             bool isREQ_RHFT = false, isREQ_RHRT = false, isLHREQUIRE_FRONTTYRE = false, isLHREQUIRE_REARTYRE, isREQ_FRONTRIM, isREQ_REARRIM = false;
             try
             {
@@ -1706,7 +1706,7 @@ namespace MVCApp.Controllers.DCU
             string response = string.Empty;
             try
             {
-                using(OracleConnection oracleConnection = new OracleConnection(orConnstring))
+                using (OracleConnection oracleConnection = new OracleConnection(orConnstring))
                 {
                     OracleCommand comm;
                     comm = new OracleCommand("UDSP_CLUSTERASSEMBLY", oracleConnection);
@@ -1730,20 +1730,20 @@ namespace MVCApp.Controllers.DCU
                         }
                         else
                         {
-                            new StringContent(response, System.Text.Encoding.UTF8, "application/json");                          
+                            new StringContent(response, System.Text.Encoding.UTF8, "application/json");
                         }
                     }
                     else
                     {
                         response = "SOMETHING WENT WRONG FROM DATABASE";
-                        new StringContent(response, System.Text.Encoding.UTF8, "application/json");                       
+                        new StringContent(response, System.Text.Encoding.UTF8, "application/json");
                     }
                 }
             }
             catch (Exception ex)
             {
                 response = ex.Message;
-                new StringContent(response, System.Text.Encoding.UTF8, "application/json");               
+                new StringContent(response, System.Text.Encoding.UTF8, "application/json");
             }
             return new HttpResponseMessage()
             {
@@ -1756,7 +1756,7 @@ namespace MVCApp.Controllers.DCU
             string response = string.Empty;
             try
             {
-                using(OracleConnection oracleConnection  = new OracleConnection(orConnstring))
+                using (OracleConnection oracleConnection = new OracleConnection(orConnstring))
                 {
                     OracleCommand comm;
                     comm = new OracleCommand("UDSP_POWERSTEERINGCYLINDER", oracleConnection);
@@ -1813,7 +1813,7 @@ namespace MVCApp.Controllers.DCU
                 query = string.Format(@"select M.ITEM_CODE,M.ITEM_DESCRIPTION,S.HYD_PUMP_SRLNO,S.STEERING_MOTOR_SRLNO,S.STEERING_ASSEMBLY_SRLNO,
                         M.REQ_HYD_PUMP,M.REQ_STEERING_MOTOR,M.REQ_STEERING_ASSEMBLY,M.steering_motor from XXES_JOB_STATUS S, XXES_ITEM_MASTER M
                         where S.JOBID='{0}' and M.ITEM_CODE=S.ITEM_CODE and M.PLANT_CODE=S.PLANT_CODE and M.FAMILY_CODE=S.FAMILY_CODE and S.PLANT_CODE = '{1}'
-                        and S.family_code = '{2}'",sTEERING.JOB,sTEERING.PLANT,sTEERING.FAMILY);
+                        and S.family_code = '{2}'", sTEERING.JOB, sTEERING.PLANT, sTEERING.FAMILY);
                 dtMain = new DataTable(); string fcode = "", fcode_desc = "";
                 dtMain = fun.returnDataTable(query);
                 if (dtMain.Rows.Count > 0)
@@ -1862,7 +1862,7 @@ namespace MVCApp.Controllers.DCU
                             };
                         }
                     }
-                   
+
                 }
                 using (OracleConnection oracleConnection = new OracleConnection(orConnstring))
                 {
@@ -1893,7 +1893,7 @@ namespace MVCApp.Controllers.DCU
                     oracleConnection.Close();
                     if (!string.IsNullOrEmpty(response))
                     {
-                        if(response.StartsWith("OK"))
+                        if (response.StartsWith("OK"))
                         {
                             response = "OK # RECORD SAVE SUCESSFULLY";
                         }
@@ -1912,7 +1912,7 @@ namespace MVCApp.Controllers.DCU
             catch (Exception ex)
             {
                 response = ex.Message;
-                new StringContent(response, System.Text.Encoding.UTF8, "application/json");              
+                new StringContent(response, System.Text.Encoding.UTF8, "application/json");
             }
             return new HttpResponseMessage()
             {
@@ -1925,7 +1925,7 @@ namespace MVCApp.Controllers.DCU
         public HttpResponseMessage UpdateHydraulic(HYDRAULIC hYDRAULIC)
         {
             string response = string.Empty;
-            string HYDRALUIC_SRLNO , HYDRAULICDCODE, FCODE, FCODE_DESC =  string.Empty;
+            string HYDRALUIC_SRLNO, HYDRAULICDCODE, FCODE, FCODE_DESC = string.Empty;
             DataTable dtMain = new DataTable();
             try
             {
@@ -1933,7 +1933,7 @@ namespace MVCApp.Controllers.DCU
                 WHERE S.JOBID = '{0}' AND M.ITEM_CODE = S.ITEM_CODE AND M.PLANT_CODE = S.PLANT_CODE AND M.FAMILY_CODE = S.FAMILY_CODE AND
                 S.PLANT_CODE = '{1}' AND S.FAMILY_CODE = '{2}' ", hYDRAULIC.JOB, hYDRAULIC.PLANT, hYDRAULIC.FAMILY);
                 dtMain = fun.returnDataTable(query);
-                if(dtMain.Rows.Count > 0)
+                if (dtMain.Rows.Count > 0)
                 {
                     FCODE = Convert.ToString(dtMain.Rows[0]["ITEM_CODE"]);
                     FCODE_DESC = Convert.ToString(dtMain.Rows[0]["ITEM_DESCRIPTION"]);
@@ -1964,7 +1964,7 @@ namespace MVCApp.Controllers.DCU
                     //}
                     if (af == null)
                         af = new Assemblyfunctions();
-                    if(af.SplitDcode(hYDRAULIC.HYDSRLNO.Trim().ToUpper(), "HYDRAULIC").Trim().ToUpper() != HYDRAULICDCODE.Trim().ToUpper())
+                    if (af.SplitDcode(hYDRAULIC.HYDSRLNO.Trim().ToUpper(), "HYDRAULIC").Trim().ToUpper() != HYDRAULICDCODE.Trim().ToUpper())
                     {
                         fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", hYDRAULIC.LOGINSTAGECODE, hYDRAULIC.JOB.Trim(),
                             "HYDRAULIC DCODE MISMATCH" + hYDRAULIC.HYDSRLNO.Trim().ToUpper() + " WITH DCODE :" +
@@ -1974,9 +1974,9 @@ namespace MVCApp.Controllers.DCU
                         {
                             Content = new StringContent(response, System.Text.Encoding.UTF8, "application/json")
                         };
-                    }           
+                    }
                 }
-               using (OracleConnection oracleConnection = new OracleConnection(orConnstring))
+                using (OracleConnection oracleConnection = new OracleConnection(orConnstring))
                 {
                     OracleCommand oracleCommand;
                     oracleCommand = new OracleCommand("UDSP_UPDATEHYDRAULIC", oracleConnection);
@@ -1995,15 +1995,15 @@ namespace MVCApp.Controllers.DCU
                     oracleCommand.ExecuteNonQuery();
                     response = Convert.ToString(oracleCommand.Parameters["RETURN_MESSAGE"].Value);
                     oracleConnection.Close();
-                    if(!string.IsNullOrEmpty(response))
+                    if (!string.IsNullOrEmpty(response))
                     {
-                        if(response.StartsWith("OK"))
+                        if (response.StartsWith("OK"))
                         {
                             response = "OK # RECORD SAVE SUCCESSUFULLY";
                         }
                         else
                         {
-                           new StringContent(response, System.Text.Encoding.UTF8, "application/json");
+                            new StringContent(response, System.Text.Encoding.UTF8, "application/json");
                         }
                     }
                     else
@@ -2012,7 +2012,7 @@ namespace MVCApp.Controllers.DCU
                         new StringContent(response, System.Text.Encoding.UTF8, "application/json");
                     }
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -3059,10 +3059,10 @@ namespace MVCApp.Controllers.DCU
                                 }
                             }
                         }
-                    else
-                        response = "OK # Matched but print not enabled";
+                        else
+                            response = "OK # Matched but print not enabled";
                     }
-                    
+
 
                 }
             }
@@ -3095,8 +3095,8 @@ namespace MVCApp.Controllers.DCU
                 bool isRePrint = false; string response = string.Empty; bool printStatus = false;
                 query = string.Format(@"select Require_RearAxel || '#' || Require_Trans || '#' || Require_Backend 
                         from XXES_ITEM_MASTER where ITEM_CODE='{0}'and PLANT_CODE='{1}' and family_code='{2}'",
-                        Convert.ToString(fTBuckleup.ITEMCODE).Split('#')[0].Trim().ToUpper(),fTBuckleup.PLANT.Trim().ToUpper()
-                        ,fTBuckleup.FAMILY.Trim().ToUpper());
+                        Convert.ToString(fTBuckleup.ITEMCODE).Split('#')[0].Trim().ToUpper(), fTBuckleup.PLANT.Trim().ToUpper()
+                        , fTBuckleup.FAMILY.Trim().ToUpper());
                 string line = fun.get_Col_Value(query);
                 if (!string.IsNullOrEmpty(line))
                 {
@@ -3106,7 +3106,7 @@ namespace MVCApp.Controllers.DCU
                     if (isBackEndRequire || isByPass)
                         isRearAxelRequire = isTransRequire = false;
                     if (isTransRequire == true || isRearAxelRequire == true)
-                        isBackEndRequire = false;                 
+                        isBackEndRequire = false;
                 }
                 else
                 {
@@ -3144,12 +3144,12 @@ namespace MVCApp.Controllers.DCU
                 if (fun == null)
                     fun = new Function();
 
-                if(fTBuckleup.TRANSMISSIONSRLNO == fTBuckleup.REARAXELSRLNO
+                if (fTBuckleup.TRANSMISSIONSRLNO == fTBuckleup.REARAXELSRLNO
                     && isTransRequire == true && isRearAxelRequire == true)
                 {
                     return "Both SrNo should not be same";
                 }
-                if(isBackEndRequire)
+                if (isBackEndRequire)
                 {
                     query = string.Format(@"select transmission_srlno || '#' || rearaxel_srlno from  XXES_BACKEND_STATUS
                             where backend_srlno='{0}'", fTBuckleup.BackendSrlno);
@@ -3157,8 +3157,8 @@ namespace MVCApp.Controllers.DCU
                     string TransSrlno = "", AxelSrlNo = "";
                     if (!string.IsNullOrEmpty(line))
                     {
-                        TransSrlno  = line.Split('#')[0].Trim().ToUpper();
-                        AxelSrlNo  = line.Split('#')[1].Trim().ToUpper();
+                        TransSrlno = line.Split('#')[0].Trim().ToUpper();
+                        AxelSrlNo = line.Split('#')[1].Trim().ToUpper();
                     }
                 }
                 string TractorType = fun.get_Col_Value("select TYPE from xxes_daily_plan_TRAN where item_code ='" + fTBuckleup.ITEMCODE.Trim() + "' and autoid='" + fTBuckleup.FCODEID + "' and plant_code='" + fTBuckleup.PLANT.Trim() + "' and family_code='" + fTBuckleup.FAMILY.Trim() + "'");
@@ -3203,7 +3203,7 @@ namespace MVCApp.Controllers.DCU
                         return " RearAxel SrlNo Already Scanned On Job" + job.Trim().ToUpper();
                     }
                 }
-                if(isBackEndRequire == true)
+                if (isBackEndRequire == true)
                 {
                     query = string.Format(@"select JOBID from XXES_JOB_STATUS where BACKEND_SRLNO='{0}'", fTBuckleup.BackendSrlno);
                     job = fun.get_Col_Value(query);
@@ -3217,7 +3217,7 @@ namespace MVCApp.Controllers.DCU
 
                 query = string.Format(@"select TRANSMISSION || '#' || REARAXEL || '#' || TRANSMISSION_DESCRIPTION || '#' || REARAXEL_DESCRIPTION  
                      from XXES_ITEM_MASTER where trim(ITEM_CODE)='{0}' and PLANT_CODE='{1}' and family_code='{2}'",
-                     fTBuckleup.ITEMCODE, fTBuckleup.PLANT.Trim().ToUpper(), fTBuckleup.FAMILY.Trim().ToUpper());            
+                     fTBuckleup.ITEMCODE, fTBuckleup.PLANT.Trim().ToUpper(), fTBuckleup.FAMILY.Trim().ToUpper());
                 Data = fun.get_Col_Value(query);
                 if (Data.Trim().IndexOf('#') != -1)
                 {
@@ -3250,12 +3250,12 @@ namespace MVCApp.Controllers.DCU
                         }
                     }
                     query = string.Format(@"SELECT FCODE_AUTOID FROM XXES_DAILY_PLAN_JOB WHERE JOBID='{0}'", fTBuckleup.JOB);
-                    if(string.IsNullOrEmpty(fTBuckleup.FCODEID))
+                    if (string.IsNullOrEmpty(fTBuckleup.FCODEID))
                     {
                         fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), "INVALID JOB FOR SELECTED MODEL " + fTBuckleup.ITEMCODE.Trim() + " ", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
                         return "Invalid Job for selected model : " + fTBuckleup.ITEMCODE;
                     }
-                    if(fun.get_Col_Value(query).Trim() != fTBuckleup.FCODEID.Trim())
+                    if (fun.get_Col_Value(query).Trim() != fTBuckleup.FCODEID.Trim())
                     {
                         fun.Insert_Into_ActivityLog("SCAN_ERROR_DCU", fTBuckleup.STAGE, fTBuckleup.JOB.Trim(), "INVALID JOB FOR SELECTED MODEL " + fTBuckleup.ITEMCODE.Trim() + " ", fTBuckleup.PLANT, fTBuckleup.FAMILY, fTBuckleup.CREATEDBY);
                         return "Invalid Job for selected model : " + fTBuckleup.ITEMCODE;
@@ -3263,7 +3263,7 @@ namespace MVCApp.Controllers.DCU
                 }
                 query = "";
                 query = string.Format(@"select count(*) from XXES_JOB_STATUS where JOBID='{0}' and PLANT_CODE='{1}' 
-                        and family_code='{2}'",fTBuckleup.JOB,fTBuckleup.PLANT,fTBuckleup.FAMILY);
+                        and family_code='{2}'", fTBuckleup.JOB, fTBuckleup.PLANT, fTBuckleup.FAMILY);
                 if (!fun.CheckExits(query))
                 {
                     if (isTransRequire == false)
@@ -3277,7 +3277,7 @@ namespace MVCApp.Controllers.DCU
                         ActualAxle = "";
                         fTBuckleup.REARAXELSRLNO = "";
                     }
-                    string remarks = "";                
+                    string remarks = "";
                     if (!isBackEndRequire)
                     {
                         if (isByPass == true)
@@ -3293,9 +3293,9 @@ namespace MVCApp.Controllers.DCU
                             TRANSMISSION,REARAXEL,ENTRYDATE,TRANSMISSION_SRLNO, REARAXEL_SRLNO,FCODE_ID,Remarks1,
                             BackEnd_Srlno) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}',sysdate,'{7}','{8}',
                             '{9}','{10}','{11}')", fTBuckleup.PLANT.Trim().ToUpper(), fTBuckleup.FAMILY.Trim().ToUpper(),
-                            fTBuckleup.ITEMCODE.Trim().ToUpper(),fTBuckleup.TRACTOR_DESC.Trim().ToUpper(),fTBuckleup.JOB,
+                            fTBuckleup.ITEMCODE.Trim().ToUpper(), fTBuckleup.TRACTOR_DESC.Trim().ToUpper(), fTBuckleup.JOB,
                             ActualTrans.Trim().ToUpper(), ActualAxle.Trim().ToUpper(), fTBuckleup.TRANSMISSIONSRLNO,
-                            fTBuckleup.REARAXELSRLNO,fTBuckleup.FCODEID,remarks,fTBuckleup.BackendSrlno);
+                            fTBuckleup.REARAXELSRLNO, fTBuckleup.FCODEID, remarks, fTBuckleup.BackendSrlno);
                     if (!fun.EXEC_QUERY(query))
                     {
                         return "Error found while saving data for job " + fTBuckleup.JOB;
@@ -3316,7 +3316,7 @@ namespace MVCApp.Controllers.DCU
                     else
                     {
                         //if (TractorType == "EXPORT")
-                            Filename = "BK.txt";
+                        Filename = "BK.txt";
                         //Filename = "BD17.txt";
                         //else
                         //    Filename = "BK.txt";
@@ -3333,7 +3333,7 @@ namespace MVCApp.Controllers.DCU
 
                         if (assemblyBarcodes == null)
                             assemblyBarcodes = new PrintAssemblyBarcodes();
-                        if (assemblyBarcodes.PrintBackendStickerFT(fTBuckleup, Filename, itemname, isTransRequire, isRearAxelRequire , isBackEndRequire))
+                        if (assemblyBarcodes.PrintBackendStickerFT(fTBuckleup, Filename, itemname, isTransRequire, isRearAxelRequire, isBackEndRequire))
                         {
                             return "OK # Matched and printed successfully !! ";
                         }
@@ -3369,8 +3369,8 @@ namespace MVCApp.Controllers.DCU
             {
                 stringExtention.SetPropertiesToDefaultValues(fTBuckleup);
                 string Suffix = string.Empty, response = string.Empty;
-                string query, TractorType, line, Filename,ROPS_SRNO = string.Empty; bool isTransRequire = false,
-                isRearAxelRequire = false; bool isBackEndRequire = false;
+                string query, TractorType, line, Filename, ROPS_SRNO = string.Empty; bool isTransRequire = false,
+                 isRearAxelRequire = false; bool isBackEndRequire = false;
 
                 line = fun.get_Col_Value(String.Format(@"select ITEM_CODE || '#' || ITEM_DESCRIPTION || '#' ||TRANSMISSION_SRLNO|| '#' ||REARAXEL_SRLNO||  
                  '#' ||FCODE_SRLNO || '#' || FCODE_ID || '#' || JOBID || '#' || ROPS_SRNO || '#' || TO_CHAR(entrydate, 'MM/YY')  
@@ -3381,7 +3381,7 @@ namespace MVCApp.Controllers.DCU
                     fTBuckleup.ITEMCODE = line.Split('#')[0].Trim();
                     fTBuckleup.TRACTOR_DESC = line.Split('#')[1].Trim();
                     fTBuckleup.TRANSMISSIONSRLNO = line.Split('#')[2].Trim();
-                    fTBuckleup.REARAXELSRLNO = line.Split('#')[3].Trim();                
+                    fTBuckleup.REARAXELSRLNO = line.Split('#')[3].Trim();
                     fTBuckleup.FCODEID = line.Split('#')[5].Trim();
                     fTBuckleup.JOB = line.Split('#')[6].Trim();
                     ROPS_SRNO = line.Split('#')[8].Trim();
@@ -3408,7 +3408,7 @@ namespace MVCApp.Controllers.DCU
                     if (assemblyBarcodes == null)
                         assemblyBarcodes = new PrintAssemblyBarcodes();
                     if (assemblyBarcodes.PrintBackendStickerFT(fTBuckleup, Filename, itemname, isTransRequire,
-                        isRearAxelRequire, isBackEndRequire ))
+                        isRearAxelRequire, isBackEndRequire))
                     {
                         response = "OK # JOB " + fTBuckleup.JOB.Trim().ToUpper() + " REPRINTED SUCCESSFULLY !! ";
                     }
@@ -3546,9 +3546,9 @@ namespace MVCApp.Controllers.DCU
                      AND JS.ITEM_CODE = IM.ITEM_CODE where JS.JOBID='{0}' and JS.PLANT_CODE='{1}' and JS.family_code='{2}'", fTEngine.JobId.Trim(), fTEngine.Plant.Trim(), fTEngine.Family.Trim()));
                 if (!string.IsNullOrEmpty(line))
                 {
-                    
+
                     PrintAssemblyBarcodes printAssemblyBarcodes = new PrintAssemblyBarcodes();
-                    printStatus = printAssemblyBarcodes.RePrintEngineSticker(line,fTEngine);
+                    printStatus = printAssemblyBarcodes.RePrintEngineSticker(line, fTEngine);
 
                     if (printStatus)
                     {
@@ -3571,7 +3571,7 @@ namespace MVCApp.Controllers.DCU
                 fun.LogWrite(ex);
                 return "ERROR : " + ex.Message;
             }
-            
+
         }
         [HttpPost]
         public HttpResponseMessage UpdateHookUp(BeforePaintAssemblyModel data)
@@ -3839,5 +3839,271 @@ namespace MVCApp.Controllers.DCU
             };
         }
 
+        [HttpPost]
+        public string INJEngineDetails(ENGINEINJECTORData data)
+        {
+            string result = string.Empty;
+            try
+            {
+                query = string.Format(@"SELECT COUNT(*) FROM XXES_ENGINE_STATUS WHERE PLANT_CODE='{0}' AND FAMILY_CODE='{1}' AND ENGINE_SRNO='{2}'",
+                         data.plantcode.Trim(), data.familycode.Trim(), data.engine_srlno.Trim());
+                if (fun.CheckExits(query))
+                {
+                    result = "ERROR # ALREADY EXIST ENGINE ";
+                    return result;
+                }
+                query = string.Format(@"SELECT nvl(p.dcode,'') || '#' || nvl(ITEM_DESC,'') || '#' ||nvl(INJECTOR,'') || '#' || m.fuel_injection_pump || '#' || m.NO_OF_INJECTORS FROM  
+                        XXES_PRINT_SERIALS p,XXES_ENGINE_MASTER m   WHERE p.dcode=m.item_code and p.SRNO='{0}'", data.engine_srlno);
+                return fun.get_Col_Value(query);
+
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+                return "ERROR:" + ex.Message;
+            }
+            return result;
+        }
+        [HttpPost]
+        public string ValidateFIP(ENGINEINJECTORData data)
+        {
+            string result = string.Empty;
+            try
+            {
+                query = string.Format(@"SELECT COUNT(*) FROM xxes_engine_barcode_data WHERE ENGINE_SRLNO='{0}' AND BARCODE_DATA='{1}'",
+                                     data.engine_srlno.Trim(), data.fipsrlno.Trim());
+                if (fun.CheckExits(query))
+                {
+                    result = "ERROR # ALREADY EXIST :" + data.engine_srlno;
+                    return result;
+                }
+                if (data.injector == "Y")
+                {
+                    query = string.Format(@"Select ITEM_CODE FROM XXES_FIPMODEL_CODE WHERE MODEL_CODE_NO='{0}'", data.fipsrlno.Substring(0, 4).Trim());
+                    data.fipdcode = fun.get_Col_Value(query);
+                    data.splitSerialno = data.fipsrlno.Substring(4, 10);
+                }
+                else
+                {
+                    query = string.Format(@"Select ITEM_CODE FROM XXES_FIPMODEL_CODE WHERE MODEL_CODE_NO='{0}'", data.fipsrlno.Substring(0, 10).Trim());
+                    data.fipdcode = fun.get_Col_Value(query);
+                    data.splitSerialno = data.fipsrlno.Substring(10);
+                }
+                if (string.IsNullOrEmpty(data.fipdcode))
+                {
+                    result = "ERROR # FIP DCODE NOT FOUND IN BARCODE" + data.fipsrlno;
+                    return result;
+                }
+                query = string.Format(@"SELECT COUNT(*) FROM XXES_ENGINE_STATUS WHERE FUEL_INJECTION_PUMP_SRNO='{0}'",
+                         data.fipsrlno.Trim());
+                if (!fun.CheckExits(query))
+                {
+                    result = "OK # VALID FIP";
+
+                }
+                else
+                {
+                    result = "ERROR # ALREADY EXIST FIP : " + data.engine_srlno;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                result = "ERROR # " + ex.Message;
+            }
+            return result;
+        }
+
+        [HttpPost]
+        public string InjectorVarify(ENGINEINJECTORData data)
+        {
+            string result = string.Empty;
+            try
+            {
+                if (!string.IsNullOrEmpty(data.No_Of_Injector))
+                {
+                    if (Convert.ToInt32(data.No_Of_Injector) < 3)
+                    {
+                        if (string.IsNullOrEmpty(data.injector3))
+                        {
+                            data.injector3 = ".3333333_";
+                        }
+
+                    }
+                    if (Convert.ToInt32(data.No_Of_Injector) < 4)
+                    {
+                        if (string.IsNullOrEmpty(data.injector4))
+                        {
+                            data.injector4 = ".3333333_";
+                        }
+                    }
+                }
+                if (!string.IsNullOrEmpty(data.injector1))
+                {
+                    query = string.Format(@"SELECT COUNT(*) FROM XXES_ENGINE_STATUS WHERE PLANT_CODE='{0}' AND FAMILY_CODE='{1}'  AND INJECTOR1='{2}' and INJECTOR1<>'.3333333_' and injector1 is not null",
+                            data.plantcode, data.familycode, data.injector1);
+                    if (fun.CheckExits(query))
+                    {
+                        result = "ERROR # INJECTOR ALREADY EXIST :" + data.injector1;
+                        return result;
+
+                    }
+                }
+                
+                if (!string.IsNullOrEmpty(data.injector2))
+                {
+                    if(data.injector1 != data.injector2)
+                    {
+                        query = string.Format(@"SELECT COUNT(*) FROM XXES_ENGINE_STATUS WHERE PLANT_CODE='{0}' AND FAMILY_CODE='{1}' AND INJECTOR2='{2}' and INJECTOR2<>'.3333333_' and injector2 is not null",
+                        data.plantcode, data.familycode, data.injector2);
+                        if (fun.CheckExits(query))
+                        {
+                            result = "ERROR # INJECTOR ALREADY EXIST :" + data.injector2;
+                            return result;
+                        }
+                    }
+                    else
+                    {
+                        result = "ERROR # INJECTOR SHOULD BE DIFFERENT :" + data.injector2;
+                        return result;
+                    }
+                    
+                }
+                if (!string.IsNullOrEmpty(data.injector3))
+                {
+                    if (data.injector1 != data.injector3 && data.injector2 != data.injector3)
+                    {
+                        query = string.Format(@"SELECT COUNT(*) FROM XXES_ENGINE_STATUS WHERE PLANT_CODE='{0}' AND FAMILY_CODE='{1}'  AND INJECTOR3='{2}' and INJECTOR3<>'.3333333_' and injector3 is not null",
+                                data.plantcode, data.familycode, data.injector3);
+                        if (fun.CheckExits(query))
+                        {
+                            result = "ERROR # INJECTOR ALREADY EXIST :" + data.injector3;
+                            return result;
+                        }
+                    }
+                    else
+                    {
+                        result = "ERROR # INJECTOR SHOULD BE DIFFERENT :" + data.injector3;
+                        return result;
+                    }
+                }
+                if (!string.IsNullOrEmpty(data.injector4))
+                {
+                    query = string.Format(@"SELECT COUNT(*) FROM XXES_ENGINE_STATUS WHERE PLANT_CODE='{0}' AND FAMILY_CODE='{1}'  AND INJECTOR4='{2}' and INJECTOR4<>'.3333333_' and injector4 is not null",
+                        data.plantcode, data.familycode, data.injector4);
+                    if (fun.CheckExits(query))
+                    {
+                        result = "ERROR # INJECTOR ALREADY EXIST :" + data.injector4;
+                        return result;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+                return "ERROR:" + ex.Message;
+            }
+            return result;
+        }
+
+        [HttpPost]
+        public string SaveInjector(ENGINEINJECTORData data)
+        {
+            string result = string.Empty;
+            try
+            {
+                if (!string.IsNullOrEmpty(data.No_Of_Injector))
+                {
+                    if (Convert.ToInt32(data.No_Of_Injector) < 3)
+                    {
+                        if (string.IsNullOrEmpty(data.injector3))
+                        {
+                            data.injector3 = ".3333333_";
+                        }
+
+                    }
+                    if (Convert.ToInt32(data.No_Of_Injector) < 4)
+                    {
+                        if (string.IsNullOrEmpty(data.injector4))
+                        {
+                            data.injector4 = ".3333333_";
+                        }
+                    }
+                }
+                if (string.IsNullOrEmpty(data.engine_srlno))
+                {
+                    result = "ERROR # PLEASE SCAN ENGINE";
+                }
+                if (string.IsNullOrEmpty(data.fipsrlno))
+                {
+                    result = "ERROR # PLEASE SCAN FIP";
+                }
+
+                query = string.Format(@"select ITEM_CODE from XXES_ENGINE_STATUS where FUEL_INJECTION_PUMP_SRNO='{0}' and ENGINE_SRNO<>'{1}'", data.fipsrlno.Trim(), data.engine_srlno.Trim());
+                string line = fun.get_Col_Value(query);
+                if (!string.IsNullOrEmpty(line))
+                {
+                    result = "ERROR # FIP SRNO ALREADY USED ON ENGINE : " + line;
+                }
+
+                if (!string.IsNullOrEmpty(data.engine_srlno) && !string.IsNullOrEmpty(data.fipsrlno))
+                {
+                    if (data.plantcode == "T04")
+                    {
+                        data.familycode = "ENGINE FTD";
+                    }
+                    else if (data.plantcode == "T05")
+                    {
+                        data.familycode = "ENGINE TD";
+                    }
+                    query = string.Format(@"SELECT COUNT(*) FROM xxes_engine_barcode_data WHERE ENGINE_SRLNO='{0}' AND BARCODE_DATA='{1}'",
+                                      data.engine_srlno.Trim(), data.fipsrlno.Trim());
+                    if (!fun.CheckExits(query))
+                    {
+                        if (data.injector == "Y")
+                        {
+                            query = string.Format(@"INSERT INTO XXES_ENGINE_BARCODE_DATA ( PLANT_CODE, FAMILY_CODE, ENGINE_SRLNO, ITEM_CODE,SRNO, ENTRYDATE,  BARCODE_DATA)
+                                VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', SYSDATE, '{5}')", data.plantcode.Trim().ToUpper(), data.familycode.Trim().ToUpper(), data.engine_srlno,
+                                data.engine, data.fipsrlno.Trim().ToUpper().Substring(4, 10), data.fipsrlno.Trim().ToUpper());
+                            if (Convert.ToBoolean(fun.EXEC_QUERY(query)))
+                            {
+                                query = string.Format(@"insert into XXES_ENGINE_STATUS(plant_code,family_code,item_code,engine_srno,FUEL_INJECTION_PUMP_SRNO,
+                                       INJECTOR1,INJECTOR2,INJECTOR3,INJECTOR4,ENTRYDATE,fuel_injection_pump) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}',SYSDATE,'{9}')", data.plantcode.Trim().ToUpper(),
+                                       data.familycode.Trim().ToUpper(), data.engine, data.engine_srlno, data.fipsrlno.Trim().ToUpper().Substring(4, 10), data.injector1, data.injector2, data.injector3, data.injector4, data.fipdcode);
+                                if (fun.EXEC_QUERY(query))
+                                {
+                                    result = "OK # SAVED SUCESSFULLY !!";
+                                }
+                            }
+                        }
+                        else
+                        {
+                            query = string.Format(@"INSERT INTO XXES_ENGINE_BARCODE_DATA ( PLANT_CODE, FAMILY_CODE, ENGINE_SRLNO, ITEM_CODE,SRNO, ENTRYDATE,  BARCODE_DATA)
+                                VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', SYSDATE, '{5}')", data.plantcode.Trim().ToUpper(), data.familycode.Trim().ToUpper(), data.engine_srlno,
+                                data.engine, data.fipsrlno.Trim().ToUpper().Substring(11), data.fipsrlno.Trim().ToUpper());
+                            if (Convert.ToBoolean(fun.EXEC_QUERY(query)))
+                            {
+                                query = string.Format(@"insert into XXES_ENGINE_STATUS(plant_code,family_code,item_code,engine_srno,FUEL_INJECTION_PUMP_SRNO,
+                                       INJECTOR1,INJECTOR2,INJECTOR3,INJECTOR4,ENTRYDATE,fuel_injection_pump) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}',SYSDATE,'{9}')", data.plantcode.Trim().ToUpper(),
+                                      data.familycode.Trim().ToUpper(), data.engine, data.engine_srlno, data.fipsrlno, data.injector1, data.injector2, data.injector3, data.injector4, data.fipdcode);
+                                if (fun.EXEC_QUERY(query))
+                                {
+                                    result = "OK # SAVED SUCESSFULLY !!";
+                                }
+                            }
+                        }
+
+
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+                return "ERROR:" + ex.Message;
+            }
+            return result;
+        }
     }
 }

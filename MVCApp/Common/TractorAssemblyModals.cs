@@ -368,4 +368,13 @@ namespace MVCApp.Common
         public string orgid { get; set; }
         public string LoginStageCode { get; set; }
     }
+    public class ECUDATA
+    {
+        public string PLANT { get; set; }
+        public string FAMILY { get; set; }
+        public string JOB { get; set; }
+        public string ECUSRNO { get; set; }
+        public string CREATEDBY { get; set; }
+        public string LOGINSTAGECODE { get; set; }
+    }
 }

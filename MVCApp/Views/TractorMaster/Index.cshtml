@@ -653,17 +653,17 @@
                                     @Html.TextBoxFor(Model => Model.FrontRim, null, new { @class = "form-control input-sm", @autocomplete = "off" })
                                 </div>
                                 @*<div class="col-md-3">
-                                    <label for="FrontRim" class="text-right control-label col-form-label"><strong>FRONT RIM</strong></label>
+            <label for="FrontRim" class="text-right control-label col-form-label"><strong>FRONT RIM</strong></label>
 
-                                    @Html.TextBoxFor(Model => Model.FrontRim, null, new { @class = "form-control input-sm", @autocomplete = "off" })
-                                    <strong>@Html.ValidationMessageFor(model => model.FrontRim, "", new { @class = "text-danger" })</strong>
-                                </div>*@
+            @Html.TextBoxFor(Model => Model.FrontRim, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+            <strong>@Html.ValidationMessageFor(model => model.FrontRim, "", new { @class = "text-danger" })</strong>
+        </div>*@
                                 @*<div class="col-md-3">
-                                    <label for="RearRim" class="text-right control-label col-form-label"><strong>REAR RIM</strong></label>
+            <label for="RearRim" class="text-right control-label col-form-label"><strong>REAR RIM</strong></label>
 
-                                    @Html.TextBoxFor(Model => Model.RearRim, null, new { @class = "form-control input-sm", @autocomplete = "off" })
-                                    <strong>@Html.ValidationMessageFor(model => model.RearRim, "", new { @class = "text-danger" })</strong>
-                                </div>*@
+            @Html.TextBoxFor(Model => Model.RearRim, null, new { @class = "form-control input-sm", @autocomplete = "off" })
+            <strong>@Html.ValidationMessageFor(model => model.RearRim, "", new { @class = "text-danger" })</strong>
+        </div>*@
                                 <div class="col-md-3">
                                     <label for="TyreMake" class="text-right control-label col-form-label"><strong>TYRE MAKE</strong></label>
                                     @Html.TextBoxFor(Model => Model.TyreMake, null, new { @class = "form-control input-sm", @autocomplete = "off" })
@@ -730,19 +730,28 @@
                                     <strong>@Html.ValidationMessageFor(model => model.Spindle, "", new { @class = "text-danger" })</strong>
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="BPS" class="text-right control-label col-form-label"><strong>Brake Pedal Set</strong></label>
+                                    <label for="BPS" class="text-right control-label col-form-label"><strong>BRAKE PEDAL SET</strong></label>
                                     @Html.TextBoxFor(Model => Model.BRK_PAD, null, new { @class = "form-control input-sm", @autocomplete = "off" })
                                     <strong>@Html.ValidationMessageFor(model => model.BRK_PAD, "", new { @class = "text-danger" })</strong>
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="FRBRH" class="text-right control-label col-form-label"><strong>Frame Running board (RH)</strong></label>
+                                    <label for="FRBRH" class="text-right control-label col-form-label"><strong>FRAME RUNNING BOARD (RH)</strong></label>
                                     @Html.TextBoxFor(Model => Model.FRB_RH, null, new { @class = "form-control input-sm", @autocomplete = "off" })
                                     <strong>@Html.ValidationMessageFor(model => model.FRB_RH, "", new { @class = "text-danger" })</strong>
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="FRBLH" class="text-right control-label col-form-label"><strong>Frame Running board (LH)</strong></label>
+                                    <label for="FRBLH" class="text-right control-label col-form-label"><strong>FRAME RUNNING BOARD (LH)</strong></label>
                                     @Html.TextBoxFor(Model => Model.FRB_LH, null, new { @class = "form-control input-sm", @autocomplete = "off" })
                                     <strong>@Html.ValidationMessageFor(model => model.FRB_LH, "", new { @class = "text-danger" })</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="ECU" class="text-right control-label col-form-label"><strong>ECU</strong></label>
+                                </div>
+                                <div class="col-md-1 rearrimdiv">
+                                    @Html.CheckBoxFor(model => model.ECUChk, new { @class = "form-control  input-sm" })
+                                </div>
+                                <div class="col-md-2 rearrimdiv2">
+                                    @Html.TextBoxFor(Model => Model.ECU, null, new { @class = "form-control input-sm", @autocomplete = "off" })
                                 </div>
                                 <div class="col-md-3">
                                     <label for="FARBS" class="text-right control-label col-form-label"><strong>Frame Assembly Running Board Set</strong></label>
@@ -1039,6 +1048,7 @@
     var FrontGrill = '@Url.Action("FillFrontGrill", "TractorMaster")';
     var MainHarnessBonnet = '@Url.Action("FillMainHarnessBonnet", "TractorMaster")';
     var Spindle = '@Url.Action("FillSpindle", "TractorMaster")';
+    var ECUCODE = '@Url.Action("FillECUCODE", "TractorMaster")';
     @*var Motor = '@Url.Action("FillMotor", "TractorMaster")';*@
     var ItemCodes = '@Url.Action("FillItemCodes", "TractorMaster")';
     var T4Plant = '@Url.Action("BindT4_Plant", "TractorMaster")';
@@ -1058,6 +1068,7 @@
     var SubmitPass = '@Url.Action("PasswordPopup", "TractorMaster")';
     var SubmitPassTab2 = '@Url.Action("PasswordPopupTab2", "TractorMaster")';
     var NewTCode = '@Url.Action("NewTractorCode", "TractorMaster")';
+   
      //-------------------Add New Jquery End---------------------------
 
     //$("#Update").on("click", function () {

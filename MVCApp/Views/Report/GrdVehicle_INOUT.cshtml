@@ -20,7 +20,7 @@
         </div>
     </div>
     <div class="table-responsive">
-        @(Html.EJS().Grid("GrdAVG_TIME").DataSource((System.Data.DataTable)ViewBag.DataSource).
+        @(Html.EJS().Grid("GrdVehicle_INOUT").DataSource((System.Data.DataTable)ViewBag.DataSource).
             Height("400").
             AllowPaging(true).
             PageSettings(Page => Page.PageSize(20)).
@@ -38,14 +38,16 @@
                 col.Field("TIMEIN").HeaderText("TIMEIN").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
                 col.Field("TIMEOUT").HeaderText("TIMEOUT").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
                 col.Field("TOTAL_HOURS").HeaderText("TOTAL_HOURS").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
-                //col.Field("TRANID").HeaderText("TRANID").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                col.Field("TRANID").HeaderText("TRANID").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                col.Field("VENDOR_NAME").HeaderText("VENDOR NAME").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
+                col.Field("CITY").HeaderText("CITY").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Center).Add();
 
             }).
             Toolbar(new List<string>() { "ExcelExport" }).
             Render())
         <script>
             function toolbarClick(args) {
-                var gridObj = document.getElementById("GrdAVG_TIME").ej2_instances[0];
+                var gridObj = document.getElementById("GrdVehicle_INOUT").ej2_instances[0];
                 gridObj.excelExport();
             }
         </script>

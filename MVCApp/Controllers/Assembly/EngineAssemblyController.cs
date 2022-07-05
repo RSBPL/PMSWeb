@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using EncodeDecode;
+using MVCApp.Common;
 using MVCApp.CommonFunction;
 using MVCApp.Models;
 using System;
@@ -1461,6 +1462,8 @@ namespace MVCApp.Controllers
 
             return fun.returnDataTable(query);
         }
+
+       
 
     }
 }

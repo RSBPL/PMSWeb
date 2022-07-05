@@ -7387,7 +7387,9 @@ namespace MVCApp.CommonFunction
 
                     sc.Parameters.Add("P_REQ_FRONTRIM", OracleDbType.NVarchar2, ParameterDirection.Input).Value = itemModel.FrontRimChk == true ? "Y" : "N";
                     sc.Parameters.Add("P_REQ_REARRIM", OracleDbType.NVarchar2, ParameterDirection.Input).Value = itemModel.RearRimChk == true ? "Y" : "N";
-
+                    sc.Parameters.Add("P_REQ_ECU", OracleDbType.NVarchar2, ParameterDirection.Input).Value = itemModel.ECUChk == true ? "Y" : "N";
+                    sc.Parameters.Add("P_ECU", OracleDbType.NVarchar2, ParameterDirection.Input).Value = string.IsNullOrEmpty(itemModel.ECU) == true ? null : itemModel.ECU.Trim();
+                    sc.Parameters.Add("P_ECU_DESC", OracleDbType.NVarchar2, ParameterDirection.Input).Value = string.IsNullOrEmpty(itemModel.ECU_DESC) == true ? null : itemModel.ECU_DESC.Trim();
                     //sc.Parameters.Add("P_MOTOR", OracleDbType.NVarchar2, ParameterDirection.Input).Value = string.IsNullOrEmpty(itemModel.Motor) == true ? null : itemModel.Motor.Trim();
                     //sc.Parameters.Add("P_MOTOR_DESC", OracleDbType.NVarchar2, ParameterDirection.Input).Value = string.IsNullOrEmpty(itemModel.Motor_Desc) == true ? null : itemModel.Motor_Desc.Trim();
                     sc.Parameters.Add("P_CREATED_BY", OracleDbType.NVarchar2, ParameterDirection.Input).Value = HttpContext.Current.Session["Login_User"].ToString().ToUpper().Trim();
@@ -7494,6 +7496,9 @@ namespace MVCApp.CommonFunction
 
                     sc.Parameters.Add("P_REQ_FRONTRIM", OracleDbType.NVarchar2, ParameterDirection.Input).Value = itemModel.FrontRimChk == true ? "Y" : "N";
                     sc.Parameters.Add("P_REQ_REARRIM", OracleDbType.NVarchar2, ParameterDirection.Input).Value = itemModel.RearRimChk == true ? "Y" : "N";
+                    sc.Parameters.Add("P_REQ_ECU", OracleDbType.NVarchar2, ParameterDirection.Input).Value = itemModel.ECUChk == true ? "Y" : "N";
+                    sc.Parameters.Add("P_ECU", OracleDbType.NVarchar2, ParameterDirection.Input).Value = string.IsNullOrEmpty(itemModel.ECU) == true ? null : itemModel.ECU.Trim();
+                    sc.Parameters.Add("P_ECU_DESC", OracleDbType.NVarchar2, ParameterDirection.Input).Value = string.IsNullOrEmpty(itemModel.ECU_DESC) == true ? null : itemModel.ECU_DESC.Trim();
 
 
 
