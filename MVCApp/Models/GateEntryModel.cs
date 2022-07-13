@@ -35,6 +35,7 @@ namespace MVCApp.Models
         public int length { get; set; }
         public bool CheckboxReprint { get; set; }
         public bool CheckboxPrint2Label { get; set; }
+        public string CITY { get; set; }
 
 
     }
@@ -57,6 +58,7 @@ namespace MVCApp.Models
 
         public string STATUS { get; set; }
         public string TOTAL_ITEM { get; set; }
+        public string CITY { get; set; }
     }
 
     public class GateEntryFunction
@@ -259,5 +261,7 @@ namespace MVCApp.Models
 
             }
         }
+
+      
     }
 }

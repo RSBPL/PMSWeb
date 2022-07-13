@@ -8734,7 +8734,7 @@ namespace MVCApp.CommonFunction
                         query += " (select g.ITEM_DESCRIPTION || ' [' || g.ITEM_CODE || ']' from apps.XXESGATETAGPRINT_BARCODE g where g.mrn_no=b.MRN_NO and g.Invoice_no=b.Invoice_no AND ";
                         query += " to_char(TRANSACTION_DATE,'dd-Mon-yyyy')>=to_char(sysdate-" + days + ",'dd-Mon-yyyy') and ORGANIZATION_CODE='" + obj.PLANTCODE + "' and UPPER(CREATED_BY)='" + HttpContext.Current.Session["Login_User"].ToString().ToUpper().Trim() + "' and rownum=1) ITEM, ";
                         query += " (select count(*) from apps.XXESGATETAGPRINT_BARCODE g where g.mrn_no=b.MRN_NO and g.Invoice_no=b.Invoice_no AND ";
-                        query += " to_char(TRANSACTION_DATE,'dd-Mon-yyyy')>=to_char(sysdate-" + days + ",'dd-Mon-yyyy') and ORGANIZATION_CODE='" + obj.PLANTCODE + "' and UPPER(CREATED_BY)='" + HttpContext.Current.Session["Login_User"].ToString().ToUpper().Trim() + "' ) TOTAL_ITEM  ,SOURCE_DOCUMENT_CODE SOURCE_TYPE,ORGANIZATION_CODE,STATUS from apps.XXESGATETAGPRINT_BARCODE b where  ";
+                        query += " to_char(TRANSACTION_DATE,'dd-Mon-yyyy')>=to_char(sysdate-" + days + ",'dd-Mon-yyyy') and ORGANIZATION_CODE='" + obj.PLANTCODE + "' and UPPER(CREATED_BY)='" + HttpContext.Current.Session["Login_User"].ToString().ToUpper().Trim() + "' ) TOTAL_ITEM  ,SOURCE_DOCUMENT_CODE SOURCE_TYPE,ORGANIZATION_CODE,STATUS,CITY from apps.XXESGATETAGPRINT_BARCODE b where  ";
                         query += "  to_char(TRANSACTION_DATE,'dd-Mon-yyyy')>=to_char(sysdate-" + days + ",'dd-Mon-yyyy') and ORGANIZATION_CODE='" + obj.PLANTCODE + "' and UPPER(CREATED_BY)='" + HttpContext.Current.Session["Login_User"].ToString().ToUpper().Trim() + "' and MRN_NO not in (select mrn_no from ITEM_RECEIPT_DETIALS)  And MRN_No like '%" + search + "%' order by mrn_no,invoice_no";
                     }
                     else if (ConfigurationSettings.AppSettings["LOGIN_CHECK_MRN"].ToString() == "N")
@@ -8744,7 +8744,7 @@ namespace MVCApp.CommonFunction
                         query += " (select g.ITEM_DESCRIPTION || ' [' || g.ITEM_CODE || ']' from apps.XXESGATETAGPRINT_BARCODE g where g.mrn_no=b.MRN_NO and g.Invoice_no=b.Invoice_no AND ";
                         query += " to_char(TRANSACTION_DATE,'dd-Mon-yyyy')=to_char(sysdate-" + days + ",'dd-Mon-yyyy') and ORGANIZATION_CODE='" + obj.PLANTCODE + "' and rownum=1) ITEM, ";
                         query += " (select count(*) from apps.XXESGATETAGPRINT_BARCODE g where g.mrn_no=b.MRN_NO and g.Invoice_no=b.Invoice_no AND ";
-                        query += " to_char(TRANSACTION_DATE,'dd-Mon-yyyy')=to_char(sysdate-" + days + ",'dd-Mon-yyyy') and ORGANIZATION_CODE='" + obj.PLANTCODE + "') TOTAL_ITEM  ,SOURCE_DOCUMENT_CODE SOURCE_TYPE,ORGANIZATION_CODE,STATUS from apps.XXESGATETAGPRINT_BARCODE b where  ";
+                        query += " to_char(TRANSACTION_DATE,'dd-Mon-yyyy')=to_char(sysdate-" + days + ",'dd-Mon-yyyy') and ORGANIZATION_CODE='" + obj.PLANTCODE + "') TOTAL_ITEM  ,SOURCE_DOCUMENT_CODE SOURCE_TYPE,ORGANIZATION_CODE,STATUS,CITY from apps.XXESGATETAGPRINT_BARCODE b where  ";
                         query += "  to_char(TRANSACTION_DATE,'dd-Mon-yyyy')=to_char(sysdate-" + days + ",'dd-Mon-yyyy') and ORGANIZATION_CODE='" + obj.PLANTCODE + "' and  MRN_NO not in (select mrn_no from ITEM_RECEIPT_DETIALS) And MRN_No like '%" + search + "%' order by mrn_no,invoice_no) A  where ROWNMBER > " + Convert.ToInt32(obj.start) + " and ROWNMBER <= " + Convert.ToInt32(obj.length) + ""; 
                         }
                  
@@ -8758,7 +8758,7 @@ namespace MVCApp.CommonFunction
                     query = string.Format(@"SELECT A.TOTALCOUNT,A.SELECT_MRN,A.TRANSACTION_DATE,A.MRN_NO,A.VEHICLE_NO,A.VENDOR_CODE,A.VENDOR_NAME,A.INVOICE_NO,A.ITEM,A.TOTAL_ITEM,A.SOURCE_TYPE,A.ORGANIZATION_CODE,A.STATUS,A.INVOICE_DATE FROM(SELECT distinct '0' SELECT_MRN,ROW_NUMBER() OVER (ORDER BY INVOICE_NO) as ROWNMBER,COUNT(*) over() as TOTALCOUNT,to_char( TRANSACTION_DATE, 'dd-Mon-yyyy HH24:MI:SS' ) TRANSACTION_DATE,MRN_NO,VEHICLE_NO,
                             VENDOR_CODE,VENDOR_NAME,INVOICE_NO,INVOICE_DATE,
                              b.ITEM_DESCRIPTION || ' [' || b.ITEM_CODE || ']'  ITEM,TOTAL_ITEM,
-                            SOURCE_DOCUMENT_CODE SOURCE_TYPE,PLANT_CODE ORGANIZATION_CODE,STATUS from ITEM_RECEIPT_DETIALS b where  
+                            SOURCE_DOCUMENT_CODE SOURCE_TYPE,PLANT_CODE ORGANIZATION_CODE,STATUS,CITY from ITEM_RECEIPT_DETIALS b where  
                              to_char(TRANSACTION_DATE,'dd-Mon-yyyy')>=to_date('" + obj.FromDate.ToString("dd-MMM-yyyy") + "','dd-Mon-yyyy') and PLANT_CODE='" + obj.PLANTCODE + "' And MRN_No like '%" + search + "%' order by mrn_no,invoice_no)A  where ROWNMBER > {0} and ROWNMBER <= {1} ", Convert.ToInt32(obj.start),obj.length);
              
                 dt = returnDataTable(query);
@@ -8781,7 +8781,8 @@ namespace MVCApp.CommonFunction
                             INVOICE_NO = dr["INVOICE_NO"].ToString(),
                             INVOICE_DATE = dr["INVOICE_DATE"].ToString(),
                             SOURCE_TYPE = dr["SOURCE_TYPE"].ToString(),
-                            STATUS = dr["STATUS"].ToString()
+                            STATUS = dr["STATUS"].ToString(),
+                            CITY = dr["CITY"].ToString()
                         };
                         GateEnteryDetails.Add(gateEntry);
                     }
@@ -8797,7 +8798,16 @@ namespace MVCApp.CommonFunction
 
             return GateEnteryDetails;
         }
-     
+        public Boolean IsNumeric(string ChkValue)
+        {
+            try
+            {
+                double num = double.Parse(ChkValue);
+                return true;
+            }
+            catch
+            { return false; }
+        }
 
         public bool isInvoiceExistsinFinancialYear(string invoice, string vendorcode)
         {

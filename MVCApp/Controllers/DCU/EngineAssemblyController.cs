@@ -3926,7 +3926,7 @@ namespace MVCApp.Controllers.DCU
                     {
                         if (string.IsNullOrEmpty(data.injector3))
                         {
-                            data.injector3 = ".3333333_";
+                            data.injector3 = "._33333_";
                         }
 
                     }
@@ -3934,7 +3934,7 @@ namespace MVCApp.Controllers.DCU
                     {
                         if (string.IsNullOrEmpty(data.injector4))
                         {
-                            data.injector4 = ".3333333_";
+                            data.injector4 = "._33333_";
                         }
                     }
                 }
@@ -4018,7 +4018,7 @@ namespace MVCApp.Controllers.DCU
                     {
                         if (string.IsNullOrEmpty(data.injector3))
                         {
-                            data.injector3 = ".3333333_";
+                            data.injector3 = "._33333_";
                         }
 
                     }
@@ -4026,7 +4026,7 @@ namespace MVCApp.Controllers.DCU
                     {
                         if (string.IsNullOrEmpty(data.injector4))
                         {
-                            data.injector4 = ".3333333_";
+                            data.injector4 = "._33333_";
                         }
                     }
                 }
