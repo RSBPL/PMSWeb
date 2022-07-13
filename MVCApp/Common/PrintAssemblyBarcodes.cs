@@ -198,6 +198,7 @@ namespace MVCApp.Common
         public bool PrintLabelViaNetwork(string cmd1, string cmd2, string ip, int port)
         {
             System.Net.Sockets.TcpClient tc;
+            bool result = false;
             try
             {
                 System.Net.Sockets.NetworkStream myStream;
@@ -212,7 +213,8 @@ namespace MVCApp.Common
                     myStream.Flush();
                 }
                 tc.Close();
-                return true;
+                result = true;
+                return result;
             }
             catch (Exception ex)
             {

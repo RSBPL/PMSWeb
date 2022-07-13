@@ -212,7 +212,7 @@
                     </div>
                     <div class="col-md-6" style="padding-bottom: 30px; margin-top: 20px;">
                         <fieldset style="box-shadow: 0 0 8px #000; height: 135px;">
-                            <legend>Font Tyre</legend>
+                            <legend>Front Tyre</legend>
                             <div class="col-md-3">
                                 <label for="fname" class="text-right control-label col-form-label"><strong>Left Side Srlno</strong></label>
                                 @Html.TextBoxFor(Model => Model.FrontTyre1_srlno1, null, new { @class = "form-control input-sm" })
@@ -428,15 +428,14 @@
             contentType: "application/json;charset=utf-8",
             dataType: "json",
             success: function (data) {
-                $("#PawordPopUp").hide();
-                $(".modal-backdrop").hide();
-                $(".modal-backdrop").addClass("important");
+                //$("#PawordPopUp").hide();
+                //$(".modal-backdrop").hide();
+                //$(".modal-backdrop").addClass("important");
+                $("[data-dismiss=modal]").trigger({ type: "click" });
                 $("#divLoader").hide();
                 if (data.Msg == "Valid Password") {
                     var chk = confirm("Are you sure you want to Update this?");
                     if (chk == true) {
-                        $('body').addClass("test");
-                        $(window).scrollTop(0);
                         $('.form-control').attr('readonly', false);
                         $("#ShowHideUpdate").hide();
                         $("#RealUpdate").show();
@@ -448,8 +447,6 @@
                             closeAlert(this);
                         });
                     }, 5000);
-                    $('body').addClass("test");
-                    $(window).scrollTop(0);
                 }
             },
             error: function (errormessage) {
@@ -500,9 +497,9 @@
             RearRIM2_srlno:$("#RearRIM2_srlno").val(),
             FrontRIM1_srlno:$("#FrontRIM1_srlno").val(),
             FrontRIM2_srlno:$("#FrontRIM2_srlno").val(),
-            RearTyre1_srlno:$("#RearTyre1_srlno").val(),
+            RearTyre1_srlno1:$("#RearTyre1_srlno1").val(),
             RearTyre2_srlno2:$("#RearTyre2_srlno2").val(),
-            FrontTyre1_srlno:$("#FrontTyre1_srlno").val(),
+            FrontTyre1_srlno1:$("#FrontTyre1_srlno1").val(),
             FrontTyre2_srlno2:$("#FrontTyre2_srlno2").val(),
             Srno:$("#Srno").val(),
             IMEI:$("#IMEI").val(),
@@ -921,6 +918,12 @@
                         if (data.Result.TractorAutoid != "" && data.Result.TractorAutoid != null) {
                             $("#TractorAutoid").val(data.Result.TractorAutoid);
                         }
+                        if (data.Result.ROPSrno != "" && data.Result.ROPSrno != null) {
+                            $("#ROPSrno").val(data.Result.ROPSrno);
+                        }
+                        if (data.Result.OilQty != "" && data.Result.OilQty != null) {
+                            $("#OilQty").val(data.Result.OilQty);
+                        }
                         $('.form-control').attr('readonly', true);
                         $('#JOBID').attr('readonly', false);
                         $("#ShowHideUpdate").show();
@@ -999,6 +1002,11 @@
                 STAGE_Code: stagecode,
                 Quantity: $('#Quantity').val(),
                 IPAddress: $("#IPAddress").val(),
+                Battery_srlno: $("#Battery_srlno").val(),
+                RearTyre1_srlno1: $("#RearTyre1_srlno1").val(),
+                RearTyre2_srlno2: $("#RearTyre2_srlno2").val(),
+                FrontTyre1_srlno1: $("#FrontTyre1_srlno1").val(),
+                FrontTyre2_srlno2: $("#FrontTyre2_srlno2").val(),
                 JOBID: myArray[3]
             };
         } else {

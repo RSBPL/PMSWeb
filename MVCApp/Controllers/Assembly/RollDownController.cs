@@ -75,7 +75,7 @@ namespace MVCApp.Controllers
         [HttpPost]
         public JsonResult BindIPAddress(string STAGECode)
         {
-            List<StageCode> result = new List<StageCode>();
+            List<DDLTextValue> result = new List<DDLTextValue>();
             try
             {
                 string schema = Convert.ToString(ConfigurationSettings.AppSettings["Schema"]);
@@ -84,38 +84,10 @@ namespace MVCApp.Controllers
                 {
                     return Json(null, JsonRequestBehavior.AllowGet);
                 }
-                DataTable dt = new DataTable();
                 if (!string.IsNullOrEmpty(STAGECode))
                 {
-                    if (fun.getUSERNAME() == "RS")
-                    {
-                        query = string.Format(@"select  PLANT_CODE || ':' || ipaddr || '(' || ipport ||')' AS DESCRIPTION , ipaddr || ' # '|| ipport CODE from xxes_stage_master where 
-                        offline_keycode='{0}' ", STAGECode.Trim().ToUpper());
-
-                    }
-                    else
-                    {
-                        query = string.Format(@"select  PLANT_CODE || ':' || ipaddr || '(' || ipport ||')' AS DESCRIPTION , ipaddr || ' # '|| ipport CODE from xxes_stage_master where 
-                        offline_keycode='{0}' ", STAGECode.Trim().ToUpper());
-                        //    query = string.Format(@"select distinct segment1 || ' # ' || description as DESCRIPTION, segment1 as ITEM_CODE from " + schema + ".mtl_system_items " +
-                        //"where organization_id in (" + orgid + ") and substr(segment1, 1, 1) in ('D','S') AND (SEGMENT1 LIKE '{0}%' OR DESCRIPTION LIKE '{1}%') order by segment1", data.SubAssembly1.Trim().ToUpper(), data.SubAssembly1.Trim().ToUpper());
-
-                    }
-
+                    result = fun.IpAdress(STAGECode);
                 }
-                dt = fun.returnDataTable(query);
-                if (dt.Rows.Count > 0)
-                {
-                    foreach (DataRow dr in dt.AsEnumerable())
-                    {
-                        result.Add(new StageCode
-                        {
-                            Text = dr["DESCRIPTION"].ToString(),
-                            Value = dr["CODE"].ToString(),
-                        });
-                    }
-                }
-
             }
             catch (Exception ex)
             {
@@ -195,19 +167,32 @@ namespace MVCApp.Controllers
                 DataTable dt = new DataTable();
                 if (!string.IsNullOrEmpty(data.JOBID))
                 {
-                    query = string.Format(@"select FCODE_SRLNO || ' # '|| ITEM_CODE || '(' || substr(ITEM_DESCRIPTION,1,25) || ')' || ' # ' || ' JOB :' || ' # ' || 
+                    if (data.JOBID.Contains("F1") || data.JOBID.Contains("F2"))
+                    {
+                        query = string.Format(@"SELECT DATA.DESCRIPTION , DATA.JOBID FROM (select FCODE_SRLNO || ' # '|| ITEM_CODE || '(' || substr(ITEM_DESCRIPTION,1,25) || ')' || ' # ' || ' JOB :' || ' # ' || 
+                             JOBID DESCRIPTION,JOBID,ROW_NUMBER() OVER (ORDER BY JOBID) as ROWNMBER   FROM XXES_JOB_STATUS" +
+                     " where JOBID LIKE '%{0}%'  Or ITEM_CODE LIKE '%{0}%' AND PLANT_CODE='{1}' And FAMILY_CODE='{2}' order by JOBID) Data WHERE DATA.ROWNMBER < 50", data.JOBID.Trim().ToUpper(), data.PLANTCODE.Trim().ToUpper(), data.FAMILYCODE.Trim().ToUpper());
+                        //   query = string.Format(@"select FCODE_SRLNO || ' # '|| ITEM_CODE || '(' || substr(ITEM_DESCRIPTION,1,25) || ')' || ' # ' || ' JOB :' || ' # ' || 
+                        //        JOBID DESCRIPTION,JOBID  FROM XXES_JOB_STATUS" +
+                        //" where JOBID LIKE '%{0}%'  Or ITEM_CODE LIKE '%{0}%' AND PLANT_CODE='{1}' And FAMILY_CODE='{2}' order by JOBID", data.JOBID.Trim().ToUpper(), data.PLANTCODE.Trim().ToUpper(), data.FAMILYCODE.Trim().ToUpper());
+                        //   //    query = string.Format(@"select distinct segment1 || ' # ' || description as DESCRIPTION, segment1 as ITEM_CODE from " + schema + ".mtl_system_items " +
+                        //"where organization_id in (" + orgid + ") and substr(segment1, 1, 1) in ('D','S') AND (SEGMENT1 LIKE '{0}%' OR DESCRIPTION LIKE '{1}%') order by segment1", data.SubAssembly1.Trim().ToUpper(), data.SubAssembly1.Trim().ToUpper());
+
+                    }
+                    else
+                    {
+                        query = string.Format(@"select FCODE_SRLNO || ' # '|| ITEM_CODE || '(' || substr(ITEM_DESCRIPTION,1,25) || ')' || ' # ' || ' JOB :' || ' # ' || 
                              JOBID DESCRIPTION,JOBID  FROM XXES_JOB_STATUS" +
-                        " where JOBID LIKE '%{0}%'  Or FCODE_SRLNO LIKE '%{0}%' Or ITEM_CODE LIKE '%{0}%' AND PLANT_CODE='{1}' And FAMILY_CODE='{2}' order by JOBID", data.JOBID.Trim().ToUpper(), data.PLANTCODE.Trim().ToUpper(), data.FAMILYCODE.Trim().ToUpper());
-                    //    query = string.Format(@"select distinct segment1 || ' # ' || description as DESCRIPTION, segment1 as ITEM_CODE from " + schema + ".mtl_system_items " +
-                    //"where organization_id in (" + orgid + ") and substr(segment1, 1, 1) in ('D','S') AND (SEGMENT1 LIKE '{0}%' OR DESCRIPTION LIKE '{1}%') order by segment1", data.SubAssembly1.Trim().ToUpper(), data.SubAssembly1.Trim().ToUpper());
-
+                            " where JOBID LIKE '%{0}%'  Or FCODE_SRLNO LIKE '%{0}%' Or ITEM_CODE LIKE '%{0}%' AND PLANT_CODE='{1}' And FAMILY_CODE='{2}' order by JOBID", data.JOBID.Trim().ToUpper(), data.PLANTCODE.Trim().ToUpper(), data.FAMILYCODE.Trim().ToUpper());
+                        //    query = string.Format(@"select distinct segment1 || ' # ' || description as DESCRIPTION, segment1 as ITEM_CODE from " + schema + ".mtl_system_items " +
+                        //"where organization_id in (" + orgid + ") and substr(segment1, 1, 1) in ('D','S') AND (SEGMENT1 LIKE '{0}%' OR DESCRIPTION LIKE '{1}%') order by segment1", data.SubAssembly1.Trim().ToUpper(), data.SubAssembly1.Trim().ToUpper());
+                    }
                 }
-
 
                 dt = fun.returnDataTable(query);
                 if (dt.Rows.Count > 0)
                 {
-                    foreach (DataRow dr in dt.AsEnumerable())
+                    foreach (DataRow dr in dt.AsEnumerable().Take(20))
                     {
                         _Item.Add(new DDLTextValue
                         {
@@ -336,29 +321,113 @@ namespace MVCApp.Controllers
                     if (rolldown.JOBID == null)
                     {
                         msg = "JOBID Not Found";
-
+                        myResult = new
+                        {
+                            Result = result,
+                            Msg = msg
+                        };
                         return Json(myResult, JsonRequestBehavior.AllowGet);
                     }
                 }
                 else
                 {
                     msg = "Please Select JOBID , Plant AND FamilyCode";
-
+                    myResult = new
+                    {
+                        Result = result,
+                        Msg = msg
+                    };
                     return Json(myResult, JsonRequestBehavior.AllowGet);
                 }
                 rolldown.STAGE_Code = down.STAGE_Code;
                 rolldown.Quantity = down.Quantity;
                 rolldown.IPAddress = down.IPAddress;
+                if (rolldown.Battery_srlno == null)
+                {
+                    rolldown.Battery_srlno = down.Battery_srlno;
+                }
+                if (rolldown.RearTyre1_srlno1 == null)
+                {
+                    rolldown.RearTyre1_srlno1 = down.RearTyre1_srlno1;
+                }
+                if (rolldown.RearTyre2_srlno2 == null)
+                {
+                    rolldown.RearTyre2_srlno2 = down.RearTyre2_srlno2;
+                }
+                if (rolldown.FrontTyre1_srlno1 == null)
+                {
+                    rolldown.FrontTyre1_srlno1 = down.FrontTyre1_srlno1;
+                }
+                if (rolldown.FrontTyre2_srlno2 == null)
+                {
+                    rolldown.FrontTyre2_srlno2 = down.FrontTyre2_srlno2;
+                }
 
                 if (string.IsNullOrEmpty(rolldown.TractorType))
                 {
                     //MessageBox.Show("Invalid Tractor Type. i.e EXPORT or DOMESTIC"); 
                     msg = "Invalid Tractor Type. i.e EXPORT or DOMESTIC";
-
+                    myResult = new
+                    {
+                        Result = result,
+                        Msg = msg
+                    };
                     return Json(myResult, JsonRequestBehavior.AllowGet);
                 }
                 string mode = "NETWORK", ip = string.Empty; int port = 0;
-
+                if (down.STAGE_Code == "COM")
+                {
+                    if (string.IsNullOrEmpty(rolldown.Battery_srlno))
+                    {
+                        msg = "Battery Should Not Empty";
+                        myResult = new
+                        {
+                            Result = result,
+                            Msg = msg
+                        };
+                        return Json(myResult, JsonRequestBehavior.AllowGet);
+                    }
+                    if (string.IsNullOrEmpty(rolldown.RearTyre1_srlno1))
+                    {
+                        msg = "rear Tyre1 Should Not Empty";
+                        myResult = new
+                        {
+                            Result = result,
+                            Msg = msg
+                        };
+                        return Json(myResult, JsonRequestBehavior.AllowGet);
+                    }
+                    if (string.IsNullOrEmpty(rolldown.RearTyre2_srlno2))
+                    {
+                        msg = "rear Tyre2 Should Not Empty";
+                        myResult = new
+                        {
+                            Result = result,
+                            Msg = msg
+                        };
+                        return Json(myResult, JsonRequestBehavior.AllowGet);
+                    }
+                    if (string.IsNullOrEmpty(rolldown.FrontTyre1_srlno1))
+                    {
+                        msg = " Front Tyre1 Should Not Empty";
+                        myResult = new
+                        {
+                            Result = result,
+                            Msg = msg
+                        };
+                        return Json(myResult, JsonRequestBehavior.AllowGet);
+                    }
+                    if (string.IsNullOrEmpty(rolldown.FrontTyre2_srlno2))
+                    {
+                        msg = " Front Tyre2 Should Not Empty";
+                        myResult = new
+                        {
+                            Result = result,
+                            Msg = msg
+                        };
+                        return Json(myResult, JsonRequestBehavior.AllowGet);
+                    }
+                }
                 if (rolldown.Quantity == null)
                 {
                     rolldown.Quantity = "1";
@@ -430,7 +499,7 @@ namespace MVCApp.Controllers
                 cOMMONDATA.PLANT = obj.PLANTCODE;
                 cOMMONDATA.FAMILY = obj.FAMILYCODE;
                 cOMMONDATA.REMARKS = "EN";
-                obj.TractorSrlno = tractorController.getNextTractorNo(cOMMONDATA);             
+                obj.TractorSrlno = tractorController.getNextTractorNo(cOMMONDATA);
             }
             tractormaster = assemblyfunctions.GetTractorDetails(obj.JOBID.Trim(), obj.PLANTCODE, obj.FAMILYCODE,
                      "JOBID");
@@ -448,19 +517,19 @@ namespace MVCApp.Controllers
                             ,ALTERNATOR_SRLNO='{28}',ALTERNATOR='{29}',CLUSSTER_SRLNO='{30}',CLUSSTER='{31}'
                             ,STARTER_MOTOR_SRLNO='{32}',STARTER_MOTOR='{33}',ROPS_SRNO='{34}',MOBILE='{35}',IMEI_NO='{36}'
                             Where JOBID='{37}'",
-                     obj.Engine,obj.Engine_srlno ,obj.Transmission, obj.Transmission_srlno, obj.RearAxel, obj.RearAxel_srlno
-                     , obj.Hydraulic_srlno, obj.Hydraulic, obj.RearSrnn1, obj.RearTyre1_srlno1, obj.RearSrnn2, obj.RearTyre2_srlno2
-                     , obj.FrontSrnn1, obj.FrontSrnn2, obj.FrontTyre1_srlno1, obj.FrontTyre2_srlno2
+                     obj.Engine, obj.Engine_srlno, obj.Transmission, obj.Transmission_srlno, obj.RearAxel, obj.RearAxel_srlno
+                     , obj.Hydraulic_srlno, obj.Hydraulic, obj.RearTyre1_dcode, obj.RearTyre1_srlno1, obj.RearTyre2_dcode, obj.RearTyre2_srlno2
+                     , obj.FrontTyre1_Dcode, obj.FrontTyre2_Dcode, obj.FrontTyre1_srlno1, obj.FrontTyre2_srlno2
                      , obj.RearRIM1, obj.RearRIM2, obj.FrontRIM1, obj.FrontRIM2, obj.Battery_srlno, obj.Battery
                      , obj.Radiator_srlno, obj.Radiator, obj.SteeringMotor, obj.SteeringMotor_srlno
                      , obj.SteeringAssem_srlno, obj.SteeringAssem, obj.Alternator_srlno, obj.Alternator
                      , obj.Cluster_srlno, obj.Cluster, obj.Motor_srlno, obj.Motor, obj.ROPSrno, obj.MOBILE, obj.IMEI, obj.JOBID.Trim());
                 string check = query;
                 fun.EXEC_QUERY(query);
-                if(tractormaster.Engine_srlno!=obj.Engine_srlno && !string.IsNullOrEmpty(obj.Engine_srlno))
+                if (tractormaster.Engine_srlno != obj.Engine_srlno && !string.IsNullOrEmpty(obj.Engine_srlno))
                 {
-                     query = @"Update SUB_ASSEMBLY_SERIAL_NUMBER set sub_assembly_serial_number='" + obj.Engine_srlno + "' where SERIAL_NUMBER='" + obj.TractorSrlno + "' and SUB_ASSEMBLY_FAMILY_CODE='ENGINE FTD'";
-                        fun.EXEC_QUERY(query);
+                    query = @"Update SUB_ASSEMBLY_SERIAL_NUMBER set sub_assembly_serial_number='" + obj.Engine_srlno + "' where SERIAL_NUMBER='" + obj.TractorSrlno + "' and SUB_ASSEMBLY_FAMILY_CODE='ENGINE FTD'";
+                    fun.EXEC_QUERY(query);
                     fun.Insert_Part_Audit_Data(obj.PLANTCODE, obj.FAMILYCODE, obj.TractorCode, obj.TractorSrlno, obj.Engine, obj.Engine_srlno, "Engine", (string.IsNullOrEmpty(obj.Engine_srlno) ? "NEW ENTERED" : ""), obj.JOBID, "", "", "");
 
                 }
@@ -517,7 +586,7 @@ namespace MVCApp.Controllers
             string LoginOrgId = fun.getOrgId(obj.PLANTCODE, obj.FAMILYCODE);
             if (!fun.CheckExits("select count(*) from PRINT_SERIAL_NUMBER where Plant_CODE='" + obj.PLANTCODE + "' and  SERIAL_NUMBER='" + obj.TractorSrlno.Trim().ToUpper() + "' and ORGANIZATION_ID='" + LoginOrgId + "'"))
             {
-           
+
                 query = string.Format("insert into PRINT_SERIAL_NUMBER(Plant_CODE,ITEM_CODE,JOB_ID,SERIAL_NUMBER,ORGANIZATION_ID,CREATION_DATE,BIG_LABEL_PRINTED) values('{0}','{1}','{2}','{3}','{4}',SYSDATE,-1)", obj.PLANTCODE.Trim().ToUpper(), obj.TractorCode.Trim().ToUpper(), obj.JOBID.Trim().ToUpper(), obj.TractorSrlno.Trim().ToUpper(), LoginOrgId);
                 fun.EXEC_QUERY(query);
 
@@ -530,7 +599,7 @@ namespace MVCApp.Controllers
                    + obj.PLANTCODE.Trim() + "','" + obj.TractorCode + "' , '" + obj.JOBID + "' , '" + obj.TractorSrlno.Trim() + "' , '" + obj.FAMILYCODE + "' , 0,0,'" + Session["Login_User"] + "',sysdate)";
                 fun.EXEC_QUERY(query);
             }
-            if (obj.PLANTCODE == "T04") 
+            if (obj.PLANTCODE == "T04")
                 fun.HookUpDown(obj.JOBID, obj.PLANTCODE, obj.FAMILYCODE, obj.TractorCode, "9999", obj.TractorAutoid, true, true, "");
 
             bool datainsert = Insert_Audi(tractormaster, obj);
@@ -539,7 +608,7 @@ namespace MVCApp.Controllers
             return Json(msg, JsonRequestBehavior.AllowGet);
 
         }
-        public bool Insert_Audi(RollDown tractormaster,RollDown obj)
+        public bool Insert_Audi(RollDown tractormaster, RollDown obj)
         {
             var result = false;
             if (tractormaster.Hydraulic_srlno != obj.Hydraulic_srlno && (!string.IsNullOrEmpty(obj.Hydraulic_srlno)))
@@ -630,6 +699,7 @@ namespace MVCApp.Controllers
             string msg = string.Empty;
             try
             {
+                string check = obj.FrontTyre1_srlno1;
                 if (string.IsNullOrEmpty(obj.PLANTCODE))
                 {
                     msg = "Select Plant to continue.";
@@ -665,7 +735,7 @@ namespace MVCApp.Controllers
         }
         public string ValidateJobforEmpty(RollDown tractormaster, RollDown updateTractor)
         {
-            string foundjob = string.Empty,founddcode=string.Empty;
+            string foundjob = string.Empty, founddcode = string.Empty;
             try
             {
                 bool check = false;
@@ -689,7 +759,7 @@ namespace MVCApp.Controllers
                     {
                         return "Engine Dcode mismatch. Master Dcode " + tractormaster.Engine + " and Serial No Dcode " + founddcode;
                     }
-                    updateTractor.Engine= founddcode;
+                    updateTractor.Engine = founddcode;
                 }
                 if (tractormaster.isTransRequire && string.IsNullOrEmpty(updateTractor.Transmission_srlno))
                 {
@@ -772,30 +842,30 @@ namespace MVCApp.Controllers
                         return "Left sidde Rear Srnn1 srlno already found on job " + foundjob;
                     }
                     founddcode = assemblyfunctions.getPartDcode(updateTractor.RearTyre1_srlno1, "RT");
-                    if (tractormaster.RearTyre1_srlno1.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                    if (tractormaster.RearTyre1_dcode.Trim().ToUpper() != founddcode.Trim().ToUpper())
                     {
                         return "Left sidde Rear Srnn1 Dcode mismatch. Master Dcode " + tractormaster.RearTyre1_srlno1 + " and Serial No Dcode " + founddcode;
                     }
-                    updateTractor.RearSrnn1 = founddcode;
+                    updateTractor.RearTyre1_dcode = founddcode;
                 }
 
                 if (tractormaster.isREQ_RHRT && string.IsNullOrEmpty(updateTractor.RearTyre2_srlno2))
                 {
-                    return "right sidde Rear Srnn2 srlno should not be blank ";
+                    return "right side Rear Srnn2 srlno should not be blank ";
                 }
                 if (!string.IsNullOrEmpty(updateTractor.RearTyre2_srlno2))
                 {
                     foundjob = assemblyfunctions.DuplicateCheck(updateTractor.RearTyre2_srlno2, "REARTYRE_SRLNO2", updateTractor.JOBID);
                     if (!string.IsNullOrEmpty(foundjob))
                     {
-                        return "right sidde Rear Srnn2 srlno already found on job " + foundjob;
+                        return "right side Rear Srnn2 srlno already found on job " + foundjob;
                     }
                     founddcode = assemblyfunctions.getPartDcode(updateTractor.RearTyre2_srlno2, "RT");
-                    if (tractormaster.RearTyre2_srlno2.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                    if (tractormaster.RearTyre2_dcode.Trim().ToUpper() != founddcode.Trim().ToUpper())
                     {
-                        return "right sidde Rear Srnn2 Dcode mismatch. Master Dcode " + tractormaster.RearSrnn2 + " and Serial No Dcode " + founddcode;
+                        return "right side Rear Srnn2 Dcode mismatch. Master Dcode " + tractormaster.RearSrnn2 + " and Serial No Dcode " + founddcode;
                     }
-                    updateTractor.RearSrnn2 = founddcode;
+                    updateTractor.RearTyre2_dcode = founddcode;
                 }
 
                 if (tractormaster.isREQUIRE_FRONTTYRE && string.IsNullOrEmpty(updateTractor.FrontTyre1_srlno1))
@@ -810,11 +880,11 @@ namespace MVCApp.Controllers
                         return "Left Side Front Srnn1 srlno already found on job " + foundjob;
                     }
                     founddcode = assemblyfunctions.getPartDcode(updateTractor.FrontTyre1_srlno1, "FT");
-                    if (tractormaster.FrontTyre1_srlno1.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                    if (tractormaster.FrontTyre1_Dcode.Trim().ToUpper() != founddcode.Trim().ToUpper())
                     {
                         return "Left Side Front Srnn1 Dcode mismatch. Master Dcode " + tractormaster.FrontSrnn1 + " and Serial No Dcode " + founddcode;
                     }
-                    updateTractor.FrontSrnn1 = founddcode;
+                    updateTractor.FrontTyre1_Dcode = founddcode;
                 }
 
                 if (tractormaster.isREQ_RHFT && string.IsNullOrEmpty(updateTractor.FrontTyre2_srlno2))
@@ -829,13 +899,13 @@ namespace MVCApp.Controllers
                         return "right Side Front Srnn2 srlno already found on job " + foundjob;
                     }
                     founddcode = assemblyfunctions.getPartDcode(updateTractor.FrontTyre2_srlno2, "FT");
-                    if (tractormaster.FrontTyre2_srlno2.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                    if (tractormaster.FrontTyre2_Dcode.Trim().ToUpper() != founddcode.Trim().ToUpper())
                     {
                         return "right Side Front Srnn2 Dcode mismatch. Master Dcode " + tractormaster.FrontTyre2_srlno2 + " and Serial No Dcode " + founddcode;
                     }
-                    updateTractor.FrontSrnn2 = founddcode;
+                    updateTractor.FrontTyre2_Dcode = founddcode;
                 }
-                if (tractormaster.isBackendRequire && string.IsNullOrEmpty(updateTractor.Backend_srlno) && updateTractor.PLANTCODE=="T05")
+                if (tractormaster.isBackendRequire && string.IsNullOrEmpty(updateTractor.Backend_srlno) && updateTractor.PLANTCODE == "T05")
                 {
                     return "Backend srlno should not be blank ";
                 }
@@ -1126,7 +1196,7 @@ namespace MVCApp.Controllers
             }
             return "OK";
         }
-  
+
         public string[] StringSpliter(string str)
         {
             if (!string.IsNullOrEmpty(str))

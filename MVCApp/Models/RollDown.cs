@@ -35,6 +35,8 @@ namespace MVCApp.Models
         public string RearRIM1 { get; set; }
         public string RearTyre1 { get; set; }
         public string RearTyre1_srlno1 { get; set; }
+        public string RearTyre1_dcode { get; set; }
+        public string RearTyre2_dcode { get; set; }
         public string RearSrnn2 { get; set; }
         public string reartyreleftsidemake1 { get; set; }
         public string reartyrerightsidemake2 { get; set; }
@@ -46,6 +48,7 @@ namespace MVCApp.Models
         public string FrontSrnn1 { get; set; }
         public string FrontRIM1 { get; set; }
         public string FrontTyre1_srlno1 { get; set; }
+        public string FrontTyre1_Dcode { get; set; }
         public string FrontSrnn2 { get; set; }
         public string FrontRIM2 { get; set; }
         
@@ -89,6 +92,7 @@ namespace MVCApp.Models
         public int TOTALCOUNT { get; set; }
         
         public string FrontTyre2_srlno2 { get; set; }
+        public string FrontTyre2_Dcode { get; set; }
         public string TractorCode  { get; set; }
         public string TractorDesc { get; set; }
         public string TractorStagePrint { get; set; }

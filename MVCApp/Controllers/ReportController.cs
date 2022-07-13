@@ -1861,6 +1861,66 @@ namespace MVCApp.Controllers
                     ViewBag.DataSource = dt;
                     return PartialView("PartScanningEffGrid");
                 }
+                else if (Convert.ToString(data.ReportType) == "TRACTOR_DECARATION_REPORT")
+                {
+                    ViewBag.heading = "TRACTOR DECARATION REPORT";
+
+                    DA = new OracleDataAdapter("USP_REPORTMASTER", fun.Connection());
+                    DA.SelectCommand.CommandType = CommandType.StoredProcedure;
+                    DA.SelectCommand.Parameters.Add("pREPORT_TYPE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.ReportType;
+                    DA.SelectCommand.Parameters.Add("pPLANT", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.Plant;
+                    DA.SelectCommand.Parameters.Add("pFAMILY", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.Family;
+                    DA.SelectCommand.Parameters.Add("pFROM_DATE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.FromDate;
+                    DA.SelectCommand.Parameters.Add("pTO_DATE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.ToDate;
+                    DA.SelectCommand.Parameters.Add("pSCHEMA", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pCHECK_JOB", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pGLE_JOBS", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pORG_ID", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+
+                    DA.SelectCommand.Parameters.Add("pPlanDate", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pShiftValue", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pStartTime", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pEndTime", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+
+                    DA.SelectCommand.Parameters.Add("pChkShowLess", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pFilterBy", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+
+                    DA.SelectCommand.Parameters.Add("RES", OracleDbType.RefCursor, ParameterDirection.Output);
+                    DA.Fill(dtMain);
+                    ViewBag.Total = dtMain.Rows.Count;
+                    ViewBag.DataSource = dtMain;
+                    return PartialView("GrdTractor_Decaration_Report");
+                }
+                else if (Convert.ToString(data.ReportType) == "PICKED_ITEM_REPORT")
+                {
+                    ViewBag.heading = "PICKED ITEM REPORT";
+
+                    DA = new OracleDataAdapter("USP_REPORTMASTER", fun.Connection());
+                    DA.SelectCommand.CommandType = CommandType.StoredProcedure;
+                    DA.SelectCommand.Parameters.Add("pREPORT_TYPE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.ReportType;
+                    DA.SelectCommand.Parameters.Add("pPLANT", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.Plant;
+                    DA.SelectCommand.Parameters.Add("pFAMILY", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.Family;
+                    DA.SelectCommand.Parameters.Add("pFROM_DATE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.FromDate;
+                    DA.SelectCommand.Parameters.Add("pTO_DATE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = data.ToDate;
+                    DA.SelectCommand.Parameters.Add("pSCHEMA", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pCHECK_JOB", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pGLE_JOBS", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pORG_ID", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+
+                    DA.SelectCommand.Parameters.Add("pPlanDate", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pShiftValue", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pStartTime", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pEndTime", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+
+                    DA.SelectCommand.Parameters.Add("pChkShowLess", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+                    DA.SelectCommand.Parameters.Add("pFilterBy", OracleDbType.NVarchar2, ParameterDirection.Input).Value = "";
+
+                    DA.SelectCommand.Parameters.Add("RES", OracleDbType.RefCursor, ParameterDirection.Output);
+                    DA.Fill(dtMain);
+                    ViewBag.Total = dtMain.Rows.Count;
+                    ViewBag.DataSource = dtMain;
+                    return PartialView("GrdTractor_Decaration_Report");
+                }
                 else
                 {
 
