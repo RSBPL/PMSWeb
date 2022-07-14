@@ -973,6 +973,27 @@ WHERE SMS.LOCATION_CODE='{0}'", Location);
             }
             return response;
         }
+
+        [HttpPost]
+        public string GetKanBanPKDITEMS(COMMONDATA cOMMONDATA)
+        {
+            DataTable dataTable = new DataTable();
+            string response = string.Empty;
+            try
+            {
+                query = string.Format(@"select KANBANNO KANBAN,LOCATION_CODE,ITEMCODE,QUANTITY from XXES_KANBANPKLIST k where k.plant_code='{0}' and k.family_code='{1}'
+                            and status='PICKED' and createdby='{2}'", cOMMONDATA.PLANT, cOMMONDATA.FAMILY, cOMMONDATA.CREATEDBY
+                    );
+                dataTable = returnDataTable(query);
+                response = JsonConvert.SerializeObject(dataTable);
+            }
+            catch (Exception ex)
+            {
+                dataTable = errorTable(ex.Message);
+                response = JsonConvert.SerializeObject(dataTable);
+            }
+            return response;
+        }
         //[HttpPost]
         //public string GetBulkStorageLocation(COMMONDATA cOMMONDATA)
         //{
