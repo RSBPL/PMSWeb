@@ -655,7 +655,63 @@ namespace MVCApp.CommonFunction
             }
         }
 
+        public List<DDLTextValue> IpAdress(string StageCode)
+        {
+            DataTable TmpDs = new DataTable();
+            List<DDLTextValue> result = new List<DDLTextValue>();
+            string ucode = Convert.ToString(HttpContext.Current.Session["Login_Unit"]);
+            try
+            {
+                if (!string.IsNullOrEmpty(StageCode))
+                {
+                    if (getUSERNAME() == "RS")
+                    {
+                        query = string.Format(@"select  PLANT_CODE || ':' || ipaddr || '(' || ipport ||')' AS DESCRIPTION , ipaddr || ' # '|| ipport CODE from xxes_stage_master where 
+                        offline_keycode='{0}' order by PLANT_CODE ", StageCode.Trim().ToUpper());
+                        if (ucode == "T05")
+                        {
+                         query = string.Format(@"select  PLANT_CODE || ':' || ipaddr || '(' || ipport ||')' AS DESCRIPTION , ipaddr || ' # '|| ipport CODE from xxes_stage_master where 
+                        offline_keycode='{0}' order by PLANT_CODE Desc ", StageCode.Trim().ToUpper());
+                        }
 
+                    }
+                    else
+                    {
+                        query = string.Format(@"select  PLANT_CODE || ':' || ipaddr || '(' || ipport ||')' AS DESCRIPTION , ipaddr || ' # '|| ipport CODE from xxes_stage_master where 
+                        offline_keycode='{0}' order by PLANT_CODE ", StageCode.Trim().ToUpper());
+                        //    query = string.Format(@"select distinct segment1 || ' # ' || description as DESCRIPTION, segment1 as ITEM_CODE from " + schema + ".mtl_system_items " +
+                        //"where organization_id in (" + orgid + ") and substr(segment1, 1, 1) in ('D','S') AND (SEGMENT1 LIKE '{0}%' OR DESCRIPTION LIKE '{1}%') order by segment1", data.SubAssembly1.Trim().ToUpper(), data.SubAssembly1.Trim().ToUpper());
+                        if (ucode == "T05")
+                        {
+                            query = string.Format(@"select  PLANT_CODE || ':' || ipaddr || '(' || ipport ||')' AS DESCRIPTION , ipaddr || ' # '|| ipport CODE from xxes_stage_master where 
+                        offline_keycode='{0}' order by PLANT_CODE Desc ", StageCode.Trim().ToUpper());
+                        }
+                    }
+                    TmpDs = returnDataTable(query);
+                    if (TmpDs.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in TmpDs.AsEnumerable())
+                        {
+                            result.Add(new DDLTextValue
+                            {
+                                Text = dr["DESCRIPTION"].ToString(),
+                                Value = dr["CODE"].ToString(),
+                            });
+                        }
+                    }
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                LogWrite(ex);
+                return result;
+            }
+            finally
+            {
+                //ConClose();
+            }
+        }
 
         public List<DDLTextValue> Fill_Family(string ucode)
         {
@@ -8814,7 +8870,7 @@ namespace MVCApp.CommonFunction
         public string SendMails(string Module, string MailBody, string MailSubject, string Email_To, string Email_CC,
        string Username)
         {
-           
+            if (getUSERNAME() != "RS") { 
                 string MAIL_PRIORITY = string.Empty;
                 string SMTP_SERVER = string.Empty;
                 string LOGIN_EMAIL = string.Empty;
@@ -8900,6 +8956,7 @@ namespace MVCApp.CommonFunction
                     pubfun.EXEC_QUERY(query);
                     return "Error" + ex.Message.ToString();
                 }
+            }
             return "";
         }
 

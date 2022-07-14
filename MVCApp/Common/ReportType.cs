@@ -201,7 +201,9 @@ namespace MVCApp
                          new ReportCode(){Code="MATERIAL_BULKTEMP",Text="STOCK BULK TEMP LOCATION"},
                          new ReportCode(){Code="ROLL",Text="ROLLOUT"},
                          new ReportCode(){Code="KIT_SCANNING",Text="KIT SCANNING REPORT"},
-                         new ReportCode(){Code="SHORT METERIAL DAILY",Text="SHORT METERIAL (DAILY)"}
+                         new ReportCode(){Code="SHORT METERIAL DAILY",Text="SHORT METERIAL (DAILY)"},
+                         new ReportCode(){Code="TRACTOR_DECARATION_REPORT",Text="TRACTOR DECARATION REPORT"},
+                         new ReportCode(){Code="PICKED_ITEM_REPORT",Text="PICKED ITEM REPORT"}
                      };
                 return al;
             }

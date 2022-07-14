@@ -833,13 +833,13 @@ namespace MVCApp.Common
             try
             {
 
-                query = string.Format(@"select j.JOBID,j.ITEM_CODE FCODE ,
+                query = string.Format(@"select j.JOBID,j.ITEM_CODE FCODE ,j.SIM_SERIAL_NO,
                 j.ENGINE_SRLNO,j.FCODE_SRLNO ,j.CLUSSTER_SRLNO,j.ALTERNATOR_SRLNO,j.RTRIM1,j.FTRIM1,j.FTRIM2,j.STEERING_MOTOR_SRLNO
                 ,j.STARTER_MOTOR_SRLNO,j.HYD_PUMP_SRLNO,j.STERING_CYLINDER_SRLNO,
                 j.RADIATOR_SRLNO ,j.STEERING_ASSEMBLY_SRLNO ,j.RTRIM2,REARTYRE_SRLNO1,REARTYRE_SRLNO2,FRONTTYRE_SRLNO1,FRONTTYRE_SRLNO2,
                 SIM_SERIAL_NO,IMEI_NO,MOBILE,
 
-                M.TRANSMISSION,M.HYDRAULIC,M.REARAXEL REAR_AXLE,M.BATTERY,M.RADIATOR,M.HYD_PUMP,M.STEERING_MOTOR,M.STEERING_ASSEMBLY
+                  m.RH_REARTYRE,m.REARTYRE, M.FRONTTYRE,M.RH_FRONTTYRE,M.TRANSMISSION,M.HYDRAULIC,M.REARAXEL REAR_AXLE,M.BATTERY,M.RADIATOR,M.HYD_PUMP,M.STEERING_MOTOR,M.STEERING_ASSEMBLY
                 ,M.STERING_CYLINDER,M.ALTERNATOR,M.CLUSSTER,M.STARTER_MOTOR,M.REQ_ROPS,
                  M.REQUIRE_ENGINE,M.REQUIRE_TRANS,M.REQUIRE_REARAXEL,M.REQUIRE_BACKEND,M.REQUIRE_HYD,M.REQUIRE_REARTYRE,M.REQ_RHRT
                 ,M.REQUIRE_FRONTTYRE,M.REQUIRE_BATTERY,M.REQ_HYD_PUMP,M.REQ_RADIATOR,M.REQ_RHFT
@@ -852,7 +852,7 @@ namespace MVCApp.Common
                 to_char( PDIOKDATE, 'dd-Mon-yyyy HH24:MI:SS' ) PDIOKDATE,   
                 M.remarks,M.short_code ,to_char( CAREBUTTONOIL, 'dd-Mon-yyyy HH24:MI:SS' )  CAREBUTTONOIL,
                  SWAPCAREBTN,j.HYDRALUIC_DESCRIPTION,j.REARTYRE_DESCRIPTION,j.FRONTTYRE_DESCRIPTION,Prefix_4
-                ,j.HYDRALUIC_SRLNO,ROPS_SRNO
+                ,j.HYDRALUIC_SRLNO,j.ROPS_SRNO,j.OIL
                 from XXES_ITEM_MASTER m join xxes_job_status j on m.plant_code=j.plant_code
                 and m.family_code=j.family_code and m.item_code=j.item_code where 
                  j.plant_code='{0}' and j.family_code='{1}' and j.{3}='{2}'",
@@ -865,6 +865,8 @@ namespace MVCApp.Common
                     down.PLANTCODE = plant;
                     down.FAMILYCODE = family;
                     down.ROPSrno = Convert.ToString(dt.Rows[0]["ROPS_SRNO"]);
+                    down.OilQty = Convert.ToString(dt.Rows[0]["OIL"]);
+                    down.Srno = Convert.ToString(dt.Rows[0]["SIM_SERIAL_NO"]);
                     down.ROPS = Convert.ToString(dt.Rows[0]["ROPS_ITEM_CODE"]);
                     down.Carebuttonoildate = Convert.ToString(dt.Rows[0]["CAREBUTTONOIL"]);
                     down.Hydraulic = Convert.ToString(dt.Rows[0]["HYDRAULIC"]);
@@ -915,9 +917,13 @@ namespace MVCApp.Common
                     down.IMEI = Convert.ToString(dt.Rows[0]["IMEI_NO"]);
                     down.MOBILE = Convert.ToString(dt.Rows[0]["MOBILE"]);
                     down.RearTyre1_srlno1 = Convert.ToString(dt.Rows[0]["REARTYRE_SRLNO1"]);
+                    down.RearTyre1_dcode = Convert.ToString(dt.Rows[0]["REARTYRE"]);
+                    down.RearTyre2_dcode = Convert.ToString(dt.Rows[0]["RH_REARTYRE"]);
                     down.RearTyre2_srlno2 = Convert.ToString(dt.Rows[0]["REARTYRE_SRLNO2"]);
                     down.FrontTyre1_srlno1 = Convert.ToString(dt.Rows[0]["FRONTTYRE_SRLNO1"]);
                     down.FrontTyre2_srlno2 = Convert.ToString(dt.Rows[0]["FRONTTYRE_SRLNO2"]);
+                    down.FrontTyre1_Dcode = Convert.ToString(dt.Rows[0]["FRONTTYRE"]);
+                    down.FrontTyre2_Dcode = Convert.ToString(dt.Rows[0]["RH_FRONTTYRE"]);
                     down.reqcarebtn = Convert.ToString(dt.Rows[0]["CAREBUTTONREQ"]);
                     down.swapbtn = Convert.ToString(dt.Rows[0]["SWAPCAREBTN"]);
                     down.Rolloutdate = Convert.ToString(dt.Rows[0]["FINAL_LABEL_DATE"]);

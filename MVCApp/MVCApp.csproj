@@ -769,6 +769,7 @@
     <Content Include="Content\select2\dist\js\i18n\zh-CN.js" />
     <Content Include="Content\select2\dist\js\i18n\zh-TW.js" />
     <Content Include="Content\select2\dist\js\select2.full.min.js" />
+    <Content Include="Content\select2\dist\js\Tab.js" />
     <Content Include="Content\select2\dist\js\select2.min.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -1271,6 +1272,7 @@
     <Content Include="Views\PTBuckleUP\Index.cshtml" />
     <Content Include="Views\FTEngine\Index.cshtml" />
     <Content Include="Views\Report\GrdVehicle_INOUT.cshtml" />
+    <Content Include="Views\Report\GrdTractor_Decaration_Report.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
