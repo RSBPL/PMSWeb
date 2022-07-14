@@ -1919,7 +1919,7 @@ namespace MVCApp.Controllers
                     DA.Fill(dtMain);
                     ViewBag.Total = dtMain.Rows.Count;
                     ViewBag.DataSource = dtMain;
-                    return PartialView("GrdTractor_Decaration_Report");
+                    return PartialView("GrdPICKED_ITEM_REPORT");
                 }
                 else
                 {

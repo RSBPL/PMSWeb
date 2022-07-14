@@ -1273,6 +1273,7 @@
     <Content Include="Views\FTEngine\Index.cshtml" />
     <Content Include="Views\Report\GrdVehicle_INOUT.cshtml" />
     <Content Include="Views\Report\GrdTractor_Decaration_Report.cshtml" />
+    <Content Include="Views\Report\GrdPICKED_ITEM_REPORT.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
