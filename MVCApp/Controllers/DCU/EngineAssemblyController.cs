@@ -3940,7 +3940,7 @@ namespace MVCApp.Controllers.DCU
                 }
                 if (!string.IsNullOrEmpty(data.injector1))
                 {
-                    query = string.Format(@"SELECT COUNT(*) FROM XXES_ENGINE_STATUS WHERE PLANT_CODE='{0}' AND FAMILY_CODE='{1}'  AND INJECTOR1='{2}' and INJECTOR1<>'.3333333_' and injector1 is not null",
+                    query = string.Format(@"SELECT COUNT(*) FROM XXES_ENGINE_STATUS WHERE PLANT_CODE='{0}' AND FAMILY_CODE='{1}'  AND INJECTOR1='{2}' and INJECTOR1<>'._33333_' and injector1 is not null",
                             data.plantcode, data.familycode, data.injector1);
                     if (fun.CheckExits(query))
                     {
@@ -3954,7 +3954,7 @@ namespace MVCApp.Controllers.DCU
                 {
                     if(data.injector1 != data.injector2)
                     {
-                        query = string.Format(@"SELECT COUNT(*) FROM XXES_ENGINE_STATUS WHERE PLANT_CODE='{0}' AND FAMILY_CODE='{1}' AND INJECTOR2='{2}' and INJECTOR2<>'.3333333_' and injector2 is not null",
+                        query = string.Format(@"SELECT COUNT(*) FROM XXES_ENGINE_STATUS WHERE PLANT_CODE='{0}' AND FAMILY_CODE='{1}' AND INJECTOR2='{2}' and INJECTOR2<>'._33333_' and injector2 is not null",
                         data.plantcode, data.familycode, data.injector2);
                         if (fun.CheckExits(query))
                         {
@@ -3973,7 +3973,7 @@ namespace MVCApp.Controllers.DCU
                 {
                     if (data.injector1 != data.injector3 && data.injector2 != data.injector3)
                     {
-                        query = string.Format(@"SELECT COUNT(*) FROM XXES_ENGINE_STATUS WHERE PLANT_CODE='{0}' AND FAMILY_CODE='{1}'  AND INJECTOR3='{2}' and INJECTOR3<>'.3333333_' and injector3 is not null",
+                        query = string.Format(@"SELECT COUNT(*) FROM XXES_ENGINE_STATUS WHERE PLANT_CODE='{0}' AND FAMILY_CODE='{1}'  AND INJECTOR3='{2}' and INJECTOR3<>'._33333_' and injector3 is not null",
                                 data.plantcode, data.familycode, data.injector3);
                         if (fun.CheckExits(query))
                         {
@@ -3989,7 +3989,7 @@ namespace MVCApp.Controllers.DCU
                 }
                 if (!string.IsNullOrEmpty(data.injector4))
                 {
-                    query = string.Format(@"SELECT COUNT(*) FROM XXES_ENGINE_STATUS WHERE PLANT_CODE='{0}' AND FAMILY_CODE='{1}'  AND INJECTOR4='{2}' and INJECTOR4<>'.3333333_' and injector4 is not null",
+                    query = string.Format(@"SELECT COUNT(*) FROM XXES_ENGINE_STATUS WHERE PLANT_CODE='{0}' AND FAMILY_CODE='{1}'  AND INJECTOR4='{2}' and INJECTOR4<>'._33333_' and injector4 is not null",
                         data.plantcode, data.familycode, data.injector4);
                     if (fun.CheckExits(query))
                     {
