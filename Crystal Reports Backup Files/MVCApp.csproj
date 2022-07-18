@@ -117,6 +117,8 @@
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Oracle.ManagedDataAccess, Version=4.122.21.1, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <HintPath>..\packages\Oracle.ManagedDataAccess.21.5.0\lib\net462\Oracle.ManagedDataAccess.dll</HintPath>
     </Reference>
     <Reference Include="Oracle.Web, Version=2.122.1.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
@@ -176,15 +178,16 @@
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Http, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.7\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Http.WebHost, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.7\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
@@ -262,12 +265,18 @@
     <Compile Include="Controllers\Admin\SettingController.cs" />
     <Compile Include="Controllers\Admin\UserMasterController.cs" />
     <Compile Include="Controllers\Assembly\BackendPartModificationController.cs" />
+    <Compile Include="Controllers\Assembly\FTBuckleUpController.cs" />
+    <Compile Include="Controllers\Assembly\FTEngineController.cs" />
+    <Compile Include="Controllers\Assembly\PTBuckleUPController.cs" />
+    <Compile Include="Controllers\Assembly\RollDownController.cs" />
     <Compile Include="Controllers\Assembly\HookUpAndDownController.cs" />
     <Compile Include="Controllers\Assembly\ImportExportController.cs" />
     <Compile Include="Controllers\Assembly\JobFinalController.cs" />
+    <Compile Include="Controllers\Assembly\TyrePrintingController.cs" />
     <Compile Include="Controllers\BarcodePrinting\TracktorSubAssemblyController.cs" />
     <Compile Include="Controllers\BarcodePrinting\SubAssemblyController.cs" />
     <Compile Include="Controllers\BarcodePrinting\GateEntryController.cs" />
+    <Compile Include="Controllers\DCU\EngineAssemblyController.cs" />
     <Compile Include="Controllers\LCD\AfterPaintLCD2Controller.cs" />
     <Compile Include="Controllers\LCD\BuckleUpController.cs" />
     <Compile Include="Controllers\LCD\BuckleUpPTController.cs" />
@@ -341,8 +350,8 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Kanban.rpt</DependentUpon>
-      <SubType>Component</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="CrystalReports\kitting.cs">
       <AutoGen>True</AutoGen>
@@ -374,6 +383,7 @@
     <Compile Include="Models\Barcode.cs" />
     <Compile Include="Models\BeforePaintAssemblyModel.cs" />
     <Compile Include="Models\BEFOREPAINTLCDGRID.cs" />
+    <Compile Include="Models\BuckleUPFT.cs" />
     <Compile Include="Models\BulkLayout.cs" />
     <Compile Include="Models\BulkStorage.cs" />
     <Compile Include="Models\CommonModel.cs" />
@@ -385,6 +395,11 @@
     <Compile Include="Models\EngineAssembly.cs" />
     <Compile Include="Models\EngineModel.cs" />
     <Compile Include="Models\FIPModel.cs" />
+    <Compile Include="Models\FTENGINE.cs" />
+    <Compile Include="Models\PrintLabel.cs" />
+    <Compile Include="Models\PTBUCKlUP.cs" />
+    <Compile Include="Models\RollDown.cs" />
+    <Compile Include="Models\SendtoPrinter.cs" />
     <Compile Include="Models\TracktorSubAssemblyModel.cs" />
     <Compile Include="Models\SubAssemblyModel.cs" />
     <Compile Include="Models\GateEntryModel.cs" />
@@ -418,6 +433,7 @@
     <Compile Include="Models\SubAssemblyMapping.cs" />
     <Compile Include="Models\TRACTOR.cs" />
     <Compile Include="Models\TractorMster.cs" />
+    <Compile Include="Models\TyrePrinting.cs" />
     <Compile Include="Models\UserMaster.cs" />
     <Compile Include="Models\Validation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -613,8 +629,6 @@
     <Content Include="bin\MVCApp.dll" />
     <Content Include="bin\MVCApp.pdb" />
     <Content Include="bin\Newtonsoft.Json.dll" />
-    <Content Include="bin\Oracle.ManagedDataAccess.dll" />
-    <Content Include="bin\Oracle.Web.dll" />
     <Content Include="bin\roslyn\csc.exe" />
     <Content Include="bin\roslyn\csi.exe" />
     <Content Include="bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll" />
@@ -770,6 +784,15 @@
     <Content Include="Image\print.jpg" />
     <Content Include="Image\print.png" />
     <Content Include="Image\Red.png" />
+    <Content Include="Printer\BD.TXT" />
+    <Content Include="Printer\BD17.TXT" />
+    <Content Include="Printer\BK.TXT" />
+    <Content Include="Printer\EN.TXT" />
+    <Content Include="Printer\EN17.TXT" />
+    <Content Include="Printer\FBD.TXT" />
+    <Content Include="Printer\hyd.txt" />
+    <Content Include="Printer\JOB.TXT" />
+    <Content Include="Printer\PDI.TXT" />
     <Content Include="Scripts\AutoFill\images\ui-anim_basic_16x16.gif" />
     <Content Include="Scripts\AutoFill\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
     <Content Include="Scripts\AutoFill\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
@@ -1235,7 +1258,19 @@
     <Content Include="Views\SubAssembly\Index.cshtml" />
     <Content Include="Views\TracktorSubAssembly\Index.cshtml" />
     <Content Include="Views\BackendPartModification\Index.cshtml" />
-    <Content Include="Views\Report\GrdMaterialShortDaily.cshtml" />
+    <Content Include="Views\Report\GrdCRITICIAL_VENDOR_MRN.cshtml" />
+    <Content Include="Views\RollDown\Grid.cshtml" />
+    <Content Include="Views\RollDown\Index.cshtml" />
+    <Content Include="Views\Setting\GridEmails.cshtml" />
+    <Content Include="Views\Report\GrdWEEKLY_OIL_FILTRATION.cshtml" />
+    <Content Include="Views\TyrePrinting\Index.cshtml" />
+    <Content Include="Views\MRNDisplaySheet\Empty.cshtml" />
+    <Content Include="Views\Report\WeeklyReportsDateWise.cshtml" />
+    <Content Include="Views\Setting\GridSMSAPIs.cshtml" />
+    <Content Include="Views\FTBuckleUp\Index.cshtml" />
+    <Content Include="Views\PTBuckleUP\Index.cshtml" />
+    <Content Include="Views\FTEngine\Index.cshtml" />
+    <Content Include="Views\Report\GrdVehicle_INOUT.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

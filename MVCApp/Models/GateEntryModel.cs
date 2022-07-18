@@ -59,6 +59,7 @@ namespace MVCApp.Models
         public string STATUS { get; set; }
         public string TOTAL_ITEM { get; set; }
         public string CITY { get; set; }
+        public string ERPCODE { get; set; }
     }
 
     public class GateEntryFunction
@@ -102,7 +103,7 @@ namespace MVCApp.Models
             }
             return retvalue;
         }
-        public void UpdateMrnDetails(string PLANT_CODE, string MRN_NO, string Family_Code)
+        public void UpdateMrnDetails(string PLANT_CODE, string MRN_NO, string Family_Code,string ERPCODE)
         {
             try
             {
@@ -154,14 +155,14 @@ namespace MVCApp.Models
                         else
                         {
                             query = string.Format(@"insert into xxes_mrninfo(PLANT_CODE,MRN_NO,INVOICE_NO,ITEMCODE,ITEM_DESCRIPTION,CREATEDDATE,CREATEDBY,
-                          QUANTITY,UOM,RATE,INVOICE_DATE,STATUS,PUNAME,ITEM_REVISION,BOM_REVISION,FAMILY_CODE,STORAGE) 
-                          values('{0}','{1}','{2}','{3}','{4}',sysdate,'{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}')",
+                          QUANTITY,UOM,RATE,INVOICE_DATE,STATUS,PUNAME,ITEM_REVISION,BOM_REVISION,FAMILY_CODE,STORAGE,ERPCODE) 
+                          values('{0}','{1}','{2}','{3}','{4}',sysdate,'{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}')",
                             Convert.ToString(dr["ORGANIZATION_CODE"]), Convert.ToString(dr["MRN_NO"]), Convert.ToString(dr["INVOICE_NO"]),
                             Convert.ToString(dr["ITEM_CODE"]), replaceApostophi(Convert.ToString(dr["ITEM_DESCRIPTION"])),
                             Convert.ToString(HttpContext.Current.Session["Login_User"]), Convert.ToString(dr["QUANTITY"]), Convert.ToString(dr["UOM"]), Convert.ToString(dr["RATE"])
                             , Convert.ToString(dr["INVOICE_DATE"]), Convert.ToString(dr["STATUS"]), puname,
                             Convert.ToString(dr["ITEM_REVISION"]), bomrevison, Convert.ToString(Family_Code),
-                            storage
+                            storage,ERPCODE
                             );
                         }
                         fun.EXEC_QUERY(query);
@@ -245,9 +246,18 @@ namespace MVCApp.Models
                         invoice.PLANT_CODE, Convert.ToString(Family_Code), invoice.ITEM_CODE);
                     if (!fun.CheckExits(query))
                     {
-                        query = string.Format(@"INSERT INTO XXES_RAWMATERIAL_MASTER(PLANT_CODE,FAMILY_CODE,ITEM_CODE,ITEM_DESCRIPTION,CREATEDBY,CREATEDDATE)    
-                         VALUES('{0}','{1}','{2}','{3}','{4}',SYSDATE)", invoice.PLANT_CODE, Convert.ToString(Family_Code), invoice.ITEM_CODE, invoice.ITEM_DESCRIPTION,
-                        Convert.ToString(HttpContext.Current.Session["Login_User"]));
+                        query = string.Format(@"INSERT INTO XXES_RAWMATERIAL_MASTER(PLANT_CODE,FAMILY_CODE,ITEM_CODE,ITEM_DESCRIPTION,CREATEDBY,CREATEDDATE,ERPCODE)    
+                         VALUES('{0}','{1}','{2}','{3}','{4}',SYSDATE,'{5}')", invoice.PLANT_CODE, Convert.ToString(Family_Code), invoice.ITEM_CODE, invoice.ITEM_DESCRIPTION,
+                        Convert.ToString(HttpContext.Current.Session["Login_User"]), invoice.ERPCODE);
+                        if (fun.EXEC_QUERY(query))
+                        {
+
+                        }
+                    }
+                    else
+                    {
+                        query = string.Format(@"UPDATE XXES_RAWMATERIAL_MASTER  SET ERPCODE = '{0}' where plant_code='{1}' and family_code='{2}' and item_code='{3}'",
+                            invoice.ERPCODE, invoice.PLANT_CODE, Convert.ToString(Family_Code), invoice.ITEM_CODE);
                         if (fun.EXEC_QUERY(query))
                         {
 

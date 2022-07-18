@@ -129,12 +129,18 @@ namespace MVCApp.Controllers.Masters
                 {
                     invoice.ITEM_CODE = line.Split('[')[1].Split(']')[0].Trim();
                     invoice.ITEM_DESCRIPTION = line.Split('[')[0].Trim();
+                    invoice.ERPCODE = invoice.ITEM_CODE;
                 }
+                if(invoice.ITEM_CODE.Length > 9)
+                {
+                    invoice.ITEM_CODE = invoice.ITEM_CODE.Substring(0, 9);
+                }
+                
                 invoice.STORE_LOCATION = GEFun.GetStoreLoc(invoice.ITEM_CODE, invoice.PLANT_CODE);
                 invoice.SAMPLE = "";// Convert.ToString(gridView1.GetRowCellValue(i, "SAMPLE"));
                 invoice.SOURCE_TYPE = item.SOURCE_TYPE;
                 invoice.TRANSACTION_DATE = Convert.ToDateTime(item.TRANSACTION_DATE);
-                GEFun.UpdateMrnDetails(invoice.PLANT_CODE, invoice.MRN_NO,item.FAMILYCODE);
+                GEFun.UpdateMrnDetails(invoice.PLANT_CODE, invoice.MRN_NO,item.FAMILYCODE,invoice.ERPCODE);
                 lstInvoice.Add(invoice.INVOICE_NO);
                 PrintAssemblyBarcodes barcodes = new PrintAssemblyBarcodes();
                 if (item.CheckboxReprint==false) //if printing
@@ -154,7 +160,7 @@ namespace MVCApp.Controllers.Masters
                               GEFun.replaceApostophi(invoice.ITEM_DESCRIPTION) + "',sysdate,'" + Login_User + "','" + invoice.STATUS + "','" + invoice.STORE_LOCATION + "'," + invoice.TOTAL_ITEM + ",'" + Convert.ToString(item.FAMILYCODE) + "','" + tranid + "','" + invoice.CITY + "')";
                         if (fun.EXEC_QUERY(query))
                         {
-                            GEFun.UpdateMrnDetails(invoice.PLANT_CODE, invoice.MRN_NO,item.FAMILYCODE);
+                            GEFun.UpdateMrnDetails(invoice.PLANT_CODE, invoice.MRN_NO,item.FAMILYCODE, invoice.ERPCODE);
                             if (!copy2)
                             {
                                 for (int ii = 0; ii < 2; ii++)

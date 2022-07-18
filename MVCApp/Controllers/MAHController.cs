@@ -2434,13 +2434,15 @@ AND FAMILY_CODE='{5}')
             }
             return "OK";
         }
+
         public string ValidateKittingItemsNew(Kitting KT)
         {
-
+            List<KittingLIST> Kitting = new List<KittingLIST>();
             try
             {
                 string query = string.Empty;
-
+                string response = string.Empty;
+              
                 // check last scanned kittno no get the time difference in minue if less than 5 then error show already scanned
 
                 query = String.Format(@"SELECT TO_CHAR(CREATEDDATE,'dd-Mon-yyyy HH24:MI:SS') || '#' ||
@@ -2474,18 +2476,37 @@ AND FAMILY_CODE='{5}')
                     query = string.Format(@"SELECT SUM(QUANTITY) FROM XXES_SUMMKTSTOCK WHERE ITEMCODE='{0}' AND PLANT_CODE='{1}'
                     AND FAMILY_CODE='{2}'", Convert.ToString(dataRow["ITEMCODE"]), KT.PLANT.ToUpper().Trim(), KT.FAMILY.ToUpper().Trim());
                     TotalQuantity = GetColValueOra(query);
-                    if (string.IsNullOrEmpty(TotalQuantity) || TotalQuantity == "0")
+                    if (string.IsNullOrEmpty(TotalQuantity) || TotalQuantity == "0" && Convert.ToDouble(TotalQuantity) < Convert.ToInt32(dataRow["QUANTITY"]))
                     {
-                        return "ERROR : QTY IS NOT AVAILABLE FOR ITEM " + Convert.ToString(dataRow["ITEMCODE"]);
+                        if(TotalQuantity == "")
+                        {
+                            TotalQuantity = "0";
+                        }
+                        string Shot = (Convert.ToInt32(dataRow["QUANTITY"]) - Convert.ToInt32(TotalQuantity)).ToString();
+                        KittingLIST lIST = new KittingLIST
+                        {
+                            ITEMCODE = Convert.ToString(dataRow["ITEMCODE"]),
+                            QUANTITY = Convert.ToString(dataRow["QUANTITY"]),
+                            AVAILQTY = TotalQuantity,
+                            SHORTAGEQTY = Shot
+                        };
+                        Kitting.Add(lIST);
+                        response = JsonConvert.SerializeObject(Kitting);
+                        //return "ERROR : QTY IS NOT AVAILABLE FOR ITEM " + Convert.ToString(dataRow["ITEMCODE"]);
 
                     }
-                    if (Convert.ToDouble(TotalQuantity) < Convert.ToInt32(dataRow["QUANTITY"]))
-                    {
-                        return "ERROR : QTY IS NOT AVAILABLE FOR ITEM " + Convert.ToString(dataRow["ITEMCODE"]);
-                    }
+                    //if (Convert.ToDouble(TotalQuantity) < Convert.ToInt32(dataRow["QUANTITY"]))
+                    //{
+                    //    query = string.Format(@"SELECT ITEMCODE,QUANTITY FROM XXES_KITMASTER WHERE PLANT_CODE='{0}'
+                    //            AND FAMILY_CODE='{2}'AND ITEMCODE='{2}'", KT.PLANT, KT.FAMILY, Convert.ToString(dataRow["ITEMCODE"]));
+                    //    dt = returnDataTable(query);
+                    //    response = JsonConvert.SerializeObject(dt);
+
+                    //    //return "ERROR : QTY IS NOT AVAILABLE FOR ITEM " + Convert.ToString(dataRow["ITEMCODE"]);
+                    //}
 
                 }
-
+                return response;
 
             }
             catch (Exception ex)
@@ -2494,6 +2515,28 @@ AND FAMILY_CODE='{5}')
                 return "ERROR: " + ex.Message;
             }
             return "OK";
+        }
+
+        [HttpPost]
+        public string GetNotAvailItems(COMMONDATA cOMMONDATA)
+        {
+            DataTable dataTable = new DataTable();
+            string response = string.Empty;
+            try
+            {
+                query = string.Format(@"select KANBANNO KANBAN,LOCATION_CODE,ITEMCODE,QUANTITY from XXES_KANBANPKLIST k where k.plant_code='{0}' and k.family_code='{1}'
+                            and status='PENDING' and createdby='{2}'", cOMMONDATA.PLANT, cOMMONDATA.FAMILY, cOMMONDATA.CREATEDBY
+                    );
+                dataTable = returnDataTable(query);
+                response = JsonConvert.SerializeObject(dataTable);
+            }
+            catch (Exception ex)
+            {
+
+                dataTable = errorTable(ex.Message);
+                response = JsonConvert.SerializeObject(dataTable);
+            }
+            return response;
         }
 
         [HttpPost]

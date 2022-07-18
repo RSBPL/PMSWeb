@@ -1,6 +1,97 @@
 ﻿@model MVCApp.Models.PrivilegeModel
 @using Syncfusion.EJ2
 
+<style>
+    .card-header {
+        border-bottom: 1px solid #e6e6e6;
+        padding: 1rem 1.5rem 0REM;
+    }
+
+    .row {
+        margin-bottom: calc(0.5 * var(--bs-gutter-x));
+    }
+
+    .bdiv {
+        text-align: end;
+    }
+
+    .rounded-circle {
+        border-radius: 15% !important;
+    }
+
+    .avatar > img {
+        border: 1px solid #bbb;
+    }
+
+    .req {
+        color: red;
+    }
+
+    .Grid thead tr {
+        background: #7fc1f9e8;
+    }
+
+    .Grid tbody tr.even:hover {
+        background-color: rgb(158 187 211 / 0.92);
+        cursor: pointer;
+    }
+
+    .Grid tbody tr:nth-of-type(odd) {
+        background-color: rgb(158 187 211 / 0.92);
+    }
+
+    .Grid tbody tr.odd:hover {
+        background-color: rgb(158 187 211 / 0.92);
+        cursor: pointer;
+    }
+
+    .Grid tr.even:hover td.sorting_1 {
+        background-color: rgb(158 187 211 / 0.92);
+        cursor: pointer;
+    }
+
+    .Grid tr.odd:hover td.sorting_1 {
+        background-color: rgb(158 187 211 / 0.92);
+        cursor: pointer;
+    }
+
+    .Grid td {
+        font-size: 15px;
+        font-weight: 400;
+    }
+
+    .dataTable > thead > tr > th[class*=sorting_] {
+        color: black;
+        font-weight: 600;
+        font-size: 15px;
+    }
+
+    .dataTables_filter input[type="search"] {
+        width: 209px;
+    }
+
+    div.dataTables_processing {
+        z-index: 1;
+    }
+
+    /*#myInput {
+        background-image: url('/css/searchicon.png');*/ /* Add a search icon to input */
+        /*background-position: 10px 12px;*/ /* Position the search icon */
+        /*background-repeat: no-repeat;*/ /* Do not repeat the icon image */
+        /*width: 100%;*/ /* Full-width */
+        /*font-size: 16px;*/ /* Increase font-size */
+        /*padding: 10px 20px 10px 40px;*/ /* Add some padding */
+        /*border: 1px solid #ddd;*/ /* Add a grey border */
+        /*margin-bottom: 12px;*/ /* Add some space below the input */
+    /*}*/
+
+    div#demoGrid1_filter {
+        margin-right: 8px !important;
+    }
+</style>
+
+
+
 <div class="breadcrumbs ace-save-state" id="breadcrumbs">
     <ul class="breadcrumb">
         <li>
@@ -72,26 +163,161 @@
                 </div>
             </div>
         }
-        <div id="Tree">
+    <div class="row">
+        <div class="col-md-4">
+            <fieldset class="the-fieldset ">
+                <div id="Tree">
 
+                </div>
+            </fieldset>
+        </div>
+        <div class="col-md-8">
+            <fieldset class="the-fieldset ">
+                <div class="row">
+                    <div class="col-md-6" style=" margin-top: 10px;">
+                        <div class="col-md-12" style="height: 300px; overflow-y: scroll; ">
+                            <div class="row" style="position:sticky; top: 0; z-index:1">
+                                <div class="col-md-6 col-xs-offset-3"><input type="text" id="ENGINEInput" onkeyup="SearchMenu('ENGINEGrid')" placeholder="Search for Menu.."></div>
+                            </div>
+                            <table id="ENGINEGrid" class="table table-striped table-bordered dt-responsive nowrap Grid" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" class="form-check-input" id="cbAll" style="margin-left: -11px;" onclick="check_uncheck_checkbox(this.checked);" /></th>
+                                        @*<th>EngCode</th>*@
+                                        <th>ENGINE</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6" style=" margin-top: 10px;">
+                        <div class="col-md-12" style="height: 300px; overflow-y: scroll;  margin-top : 10px;">
+                            <div class="row" style="position:sticky; top: 0; z-index:1">
+                                <div class="col-md-6 col-xs-offset-3"><input type="text" id="TRACTORInput" onkeyup="SearchMenu('TRACTORGrid')" placeholder="Search for Menu.."></div>
+                            </div>
+                            <table id="TRACTORGrid" class="table table-striped table-bordered dt-responsive nowrap Grid" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" class="form-check-input" id="cbAll" style="margin-left: -11px;" onclick="check_uncheck_checkbox1(this.checked);" /></th>
+                                        @*<th>TRACTORCode</th>*@
+                                        <th>TRACTOR</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6" style=" margin-top: 20px;">
+                        <div class="col-md-12" style="height: 300px; overflow-y: scroll;  margin-top : 10px;">
+                            <div class="row" style="position:sticky; top: 0; z-index:1">
+                                <div class="col-md-6 col-xs-offset-3"><input type="text" id="CRANEInput" onkeyup="SearchMenu('CRANEGrid')" placeholder="Search for Menu.."></div>
+                            </div>
+                            <table id="CRANEGrid" class="table table-striped table-bordered dt-responsive nowrap Grid" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" class="form-check-input" id="cbAll" style="margin-left: -11px;" onclick="check_uncheck_checkbox2(this.checked);" /></th>
+                                        @*<th>CRANECode</th>*@
+                                        <th>CRANE</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6" style=" margin-top: 20px;">
+                        <div class="col-md-12" style="height: 300px; overflow-y: scroll;  margin-top : 10px; ">
+                            <div class="row" style="position:sticky; top: 0; z-index:1">
+                                <div class="col-md-6 col-xs-offset-3"><input type="text" id="EKIInput" onkeyup="SearchMenu('EKIGrid')" placeholder="Search for Menu.."></div>
+                            </div>
+                            <table id="EKIGrid" class="table table-striped table-bordered dt-responsive nowrap Grid" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" class="form-check-input" id="cbAll" style="margin-left: -11px;" onclick="check_uncheck_checkbox3(this.checked);" /></th>
+                                        @*<th>EKICode</th>*@
+                                        <th>EKI</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6" style=" margin-top: 20px;">
+                        <div class="col-md-12" style="height: 300px; overflow-y: scroll; margin-top : 10px;">
+                            <div class="row" style="position:sticky; top: 0; z-index:1">
+                                <div class="col-md-6 col-xs-offset-3"><input type="text" id="BACKENDInput" onkeyup="SearchMenu('BACKENDGrid')" placeholder="Search for Menu.."></div>
+                            </div>
+                            <table id="BACKENDGrid" class="table table-striped table-bordered dt-responsive nowrap Grid" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" class="form-check-input" id="cbAll" style="margin-left: -11px;" onclick="check_uncheck_checkbox4(this.checked);" /></th>
+                                        @*<th>BACKENDCode</th>*@
+                                        <th>BACKEND</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6" style=" margin-top: 20px;">
+                        <div class="col-md-12" style="height: 300px; overflow-y: scroll; margin-top:10px;">
+                            <div class="row" style="position:sticky; top: 0; z-index:1">
+                                <div class="col-md-6 col-xs-offset-3"><input type="text" id="HYDRAULICInput" onkeyup="SearchMenu('HYDRAULICGrid')" placeholder="Search for Menu.."></div>
+                            </div>
+                            <table id="HYDRAULICGrid" class="table table-striped table-bordered dt-responsive nowrap Grid" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" class="form-check-input" id="cbAll" style="margin-left: -11px;" onclick="check_uncheck_checkbox5(this.checked);" /></th>
+                                        @*<th>HYDRAULICCode</th>*@
+                                        <th>HYDRAULIC</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
         </div>
     </div>
 </div>
+</div>
+
+
 
 @Styles.Render("~/Content/ej2")
 <link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
 <script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
 <script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
 <script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
 <script>
     $(document).ready(function () {
+        $.noConflict();
+
+        ENGINEREPORTS();
+        TRACTORREPORTS();
+        CRANEREPORTS();
+        EKIREPORTS();
+        BACKENDREPORTS();
+        HYDRAULICREPORTS();
         TreeView("");
     });
 
     $("#RoleId").change(function () {
         var selectedValue = $("#RoleId").val();
         //if ($("select option:selected").index() > 0) {
-            TreeView(selectedValue);
+        TreeView(selectedValue);
+
+        ENGINESelection();
+        TRACTORSelection();
+        CRANESelection();
+        EKISelection();
+        BACKENDSelection();
+        HYDRAULICSelection();
         //}
         //else {
         //    TreeView(0);
@@ -125,7 +351,7 @@
         $('#RoleId').val(1).trigger('change');
     });
 
-    $('#submit').on('click', function () {
+    @*$('#submit').on('click', function () {
         var LevelObj = $('#RoleId').val();
 
         var Menus = checkedNodes;
@@ -154,7 +380,1019 @@
                   setTimeout(function() {$(".alert").alert('close');}, 3000);
              }
          });
+    });*@
+
+
+
+
+
+
+
+
+    $('#submit').on('click', function () {
+        var ENGINEData = []; var TRACTORData = []; var CRANEData = []; var EKIData = []; var BACKENDData = []; var HYDRAULICData = [];
+
+         $("#ENGINEGrid tbody tr").each(function () {
+             var self = $(this);
+             var currentRow = self.closest("tr");
+             var data = $('#ENGINEGrid').DataTable().row(currentRow).data();
+
+             if (data == undefined || data == null) {
+
+                 if (data.Status === "ERROR") {
+                     Swal.fire(
+                         {
+                             text: "No record selected",
+                             type: 'error',
+                             title: 'Invalid !',
+                             showConfirmButton: false,
+                             timer: 2000
+                         }
+                     );
+
+                 }
+             }
+             else {
+
+                 if ((self.find('input[name="Menu"]')).is(':checked')) {
+                     var obj = {
+                         ENGINE: data['EngCode'],
+                     };
+                     ENGINEData.push(obj);
+                 }
+                 //else {
+                 //    var obj = {
+                 //        ENGINE: null,
+                 //    };
+                 //    ENGINEData.push(obj);
+                 //}
+
+             }
+
+         });
+
+        $("#TRACTORGrid tbody tr").each(function () {
+            var self = $(this);
+            var currentRow = self.closest("tr");
+            var data = $('#TRACTORGrid').DataTable().row(currentRow).data();
+
+            if (data == undefined || data == null) {
+
+                if (data.Status === "ERROR") {
+                    Swal.fire(
+                        {
+                            text: "No record selected",
+                            type: 'error',
+                            title: 'Invalid !',
+                            showConfirmButton: false,
+                            timer: 2000
+                        }
+                    );
+
+                }
+            }
+            else {
+
+                if ((self.find('input[name="Menu1"]')).is(':checked')) {
+                    var obj = {
+                        TRACTOR: data['EngCode'],
+                    };
+                    TRACTORData.push(obj);
+                }
+                //else {
+                //    var obj = {
+                //        TRACTOR: null,
+                //    };
+                //    TRACTORData.push(obj);
+                //}
+
+            }
+
+        });
+        $("#CRANEGrid tbody tr").each(function () {
+            var self = $(this);
+            var currentRow = self.closest("tr");
+            var data = $('#CRANEGrid').DataTable().row(currentRow).data();
+
+            if (data == undefined || data == null) {
+
+                if (data.Status === "ERROR") {
+                    Swal.fire(
+                        {
+                            text: "No record selected",
+                            type: 'error',
+                            title: 'Invalid !',
+                            showConfirmButton: false,
+                            timer: 2000
+                        }
+                    );
+
+                }
+            }
+            else {
+
+                if ((self.find('input[name="Menu2"]')).is(':checked')) {
+                    var obj = {
+                        CRANE: data['EngCode'],
+                    };
+                    CRANEData.push(obj);
+                }
+                //else {
+                //    var obj = {
+                //        CRANE: null,
+                //    };
+                //    CRANEData.push(obj);
+                //}
+
+            }
+
+        });
+        $("#EKIGrid tbody tr").each(function () {
+            var self = $(this);
+            var currentRow = self.closest("tr");
+            var data = $('#EKIGrid').DataTable().row(currentRow).data();
+
+            if (data == undefined || data == null) {
+
+                if (data.Status === "ERROR") {
+                    Swal.fire(
+                        {
+                            text: "No record selected",
+                            type: 'error',
+                            title: 'Invalid !',
+                            showConfirmButton: false,
+                            timer: 2000
+                        }
+                    );
+
+                }
+            }
+            else {
+
+                if ((self.find('input[name="Menu3"]')).is(':checked')) {
+                    var obj = {
+                        EKI: data['EngCode'],
+                    };
+                    EKIData.push(obj);
+                }
+                //else {
+                //    var obj = {
+                //        EKI: null,
+                //    };
+                //    EKIData.push(obj);
+                //}
+
+            }
+
+        });
+        $("#BACKENDGrid tbody tr").each(function () {
+            var self = $(this);
+            var currentRow = self.closest("tr");
+            var data = $('#BACKENDGrid').DataTable().row(currentRow).data();
+
+            if (data == undefined || data == null) {
+
+                if (data.Status === "ERROR") {
+                    Swal.fire(
+                        {
+                            text: "No record selected",
+                            type: 'error',
+                            title: 'Invalid !',
+                            showConfirmButton: false,
+                            timer: 2000
+                        }
+                    );
+
+                }
+            }
+            else {
+
+                if ((self.find('input[name="Menu4"]')).is(':checked')) {
+                    var obj = {
+                        BACKEND: data['EngCode'],
+                    };
+                    BACKENDData.push(obj);
+                }
+                //else {
+                //    var obj = {
+                //        BACKEND: null,
+                //    };
+                //    BACKENDData.push(obj);
+                //}
+
+            }
+
+        });
+        $("#HYDRAULICGrid tbody tr").each(function () {
+            var self = $(this);
+            var currentRow = self.closest("tr");
+            var data = $('#HYDRAULICGrid').DataTable().row(currentRow).data();
+
+            if (data == undefined || data == null) {
+
+                if (data.Status === "ERROR") {
+                    Swal.fire(
+                        {
+                            text: "No record selected",
+                            type: 'error',
+                            title: 'Invalid !',
+                            showConfirmButton: false,
+                            timer: 2000
+                        }
+                    );
+
+                }
+            }
+            else {
+
+                if ((self.find('input[name="Menu5"]')).is(':checked')) {
+                    var obj = {
+                        HYDRAULIC: data['EngCode'],
+                    };
+                    HYDRAULICData.push(obj);
+                }
+                //else {
+                //    var obj = {
+                //        HYDRAULIC: null,
+                //    };
+                //    HYDRAULICData.push(obj);
+                //}
+
+            }
+
+        });
+
+        if (ENGINEData.length > 0 || TRACTORData.length > 0 || CRANEData.length > 0 || EKIData.length > 0 || BACKENDData.length > 0 || HYDRAULICData.length > 0) {
+
+            GetReportData(ENGINEData, TRACTORData, CRANEData, EKIData, BACKENDData, HYDRAULICData);
+
+         }
     });
+
+    function GetReportData(ENGINEData, TRACTORData, CRANEData, EKIData, BACKENDData, HYDRAULICData) {
+
+         var LevelObj = $('#RoleId').val();
+
+        var Menus = checkedNodes;
+         $.ajax({
+              url: '@Url.Action("Create", "LevelMaster")',
+             data: JSON.stringify({
+                 Role: LevelObj, MenuCode: Menus, eng: ENGINEData, trac: TRACTORData, crn: CRANEData, EKI: EKIData, bac: BACKENDData,
+                 hyd: HYDRAULICData
+             }),
+              type: "POST",
+              traditional : true,
+              contentType: "application/json;charset=utf-8",
+              dataType: "json",
+             success: function (result) {
+                 if (result == "RECORD SAVED SUCCESSFULLY") {
+                     $('#alert').append('<div class="alert alert-success role = "alert"><strong>' + result + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                     setTimeout(function() {$(".alert").alert('close');}, 3000);
+                     $("#btnReset" ).click();
+                 }
+                 else {
+                     $("#alert").show();
+                     $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + result + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                     setTimeout(function() {$(".alert").alert('close');}, 3000);
+                 }
+             },
+             error: function (errormessage) {
+                  $("#alert").show();
+                  $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + errormessage + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                  setTimeout(function() {$(".alert").alert('close');}, 3000);
+             }
+         });
+    }
+
+
+    function SearchMenu(Type) {
+        // Declare variables
+        var table = null;
+        var input, filter,  tr, td, i, txtValue;
+
+
+        if (Type == "ENGINEGrid") {
+            input = document.getElementById("ENGINEInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("ENGINEGrid");
+        }
+        else if (Type == "TRACTORGrid") {
+            input = document.getElementById("TRACTORInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("TRACTORGrid");
+        }
+        else if (Type == "CRANEGrid") {
+            input = document.getElementById("CRANEInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("CRANEGrid");
+        }
+        else if (Type == "EKIGrid") {
+            input = document.getElementById("EKIInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("EKIGrid");
+        }
+        else if (Type == "BACKENDGrid") {
+            input = document.getElementById("BACKENDInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("BACKENDGrid");
+        }
+        else if (Type == "HYDRAULICGrid") {
+            input = document.getElementById("HYDRAULICInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("HYDRAULICGrid");
+        }
+
+
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+    function check_uncheck_checkbox(isChecked) {
+        if (isChecked) {
+            $('input[name="Menu"]').each(function () {
+                this.checked = true;
+            });
+        } else {
+            $('input[name="Menu"]').each(function () {
+                this.checked = false;
+            });
+        }
+    }
+
+    function check_uncheck_checkbox1(isChecked) {
+        if (isChecked) {
+            $('input[name="Menu1"]').each(function () {
+                this.checked = true;
+            });
+        } else {
+            $('input[name="Menu1"]').each(function () {
+                this.checked = false;
+            });
+        }
+    }
+    function check_uncheck_checkbox2(isChecked) {
+        if (isChecked) {
+            $('input[name="Menu2"]').each(function () {
+                this.checked = true;
+            });
+        } else {
+            $('input[name="Menu2"]').each(function () {
+                this.checked = false;
+            });
+        }
+    }
+
+    function check_uncheck_checkbox3(isChecked) {
+        if (isChecked) {
+            $('input[name="Menu3"]').each(function () {
+                this.checked = true;
+            });
+        } else {
+            $('input[name="Menu3"]').each(function () {
+                this.checked = false;
+            });
+        }
+    }
+
+    function check_uncheck_checkbox4(isChecked) {
+        if (isChecked) {
+            $('input[name="Menu4"]').each(function () {
+                this.checked = true;
+            });
+        } else {
+            $('input[name="Menu4"]').each(function () {
+                this.checked = false;
+            });
+        }
+    }
+
+    function check_uncheck_checkbox5(isChecked) {
+        if (isChecked) {
+            $('input[name="Menu5"]').each(function () {
+                this.checked = true;
+            });
+        } else {
+            $('input[name="Menu5"]').each(function () {
+                this.checked = false;
+            });
+        }
+    }
+
+
+    function ENGINEREPORTS() {
+        $('#ENGINEGrid').DataTable().destroy();
+        var abc = "ENGINE_REPORTS";
+        var dtable = $("#ENGINEGrid").DataTable({
+            //"scrollX": true,
+            //"scrollY": 480,
+            "paging": false,
+            "autoWidth": false,
+            "lengthChange": true,
+            "pageLength": 10,
+            "ordering": false,
+            "processing": true, // for show progress bar
+            "serverSide": true, // for process server side
+            "filter": false, // this is for disable filter (search box)
+            "orderMulti": false, // for disable multiple column at once
+            //language: {
+            //    search: "SEARCH BY TRACTOR CODE OR JOB ID",
+            //    searchPlaceholder: "Enter min 3 characters",
+            //    width: "250PX"
+            //},
+            "ajax": {
+                "url": '@Url.Action("ENGINEREPORTS", "LevelMaster")',
+                "data": function (obj) {
+                    obj.Type = abc;
+                } ,
+                "type": "POST",
+
+                "datatype": "json"
+            },
+
+
+            "columns": [
+                {
+                    "render": function (data) {
+                        return '<input type="checkbox" name="Menu">';
+                    }
+                },
+                /*{ "data": "EngCode", "name": "EngCode" },*/
+                { "data": "EngText", "name": "ENGINE" },
+
+
+            ],
+            "columnDefs": [
+                { "width": "3%", "className": "text-center form-check-input", "targets": 0 },
+                { "width": "6%", "className": "text-center", "targets": 1 },
+                /*{ "width": "6%", "className": "text-center", "targets": 2 }*/
+
+            ]
+
+
+        });
+
+    }
+
+    function TRACTORREPORTS() {
+        $('#TRACTORGrid').DataTable().destroy();
+        var abc = "TRACTOR_REPORTS";
+        var dtable = $("#TRACTORGrid").DataTable({
+            "paging": false,
+            "autoWidth": false,
+            "lengthChange": true,
+            "pageLength": 10,
+            "ordering": false,
+            "processing": true, // for show progress bar
+            "serverSide": true, // for process server side
+            "filter": false, // this is for disable filter (search box)
+            "orderMulti": false, // for disable multiple column at once
+            //language: {
+            //    search: "SEARCH BY TRACTOR CODE OR JOB ID",
+            //    searchPlaceholder: "Enter min 3 characters",
+            //    width: "250PX"
+            //},
+            "ajax": {
+                "url": '@Url.Action("ENGINEREPORTS", "LevelMaster")',
+                "data": function (obj) {
+                    obj.Type = abc;
+                } ,
+                "type": "POST",
+
+                "datatype": "json"
+            },
+
+
+            "columns": [
+                {
+                    "render": function (data) {
+                        return '<input type="checkbox" name="Menu1">';
+                    }
+                },
+                /*{ "data": "EngCode", "name": "EngCode" },*/
+                { "data": "EngText", "name": "TRACTOR" },
+
+
+            ],
+            "columnDefs": [
+                { "width": "3%", "className": "text-center form-check-input", "targets": 0 },
+                { "width": "6%", "className": "text-center", "targets": 1 },
+                /*{ "width": "6%", "className": "text-center", "targets": 2 }*/
+
+            ]
+
+
+        });
+
+    }
+
+    function CRANEREPORTS() {
+        $('#CRANEGrid').DataTable().destroy();
+        var abc = "CRANE_REPORTS";
+        var dtable = $("#CRANEGrid").DataTable({
+            //"scrollX": true,
+            //"scrollY": 480,
+            "paging": false,
+            "autoWidth": false,
+            "lengthChange": false,
+            "pageLength": 10,
+            "ordering": false,
+            "processing": true, // for show progress bar
+            "serverSide": true, // for process server side
+            "filter": false, // this is for disable filter (search box)
+            "orderMulti": false, // for disable multiple column at once
+            //language: {
+            //    search: "SEARCH BY TRACTOR CODE OR JOB ID",
+            //    searchPlaceholder: "Enter min 3 characters",
+            //    width: "250PX"
+            //},
+            "ajax": {
+                "url": '@Url.Action("ENGINEREPORTS", "LevelMaster")',
+                "data": function (obj) {
+                    obj.Type = abc;
+                } ,
+                "type": "POST",
+
+                "datatype": "json"
+            },
+
+
+            "columns": [
+                {
+                    "render": function (data) {
+                        return '<input type="checkbox" name="Menu2">';
+                    }
+                },
+                /*{ "data": "EngCode", "name": "EngCode" },*/
+                { "data": "EngText", "name": "CRANE" },
+
+
+            ],
+            "columnDefs": [
+                { "width": "3%", "className": "text-center form-check-input", "targets": 0 },
+                { "width": "6%", "className": "text-center", "targets": 1 },
+                /*{ "width": "6%", "className": "text-center", "targets": 2 }*/
+
+            ]
+
+
+        });
+
+    }
+
+    function EKIREPORTS() {
+        $('#EKIGrid').DataTable().destroy();
+        var abc = "EKI_REPORTS";
+        var dtable = $("#EKIGrid").DataTable({
+            //"scrollX": true,
+            //"scrollY": 480,
+            "paging": false,
+            "autoWidth": false,
+            "lengthChange": false,
+            "pageLength": 10,
+            "ordering": false,
+            "processing": true, // for show progress bar
+            "serverSide": true, // for process server side
+            "filter": false, // this is for disable filter (search box)
+            "orderMulti": false, // for disable multiple column at once
+            //language: {
+            //    search: "SEARCH BY TRACTOR CODE OR JOB ID",
+            //    searchPlaceholder: "Enter min 3 characters",
+            //    width: "250PX"
+            //},
+            "ajax": {
+                "url": '@Url.Action("ENGINEREPORTS", "LevelMaster")',
+                "data": function (obj) {
+                    obj.Type = abc;
+                } ,
+                "type": "POST",
+
+                "datatype": "json"
+            },
+
+
+            "columns": [
+                {
+                    "render": function (data) {
+                        return '<input type="checkbox" name="Menu3">';
+                    }
+                },
+                /*{ "data": "EngCode", "name": "EngCode" },*/
+                { "data": "EngText", "name": "EKI" },
+
+
+            ],
+            "columnDefs": [
+                { "width": "3%", "className": "text-center form-check-input", "targets": 0 },
+                { "width": "6%", "className": "text-center", "targets": 1 },
+                /*{ "width": "6%", "className": "text-center", "targets": 2 }*/
+
+            ]
+
+
+        });
+
+    }
+
+    function BACKENDREPORTS() {
+        $('#BACKENDGrid').DataTable().destroy();
+        var abc = "BACKEND_REPORTS";
+        var dtable = $("#BACKENDGrid").DataTable({
+            //"scrollX": true,
+            //"scrollY": 480,
+            "paging": false,
+            "autoWidth": false,
+            "lengthChange": false,
+            "pageLength": 10,
+            "ordering": false,
+            "processing": true, // for show progress bar
+            "serverSide": true, // for process server side
+            "filter": false, // this is for disable filter (search box)
+            "orderMulti": false, // for disable multiple column at once
+            //language: {
+            //    search: "SEARCH BY TRACTOR CODE OR JOB ID",
+            //    searchPlaceholder: "Enter min 3 characters",
+            //    width: "250PX"
+            //},
+            "ajax": {
+                "url": '@Url.Action("ENGINEREPORTS", "LevelMaster")',
+                "data": function (obj) {
+                    obj.Type = abc;
+                } ,
+                "type": "POST",
+
+                "datatype": "json"
+            },
+
+
+            "columns": [
+                {
+                    "render": function (data) {
+                        return '<input type="checkbox" name="Menu4">';
+                    }
+                },
+                /*{ "data": "EngCode", "name": "EngCode" },*/
+                { "data": "EngText", "name": "BACKEND" },
+
+
+            ],
+            "columnDefs": [
+                { "width": "3%", "className": "text-center form-check-input", "targets": 0 },
+                { "width": "6%", "className": "text-center", "targets": 1 },
+                /*{ "width": "6%", "className": "text-center", "targets": 2 }*/
+
+            ]
+
+
+        });
+
+    }
+
+    function HYDRAULICREPORTS() {
+        $('#HYDRAULICGrid').DataTable().destroy();
+        var abc = "HYDRAULIC_REPORTS";
+        var dtable = $("#HYDRAULICGrid").DataTable({
+            //"scrollX": true,
+            //"scrollY": 480,
+            "paging": false,
+            "autoWidth": false,
+            "lengthChange": false,
+            "pageLength": 10,
+            "ordering": false,
+            "processing": true, // for show progress bar
+            "serverSide": true, // for process server side
+            "filter": false, // this is for disable filter (search box)
+            "orderMulti": false, // for disable multiple column at once
+            //language: {
+            //    search: "SEARCH BY TRACTOR CODE OR JOB ID",
+            //    searchPlaceholder: "Enter min 3 characters",
+            //    width: "250PX"
+            //},
+            "ajax": {
+                "url": '@Url.Action("ENGINEREPORTS", "LevelMaster")',
+                "data": function (obj) {
+                    obj.Type = abc;
+                } ,
+                "type": "POST",
+
+                "datatype": "json"
+            },
+
+
+            "columns": [
+                {
+                    "render": function (data) {
+                        return '<input type="checkbox" name="Menu5">';
+                    }
+                },
+                /*{ "data": "EngCode", "name": "EngCode" },*/
+                { "data": "EngText", "name": "HYDRAULIC" },
+
+
+            ],
+            "columnDefs": [
+                { "width": "3%", "className": "text-center form-check-input", "targets": 0 },
+                { "width": "6%", "className": "text-center", "targets": 1 },
+                /*{ "width": "6%", "className": "text-center", "targets": 2 }*/
+
+            ]
+
+
+        });
+
+    }  
+
+
+     function ENGINESelection() {        
+         var RoleId = $('#RoleId').val();
+         var Type = "ENGINE_REPORTS";
+         $.ajax({
+            url: '@Url.Action("SelectedSection", "LevelMaster")',
+             data: JSON.stringify({ RoleId: RoleId, Type: Type}),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+             success: function (data) {
+                 $('#ENGINEGrid').DataTable().destroy();
+                 $('#ENGINEGrid').DataTable({
+                     "data": data,
+                     "autoWidth": false,
+                     "lengthChange": true,
+
+                     "ordering": true,
+                     "processing": true, // for show progress bar
+                     "paging": false,
+                     "searching": false,
+
+                     "columns": [
+                         {
+                             "render": function (data, type, row, meta) {
+                                 var ChkValue = row.CheckboxCheck;
+                                 if (ChkValue === "Check") {
+                                     return '<input type="checkbox"  name="Menu" checked="checked">';
+                                 } else {
+                                     return '<input type="checkbox" name="Menu">';
+                                 }
+                             }
+                         },
+                         { "data": "EngText", "name": "ENGINE" },
+                     ],
+                     "columnDefs": [
+                         { "width": "3%", "className": "text-center ", "targets": 0 },
+                         { "width": "6%", "className": "text-center", "targets": 1 }
+
+                     ]
+                 });
+
+
+             }
+        })
+    }
+
+    function TRACTORSelection() {       
+        var RoleId = $('#RoleId').val();
+        var Type = "TRACTOR_REPORTS";
+         $.ajax({
+            url: '@Url.Action("SelectedSection", "LevelMaster")',
+             data: JSON.stringify({ RoleId: RoleId, Type: Type }),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+             success: function (data) {
+                 $('#TRACTORGrid').DataTable().destroy();
+                 $('#TRACTORGrid').DataTable({
+                     "data": data,
+                     "autoWidth": false,
+                     "lengthChange": true,
+
+                     "ordering": true,
+                     "processing": true, // for show progress bar
+                     "paging": false,
+                     "searching": false,
+
+                     "columns": [
+                         {
+                             "render": function (data, type, row, meta) {
+                                 var ChkValue = row.CheckboxCheck;
+                                 if (ChkValue === "Check") {
+                                     return '<input type="checkbox"  name="Menu1" checked="checked">';
+                                 } else {
+                                     return '<input type="checkbox" name="Menu1">';
+                                 }
+                             }
+                         },
+                         { "data": "EngText", "name": "TRACTOR" },
+                     ],
+                     "columnDefs": [
+                         { "width": "3%", "className": "text-center ", "targets": 0 },
+                         { "width": "6%", "className": "text-center", "targets": 1 }
+
+                     ]
+                 });
+
+
+             }
+        })
+    }
+
+    function CRANESelection() {
+         var RoleId = $('#RoleId').val();
+         var Type = "CRANE_REPORTS";
+         $.ajax({
+            url: '@Url.Action("SelectedSection", "LevelMaster")',
+             data: JSON.stringify({ RoleId: RoleId, Type: Type }),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+             success: function (data) {
+                 $('#CRANEGrid').DataTable().destroy();
+                 $('#CRANEGrid').DataTable({
+                     "data": data,
+                     "autoWidth": false,
+                     "lengthChange": true,
+
+                     "ordering": true,
+                     "processing": true, // for show progress bar
+                     "paging": false,
+                     "searching": false,
+
+                     "columns": [
+                         {
+                             "render": function (data, type, row, meta) {
+                                 var ChkValue = row.CheckboxCheck;
+                                 if (ChkValue === "Check") {
+                                     return '<input type="checkbox"  name="Menu2" checked="checked">';
+                                 } else {
+                                     return '<input type="checkbox" name="Menu2">';
+                                 }
+                             }
+                         },
+                         { "data": "EngText", "name": "CRANE" },
+                     ],
+                     "columnDefs": [
+                         { "width": "3%", "className": "text-center ", "targets": 0 },
+                         { "width": "6%", "className": "text-center", "targets": 1 }
+
+                     ]
+                 });
+
+
+             }
+        })
+    }
+
+    function EKISelection() {
+        var RoleId = $('#RoleId').val();
+        var Type = "EKI_REPORTS";
+         $.ajax({
+             url: '@Url.Action("SelectedSection", "LevelMaster")',
+             data: JSON.stringify({ RoleId: RoleId, Type: Type }),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+             success: function (data) {
+                 $('#EKIGrid').DataTable().destroy();
+                 $('#EKIGrid').DataTable({
+                     "data": data,
+                     "autoWidth": false,
+                     "lengthChange": true,
+
+                     "ordering": true,
+                     "processing": true, // for show progress bar
+                     "paging": false,
+                     "searching": false,
+
+                     "columns": [
+                         {
+                             "render": function (data, type, row, meta) {
+                                 var ChkValue = row.CheckboxCheck;
+                                 if (ChkValue === "Check") {
+                                     return '<input type="checkbox"  name="Menu3" checked="checked">';
+                                 } else {
+                                     return '<input type="checkbox" name="Menu3">';
+                                 }
+                             }
+                         },
+                         { "data": "EngText", "name": "EKI" },
+                     ],
+                     "columnDefs": [
+                         { "width": "3%", "className": "text-center ", "targets": 0 },
+                         { "width": "6%", "className": "text-center", "targets": 1 }
+
+                     ]
+                 });
+
+
+             }
+        })
+    }
+
+    function BACKENDSelection() {
+        var RoleId = $('#RoleId').val();
+        var Type = "BACKEND_REPORTS";
+         $.ajax({
+             url: '@Url.Action("SelectedSection", "LevelMaster")',
+             data: JSON.stringify({ RoleId: RoleId, Type: Type }),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+             success: function (data) {
+                 $('#BACKENDGrid').DataTable().destroy();
+                 $('#BACKENDGrid').DataTable({
+                     "data": data,
+                     "autoWidth": false,
+                     "lengthChange": true,
+
+                     "ordering": true,
+                     "processing": true, // for show progress bar
+                     "paging": false,
+                     "searching": false,
+
+                     "columns": [
+                         {
+                             "render": function (data, type, row, meta) {
+                                 var ChkValue = row.CheckboxCheck;
+                                 if (ChkValue === "Check") {
+                                     return '<input type="checkbox"  name="Menu4" checked="checked">';
+                                 } else {
+                                     return '<input type="checkbox" name="Menu4">';
+                                 }
+                             }
+                         },
+                         { "data": "EngText", "name": "BACKEND" },
+                     ],
+                     "columnDefs": [
+                         { "width": "3%", "className": "text-center ", "targets": 0 },
+                         { "width": "6%", "className": "text-center", "targets": 1 }
+
+                     ]
+                 });
+
+
+             }
+        })
+    }
+
+    function HYDRAULICSelection() {
+         var RoleId = $('#RoleId').val();
+         var Type = "HYDRAULIC_REPORTS";
+         $.ajax({
+            url: '@Url.Action("SelectedSection", "LevelMaster")',
+             data: JSON.stringify({ RoleId: RoleId, Type: Type }),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+             success: function (data) {
+                 $('#HYDRAULICGrid').DataTable().destroy();
+                 $('#HYDRAULICGrid').DataTable({
+                     "data": data,
+                     "autoWidth": false,
+                     "lengthChange": true,
+
+                     "ordering": true,
+                     "processing": true, // for show progress bar
+                     "paging": false,
+                     "searching": false,
+
+                     "columns": [
+                         {
+                             "render": function (data, type, row, meta) {
+                                 var ChkValue = row.CheckboxCheck;
+                                 if (ChkValue === "Check") {
+                                     return '<input type="checkbox"  name="Menu5" checked="checked">';
+                                 } else {
+                                     return '<input type="checkbox" name="Menu5">';
+                                 }
+                             }
+                         },
+                         { "data": "EngText", "name": "HYDRAULIC" },
+                     ],
+                     "columnDefs": [
+                         { "width": "3%", "className": "text-center ", "targets": 0 },
+                         { "width": "6%", "className": "text-center", "targets": 1 }
+
+                     ]
+                 });
+
+
+             }
+        })
+    }
+
+   
+
+
 </script>
 <script>
     $("#RoleId").select2({});
