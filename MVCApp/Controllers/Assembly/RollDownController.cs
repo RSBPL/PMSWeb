@@ -433,7 +433,16 @@ namespace MVCApp.Controllers
                     rolldown.Quantity = "1";
                 }
                 //MessageBox.Show("PDI OK sticker printed successfully !! ");
-                msg = af.PrintAssemblyStagesSticker(rolldown, Convert.ToInt32(rolldown.Quantity));
+
+                string status = ValidateJobforEmpty(rolldown, down,"Print");
+                if (status == "OK")
+                {
+                    msg = af.PrintAssemblyStagesSticker(rolldown, Convert.ToInt32(rolldown.Quantity));
+                }
+                else
+                {
+                    msg = status;
+                }
                 myResult = new
                 {
                     Result = result,
@@ -719,10 +728,15 @@ namespace MVCApp.Controllers
                 Assemblyfunctions assemblyfunctions = new Assemblyfunctions();
                 rollDown = assemblyfunctions.GetTractorDetails(obj.JOBID.Trim(), obj.PLANTCODE, obj.FAMILYCODE,
                        "JOBID");
-                string status = ValidateJobforEmpty(rollDown, obj);
+                string status = ValidateJobforEmpty(rollDown, obj, "update");
                 if (status != "OK")
                 {
                     return Json(status, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    msg = "Update Successfully";
+                    return Json(msg, JsonRequestBehavior.AllowGet);
                 }
             }
             catch (Exception ex)
@@ -733,7 +747,7 @@ namespace MVCApp.Controllers
             return Json(msg, JsonRequestBehavior.AllowGet);
 
         }
-        public string ValidateJobforEmpty(RollDown tractormaster, RollDown updateTractor)
+        public string ValidateJobforEmpty(RollDown tractormaster, RollDown updateTractor,string CHktype)
         {
             string foundjob = string.Empty, founddcode = string.Empty;
             try
@@ -747,74 +761,492 @@ namespace MVCApp.Controllers
                 {
                     return "Engine srlno should not be blank ";
                 }
-                if (!string.IsNullOrEmpty(updateTractor.Engine_srlno))
+                if (CHktype == "Print")
                 {
-                    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Engine, "ENGINE_SRLNO", updateTractor.JOBID);
-                    if (!string.IsNullOrEmpty(foundjob))
+
+                    if (updateTractor.STAGE_Code == "ENG")
                     {
-                        return "Engine srlno already found on job " + foundjob;
+                        if (!string.IsNullOrEmpty(updateTractor.Engine_srlno))
+                        {
+                            foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Engine, "ENGINE_SRLNO", updateTractor.JOBID);
+                            if (!string.IsNullOrEmpty(foundjob))
+                            {
+                                return "Engine srlno already found on job " + foundjob;
+                            }
+                            founddcode = assemblyfunctions.getPartDcode(updateTractor.Engine_srlno, (updateTractor.PLANTCODE == "T04" ? "ENF" : "ENP"));
+                            if (tractormaster.Engine.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                            {
+                                return "Engine Dcode mismatch. Master Dcode " + tractormaster.Engine + " and Serial No Dcode " + founddcode;
+                            }
+                            updateTractor.Engine = founddcode;
+                        }
+
+                        if (tractormaster.isTransRequire && string.IsNullOrEmpty(updateTractor.Transmission_srlno))
+                        {
+                            return "Transmission srlno should not be blank ";
+                        }
+                        if (!string.IsNullOrEmpty(updateTractor.Transmission_srlno))
+                        {
+                            foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Transmission_srlno, "TRANSMISSION_SRLNO", updateTractor.JOBID);
+                            if (!string.IsNullOrEmpty(foundjob))
+                            {
+                                return "Transmission srlno already found on job " + foundjob;
+                            }
+                            founddcode = assemblyfunctions.getPartDcode(updateTractor.Transmission_srlno, "TRB");
+                            if (tractormaster.Transmission.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                            {
+                                return "Transmission Dcode mismatch. Master Dcode " + tractormaster.Transmission + " and Serial No Dcode " + founddcode;
+                            }
+                            updateTractor.Transmission = founddcode;
+                        }
+                        if (tractormaster.isRearAxelRequire && string.IsNullOrEmpty(updateTractor.RearAxel_srlno))
+                        {
+                            return "RearAxel srlno should not be blank ";
+                        }
+                        if (!string.IsNullOrEmpty(updateTractor.RearAxel_srlno))
+                        {
+                            foundjob = assemblyfunctions.DuplicateCheck(updateTractor.RearAxel_srlno, "REARAXEL_SRLNO", updateTractor.JOBID);
+                            if (!string.IsNullOrEmpty(foundjob))
+                            {
+                                return "RearAxel srlno already found on job " + foundjob;
+                            }
+                            founddcode = assemblyfunctions.getPartDcode(updateTractor.RearAxel_srlno, "HYD");
+                            if (tractormaster.RearAxel.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                            {
+                                return "RearAxel Dcode mismatch. Master Dcode " + tractormaster.RearAxel + " and Serial No Dcode " + founddcode;
+                            }
+                            updateTractor.RearAxel = founddcode;
+                        }
                     }
-                    founddcode = assemblyfunctions.getPartDcode(updateTractor.Engine_srlno, (updateTractor.PLANTCODE == "T04" ? "ENF" : "ENP"));
-                    if (tractormaster.Engine.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                    if (updateTractor.STAGE_Code == "BK")
                     {
-                        return "Engine Dcode mismatch. Master Dcode " + tractormaster.Engine + " and Serial No Dcode " + founddcode;
+                        if (tractormaster.isTransRequire && string.IsNullOrEmpty(updateTractor.Transmission_srlno))
+                        {
+                            return "Transmission srlno should not be blank ";
+                        }
+                        if (!string.IsNullOrEmpty(updateTractor.Transmission_srlno))
+                        {
+                            foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Transmission_srlno, "TRANSMISSION_SRLNO", updateTractor.JOBID);
+                            if (!string.IsNullOrEmpty(foundjob))
+                            {
+                                return "Transmission srlno already found on job " + foundjob;
+                            }
+                            founddcode = assemblyfunctions.getPartDcode(updateTractor.Transmission_srlno, "TRB");
+                            if (tractormaster.Transmission.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                            {
+                                return "Transmission Dcode mismatch. Master Dcode " + tractormaster.Transmission + " and Serial No Dcode " + founddcode;
+                            }
+                            updateTractor.Transmission = founddcode;
+                        }
+                        if (tractormaster.isRearAxelRequire && string.IsNullOrEmpty(updateTractor.RearAxel_srlno))
+                        {
+                            return "RearAxel srlno should not be blank ";
+                        }
+                        if (!string.IsNullOrEmpty(updateTractor.RearAxel_srlno))
+                        {
+                            foundjob = assemblyfunctions.DuplicateCheck(updateTractor.RearAxel_srlno, "REARAXEL_SRLNO", updateTractor.JOBID);
+                            if (!string.IsNullOrEmpty(foundjob))
+                            {
+                                return "RearAxel srlno already found on job " + foundjob;
+                            }
+                            founddcode = assemblyfunctions.getPartDcode(updateTractor.RearAxel_srlno, "HYD");
+                            if (tractormaster.RearAxel.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                            {
+                                return "RearAxel Dcode mismatch. Master Dcode " + tractormaster.RearAxel + " and Serial No Dcode " + founddcode;
+                            }
+                            updateTractor.RearAxel = founddcode;
+                        }
                     }
-                    updateTractor.Engine = founddcode;
+                    if (updateTractor.STAGE_Code == "COM")
+                    {
+                        if (!string.IsNullOrEmpty(tractormaster.Battery))
+                        {
+                            return "Battery Not Scan ";
+                        }
+                        if (tractormaster.isREQUIRE_REARTYRE && string.IsNullOrEmpty(updateTractor.RearTyre1_srlno1))
+                        {
+                            return "Left sidde Rear Srnn 1 srlno should not be blank ";
+                        }
+                        if (!string.IsNullOrEmpty(updateTractor.RearTyre1_srlno1))
+                        {
+                            foundjob = assemblyfunctions.DuplicateCheck(updateTractor.RearTyre1_srlno1, "REARTYRE_SRLNO1", updateTractor.JOBID);
+                            if (!string.IsNullOrEmpty(foundjob))
+                            {
+                                return "Left sidde Rear Srnn1 srlno already found on job " + foundjob;
+                            }
+                            founddcode = assemblyfunctions.getPartDcode(updateTractor.RearTyre1_srlno1, "RT");
+                            if (tractormaster.RearTyre1_dcode.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                            {
+                                return "Left sidde Rear Srnn1 Dcode mismatch. Master Dcode " + tractormaster.RearTyre1_srlno1 + " and Serial No Dcode " + founddcode;
+                            }
+                            updateTractor.RearTyre1_dcode = founddcode;
+                        }
+
+                        if (tractormaster.isREQ_RHRT && string.IsNullOrEmpty(updateTractor.RearTyre2_srlno2))
+                        {
+                            return "right side Rear Srnn2 srlno should not be blank ";
+                        }
+                        if (!string.IsNullOrEmpty(updateTractor.RearTyre2_srlno2))
+                        {
+                            foundjob = assemblyfunctions.DuplicateCheck(updateTractor.RearTyre2_srlno2, "REARTYRE_SRLNO2", updateTractor.JOBID);
+                            if (!string.IsNullOrEmpty(foundjob))
+                            {
+                                return "right side Rear Srnn2 srlno already found on job " + foundjob;
+                            }
+                            founddcode = assemblyfunctions.getPartDcode(updateTractor.RearTyre2_srlno2, "RT");
+                            if (tractormaster.RearTyre2_dcode.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                            {
+                                return "right side Rear Srnn2 Dcode mismatch. Master Dcode " + tractormaster.RearSrnn2 + " and Serial No Dcode " + founddcode;
+                            }
+                            updateTractor.RearTyre2_dcode = founddcode;
+                        }
+
+                        if (tractormaster.isREQUIRE_FRONTTYRE && string.IsNullOrEmpty(updateTractor.FrontTyre1_srlno1))
+                        {
+                            //return "Left Side Front Srnn1 srlno should not be blank ";
+                        }
+                        if (!string.IsNullOrEmpty(updateTractor.FrontTyre1_srlno1))
+                        {
+                            foundjob = assemblyfunctions.DuplicateCheck(updateTractor.FrontTyre1_srlno1, "FRONTTYRE_SRLNO1", updateTractor.JOBID);
+                            if (!string.IsNullOrEmpty(foundjob))
+                            {
+                                return "Left Side Front Srnn1 srlno already found on job " + foundjob;
+                            }
+                            founddcode = assemblyfunctions.getPartDcode(updateTractor.FrontTyre1_srlno1, "FT");
+                            if (tractormaster.FrontTyre1_Dcode.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                            {
+                                return "Left Side Front Srnn1 Dcode mismatch. Master Dcode " + tractormaster.FrontSrnn1 + " and Serial No Dcode " + founddcode;
+                            }
+                            updateTractor.FrontTyre1_Dcode = founddcode;
+                        }
+
+                        if (tractormaster.isREQ_RHFT && string.IsNullOrEmpty(updateTractor.FrontTyre2_srlno2))
+                        {
+                            return "right Side Front Srnn2 srlno should not be blank ";
+                        }
+                        if (!string.IsNullOrEmpty(updateTractor.FrontTyre2_srlno2))
+                        {
+                            foundjob = assemblyfunctions.DuplicateCheck(updateTractor.FrontTyre2_srlno2, "FRONTTYRE_SRLNO1", updateTractor.JOBID);
+                            if (!string.IsNullOrEmpty(foundjob))
+                            {
+                                return "right Side Front Srnn2 srlno already found on job " + foundjob;
+                            }
+                            founddcode = assemblyfunctions.getPartDcode(updateTractor.FrontTyre2_srlno2, "FT");
+                            if (tractormaster.FrontTyre2_Dcode.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                            {
+                                return "right Side Front Srnn2 Dcode mismatch. Master Dcode " + tractormaster.FrontTyre2_srlno2 + " and Serial No Dcode " + founddcode;
+                            }
+                            updateTractor.FrontTyre2_Dcode = founddcode;
+                        }
+                        if (tractormaster.isHydrualicRequire && string.IsNullOrEmpty(updateTractor.Hydraulic_srlno))
+                        {
+                            return "Hydraulic srlno should not be blank ";
+                        }
+                        if (!string.IsNullOrEmpty(updateTractor.Hydraulic_srlno))
+                        {
+                            foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Hydraulic_srlno, "HYDRALUIC_SRLNO", updateTractor.JOBID);
+                            if (!string.IsNullOrEmpty(foundjob))
+                            {
+                                return "Hydraulic srlno already found on job " + foundjob;
+                            }
+                            founddcode = assemblyfunctions.getPartDcode(updateTractor.Hydraulic_srlno, "HYD");
+                            if (tractormaster.Hydraulic.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                            {
+                                return "Hydraulic Dcode mismatch. Master Dcode " + tractormaster.Hydraulic + " and Serial No Dcode " + founddcode;
+                            }
+                            updateTractor.Hydraulic = founddcode;
+                        }
+                        if (!string.IsNullOrEmpty(updateTractor.Engine_srlno))
+                        {
+                            foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Engine, "ENGINE_SRLNO", updateTractor.JOBID);
+                            if (!string.IsNullOrEmpty(foundjob))
+                            {
+                                return "Engine srlno already found on job " + foundjob;
+                            }
+                            founddcode = assemblyfunctions.getPartDcode(updateTractor.Engine_srlno, (updateTractor.PLANTCODE == "T04" ? "ENF" : "ENP"));
+                            if (tractormaster.Engine.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                            {
+                                return "Engine Dcode mismatch. Master Dcode " + tractormaster.Engine + " and Serial No Dcode " + founddcode;
+                            }
+                            updateTractor.Engine = founddcode;
+                        }
+
+                        if (tractormaster.isTransRequire && string.IsNullOrEmpty(updateTractor.Transmission_srlno))
+                        {
+                            return "Transmission srlno should not be blank ";
+                        }
+                        if (!string.IsNullOrEmpty(updateTractor.Transmission_srlno))
+                        {
+                            foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Transmission_srlno, "TRANSMISSION_SRLNO", updateTractor.JOBID);
+                            if (!string.IsNullOrEmpty(foundjob))
+                            {
+                                return "Transmission srlno already found on job " + foundjob;
+                            }
+                            founddcode = assemblyfunctions.getPartDcode(updateTractor.Transmission_srlno, "TRB");
+                            if (tractormaster.Transmission.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                            {
+                                return "Transmission Dcode mismatch. Master Dcode " + tractormaster.Transmission + " and Serial No Dcode " + founddcode;
+                            }
+                            updateTractor.Transmission = founddcode;
+                        }
+                        if (tractormaster.isRearAxelRequire && string.IsNullOrEmpty(updateTractor.RearAxel_srlno))
+                        {
+                            return "RearAxel srlno should not be blank ";
+                        }
+                        if (!string.IsNullOrEmpty(updateTractor.RearAxel_srlno))
+                        {
+                            foundjob = assemblyfunctions.DuplicateCheck(updateTractor.RearAxel_srlno, "REARAXEL_SRLNO", updateTractor.JOBID);
+                            if (!string.IsNullOrEmpty(foundjob))
+                            {
+                                return "RearAxel srlno already found on job " + foundjob;
+                            }
+                            founddcode = assemblyfunctions.getPartDcode(updateTractor.RearAxel_srlno, "HYD");
+                            if (tractormaster.RearAxel.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                            {
+                                return "RearAxel Dcode mismatch. Master Dcode " + tractormaster.RearAxel + " and Serial No Dcode " + founddcode;
+                            }
+                            updateTractor.RearAxel = founddcode;
+                        }
+                    }
+                    if (updateTractor.STAGE_Code == "PDIOK")
+                    {
+                        if (!string.IsNullOrEmpty(tractormaster.Battery))
+                        {
+                            return "Battery Not Scan ";
+                        }
+                        if (tractormaster.isREQUIRE_REARTYRE && string.IsNullOrEmpty(updateTractor.RearTyre1_srlno1))
+                        {
+                            return "Left sidde Rear Srnn 1 srlno should not be blank ";
+                        }
+                        if (!string.IsNullOrEmpty(updateTractor.RearTyre1_srlno1))
+                        {
+                            foundjob = assemblyfunctions.DuplicateCheck(updateTractor.RearTyre1_srlno1, "REARTYRE_SRLNO1", updateTractor.JOBID);
+                            if (!string.IsNullOrEmpty(foundjob))
+                            {
+                                return "Left sidde Rear Srnn1 srlno already found on job " + foundjob;
+                            }
+                            founddcode = assemblyfunctions.getPartDcode(updateTractor.RearTyre1_srlno1, "RT");
+                            if (tractormaster.RearTyre1_dcode.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                            {
+                                return "Left sidde Rear Srnn1 Dcode mismatch. Master Dcode " + tractormaster.RearTyre1_srlno1 + " and Serial No Dcode " + founddcode;
+                            }
+                            updateTractor.RearTyre1_dcode = founddcode;
+                        }
+
+                        if (tractormaster.isREQ_RHRT && string.IsNullOrEmpty(updateTractor.RearTyre2_srlno2))
+                        {
+                            return "right side Rear Srnn2 srlno should not be blank ";
+                        }
+                        if (!string.IsNullOrEmpty(updateTractor.RearTyre2_srlno2))
+                        {
+                            foundjob = assemblyfunctions.DuplicateCheck(updateTractor.RearTyre2_srlno2, "REARTYRE_SRLNO2", updateTractor.JOBID);
+                            if (!string.IsNullOrEmpty(foundjob))
+                            {
+                                return "right side Rear Srnn2 srlno already found on job " + foundjob;
+                            }
+                            founddcode = assemblyfunctions.getPartDcode(updateTractor.RearTyre2_srlno2, "RT");
+                            if (tractormaster.RearTyre2_dcode.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                            {
+                                return "right side Rear Srnn2 Dcode mismatch. Master Dcode " + tractormaster.RearSrnn2 + " and Serial No Dcode " + founddcode;
+                            }
+                            updateTractor.RearTyre2_dcode = founddcode;
+                        }
+
+                        if (tractormaster.isREQUIRE_FRONTTYRE && string.IsNullOrEmpty(updateTractor.FrontTyre1_srlno1))
+                        {
+                            //return "Left Side Front Srnn1 srlno should not be blank ";
+                        }
+                        if (!string.IsNullOrEmpty(updateTractor.FrontTyre1_srlno1))
+                        {
+                            foundjob = assemblyfunctions.DuplicateCheck(updateTractor.FrontTyre1_srlno1, "FRONTTYRE_SRLNO1", updateTractor.JOBID);
+                            if (!string.IsNullOrEmpty(foundjob))
+                            {
+                                return "Left Side Front Srnn1 srlno already found on job " + foundjob;
+                            }
+                            founddcode = assemblyfunctions.getPartDcode(updateTractor.FrontTyre1_srlno1, "FT");
+                            if (tractormaster.FrontTyre1_Dcode.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                            {
+                                return "Left Side Front Srnn1 Dcode mismatch. Master Dcode " + tractormaster.FrontSrnn1 + " and Serial No Dcode " + founddcode;
+                            }
+                            updateTractor.FrontTyre1_Dcode = founddcode;
+                        }
+
+                        if (tractormaster.isREQ_RHFT && string.IsNullOrEmpty(updateTractor.FrontTyre2_srlno2))
+                        {
+                            return "right Side Front Srnn2 srlno should not be blank ";
+                        }
+                        if (!string.IsNullOrEmpty(updateTractor.FrontTyre2_srlno2))
+                        {
+                            foundjob = assemblyfunctions.DuplicateCheck(updateTractor.FrontTyre2_srlno2, "FRONTTYRE_SRLNO1", updateTractor.JOBID);
+                            if (!string.IsNullOrEmpty(foundjob))
+                            {
+                                return "right Side Front Srnn2 srlno already found on job " + foundjob;
+                            }
+                            founddcode = assemblyfunctions.getPartDcode(updateTractor.FrontTyre2_srlno2, "FT");
+                            if (tractormaster.FrontTyre2_Dcode.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                            {
+                                return "right Side Front Srnn2 Dcode mismatch. Master Dcode " + tractormaster.FrontTyre2_srlno2 + " and Serial No Dcode " + founddcode;
+                            }
+                            updateTractor.FrontTyre2_Dcode = founddcode;
+                        }
+                        if (tractormaster.isHydrualicRequire && string.IsNullOrEmpty(updateTractor.Hydraulic_srlno))
+                        {
+                            return "Hydraulic srlno should not be blank ";
+                        }
+                        if (!string.IsNullOrEmpty(updateTractor.Hydraulic_srlno))
+                        {
+                            foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Hydraulic_srlno, "HYDRALUIC_SRLNO", updateTractor.JOBID);
+                            if (!string.IsNullOrEmpty(foundjob))
+                            {
+                                return "Hydraulic srlno already found on job " + foundjob;
+                            }
+                            founddcode = assemblyfunctions.getPartDcode(updateTractor.Hydraulic_srlno, "HYD");
+                            if (tractormaster.Hydraulic.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                            {
+                                return "Hydraulic Dcode mismatch. Master Dcode " + tractormaster.Hydraulic + " and Serial No Dcode " + founddcode;
+                            }
+                            updateTractor.Hydraulic = founddcode;
+                        }
+                        if (!string.IsNullOrEmpty(updateTractor.Engine_srlno))
+                        {
+                            foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Engine, "ENGINE_SRLNO", updateTractor.JOBID);
+                            if (!string.IsNullOrEmpty(foundjob))
+                            {
+                                return "Engine srlno already found on job " + foundjob;
+                            }
+                            founddcode = assemblyfunctions.getPartDcode(updateTractor.Engine_srlno, (updateTractor.PLANTCODE == "T04" ? "ENF" : "ENP"));
+                            if (tractormaster.Engine.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                            {
+                                return "Engine Dcode mismatch. Master Dcode " + tractormaster.Engine + " and Serial No Dcode " + founddcode;
+                            }
+                            updateTractor.Engine = founddcode;
+                        }
+
+                        if (tractormaster.isTransRequire && string.IsNullOrEmpty(updateTractor.Transmission_srlno))
+                        {
+                            return "Transmission srlno should not be blank ";
+                        }
+                        if (!string.IsNullOrEmpty(updateTractor.Transmission_srlno))
+                        {
+                            foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Transmission_srlno, "TRANSMISSION_SRLNO", updateTractor.JOBID);
+                            if (!string.IsNullOrEmpty(foundjob))
+                            {
+                                return "Transmission srlno already found on job " + foundjob;
+                            }
+                            founddcode = assemblyfunctions.getPartDcode(updateTractor.Transmission_srlno, "TRB");
+                            if (tractormaster.Transmission.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                            {
+                                return "Transmission Dcode mismatch. Master Dcode " + tractormaster.Transmission + " and Serial No Dcode " + founddcode;
+                            }
+                            updateTractor.Transmission = founddcode;
+                        }
+                        if (tractormaster.isRearAxelRequire && string.IsNullOrEmpty(updateTractor.RearAxel_srlno))
+                        {
+                            return "RearAxel srlno should not be blank ";
+                        }
+                        if (!string.IsNullOrEmpty(updateTractor.RearAxel_srlno))
+                        {
+                            foundjob = assemblyfunctions.DuplicateCheck(updateTractor.RearAxel_srlno, "REARAXEL_SRLNO", updateTractor.JOBID);
+                            if (!string.IsNullOrEmpty(foundjob))
+                            {
+                                return "RearAxel srlno already found on job " + foundjob;
+                            }
+                            founddcode = assemblyfunctions.getPartDcode(updateTractor.RearAxel_srlno, "HYD");
+                            if (tractormaster.RearAxel.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                            {
+                                return "RearAxel Dcode mismatch. Master Dcode " + tractormaster.RearAxel + " and Serial No Dcode " + founddcode;
+                            }
+                            updateTractor.RearAxel = founddcode;
+                        }
+                    }
                 }
-                if (tractormaster.isTransRequire && string.IsNullOrEmpty(updateTractor.Transmission_srlno))
-                {
-                    return "Transmission srlno should not be blank ";
-                }
-                if (!string.IsNullOrEmpty(updateTractor.Transmission_srlno))
-                {
-                    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Transmission_srlno, "TRANSMISSION_SRLNO", updateTractor.JOBID);
-                    if (!string.IsNullOrEmpty(foundjob))
+                else { 
+                    if (!string.IsNullOrEmpty(updateTractor.Engine_srlno))
                     {
-                        return "Transmission srlno already found on job " + foundjob;
+                        foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Engine, "ENGINE_SRLNO", updateTractor.JOBID);
+                        if (!string.IsNullOrEmpty(foundjob))
+                        {
+                            return "Engine srlno already found on job " + foundjob;
+                        }
+                        founddcode = assemblyfunctions.getPartDcode(updateTractor.Engine_srlno, (updateTractor.PLANTCODE == "T04" ? "ENF" : "ENP"));
+                        if (tractormaster.Engine.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                        {
+                            return "Engine Dcode mismatch. Master Dcode " + tractormaster.Engine + " and Serial No Dcode " + founddcode;
+                        }
+                        updateTractor.Engine = founddcode;
                     }
-                    founddcode = assemblyfunctions.getPartDcode(updateTractor.Transmission_srlno, "TRB");
-                    if (tractormaster.Transmission.Trim().ToUpper() != founddcode.Trim().ToUpper())
+
+                    if (tractormaster.isTransRequire && string.IsNullOrEmpty(updateTractor.Transmission_srlno))
                     {
-                        return "Transmission Dcode mismatch. Master Dcode " + tractormaster.Transmission + " and Serial No Dcode " + founddcode;
+                        return "Transmission srlno should not be blank ";
                     }
-                    updateTractor.Transmission = founddcode;
-                }
-                if (tractormaster.isRearAxelRequire && string.IsNullOrEmpty(updateTractor.RearAxel_srlno))
-                {
-                    return "RearAxel srlno should not be blank ";
-                }
-                if (!string.IsNullOrEmpty(updateTractor.RearAxel_srlno))
-                {
-                    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.RearAxel_srlno, "REARAXEL_SRLNO", updateTractor.JOBID);
-                    if (!string.IsNullOrEmpty(foundjob))
+                    if (!string.IsNullOrEmpty(updateTractor.Transmission_srlno))
                     {
-                        return "RearAxel srlno already found on job " + foundjob;
+                        foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Transmission_srlno, "TRANSMISSION_SRLNO", updateTractor.JOBID);
+                        if (!string.IsNullOrEmpty(foundjob))
+                        {
+                            return "Transmission srlno already found on job " + foundjob;
+                        }
+                        founddcode = assemblyfunctions.getPartDcode(updateTractor.Transmission_srlno, "TRB");
+                        if (tractormaster.Transmission.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                        {
+                            return "Transmission Dcode mismatch. Master Dcode " + tractormaster.Transmission + " and Serial No Dcode " + founddcode;
+                        }
+                        updateTractor.Transmission = founddcode;
                     }
-                    founddcode = assemblyfunctions.getPartDcode(updateTractor.RearAxel_srlno, "HYD");
-                    if (tractormaster.RearAxel.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                    if (tractormaster.isRearAxelRequire && string.IsNullOrEmpty(updateTractor.RearAxel_srlno))
                     {
-                        return "RearAxel Dcode mismatch. Master Dcode " + tractormaster.RearAxel + " and Serial No Dcode " + founddcode;
+                        return "RearAxel srlno should not be blank ";
                     }
-                    updateTractor.RearAxel = founddcode;
-                }
-                if (tractormaster.isHydrualicRequire && string.IsNullOrEmpty(updateTractor.Hydraulic_srlno))
-                {
-                    return "Hydraulic srlno should not be blank ";
-                }
-                if (!string.IsNullOrEmpty(updateTractor.Hydraulic_srlno))
-                {
-                    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Hydraulic_srlno, "HYDRALUIC_SRLNO", updateTractor.JOBID);
-                    if (!string.IsNullOrEmpty(foundjob))
+                    if (!string.IsNullOrEmpty(updateTractor.RearAxel_srlno))
                     {
-                        return "Hydraulic srlno already found on job " + foundjob;
+                        foundjob = assemblyfunctions.DuplicateCheck(updateTractor.RearAxel_srlno, "REARAXEL_SRLNO", updateTractor.JOBID);
+                        if (!string.IsNullOrEmpty(foundjob))
+                        {
+                            return "RearAxel srlno already found on job " + foundjob;
+                        }
+                        founddcode = assemblyfunctions.getPartDcode(updateTractor.RearAxel_srlno, "HYD");
+                        if (tractormaster.RearAxel.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                        {
+                            return "RearAxel Dcode mismatch. Master Dcode " + tractormaster.RearAxel + " and Serial No Dcode " + founddcode;
+                        }
+                        updateTractor.RearAxel = founddcode;
                     }
-                    founddcode = assemblyfunctions.getPartDcode(updateTractor.Hydraulic_srlno, "HYD");
-                    if (tractormaster.Hydraulic.Trim().ToUpper() != founddcode.Trim().ToUpper())
+               
+              
+                    if (tractormaster.isHydrualicRequire && string.IsNullOrEmpty(updateTractor.Hydraulic_srlno))
                     {
-                        return "Hydraulic Dcode mismatch. Master Dcode " + tractormaster.Hydraulic + " and Serial No Dcode " + founddcode;
+                        return "Hydraulic srlno should not be blank ";
                     }
-                    updateTractor.Hydraulic = founddcode;
-                }
+                    if (!string.IsNullOrEmpty(updateTractor.Hydraulic_srlno))
+                    {
+                        foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Hydraulic_srlno, "HYDRALUIC_SRLNO", updateTractor.JOBID);
+                        if (!string.IsNullOrEmpty(foundjob))
+                        {
+                            return "Hydraulic srlno already found on job " + foundjob;
+                        }
+                        founddcode = assemblyfunctions.getPartDcode(updateTractor.Hydraulic_srlno, "HYD");
+                        if (tractormaster.Hydraulic.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                        {
+                            return "Hydraulic Dcode mismatch. Master Dcode " + tractormaster.Hydraulic + " and Serial No Dcode " + founddcode;
+                        }
+                        updateTractor.Hydraulic = founddcode;
+                    }
+                    if (!string.IsNullOrEmpty(updateTractor.Engine_srlno))
+                    {
+                        foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Engine, "ENGINE_SRLNO", updateTractor.JOBID);
+                        if (!string.IsNullOrEmpty(foundjob))
+                        {
+                            return "Engine srlno already found on job " + foundjob;
+                        }
+                        founddcode = assemblyfunctions.getPartDcode(updateTractor.Engine_srlno, (updateTractor.PLANTCODE == "T04" ? "ENF" : "ENP"));
+                        if (tractormaster.Engine.Trim().ToUpper() != founddcode.Trim().ToUpper())
+                        {
+                            return "Engine Dcode mismatch. Master Dcode " + tractormaster.Engine + " and Serial No Dcode " + founddcode;
+                        }
+                        updateTractor.Engine = founddcode;
+                    }
+
                 if (tractormaster.isREQ_HYD_PUMP && string.IsNullOrEmpty(updateTractor.HydrualicPump_srlno))
                 {
                     return "Hydraulic pump srlno should not be blank ";
@@ -972,170 +1404,173 @@ namespace MVCApp.Controllers
                     //    return "Backend Dcode mismatch. Master Dcode " + tractormaster.HydrualicPump + " and Serial No Dcode " + founddcode;
                     //}
                 }
-
-                if (tractormaster.isREQUIRE_BATTERY && string.IsNullOrEmpty(updateTractor.Battery_srlno))
-                {
-                    return "BATTERY srlno should not be blank ";
-                }
-                if (!string.IsNullOrEmpty(updateTractor.Battery_srlno))
-                {
-
-                    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Battery_srlno, "BATTERY_SRLNO", updateTractor.JOBID);
-                    if (!string.IsNullOrEmpty(foundjob))
+                    if (tractormaster.isREQUIRE_BATTERY && string.IsNullOrEmpty(tractormaster.Battery_srlno))
                     {
-                        return "Battery srlno already found on job " + foundjob;
+                        return "Battery Not Scan ";
                     }
-                    if (!string.IsNullOrEmpty(tractormaster.Battery))
-                    {
-                        string dummyDcode = fun.get_Col_Value(
-                            string.Format(@"select distinct parameterinfo from xxes_sft_settings where status='BATDUMMY' 
-                            and plant_code='{0}'", tractormaster.PLANTCODE));
-                        if (!string.IsNullOrEmpty(dummyDcode))
-                        {
+                    //if (tractormaster.isREQUIRE_BATTERY && string.IsNullOrEmpty(updateTractor.Battery_srlno))
+                    //{
+                    //    return "BATTERY srlno should not be blank ";
+                    //}
+                    //if (!string.IsNullOrEmpty(updateTractor.Battery_srlno))
+                    //{
 
-                            if (dummyDcode.Trim().ToUpper() == tractormaster.Battery.Trim().ToUpper())
-                            {
-                                query = string.Format(@"select count(*) from xxes_sft_settings where paramvalue='{0}' 
-                                and status='BATDUMMYNO' and parameterinfo='{1}'", updateTractor.Battery_srlno, dummyDcode.Trim());
-                                if (!fun.CheckExits(query))
-                                {
-                                    return "Invalid Dummy Serial No";
-                                }
-                            }
-                        }
-                    }
+                    //    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Battery_srlno, "BATTERY_SRLNO", updateTractor.JOBID);
+                    //    if (!string.IsNullOrEmpty(foundjob))
+                    //    {
+                    //        return "Battery srlno already found on job " + foundjob;
+                    //    }
+                    //    if (!string.IsNullOrEmpty(tractormaster.Battery))
+                    //    {
+                    //        string dummyDcode = fun.get_Col_Value(
+                    //            string.Format(@"select distinct parameterinfo from xxes_sft_settings where status='BATDUMMY' 
+                    //            and plant_code='{0}'", tractormaster.PLANTCODE));
+                    //        if (!string.IsNullOrEmpty(dummyDcode))
+                    //        {
 
-                }
+                    //            if (dummyDcode.Trim().ToUpper() == tractormaster.Battery.Trim().ToUpper())
+                    //            {
+                    //                query = string.Format(@"select count(*) from xxes_sft_settings where paramvalue='{0}' 
+                    //                and status='BATDUMMYNO' and parameterinfo='{1}'", updateTractor.Battery_srlno, dummyDcode.Trim());
+                    //                if (!fun.CheckExits(query))
+                    //                {
+                    //                    return "Invalid Dummy Serial No";
+                    //                }
+                    //            }
+                    //        }
+                    //    }
 
-                if (tractormaster.isREQ_RADIATOR && string.IsNullOrEmpty(updateTractor.Radiator_srlno))
-                {
-                    return "Radiator srlno should not be blank ";
-                }
+                    //}
 
-                if (!string.IsNullOrEmpty(updateTractor.Radiator_srlno))
-                {
-                    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Radiator_srlno, "RADIATOR_SRLNO", updateTractor.JOBID);
-                    if (!string.IsNullOrEmpty(foundjob))
-                    {
-                        return "Radiator srlno already found on job " + foundjob;
-                    }
-                    founddcode = assemblyfunctions.SplitDcode(updateTractor.Radiator_srlno.Trim().ToUpper(), "RADIATOR").Trim().ToUpper();
-                    if (founddcode != tractormaster.Radiator.ToUpper().Trim().ToUpper())
-                    {
-                        return "Radiator Dcode mismatch. Master Dcode " + tractormaster.Radiator + " and Serial No Dcode " + founddcode;
-                    }
-                    updateTractor.Radiator = founddcode;
-                }
+                    //if (tractormaster.isREQ_RADIATOR && string.IsNullOrEmpty(updateTractor.Radiator_srlno))
+                    //{
+                    //    return "Radiator srlno should not be blank ";
+                    //}
 
-                if (tractormaster.isREQ_STEERING_MOTOR && string.IsNullOrEmpty(updateTractor.SteeringMotor_srlno))
-                {
-                    return "Steering Motor srlno should not be blank ";
-                }
+                    //if (!string.IsNullOrEmpty(updateTractor.Radiator_srlno))
+                    //{
+                    //    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Radiator_srlno, "RADIATOR_SRLNO", updateTractor.JOBID);
+                    //    if (!string.IsNullOrEmpty(foundjob))
+                    //    {
+                    //        return "Radiator srlno already found on job " + foundjob;
+                    //    }
+                    //    founddcode = assemblyfunctions.SplitDcode(updateTractor.Radiator_srlno.Trim().ToUpper(), "RADIATOR").Trim().ToUpper();
+                    //    if (founddcode != tractormaster.Radiator.ToUpper().Trim().ToUpper())
+                    //    {
+                    //        return "Radiator Dcode mismatch. Master Dcode " + tractormaster.Radiator + " and Serial No Dcode " + founddcode;
+                    //    }
+                    //    updateTractor.Radiator = founddcode;
+                    //}
 
-                if (!string.IsNullOrEmpty(updateTractor.SteeringMotor_srlno))
-                {
-                    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.SteeringMotor_srlno, "STEERING_MOTOR_SRLNO", updateTractor.JOBID);
-                    if (!string.IsNullOrEmpty(foundjob))
-                    {
-                        return "SteeringMotor srlno already found on job " + foundjob;
-                    }
-                    founddcode = assemblyfunctions.SplitDcode(updateTractor.SteeringMotor_srlno.Trim().ToUpper(), "POWER_STMOTOR").Trim().ToUpper();
-                    if (founddcode != tractormaster.SteeringMotor.ToUpper().Trim().ToUpper())
-                    {
-                        return "Radiator Dcode mismatch. Master Dcode " + tractormaster.SteeringMotor + " and Serial No Dcode " + founddcode;
-                    }
-                    updateTractor.SteeringMotor = founddcode;
-                }
-                if (tractormaster.isREQ_STEERING_ASSEMBLY && string.IsNullOrEmpty(updateTractor.SteeringAssem_srlno))
-                {
-                    return "STEERING ASSEMBLY srlno should not be blank ";
-                }
+                    //if (tractormaster.isREQ_STEERING_MOTOR && string.IsNullOrEmpty(updateTractor.SteeringMotor_srlno))
+                    //{
+                    //    return "Steering Motor srlno should not be blank ";
+                    //}
 
-                if (!string.IsNullOrEmpty(updateTractor.SteeringAssem_srlno))
-                {
-                    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.SteeringAssem_srlno, "STEERING_ASSEMBLY_SRLNO", updateTractor.JOBID);
-                    if (!string.IsNullOrEmpty(foundjob))
-                    {
-                        return "Steering Assembly srlno already found on job " + foundjob;
-                    }
-                }
+                    //if (!string.IsNullOrEmpty(updateTractor.SteeringMotor_srlno))
+                    //{
+                    //    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.SteeringMotor_srlno, "STEERING_MOTOR_SRLNO", updateTractor.JOBID);
+                    //    if (!string.IsNullOrEmpty(foundjob))
+                    //    {
+                    //        return "SteeringMotor srlno already found on job " + foundjob;
+                    //    }
+                    //    founddcode = assemblyfunctions.SplitDcode(updateTractor.SteeringMotor_srlno.Trim().ToUpper(), "POWER_STMOTOR").Trim().ToUpper();
+                    //    if (founddcode != tractormaster.SteeringMotor.ToUpper().Trim().ToUpper())
+                    //    {
+                    //        return "Radiator Dcode mismatch. Master Dcode " + tractormaster.SteeringMotor + " and Serial No Dcode " + founddcode;
+                    //    }
+                    //    updateTractor.SteeringMotor = founddcode;
+                    //}
+                    //if (tractormaster.isREQ_STEERING_ASSEMBLY && string.IsNullOrEmpty(updateTractor.SteeringAssem_srlno))
+                    //{
+                    //    return "STEERING ASSEMBLY srlno should not be blank ";
+                    //}
 
-                if (tractormaster.isREQ_ALTERNATOR && string.IsNullOrEmpty(updateTractor.Alternator_srlno))
-                {
-                    return "Alternator srlno should not be blank ";
-                }
-                if (!string.IsNullOrEmpty(updateTractor.Alternator_srlno))
-                {
-                    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Alternator_srlno, "ALTERNATOR_SRLNO", updateTractor.JOBID);
-                    if (!string.IsNullOrEmpty(foundjob))
-                    {
-                        return "Alternator srlno already found on job " + foundjob;
-                    }
-                    founddcode = assemblyfunctions.SplitDcode(updateTractor.Alternator_srlno.Trim().ToUpper(), "ALT").Trim().ToUpper();
-                    if (founddcode != tractormaster.Alternator.ToUpper().Trim().ToUpper())
-                    {
-                        return "Alternator Dcode mismatch. Master Dcode " + tractormaster.Alternator + " and Serial No Dcode " + founddcode;
-                    }
-                    updateTractor.Alternator = founddcode;
-                }
+                    //if (!string.IsNullOrEmpty(updateTractor.SteeringAssem_srlno))
+                    //{
+                    //    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.SteeringAssem_srlno, "STEERING_ASSEMBLY_SRLNO", updateTractor.JOBID);
+                    //    if (!string.IsNullOrEmpty(foundjob))
+                    //    {
+                    //        return "Steering Assembly srlno already found on job " + foundjob;
+                    //    }
+                    //}
 
-                if (tractormaster.isREQ_CLUSSTER && string.IsNullOrEmpty(updateTractor.Cluster_srlno))
-                {
-                    return "Cluster srlno should not be blank ";
-                }
-                if (!string.IsNullOrEmpty(updateTractor.Cluster))
-                {
-                    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Cluster_srlno, "CLUSSTER_SRLNO", updateTractor.JOBID);
-                    if (!string.IsNullOrEmpty(foundjob))
-                    {
-                        return "Cluster srlno already found on job " + foundjob;
-                    }
+                    //if (tractormaster.isREQ_ALTERNATOR && string.IsNullOrEmpty(updateTractor.Alternator_srlno))
+                    //{
+                    //    return "Alternator srlno should not be blank ";
+                    //}
+                    //if (!string.IsNullOrEmpty(updateTractor.Alternator_srlno))
+                    //{
+                    //    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Alternator_srlno, "ALTERNATOR_SRLNO", updateTractor.JOBID);
+                    //    if (!string.IsNullOrEmpty(foundjob))
+                    //    {
+                    //        return "Alternator srlno already found on job " + foundjob;
+                    //    }
+                    //    founddcode = assemblyfunctions.SplitDcode(updateTractor.Alternator_srlno.Trim().ToUpper(), "ALT").Trim().ToUpper();
+                    //    if (founddcode != tractormaster.Alternator.ToUpper().Trim().ToUpper())
+                    //    {
+                    //        return "Alternator Dcode mismatch. Master Dcode " + tractormaster.Alternator + " and Serial No Dcode " + founddcode;
+                    //    }
+                    //    updateTractor.Alternator = founddcode;
+                    //}
 
-                }
-                if (tractormaster.isREQ_STARTER_MOTOR && string.IsNullOrEmpty(updateTractor.Motor_srlno))
-                {
-                    return "Motor srlno should not be blank ";
-                }
-                if (!string.IsNullOrEmpty(updateTractor.Motor))
-                {
-                    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Motor_srlno, "STARTER_MOTOR_SRLNO", updateTractor.JOBID);
-                    if (!string.IsNullOrEmpty(foundjob))
-                    {
-                        return "Motor srlno already found on job " + foundjob;
-                    }
-                    founddcode = assemblyfunctions.SplitDcode(updateTractor.Motor_srlno.Trim().ToUpper(), "START_MOTOR").Trim().ToUpper();
-                    if (founddcode != tractormaster.Motor.ToUpper().Trim().ToUpper())
-                    {
-                        return "Starter motor Dcode mismatch. Master Dcode " + tractormaster.Motor + " and Serial No Dcode " + founddcode;
-                    }
-                    updateTractor.Motor = founddcode;
-                }
-                bool isNewROPSSrNo = false;
-                if (!string.IsNullOrEmpty(updateTractor.ROPSrno))
-                {
-                    query = string.Format(@"select count(*) from  xxes_torque_master where item_dcode='{0}' and srno_req=1 
-                    and plant_code='{1}' and family_code='{2}' and (to_number(START_SERIALNO)<{3}
-                    OR TO_NUMBER(END_SERIALNO)>{3})", tractormaster.ROPS, tractormaster.PLANTCODE, tractormaster.FAMILYCODE, updateTractor.ROPS);
-                    if (fun.CheckExits(query))
-                    {
-                        return "ROPS Serial no not valid. It should be in range of start and end serial number";
+                    //if (tractormaster.isREQ_CLUSSTER && string.IsNullOrEmpty(updateTractor.Cluster_srlno))
+                    //{
+                    //    return "Cluster srlno should not be blank ";
+                    //}
+                    //if (!string.IsNullOrEmpty(updateTractor.Cluster))
+                    //{
+                    //    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Cluster_srlno, "CLUSSTER_SRLNO", updateTractor.JOBID);
+                    //    if (!string.IsNullOrEmpty(foundjob))
+                    //    {
+                    //        return "Cluster srlno already found on job " + foundjob;
+                    //    }
 
-                    }
-                    isNewROPSSrNo = false;
-                }
-                if (tractormaster.isREQ_ROPS && string.IsNullOrEmpty(updateTractor.ROPSrno))
-                {
-                    string ROPS_SRNO = string.Empty;
-                    //generate new rops serial no and assign to textboxstring 
-                    assemblyfunctions.GetROPSSrno(updateTractor.PLANTCODE, updateTractor.FAMILYCODE, tractormaster.ROPS, out ROPS_SRNO);
-                    updateTractor.ROPSrno = ROPS_SRNO;
-                    if (string.IsNullOrEmpty(updateTractor.ROPSrno))
-                        return "Unable to generate ROPS Serial no";
-                    else
-                        isNewROPSSrNo = true;
-                }
-                // make drop down. get tyre make for all tyre serial no and make should be same. set make to selected value if any for selected job
-                if (!string.IsNullOrEmpty(updateTractor.RearTyre1_srlno1))
+                    //}
+                    //if (tractormaster.isREQ_STARTER_MOTOR && string.IsNullOrEmpty(updateTractor.Motor_srlno))
+                    //{
+                    //    return "Motor srlno should not be blank ";
+                    //}
+                    //if (!string.IsNullOrEmpty(updateTractor.Motor))
+                    //{
+                    //    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.Motor_srlno, "STARTER_MOTOR_SRLNO", updateTractor.JOBID);
+                    //    if (!string.IsNullOrEmpty(foundjob))
+                    //    {
+                    //        return "Motor srlno already found on job " + foundjob;
+                    //    }
+                    //    founddcode = assemblyfunctions.SplitDcode(updateTractor.Motor_srlno.Trim().ToUpper(), "START_MOTOR").Trim().ToUpper();
+                    //    if (founddcode != tractormaster.Motor.ToUpper().Trim().ToUpper())
+                    //    {
+                    //        return "Starter motor Dcode mismatch. Master Dcode " + tractormaster.Motor + " and Serial No Dcode " + founddcode;
+                    //    }
+                    //    updateTractor.Motor = founddcode;
+                    //}
+                    //bool isNewROPSSrNo = false;
+                    //if (!string.IsNullOrEmpty(updateTractor.ROPSrno))
+                    //{
+                    //    query = string.Format(@"select count(*) from  xxes_torque_master where item_dcode='{0}' and srno_req=1 
+                    //    and plant_code='{1}' and family_code='{2}' and (to_number(START_SERIALNO)<{3}
+                    //    OR TO_NUMBER(END_SERIALNO)>{3})", tractormaster.ROPS, tractormaster.PLANTCODE, tractormaster.FAMILYCODE, updateTractor.ROPS);
+                    //    if (fun.CheckExits(query))
+                    //    {
+                    //        return "ROPS Serial no not valid. It should be in range of start and end serial number";
+
+                    //    }
+                    //    isNewROPSSrNo = false;
+                    //}
+                    //if (tractormaster.isREQ_ROPS && string.IsNullOrEmpty(updateTractor.ROPSrno))
+                    //{
+                    //    string ROPS_SRNO = string.Empty;
+                    //    //generate new rops serial no and assign to textboxstring 
+                    //    assemblyfunctions.GetROPSSrno(updateTractor.PLANTCODE, updateTractor.FAMILYCODE, tractormaster.ROPS, out ROPS_SRNO);
+                    //    updateTractor.ROPSrno = ROPS_SRNO;
+                    //    if (string.IsNullOrEmpty(updateTractor.ROPSrno))
+                    //        return "Unable to generate ROPS Serial no";
+                    //    else
+                    //        isNewROPSSrNo = true;
+                    //}
+                    // make drop down. get tyre make for all tyre serial no and make should be same. set make to selected value if any for selected job
+                    if (!string.IsNullOrEmpty(updateTractor.RearTyre1_srlno1))
                 {
                     updateTractor.reartyreleftsidemake1 = assemblyfunctions.makeTyre("RT", updateTractor.RearTyre1_srlno1);
                 }
@@ -1155,22 +1590,22 @@ namespace MVCApp.Controllers
                 {
                     return "Check both tyre assemblies serial nos. They should belong to Same making company.i.e.";
                 }
-                if (!string.IsNullOrEmpty(updateTractor.MOBILE))
-                {
-                    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.MOBILE, "MOBILE", updateTractor.JOBID);
-                    if (!string.IsNullOrEmpty(foundjob))
-                    {
-                        return "MOBILE already found on job " + foundjob;
-                    }
-                }
-                if (!string.IsNullOrEmpty(updateTractor.IMEI))
-                {
-                    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.IMEI, "IMEI_NO", updateTractor.JOBID);
-                    if (!string.IsNullOrEmpty(foundjob))
-                    {
-                        return "IMEI already found on job " + foundjob;
-                    }
-                }
+                //if (!string.IsNullOrEmpty(updateTractor.MOBILE))
+                //{
+                //    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.MOBILE, "MOBILE", updateTractor.JOBID);
+                //    if (!string.IsNullOrEmpty(foundjob))
+                //    {
+                //        return "MOBILE already found on job " + foundjob;
+                //    }
+                //}
+                //if (!string.IsNullOrEmpty(updateTractor.IMEI))
+                //{
+                //    foundjob = assemblyfunctions.DuplicateCheck(updateTractor.IMEI, "IMEI_NO", updateTractor.JOBID);
+                //    if (!string.IsNullOrEmpty(foundjob))
+                //    {
+                //        return "IMEI already found on job " + foundjob;
+                //    }
+                //}
                 if (tractormaster.isSrNoRequire && string.IsNullOrEmpty(updateTractor.TractorSrlno))
                 {
                     TractorController tractorController = new TractorController();
@@ -1188,6 +1623,7 @@ namespace MVCApp.Controllers
                 {
                     UpdateConform(updateTractor);
                 }
+            }
             }
             catch (Exception ex)
             {

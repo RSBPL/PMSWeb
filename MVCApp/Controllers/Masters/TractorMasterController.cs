@@ -2789,7 +2789,12 @@ namespace MVCApp.Controllers
                 if (Tmold.Transmission == null)
                 {
                     Tmold.Transmission = "";
-                    Tmold.Transmission = "";
+                    Tmold.Transmission_Desc = "";
+                }
+                if (TM.Transmission == null)
+                {
+                    TM.Transmission = "";
+                    TM.Transmission_Desc = "";
                 }
                 if (Tmold.Transmission != TM.Transmission)
                 {
@@ -3843,7 +3848,15 @@ namespace MVCApp.Controllers
                 if (fun.UpdateTractorMaster(obj))
                 {
                     string Subject = "Alert ! Update in the tractor mapping page . F-code : " + obj.gleSearch + "";
-                    string head = "Alert ! Update in the tractor mapping page . F-code : " + obj.gleSearch + "<br> Model name :" + obj.ItemCode_Desc.Substring(0, 50) + "";
+                    string head = "";
+                    if (obj.ItemCode_Desc.Length > 50)
+                    {
+                         head = "Alert ! Update in the tractor mapping page . F-code : " + obj.gleSearch + "<br> Model name :" + obj.ItemCode_Desc.Substring(0, 50) + "";
+                    }
+                    else
+                    {
+                         head = "Alert ! Update in the tractor mapping page . F-code : " + obj.gleSearch + "<br> Model name :" + obj.ItemCode_Desc + "";
+                    }
                     string mailbody = MailBODY(transaction, obj.gleSearch, "TRACTOR_TAB_1", head);
                     string mailsend = sendMail("Update_Change", mailbody, Subject);
                     query = "select count(*) from ITEM_MASTER where trim(PLANT_CODE)='" + Convert.ToString(obj.Plant) + "' and trim(FAMILY_CODE)='" + Convert.ToString(obj.Family) + "' and trim(ITEM_CODE)='" + Convert.ToString(obj.ItemCode).Trim() + "'";
@@ -5390,7 +5403,16 @@ namespace MVCApp.Controllers
                 {
                     int transactionNo = InsertSave(obj, "TRACTOR_TAB_2");
                     string subject = "Alert ! Addition in the tractor mapping page . F-code : " + obj.gleSearch + "";
-                    string head = "Alert ! Addition in the tractor mapping page . F-code : " + obj.gleSearch + "<br> Model name :" + obj.ItemCode_Desc + "";
+                    //string head = "Alert ! Addition in the tractor mapping page . F-code : " + obj.gleSearch + "<br> Model name :" + obj.ItemCode_Desc + "";
+                    string head = "";
+                    if (obj.ItemCode_Desc.Length > 50)
+                    {
+                        head = "Alert ! Addition in the tractor mapping page . F-code : " + obj.gleSearch + "<br> Model name :" + obj.ItemCode_Desc.Substring(0, 50) + "";
+                    }
+                    else
+                    {
+                        head = "Alert ! Addition in the tractor mapping page . F-code : " + obj.gleSearch + "<br> Model name :" + obj.ItemCode_Desc + "";
+                    }
                     string mailbody = MailBODY(transactionNo, obj.gleSearch, "TRACTOR_TAB_1", head);
                     string mailsend = sendMail("Insert_Tractor", mailbody, subject);
                     query = "select count(*) from ITEM_MASTER where trim(PLANT_CODE)='" + Convert.ToString(obj.T4_Plant) + "' and trim(FAMILY_CODE)='" + Convert.ToString(obj.T4_Family) + "'and trim(ITEM_CODE)='" + Convert.ToString(obj.T4_ItemCode).Trim() + "' ";

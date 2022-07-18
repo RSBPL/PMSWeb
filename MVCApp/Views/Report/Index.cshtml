@@ -389,6 +389,16 @@
             $('#PNLShiftDetail').hide();
             $('#PNLSTFILTERBY').hide();
             $('#PNLReportType').hide();
+        } else if ($('#ReportType').val() == 'SUPER_MARKET_STOCK_COVERAGE') {
+            $('#PNLTotalTractorsManufactured').hide();
+            $('#PNLJobHistory').hide();
+            $('#PNLJobExistance').hide();
+            $('#PNLProductionReport').hide();
+            $('#hideshowdate').show();
+            $('#PNLQCOKPRINTON').hide();
+            $('#PNLShiftDetail').hide();
+            $('#PNLReportType').show();
+            $('#lbltext').text("Plan");
         } else {
             $('#PNLTotalTractorsManufactured').hide();
             $('#PNLJobHistory').hide();

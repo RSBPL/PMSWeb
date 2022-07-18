@@ -92,186 +92,182 @@ namespace MVCApp.Controllers.MHS
             try
             {
                 
-                    if (addMRN.IsNumber(data.DIMOK_QTY0, out DIMOKQTY0))
-                    {
-                        IsDIMEmpty = true;
-                    }
-                    else
-                    {
-                        msg = "Invalid Value in Dim Fields";
-                        mstType = Validation.str1;
-                        status = Validation.str2;
-                        var resul = new { Msg = msg, ID = mstType, validation = status };
-                        return Json(resul, JsonRequestBehavior.AllowGet);
-                    }
-                    if (addMRN.IsNumber(data.DIMREJ_QTY0, out DIMREJQTY0))
-                    {
-                        IsDIMEmpty = true;
-                    }
-                    else
-                    {
-                        msg = "Invalid Value in Dim Fields";
-                        mstType = Validation.str1;
-                        status = Validation.str2;
-                        var resul = new { Msg = msg, ID = mstType, validation = status };
-                        return Json(resul, JsonRequestBehavior.AllowGet);
-                    }
-                    if (addMRN.IsNumber(data.DIMOK_DEV0, out DIMOKDEV0))
-                    {
-                        IsDIMEmpty = true;
-                    }
-                    else
-                    {
-                        msg = "Invalid Value in Dim Fields";
-                        mstType = Validation.str1;
-                        status = Validation.str2;
-                        var resul = new { Msg = msg, ID = mstType, validation = status };
-                        return Json(resul, JsonRequestBehavior.AllowGet);
-                    }
-                    if (addMRN.IsNumber(data.DIMOK_AFTERSEG0, out DIMOKAFTERSEG0))
-                    {
-                        IsDIMEmpty = true;
-                    }
-                    else
-                    {
-                        msg = "Invalid Value in Dim Fields";
-                        mstType = Validation.str1;
-                        status = Validation.str2;
-                        var resul = new { Msg = msg, ID = mstType, validation = status };
-                        return Json(resul, JsonRequestBehavior.AllowGet);
-                    }
-                    if (addMRN.IsNumber(data.DIMOK_AFTEREWORK0, out DIMOKAFTEREWORK0))
-                    {
-                        IsDIMEmpty = true;
-                    }
-                    else
-                    {
-                        msg = "Invalid Value in Dim Fields";
-                        mstType = Validation.str1;
-                        status = Validation.str2;
-                        var resul = new { Msg = msg, ID = mstType, validation = status };
-                        return Json(resul, JsonRequestBehavior.AllowGet);
-                    }
-                    if (addMRN.IsNumber(data.DIMHOLD_QTY0, out DIMHOLDQTY0))
-                    {
-                        IsDIMEmpty = true;
-                    }
-                    else
-                    {
-                        msg = "Invalid Value in Dim Fields";
-                        mstType = Validation.str1;
-                        status = Validation.str2;
-                        var resul = new { Msg = msg, ID = mstType, validation = status };
-                        return Json(resul, JsonRequestBehavior.AllowGet);
-                    }
-                    if (addMRN.IsNumber(data.MTOK_QTY0, out MTOKQTY0))
-                    {
-                        IsMTEmpty = true;
-                    }
-                    else
-                    {
-                        msg = "Invalid Value in MT Fields";
-                        mstType = Validation.str1;
-                        status = Validation.str2;
-                        var resul = new { Msg = msg, ID = mstType, validation = status };
-                        return Json(resul, JsonRequestBehavior.AllowGet);
-                    }
-                    if (addMRN.IsNumber(data.MTREJ_QTY0, out MTREJQTY0))
-                    {
-                        IsMTEmpty = true;
-                    }
-                    else
-                    {
-                        msg = "Invalid Value in MT Fields";
-                        mstType = Validation.str1;
-                        status = Validation.str2;
-                        var resul = new { Msg = msg, ID = mstType, validation = status };
-                        return Json(resul, JsonRequestBehavior.AllowGet);
-                    }
-                    if (addMRN.IsNumber(data.MTOK_DEV0, out MTOKDEV0))
-                    {
-                        IsMTEmpty = true;
-                    }
-                    else
-                    {
-                        msg = "Invalid Value in MT Fields";
-                        mstType = Validation.str1;
-                        status = Validation.str2;
-                        var resul = new { Msg = msg, ID = mstType, validation = status };
-                        return Json(resul, JsonRequestBehavior.AllowGet);
-                    }
-                    if (addMRN.IsNumber(data.MTOK_AFTERSEG0, out MTOKAFTERSEG0))
-                    {
-                        IsMTEmpty = true;
-                    }
-                    else
-                    {
-                        msg = "Invalid Value in MT Fields";
-                        mstType = Validation.str1;
-                        status = Validation.str2;
-                        var resul = new { Msg = msg, ID = mstType, validation = status };
-                        return Json(resul, JsonRequestBehavior.AllowGet);
-                    }
-                    if (addMRN.IsNumber(data.MTOK_AFTEREWORK0, out MTOKAFTEREWORK0))
-                    {
-                        IsMTEmpty = true;
-                    }
-                    else
-                    {
-                        msg = "Invalid Value in MT Fields";
-                        mstType = Validation.str1;
-                        status = Validation.str2;
-                        var resul = new { Msg = msg, ID = mstType, validation = status };
-                        return Json(resul, JsonRequestBehavior.AllowGet);
-                    }
-                    if (addMRN.IsNumber(data.MTHOLD_QTY0, out MTHOLDQTY0))
-                    {
-                        IsMTEmpty = true;
-                    }
-                    else
-                    {
-                        msg = "Invalid Value in MT Fields";
-                        mstType = Validation.str1;
-                        status = Validation.str2;
-                        var resul = new { Msg = msg, ID = mstType, validation = status };
-                        return Json(resul, JsonRequestBehavior.AllowGet);
-                    }
+                    //if (addMRN.IsNumber(data.DIMOK_QTY0, out DIMOKQTY0))
+                    //{
+                    //    IsDIMEmpty = true;
+                    //}
+                    //else
+                    //{
+                    //    msg = "Invalid Value in Dim Fields";
+                    //    mstType = Validation.str1;
+                    //    status = Validation.str2;
+                    //    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    //    return Json(resul, JsonRequestBehavior.AllowGet);
+                    //}
+                    //if (addMRN.IsNumber(data.DIMREJ_QTY0, out DIMREJQTY0))
+                    //{
+                    //    IsDIMEmpty = true;
+                    //}
+                    //else
+                    //{
+                    //    msg = "Invalid Value in Dim Fields";
+                    //    mstType = Validation.str1;
+                    //    status = Validation.str2;
+                    //    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    //    return Json(resul, JsonRequestBehavior.AllowGet);
+                    //}
+                    //if (addMRN.IsNumber(data.DIMOK_DEV0, out DIMOKDEV0))
+                    //{
+                    //    IsDIMEmpty = true;
+                    //}
+                    //else
+                    //{
+                    //    msg = "Invalid Value in Dim Fields";
+                    //    mstType = Validation.str1;
+                    //    status = Validation.str2;
+                    //    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    //    return Json(resul, JsonRequestBehavior.AllowGet);
+                    //}
+                    //if (addMRN.IsNumber(data.DIMOK_AFTERSEG0, out DIMOKAFTERSEG0))
+                    //{
+                    //    IsDIMEmpty = true;
+                    //}
+                    //else
+                    //{
+                    //    msg = "Invalid Value in Dim Fields";
+                    //    mstType = Validation.str1;
+                    //    status = Validation.str2;
+                    //    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    //    return Json(resul, JsonRequestBehavior.AllowGet);
+                    //}
+                    //if (addMRN.IsNumber(data.DIMOK_AFTEREWORK0, out DIMOKAFTEREWORK0))
+                    //{
+                    //    IsDIMEmpty = true;
+                    //}
+                    //else
+                    //{
+                    //    msg = "Invalid Value in Dim Fields";
+                    //    mstType = Validation.str1;
+                    //    status = Validation.str2;
+                    //    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    //    return Json(resul, JsonRequestBehavior.AllowGet);
+                    //}
+                    //if (addMRN.IsNumber(data.DIMHOLD_QTY0, out DIMHOLDQTY0))
+                    //{
+                    //    IsDIMEmpty = true;
+                    //}
+                    //else
+                    //{
+                    //    msg = "Invalid Value in Dim Fields";
+                    //    mstType = Validation.str1;
+                    //    status = Validation.str2;
+                    //    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    //    return Json(resul, JsonRequestBehavior.AllowGet);
+                    //}
+                    //if (addMRN.IsNumber(data.MTOK_QTY0, out MTOKQTY0))
+                    //{
+                    //    IsMTEmpty = true;
+                    //}
+                    //else
+                    //{
+                    //    msg = "Invalid Value in MT Fields";
+                    //    mstType = Validation.str1;
+                    //    status = Validation.str2;
+                    //    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    //    return Json(resul, JsonRequestBehavior.AllowGet);
+                    //}
+                    //if (addMRN.IsNumber(data.MTREJ_QTY0, out MTREJQTY0))
+                    //{
+                    //    IsMTEmpty = true;
+                    //}
+                    //else
+                    //{
+                    //    msg = "Invalid Value in MT Fields";
+                    //    mstType = Validation.str1;
+                    //    status = Validation.str2;
+                    //    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    //    return Json(resul, JsonRequestBehavior.AllowGet);
+                    //}
+                    //if (addMRN.IsNumber(data.MTOK_DEV0, out MTOKDEV0))
+                    //{
+                    //    IsMTEmpty = true;
+                    //}
+                    //else
+                    //{
+                    //    msg = "Invalid Value in MT Fields";
+                    //    mstType = Validation.str1;
+                    //    status = Validation.str2;
+                    //    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    //    return Json(resul, JsonRequestBehavior.AllowGet);
+                    //}
+                    //if (addMRN.IsNumber(data.MTOK_AFTERSEG0, out MTOKAFTERSEG0))
+                    //{
+                    //    IsMTEmpty = true;
+                    //}
+                    //else
+                    //{
+                    //    msg = "Invalid Value in MT Fields";
+                    //    mstType = Validation.str1;
+                    //    status = Validation.str2;
+                    //    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    //    return Json(resul, JsonRequestBehavior.AllowGet);
+                    //}
+                    //if (addMRN.IsNumber(data.MTOK_AFTEREWORK0, out MTOKAFTEREWORK0))
+                    //{
+                    //    IsMTEmpty = true;
+                    //}
+                    //else
+                    //{
+                    //    msg = "Invalid Value in MT Fields";
+                    //    mstType = Validation.str1;
+                    //    status = Validation.str2;
+                    //    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    //    return Json(resul, JsonRequestBehavior.AllowGet);
+                    //}
+                    //if (addMRN.IsNumber(data.MTHOLD_QTY0, out MTHOLDQTY0))
+                    //{
+                    //    IsMTEmpty = true;
+                    //}
+                    //else
+                    //{
+                    //    msg = "Invalid Value in MT Fields";
+                    //    mstType = Validation.str1;
+                    //    status = Validation.str2;
+                    //    var resul = new { Msg = msg, ID = mstType, validation = status };
+                    //    return Json(resul, JsonRequestBehavior.AllowGet);
+                    //}
 
-                quantity = Convert.ToDouble(data.QUANTITY);
-                if (IsDIMEmpty)
-                {
-                    TotalDIM = DIMOKQTY0 + DIMREJQTY0 + DIMOKDEV0 + DIMOKAFTERSEG0 + DIMOKAFTEREWORK0 + DIMHOLDQTY0;
-                    if (TotalDIM > quantity)
-                    {
-                        msg = "Sum of DIM Fields cannot be more than quantity";
-                        mstType = Validation.str1;
-                        status = Validation.str2;
-                        var resul = new { Msg = msg, ID = mstType, validation = status };
-                        return Json(resul, JsonRequestBehavior.AllowGet);
-                    }
-                    if (quantity > TotalDIM)
-                    {
-                        double DimDifference = quantity - TotalDIM;
-                        data.DIMHOLD_QTY0 = Convert.ToString(DIMHOLDQTY0 + DimDifference);
-                    }
-                }
-                if (IsMTEmpty)
-                {
-                    TotalMT = MTOKQTY0 + MTREJQTY0 + MTOKDEV0 + MTOKAFTERSEG0 + MTOKAFTEREWORK0 + MTHOLDQTY0;
-                    if (TotalMT > quantity)
-                    {
-                        msg = "Sum of MT Fields cannot be more than quantity";
-                        mstType = Validation.str1;
-                        status = Validation.str2;
-                        var resul = new { Msg = msg, ID = mstType, validation = status };
-                        return Json(resul, JsonRequestBehavior.AllowGet);
-                    }
-                    if (quantity > TotalMT)
-                    {
-                        double MTDifference = quantity - TotalMT;
-                        data.MTHOLD_QTY0 = Convert.ToString(MTHOLDQTY0 + MTDifference);
-                    }
-                }
+                //quantity = Convert.ToDouble(data.QUANTITY);
+               
+                //    TotalDIM = Convert.ToDouble(data.DIMOK_QTY0) + Convert.ToDouble(data.DIMREJ_QTY0) + Convert.ToDouble(data.DIMOK_DEV0) + Convert.ToDouble(data.DIMOK_AFTERSEG0) + Convert.ToDouble(data.DIMOK_AFTEREWORK0) + Convert.ToDouble(data.DIMHOLD_QTY0);
+                //    if (TotalDIM > quantity)
+                //    {
+                //        msg = "Sum of DIM Fields cannot be more than quantity";
+                //        mstType = Validation.str1;
+                //        status = Validation.str2;
+                //        var resul = new { Msg = msg, ID = mstType, validation = status };
+                //        return Json(resul, JsonRequestBehavior.AllowGet);
+                //    }
+                //    if (quantity > TotalDIM)
+                //    {
+                //        double DimDifference = quantity - TotalDIM;
+                //        data.DIMHOLD_QTY0 = Convert.ToString(DIMHOLDQTY0 + DimDifference);
+                //    }
+               
+                //    TotalMT = Convert.ToDouble(data.MTOK_QTY0) + Convert.ToDouble(data.MTREJ_QTY0) + Convert.ToDouble(data.MTOK_DEV0) + Convert.ToDouble(data.MTOK_AFTERSEG0) + Convert.ToDouble(data.MTOK_AFTEREWORK0) + Convert.ToDouble(data.MTHOLD_QTY0);
+                //    if (TotalMT > quantity)
+                //    {
+                //        msg = "Sum of MT Fields cannot be more than quantity";
+                //        mstType = Validation.str1;
+                //        status = Validation.str2;
+                //        var resul = new { Msg = msg, ID = mstType, validation = status };
+                //        return Json(resul, JsonRequestBehavior.AllowGet);
+                //    }
+                //    if (quantity > TotalMT)
+                //    {
+                //        double MTDifference = quantity - TotalMT;
+                //        data.MTHOLD_QTY0 = Convert.ToString(MTHOLDQTY0 + MTDifference);
+                //    }
 
                 var tuple = addMRN.InsertMRNSheet(data);
 

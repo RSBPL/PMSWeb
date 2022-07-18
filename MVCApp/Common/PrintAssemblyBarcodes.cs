@@ -218,7 +218,7 @@ namespace MVCApp.Common
             }
             catch (Exception ex)
             {
-                throw;
+                return result = false;
             }
             finally { }
         }

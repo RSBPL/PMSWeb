@@ -142,12 +142,14 @@ namespace MVCApp.Models
 		public string DIMOK_AFTERSEG0 { get; set; }
 		public string DIMOK_AFTEREWORK0 { get; set; }
 		public string DIMHOLD_QTY0 { get; set; }
+		public string DIM_REMARK0 { get; set; }
 		public string MTOK_QTY0 { get; set; }
 		public string MTREJ_QTY0 { get; set; }
 		public string MTOK_DEV0 { get; set; }
 		public string MTOK_AFTERSEG0 { get; set; }
 		public string MTOK_AFTEREWORK0 { get; set; }
 		public string MTHOLD_QTY0 { get; set; }
+		public string MT_REMARK0 { get; set; }
 		public string DIMOK_QTY1 { get; set; }
 		public string DIMREJ_QTY1 { get; set; }
 		public string DIMOK_DEV1 { get; set; }
@@ -450,6 +452,8 @@ namespace MVCApp.Models
 					sc.Parameters.Add("p_SQA_STATUS", OracleDbType.NVarchar2, ParameterDirection.Input).Value = string.IsNullOrEmpty(KM.SQA_STATUS) == true ? null : KM.SQA_STATUS.ToUpper().Trim();
 
 
+					sc.Parameters.Add("p_DIM_REMARK0", OracleDbType.NVarchar2, ParameterDirection.Input).Value = string.IsNullOrEmpty(KM.DIM_REMARK0) == true ? null : KM.DIM_REMARK0.ToUpper().Trim();
+					sc.Parameters.Add("p_MT_REMARK0", OracleDbType.NVarchar2, ParameterDirection.Input).Value = string.IsNullOrEmpty(KM.MT_REMARK0) == true ? null : KM.MT_REMARK0.ToUpper().Trim();
 					sc.Parameters.Add("p_CREATEDBY", OracleDbType.NVarchar2, ParameterDirection.Input).Value = HttpContext.Current.Session["Login_User"].ToString().ToUpper().Trim();
 					sc.Parameters.Add("RETURN_MESSAGE", OracleDbType.NVarchar2, 500);
 					sc.Parameters["RETURN_MESSAGE"].Direction = ParameterDirection.Output;

@@ -1,0 +1,66 @@
+﻿<div class="container" style="width:100%!important">
+    <style>
+        .e-headercell {
+            background-color: #14567e !important;
+            color: white;
+        }
+
+        .e-summarycell {
+            background-color: #8fbfdc !important;
+        }
+    </style>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bg-primary" style="padding-top:5px; padding-left:5px;">
+                <center>
+                    <label style="color:white;">@ViewBag.heading</label>
+                    <label style="color: white;padding-right: 10px;" class="pull-right"><strong>TOTAL RECORD : @ViewBag.Total </strong></label>
+                </center>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        @(Html.EJS().Grid("GrdSUPER_MARKET_STOCK_COVERAGE").DataSource((System.Data.DataTable)ViewBag.DataSource).
+            Height("400").
+            PageSettings(Page => Page.PageSize(25)).
+            AllowSelection(false).
+            AllowPaging().
+            AllowResizing().
+            AllowExcelExport().
+            ToolbarClick("toolbarClick").
+            AllowFiltering().
+            AllowGrouping().
+            AllowSorting().
+            Columns(col =>
+            {
+                col.Field("ITEMCODE").HeaderText("ITEMCODE").Width("100").Add();
+                col.Field("DESCRIPTION").HeaderText("DESCRIPTION").Width("330").Add();
+                col.Field("USAGE_PER_TRACTOR").HeaderText("Usage").Width("50").Add();
+                col.Field("SNP").HeaderText("SNP").Width("100").Add();
+                col.Field("LOCATION_CODE").HeaderText("LOCATION CODE").Width("100").Add();
+                col.Field("Total_SMSTK").HeaderText("Total SM Stk").Width("100").Add();
+                col.Field("ISSUE").HeaderText("ISSUED").Width("100").Add();
+                col.Field("BALANCE_STK").HeaderText("Bal. Stk").Width("100").Add();
+                col.Field("COVER").HeaderText("No. of Trs. Covered").Width("100").Add();
+                //col.Field("QUANTITY_PER_TRACTOR").HeaderText("Quantity Per Tractor").Width("140").Add();
+                //col.Field("REQUIRED_QTY").HeaderText("REQUIRED QTY").Width("140").Add();
+                //col.Field("SHORT_AS_PER_PLAN").HeaderText("SHORT AS PER PLAN").Width("140").Add();
+                //col.Field("BALANCE_STOCK").HeaderText("BALANCE STOCK").Width("140").Add();
+                //col.Field("LOCATION_CODE").HeaderText("LOCATION").Width("120").Add();
+                //col.Field("CREATEDBY").HeaderText("CREATEDBY").Width("130").Add();
+                //col.Field("CREATEDDATE").HeaderText("CREATEDDATE").Add();
+            }).
+            Toolbar(new List<string>() { "ExcelExport" }).
+            Render())
+        <script>
+            function toolbarClick(args) {
+                var gridObj = document.getElementById("GrdSUPER_MARKET_STOCK_COVERAGE").ej2_instances[0];
+                gridObj.excelExport();
+            }
+           
+        </script>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+
+@Html.EJS().ScriptManager()

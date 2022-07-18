@@ -112,8 +112,8 @@
                     <th colspan="2" class="textaligncenter">Responsibility</th>
                     <th></th>
                     <th colspan="2" class="textaligncenter">Inspection Of Receipt Part</th>
-                    <th colspan="6" class="textaligncenter">Partial Lot Clearance  For Dim. To Be Entered by RI Inspector For Lot Disposition</th>
-                    <th colspan="6" class="textaligncenter">Partial Lot Clearance Status For MT. To Be Entered by RI Inspector For Lot Disposition</th>
+                    <th colspan="7" class="textaligncenter">Partial Lot Clearance  For Dim. To Be Entered by RI Inspector For Lot Disposition</th>
+                    <th colspan="7" class="textaligncenter">Partial Lot Clearance Status For MT. To Be Entered by RI Inspector For Lot Disposition</th>
                     <th colspan="24" class="textaligncenter">Last 3 Lot RI Status With Date For Dim.</th>
                     <th colspan="24" class="textaligncenter">Last 3 Lot RI Status With Date For MT</th>
                     <th></th>
@@ -168,6 +168,7 @@
                     <th>OK After Segregation</th>
                     <th>OK after Rework</th>
                     <th>Hold Qty</th>
+                    <th>Remark</th>
 
 
 
@@ -177,6 +178,7 @@
                     <th>OK After Segregation</th>
                     <th>OK after Rework</th>
                     <th>Hold Qty</th>
+                    <th>Remarks</th>
 
 
 
@@ -491,84 +493,98 @@
                 {
                     "render": function (data, type, full, meta) {
                         tabindex++;
-                        return '<input type="text" id="FocusEnable' + tabindex +'" name="DimOkQty0" style="background-color: #d9edf7" onblur="nextField(this); tabindex="' + tabindex +'"">';
+                        return '<input type="number" id="FocusEnable' + tabindex +'" name="DimOkQty0" style="background-color: #d9edf7" onblur="nextField(this); tabindex="' + tabindex +'"">';
 
                     }
                 },
                 {
                     "render": function (data, type, full, meta) {
                         tabindex++;
-                        return '<input type="text" id="FocusEnable' + tabindex +'" name="DimRejQty0" style="background-color: #d9edf7" onblur="nextField(this); tabindex="' + tabindex +'"">';
+                        return '<input type="number" id="FocusEnable' + tabindex +'" name="DimRejQty0" style="background-color: #d9edf7" onblur="nextField(this); tabindex="' + tabindex +'"">';
 
                     }
                 },
                 {
                     "render": function (data, type, full, meta) {
                         tabindex++;
-                        return '<input type="text" id="FocusEnable' + tabindex +'" name="DimOkDev0" style="background-color: #d9edf7" onblur="nextField(this); tabindex="' + tabindex +'"">';
+                        return '<input type="number" id="FocusEnable' + tabindex +'" name="DimOkDev0" style="background-color: #d9edf7" onblur="nextField(this); tabindex="' + tabindex +'"">';
 
                     }
                 },
                 {
                     "render": function (data, type, full, meta) {
                         tabindex++;
-                        return '<input type="text" id="FocusEnable' + tabindex +'" name="DimOkSeg0" style="background-color: #d9edf7" onblur="nextField(this); tabindex="' + tabindex +'"">';
+                        return '<input type="number" id="FocusEnable' + tabindex +'" name="DimOkSeg0" style="background-color: #d9edf7" onblur="nextField(this); tabindex="' + tabindex +'"">';
 
                     }
                 },
                 {
                     "render": function (data, type, full, meta) {
                         tabindex++;
-                        return '<input type="text" id="FocusEnable' + tabindex +'" name="DimOkRework0" style="background-color: #d9edf7" class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
+                        return '<input type="number" id="FocusEnable' + tabindex +'" name="DimOkRework0" style="background-color: #d9edf7" class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
 
                     }
                 },
                 {
                     "render": function (data, type, full, meta) {
                         tabindex++;
-                        return '<input type="text" id="FocusEnable' + tabindex +'" name="DimHoldQty0" style="background-color: #d9edf7" class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
+                        return '<input type="number" id="FocusEnable' + tabindex +'" name="DimHoldQty0" style="background-color: #d9edf7" class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
 
                     }
                 },
                 {
                     "render": function (data, type, full, meta) {
                         tabindex++;
-                        return '<input type="text" id="FocusEnable' + tabindex +'" name="MTOkQty0" style="background-color: #d9edf7" class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
+                        return '<input type="text" id="FocusEnable' + tabindex + '" name="DimRemark0" style="background-color: #d9edf7" class="column_search" onblur="nextField(this); tabindex="' + tabindex + '"">';
 
                     }
                 },
                 {
                     "render": function (data, type, full, meta) {
                         tabindex++;
-                        return '<input type="text" id="FocusEnable' + tabindex +'" name="MTRejQty0" style="background-color: #d9edf7" class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
+                        return '<input type="number" id="FocusEnable' + tabindex +'" name="MTOkQty0" style="background-color: #d9edf7" class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
 
                     }
                 },
                 {
                     "render": function (data, type, full, meta) {
                         tabindex++;
-                        return '<input type="text" id="FocusEnable' + tabindex +'" name="MTOkDev0" style="background-color: #d9edf7" class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
+                        return '<input type="number" id="FocusEnable' + tabindex +'" name="MTRejQty0" style="background-color: #d9edf7" class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
 
                     }
                 },
                 {
                     "render": function (data, type, full, meta) {
                         tabindex++;
-                        return '<input type="text" id="FocusEnable' + tabindex +'" name="MTOkSeg0" style="background-color: #d9edf7" class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
-                        tabindex++;
-                    }
-                },
-                {
-                    "render": function (data, type, full, meta) {
-                        tabindex++;
-                        return '<input type="text" id="FocusEnable' + tabindex +'" name="MTOkRework0" style="background-color: #d9edf7"  class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
+                        return '<input type="number" id="FocusEnable' + tabindex +'" name="MTOkDev0" style="background-color: #d9edf7" class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
 
                     }
                 },
                 {
                     "render": function (data, type, full, meta) {
                         tabindex++;
-                        return '<input type="text" id="FocusEnable' + tabindex +'" name="MTHoldQty0" style="background-color: #d9edf7" class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
+                        return '<input type="number" id="FocusEnable' + tabindex +'" name="MTOkSeg0" style="background-color: #d9edf7" class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
+                        tabindex++;
+                    }
+                },
+                {
+                    "render": function (data, type, full, meta) {
+                        tabindex++;
+                        return '<input type="number" id="FocusEnable' + tabindex +'" name="MTOkRework0" style="background-color: #d9edf7"  class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
+
+                    }
+                },
+                {
+                    "render": function (data, type, full, meta) {
+                        tabindex++;
+                        return '<input type="number" id="FocusEnable' + tabindex +'" name="MTHoldQty0" style="background-color: #d9edf7" class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
+
+                    }
+                },
+                {
+                    "render": function (data, type, full, meta) {
+                        tabindex++;
+                        return '<input type="text" id="FocusEnable' + tabindex + '" name="MTRemark0" style="background-color: #d9edf7" class="column_search" >';
 
                     }
                 },
@@ -673,7 +689,7 @@
             columnDefs: [
                 {
 
-                    "targets": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,92,93,94,95,96,97,98],
+                    "targets": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,94,95,96,97,98,99,100],
                     "createdCell": function (td, cellData, rowData, row, col) {
                         $(td).css('background-color', '#87B87F'),
                             $(td).css('color', 'white'),
@@ -749,7 +765,8 @@
                  }
     }
     $('#myTable tbody').on('click', '.btnSave', function () {
-
+        var totalMT = 0;
+        var totalDIM = 0;
         var self = $(this);
         var currentRow = self.closest("tr");
         var data = $('#myTable').DataTable().row(currentRow).data();
@@ -774,12 +791,14 @@
             DIMOK_AFTERSEG0: currentRow.find('input[name="DimOkSeg0"]').val(),
             DIMOK_AFTEREWORK0: currentRow.find('input[name="DimOkRework0"]').val(),
             DIMHOLD_QTY0: currentRow.find('input[name="DimHoldQty0"]').val(),
+            DIM_REMARK0: currentRow.find('input[name="DimRemark0"]').val(),
             MTOK_QTY0: currentRow.find('input[name="MTOkQty0"]').val(),
             MTREJ_QTY0: currentRow.find('input[name="MTRejQty0"]').val(),
             MTOK_DEV0: currentRow.find('input[name="MTOkDev0"]').val(),
             MTOK_AFTERSEG0: currentRow.find('input[name="MTOkSeg0"]').val(),
             MTOK_AFTEREWORK0: currentRow.find('input[name="MTOkRework0"]').val(),
             MTHOLD_QTY0: currentRow.find('input[name="MTHoldQty0"]').val(),
+            MT_REMARK0: currentRow.find('input[name="MTRemark0"]').val(),
             BLANKET_STDPO: data["BLANKET_STDPO"],
             NEW_REGULAR: data["NEW_REGULAR"],
             NUMTIMES_REC: data["NUMTIMES_REC"],
@@ -806,7 +825,107 @@
             FITMENT_STATUS: data["FITMENT_STATUS"],
             SQA_STATUS: data["SQA_STATUS"]
 
-         };
+        };
+        var totalQty = parseInt(obj.QUANTITY); 
+        var isISDIM = obj.ISDIM;
+        var isISMT = obj.ISMT;
+
+        var DIMOK_QTY0 = parseInt(obj.DIMOK_QTY0);
+        var DIMREJ_QTY0 = parseInt(obj.DIMREJ_QTY0);
+        var DIMOK_DEV0 = parseInt(obj.DIMOK_DEV0);
+        var DIMOK_AFTERSEG0 = parseInt(obj.DIMOK_AFTERSEG0);
+        var DIMOK_AFTEREWORK0 = parseInt(obj.DIMOK_AFTEREWORK0);
+        var DIMHOLD_QTY0 = parseInt(obj.DIMHOLD_QTY0);
+
+        var MTOK_QTY0 = parseInt(obj.MTOK_QTY0);
+        var MTREJ_QTY0 = parseInt(obj.MTREJ_QTY0);
+        var MTOK_DEV0 = parseInt(obj.MTOK_DEV0);
+        var MTOK_AFTERSEG0 = parseInt(obj.MTOK_AFTERSEG0);
+        var MTOK_AFTEREWORK0 = parseInt(obj.MTOK_AFTEREWORK0);
+        var MTHOLD_QTY0 = parseInt(obj.MTHOLD_QTY0);
+        if (isNaN(DIMOK_QTY0)) {
+            DIMOK_QTY0 = 0;
+        }
+        if (isNaN(DIMREJ_QTY0)) {
+            DIMREJ_QTY0 = 0;
+        }
+        if (isNaN(DIMOK_DEV0)) {
+            DIMOK_DEV0 = 0;
+        }
+        if (isNaN(DIMOK_AFTERSEG0)) {
+            DIMOK_AFTERSEG0 = 0;
+        }
+        if (isNaN(DIMOK_AFTEREWORK0)) {
+            DIMOK_AFTEREWORK0 = 0;
+        }
+        if (isNaN(DIMHOLD_QTY0)) {
+            DIMHOLD_QTY0 = 0;
+        }
+
+        if (isNaN(MTOK_QTY0)) {
+            MTOK_QTY0 = 0;
+        }
+        if (isNaN(MTREJ_QTY0)) {
+            MTREJ_QTY0 = 0;
+        }
+        if (isNaN(MTOK_DEV0)) {
+            MTOK_DEV0 = 0;
+        }
+        if (isNaN(MTOK_AFTERSEG0)) {
+            MTOK_AFTERSEG0 = 0;
+        }
+        if (isNaN(MTOK_AFTEREWORK0)) {
+            MTOK_AFTEREWORK0 = 0;
+        }
+        if (isNaN(MTHOLD_QTY0)) {
+            MTHOLD_QTY0 = 0;
+        }
+        totalMT = MTOK_QTY0 + MTREJ_QTY0 + MTOK_DEV0 + MTOK_AFTERSEG0 + MTOK_AFTEREWORK0 + MTHOLD_QTY0;
+        totalDIM = DIMOK_QTY0 + DIMREJ_QTY0 + DIMOK_DEV0 + DIMOK_AFTERSEG0 + DIMOK_AFTEREWORK0 + DIMHOLD_QTY0;
+        if (isISDIM == "Y") {
+            if (totalDIM > totalQty) {
+                $('#alert').append('<div class="alert alert-danger"role = "alert"><strong> DIM ALL QTY GREATER THE QUANTITY </strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                setTimeout(function () {
+                    $.each($('.alert'), function () {
+                        closeAlert(this);
+                    });
+                }, 5000);
+                return;
+            }
+            else if (totalDIM < totalQty) {
+                $('#alert').append('<div class="alert alert-danger"role = "alert"><strong> DIM ALL QTY LESS THE QUANTITY </strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                setTimeout(function () {
+                    $.each($('.alert'), function () {
+                        closeAlert(this);
+                    });
+                }, 5000);
+                return;
+            }
+        }
+        if (isISMT == "Y") {
+            if (totalMT > totalQty) {
+                $('#alert').append('<div class="alert alert-danger"role = "alert"><strong> MT ALL QTY GREATER THE QUANTITY </strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                setTimeout(function () {
+                    $.each($('.alert'), function () {
+                        closeAlert(this);
+                    });
+                }, 5000);
+                return;
+            }
+            else if (totalMT < totalQty) {
+                $('#alert').append('<div class="alert alert-danger"role = "alert"><strong> MT ALL QTY LESS THE QUANTITY </strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                /*setTimeout(function () { $(".alert").alert('close'); }, 5000);*/
+                setTimeout(function () {
+                    $.each($('.alert'), function () {
+                        closeAlert(this);
+                    });
+                }, 5000);
+                return;
+            }
+        }
         AddMRNQC(obj);
      });
 

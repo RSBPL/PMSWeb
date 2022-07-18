@@ -13,6 +13,7 @@ namespace MVCApp.Models
         public string Location { get; set; }
         public string Item { get; set; }
         public string Capacity { get; set; }
+        public string NoofBin { get; set; }
         public bool TempLoc { get; set; }
         public string Description { get; set; }
         public string SftStkQuantity { get; set; }

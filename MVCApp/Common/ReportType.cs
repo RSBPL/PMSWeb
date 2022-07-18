@@ -203,7 +203,9 @@ namespace MVCApp
                          new ReportCode(){Code="KIT_SCANNING",Text="KIT SCANNING REPORT"},
                          new ReportCode(){Code="SHORT METERIAL DAILY",Text="SHORT METERIAL (DAILY)"},
                          new ReportCode(){Code="TRACTOR_DECARATION_REPORT",Text="TRACTOR DECARATION REPORT"},
-                         new ReportCode(){Code="PICKED_ITEM_REPORT",Text="PICKED ITEM REPORT"}
+                         new ReportCode(){Code="PICKED_ITEM_REPORT",Text="PICKED ITEM REPORT"},
+                         new ReportCode(){Code="KIT_SCANNING_REPORT",Text="KIT SCANNING REPORT"},
+                         new ReportCode(){Code="SUPER_MARKET_STOCK_COVERAGE",Text="SUPER MARKET STOCK COVERAGE "}
                      };
                 return al;
             }

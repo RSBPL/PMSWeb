@@ -1274,6 +1274,8 @@
     <Content Include="Views\Report\GrdVehicle_INOUT.cshtml" />
     <Content Include="Views\Report\GrdTractor_Decaration_Report.cshtml" />
     <Content Include="Views\Report\GrdPICKED_ITEM_REPORT.cshtml" />
+    <Content Include="Views\Report\GrdSUPER_MARKET_STOCK_COVERAGE.cshtml" />
+    <Content Include="Views\Report\GrdKIT_SCANNING_REPORT.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
