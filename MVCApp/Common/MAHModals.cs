@@ -151,6 +151,14 @@ namespace MVCApp.Common
         public string KITNO { get; set; }
         public string CREATEDBY { get; set; }
     }
+    public class KittingLIST
+    {
+
+        public string ITEMCODE { get; set; }
+        public string QUANTITY { get; set; }
+        public string AVAILQTY { get; set; }
+        public string SHORTAGEQTY { get; set; }
+    }
     public class FAULTYITEMS
     {
         public string PLANT { get; set; }

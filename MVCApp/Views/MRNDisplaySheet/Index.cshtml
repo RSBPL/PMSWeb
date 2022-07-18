@@ -18,6 +18,9 @@
     .textaligncenter {
         text-align: center;
     }
+    .dataTables_processing {
+        z-index: 1111;
+    }
     /*th {
         background: white;
         position: sticky;
@@ -43,7 +46,8 @@
     table.dataTable td.focus {
         outline: 1px solid #ac1212;
         outline-offset: -3px;
-        background-color: #f8e6e6 !important;
+        background-color: #569ca8 !important;
+
     }
 </style>
 <div id="divLoader" style="display: none; top: 200px;">
@@ -290,10 +294,11 @@
 <script src="~/Scripts/DataTable/jquery.dataTables.min.js"></script>
 <link href="~/Scripts/DataTable/Custom.css" rel="stylesheet" />
 
+
 @*<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>*@
 <script type="text/javascript" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/keytable/2.7.0/js/dataTables.keyTable.min.js"></script>
-
+@*<script type="text/javascript" src="https://cdn.datatables.net/keytable/2.7.0/js/dataTables.keyTable.min.js"></script>*@
+<script src="~/Content/select2/dist/js/Tab.js"></script>
 <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
@@ -310,6 +315,13 @@
 
 
     });
+    $("#FocusEnable").keydown(function (e) {
+        if (e.which === 13) {
+            var index = $("#FocusEnable").index(this) + 1;
+            $("#FocusEnable").eq(index).focus();
+        }
+    });
+
     $("#PLANT_CODE").on("change", function () {
         DDLFamilyByPlant();
     });
@@ -372,19 +384,57 @@
             }
         });
     };
+    $('#myTable').on('keyup', 'input', function (event) {
+        if (event.which == 9 || event.which == 40 || event.which == 39 || event.which == 37 || event.which == 38) {
+            var generico = $("#myTable").find('td.focus input:visible');
+            if (generico != undefined) {
+            var focusid = generico[0].id;
+            var val = $('#' + focusid).val();
+            $('#' + focusid).addClass("focus");
+                $('#' + focusid).filter(':visible').focus();
+            }
+        }
+    });
+
+    //$(document).keydown(function (e) {
+    //    if (e.keyCode === 9) {
+    //            if ($('td').hasClass("focus")) {
+    //                //$(this).find();
+    //                //var keval = $(this).find("input").attr('id');
+    //               // $(this).find("input").next.focus();
+    //                var next_inbox_index = $('.column_search').index(this) + 1;
+    //                debugger;
+    //                $('.column_search').eq(next_inbox_index).focus();
+    //                //var keval =  $('#myTable td.focus input').attr('id');
+    //            //if (keval != undefined) {
+    //            //    console.log(keval);
+    //            //}
+    //        }
+    //        $('#myTable tr').each(function () {
+    //            var keval = $(this).find(".focus input").attr('id');
+    //            if (keval != undefined) {
+    //                $(this).find(".focus input").focus();
+    //                $(this).find("input").next.focus();
+    //                console.log(keval);
+    //            }
+    //        });
+    //    }
+    //});
+    var tabindex = 0;
     function BindGrid() {
         $('#myTable').DataTable().destroy();
 
 
         var dtable = $("#myTable").DataTable({
            /* "scrollX": true,*/
-            dom: 'Bfrtip',
+            dom: 'lBfrtip',
             "autoWidth": true,
-            "lengthChange": false,
-            "pageLength": 20,
+            "lengthChange": true,
+            "lengthMenu": [[10, 25, 50, 100, 200, 300, 400, 500, 1000], [10, 25, 50, 100, 200, 300, 400, 500, "All"]], "iDisplayLength": 25,
             "scrollY": 550,
             "scrollX": 1200,
             "keys": true,
+            "paging": true,
             "fixedColumns": true,
             "fixedHeader": true,
             "scrollCollapse": true,
@@ -397,7 +447,7 @@
                 search: "SEARCH BY",
                 searchPlaceholder: "Enter min 3 characters",
                 width: "250PX",
-                processing: "<img style='width:50px; height:50px;margin: 65px 0 0 0;' src='/ekidev/Image/Loader.gif' />"
+                processing: "<img style='width:50px; height:50px;margin: -25px 0 0 0;' src='/ekidev/Image/Loader.gif' />"
             },
             "ajax": {
 
@@ -440,62 +490,86 @@
                 { "data": "ISMT" },
                 {
                     "render": function (data, type, full, meta) {
-                        return '<input type="text" name="DimOkQty0" style="background-color: #d9edf7">';
+                        tabindex++;
+                        return '<input type="text" id="FocusEnable' + tabindex +'" name="DimOkQty0" style="background-color: #d9edf7" onblur="nextField(this); tabindex="' + tabindex +'"">';
+
                     }
                 },
                 {
                     "render": function (data, type, full, meta) {
-                        return '<input type="text" name="DimRejQty0" style="background-color: #d9edf7">';
+                        tabindex++;
+                        return '<input type="text" id="FocusEnable' + tabindex +'" name="DimRejQty0" style="background-color: #d9edf7" onblur="nextField(this); tabindex="' + tabindex +'"">';
+
                     }
                 },
                 {
                     "render": function (data, type, full, meta) {
-                        return '<input type="text" name="DimOkDev0" style="background-color: #d9edf7">';
+                        tabindex++;
+                        return '<input type="text" id="FocusEnable' + tabindex +'" name="DimOkDev0" style="background-color: #d9edf7" onblur="nextField(this); tabindex="' + tabindex +'"">';
+
                     }
                 },
                 {
                     "render": function (data, type, full, meta) {
-                        return '<input type="text" name="DimOkSeg0" style="background-color: #d9edf7">';
+                        tabindex++;
+                        return '<input type="text" id="FocusEnable' + tabindex +'" name="DimOkSeg0" style="background-color: #d9edf7" onblur="nextField(this); tabindex="' + tabindex +'"">';
+
                     }
                 },
                 {
                     "render": function (data, type, full, meta) {
-                        return '<input type="text" name="DimOkRework0" style="background-color: #d9edf7">';
+                        tabindex++;
+                        return '<input type="text" id="FocusEnable' + tabindex +'" name="DimOkRework0" style="background-color: #d9edf7" class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
+
                     }
                 },
                 {
                     "render": function (data, type, full, meta) {
-                        return '<input type="text" name="DimHoldQty0" style="background-color: #d9edf7">';
+                        tabindex++;
+                        return '<input type="text" id="FocusEnable' + tabindex +'" name="DimHoldQty0" style="background-color: #d9edf7" class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
+
                     }
                 },
                 {
                     "render": function (data, type, full, meta) {
-                        return '<input type="text" name="MTOkQty0" style="background-color: #d9edf7">';
+                        tabindex++;
+                        return '<input type="text" id="FocusEnable' + tabindex +'" name="MTOkQty0" style="background-color: #d9edf7" class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
+
                     }
                 },
                 {
                     "render": function (data, type, full, meta) {
-                        return '<input type="text" name="MTRejQty0" style="background-color: #d9edf7">';
+                        tabindex++;
+                        return '<input type="text" id="FocusEnable' + tabindex +'" name="MTRejQty0" style="background-color: #d9edf7" class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
+
                     }
                 },
                 {
                     "render": function (data, type, full, meta) {
-                        return '<input type="text" name="MTOkDev0" style="background-color: #d9edf7">';
+                        tabindex++;
+                        return '<input type="text" id="FocusEnable' + tabindex +'" name="MTOkDev0" style="background-color: #d9edf7" class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
+
                     }
                 },
                 {
                     "render": function (data, type, full, meta) {
-                        return '<input type="text" name="MTOkSeg0" style="background-color: #d9edf7">';
+                        tabindex++;
+                        return '<input type="text" id="FocusEnable' + tabindex +'" name="MTOkSeg0" style="background-color: #d9edf7" class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
+                        tabindex++;
                     }
                 },
                 {
                     "render": function (data, type, full, meta) {
-                        return '<input type="text" name="MTOkRework0" style="background-color: #d9edf7">';
+                        tabindex++;
+                        return '<input type="text" id="FocusEnable' + tabindex +'" name="MTOkRework0" style="background-color: #d9edf7"  class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
+
                     }
                 },
                 {
                     "render": function (data, type, full, meta) {
-                        return '<input type="text" name="MTHoldQty0" style="background-color: #d9edf7">';
+                        tabindex++;
+                        return '<input type="text" id="FocusEnable' + tabindex +'" name="MTHoldQty0" style="background-color: #d9edf7" class="column_search" onblur="nextField(this); tabindex="' + tabindex +'"">';
+
                     }
                 },
                 { "data": "DIMOK_QTY1" },
@@ -614,10 +688,10 @@
 
 
             ],
-            buttons: [
-                'excelHtml5'
-            ]
-
+            buttons: [{
+                extend: 'excel',
+                text: 'Export to Excel'
+            }],
             //"columnDefs": [
             //    { "width": "3%", "targets": 0, "className": "text-center"},
             //    { "width": "6%", "targets": 1, "className": "text-center" },
@@ -655,8 +729,11 @@
             });
 
 
+
         $("#divLoader").hide();
     }
+
+
     function getCrystalReportForMRN(MRN, itemcode) {
          var data = {
              MRN_NO: MRN,

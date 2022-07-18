@@ -655,7 +655,63 @@ namespace MVCApp.CommonFunction
             }
         }
 
+        public List<DDLTextValue> IpAdress(string StageCode)
+        {
+            DataTable TmpDs = new DataTable();
+            List<DDLTextValue> result = new List<DDLTextValue>();
+            string ucode = Convert.ToString(HttpContext.Current.Session["Login_Unit"]);
+            try
+            {
+                if (!string.IsNullOrEmpty(StageCode))
+                {
+                    if (getUSERNAME() == "RS")
+                    {
+                        query = string.Format(@"select  PLANT_CODE || ':' || ipaddr || '(' || ipport ||')' AS DESCRIPTION , ipaddr || ' # '|| ipport CODE from xxes_stage_master where 
+                        offline_keycode='{0}' order by PLANT_CODE ", StageCode.Trim().ToUpper());
+                        if (ucode == "T05")
+                        {
+                         query = string.Format(@"select  PLANT_CODE || ':' || ipaddr || '(' || ipport ||')' AS DESCRIPTION , ipaddr || ' # '|| ipport CODE from xxes_stage_master where 
+                        offline_keycode='{0}' order by PLANT_CODE Desc ", StageCode.Trim().ToUpper());
+                        }
 
+                    }
+                    else
+                    {
+                        query = string.Format(@"select  PLANT_CODE || ':' || ipaddr || '(' || ipport ||')' AS DESCRIPTION , ipaddr || ' # '|| ipport CODE from xxes_stage_master where 
+                        offline_keycode='{0}' order by PLANT_CODE ", StageCode.Trim().ToUpper());
+                        //    query = string.Format(@"select distinct segment1 || ' # ' || description as DESCRIPTION, segment1 as ITEM_CODE from " + schema + ".mtl_system_items " +
+                        //"where organization_id in (" + orgid + ") and substr(segment1, 1, 1) in ('D','S') AND (SEGMENT1 LIKE '{0}%' OR DESCRIPTION LIKE '{1}%') order by segment1", data.SubAssembly1.Trim().ToUpper(), data.SubAssembly1.Trim().ToUpper());
+                        if (ucode == "T05")
+                        {
+                            query = string.Format(@"select  PLANT_CODE || ':' || ipaddr || '(' || ipport ||')' AS DESCRIPTION , ipaddr || ' # '|| ipport CODE from xxes_stage_master where 
+                        offline_keycode='{0}' order by PLANT_CODE Desc ", StageCode.Trim().ToUpper());
+                        }
+                    }
+                    TmpDs = returnDataTable(query);
+                    if (TmpDs.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in TmpDs.AsEnumerable())
+                        {
+                            result.Add(new DDLTextValue
+                            {
+                                Text = dr["DESCRIPTION"].ToString(),
+                                Value = dr["CODE"].ToString(),
+                            });
+                        }
+                    }
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                LogWrite(ex);
+                return result;
+            }
+            finally
+            {
+                //ConClose();
+            }
+        }
 
         public List<DDLTextValue> Fill_Family(string ucode)
         {
@@ -8683,7 +8739,7 @@ namespace MVCApp.CommonFunction
                     }
                     else if (ConfigurationSettings.AppSettings["LOGIN_CHECK_MRN"].ToString() == "N")
                     {
-                        query = @" SELECT A.TOTALCOUNT,A.SELECT_MRN,A.TRANSACTION_DATE,A.MRN_NO,A.VEHICLE_NO,A.VENDOR_CODE,A.VENDOR_NAME,A.INVOICE_NO,A.ITEM,A.TOTAL_ITEM,A.SOURCE_TYPE,A.ORGANIZATION_CODE,A.STATUS,A.INVOICE_DATE FROM(select distinct '0' SELECT_MRN,ROW_NUMBER() OVER (ORDER BY INVOICE_NO) as ROWNMBER,COUNT(*) over() as TOTALCOUNT, to_char( TRANSACTION_DATE, 'dd-Mon-yyyy HH24:MI:SS' ) TRANSACTION_DATE,MRN_NO,VEHICLE_NO, ";
+                        query = @" SELECT A.TOTALCOUNT,A.SELECT_MRN,A.TRANSACTION_DATE,A.MRN_NO,A.VEHICLE_NO,A.VENDOR_CODE,A.VENDOR_NAME,A.INVOICE_NO,A.ITEM,A.TOTAL_ITEM,A.SOURCE_TYPE,A.ORGANIZATION_CODE,A.STATUS,A.INVOICE_DATE,A.CITY FROM(select distinct '0' SELECT_MRN,ROW_NUMBER() OVER (ORDER BY INVOICE_NO) as ROWNMBER,COUNT(*) over() as TOTALCOUNT, to_char( TRANSACTION_DATE, 'dd-Mon-yyyy HH24:MI:SS' ) TRANSACTION_DATE,MRN_NO,VEHICLE_NO, ";
                         query += " VENDOR_CODE,VENDOR_NAME,INVOICE_NO,INVOICE_DATE, ";
                         query += " (select g.ITEM_DESCRIPTION || ' [' || g.ITEM_CODE || ']' from apps.XXESGATETAGPRINT_BARCODE g where g.mrn_no=b.MRN_NO and g.Invoice_no=b.Invoice_no AND ";
                         query += " to_char(TRANSACTION_DATE,'dd-Mon-yyyy')=to_char(sysdate-" + days + ",'dd-Mon-yyyy') and ORGANIZATION_CODE='" + obj.PLANTCODE + "' and rownum=1) ITEM, ";
@@ -8699,7 +8755,7 @@ namespace MVCApp.CommonFunction
                     //        (select g.ITEM_DESCRIPTION || ' [' || g.ITEM_CODE || ']' from apps.XXESGATETAGPRINT_BARCODE g where g.mrn_no=b.MRN_NO and g.Invoice_no=b.Invoice_no and rownum=1) ITEM,
                     //        SOURCE_DOCUMENT_CODE SOURCE_TYPE,ORGANIZATION_CODE,STATUS from apps.XXESGATETAGPRINT_BARCODE b where  
                     //         ORGANIZATION_CODE='" + PubFun.Login_Unit + "' and MRN_NO in (select mrn_no from ITEM_RECEIPT_DETIALS where to_char(TRANSACTION_DATE,'dd-Mon-yyyy')>=to_date('" + dateTimePicker1.Value.ToString("dd-MMM-yyyy") + "','dd-Mon-yyyy'))  order by mrn_no,invoice_no";
-                    query = string.Format(@"SELECT A.TOTALCOUNT,A.SELECT_MRN,A.TRANSACTION_DATE,A.MRN_NO,A.VEHICLE_NO,A.VENDOR_CODE,A.VENDOR_NAME,A.INVOICE_NO,A.ITEM,A.TOTAL_ITEM,A.SOURCE_TYPE,A.ORGANIZATION_CODE,A.STATUS,A.INVOICE_DATE FROM(SELECT distinct '0' SELECT_MRN,ROW_NUMBER() OVER (ORDER BY INVOICE_NO) as ROWNMBER,COUNT(*) over() as TOTALCOUNT,to_char( TRANSACTION_DATE, 'dd-Mon-yyyy HH24:MI:SS' ) TRANSACTION_DATE,MRN_NO,VEHICLE_NO,
+                    query = string.Format(@"SELECT A.TOTALCOUNT,A.SELECT_MRN,A.TRANSACTION_DATE,A.MRN_NO,A.VEHICLE_NO,A.VENDOR_CODE,A.VENDOR_NAME,A.INVOICE_NO,A.ITEM,A.TOTAL_ITEM,A.SOURCE_TYPE,A.ORGANIZATION_CODE,A.STATUS,A.INVOICE_DATE,A.CITY FROM(SELECT distinct '0' SELECT_MRN,ROW_NUMBER() OVER (ORDER BY INVOICE_NO) as ROWNMBER,COUNT(*) over() as TOTALCOUNT,to_char( TRANSACTION_DATE, 'dd-Mon-yyyy HH24:MI:SS' ) TRANSACTION_DATE,MRN_NO,VEHICLE_NO,
                             VENDOR_CODE,VENDOR_NAME,INVOICE_NO,INVOICE_DATE,
                              b.ITEM_DESCRIPTION || ' [' || b.ITEM_CODE || ']'  ITEM,TOTAL_ITEM,
                             SOURCE_DOCUMENT_CODE SOURCE_TYPE,PLANT_CODE ORGANIZATION_CODE,STATUS,CITY from ITEM_RECEIPT_DETIALS b where  
@@ -8814,7 +8870,7 @@ namespace MVCApp.CommonFunction
         public string SendMails(string Module, string MailBody, string MailSubject, string Email_To, string Email_CC,
        string Username)
         {
-           
+            if (getUSERNAME() != "RS") { 
                 string MAIL_PRIORITY = string.Empty;
                 string SMTP_SERVER = string.Empty;
                 string LOGIN_EMAIL = string.Empty;
@@ -8900,6 +8956,7 @@ namespace MVCApp.CommonFunction
                     pubfun.EXEC_QUERY(query);
                     return "Error" + ex.Message.ToString();
                 }
+            }
             return "";
         }
 

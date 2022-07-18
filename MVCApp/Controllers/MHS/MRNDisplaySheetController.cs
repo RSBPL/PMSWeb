@@ -63,8 +63,9 @@ namespace MVCApp.Controllers.MHS
             DataTable dt = new DataTable();
             List<MRNQCVIEWMODEL> MRNList = null;
             int recordsTotal = 0;
+            if (Request.Form.GetValues("search[value]").FirstOrDefault() != null) { 
             obj.P_Search = Request.Form.GetValues("search[value]").FirstOrDefault();
-
+            }
             try
             {
                 MRNList = addMRN.GridMRN(obj);

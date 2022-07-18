@@ -2770,7 +2770,7 @@ namespace MVCApp.Controllers
             {
                 TM.Family = TM.T4_Family;
             }
-            string transactionNo = fun.get_Col_Value("SELECT NVL( MAX(TRANSACTION_NUMBER),0)+1 AS TRANSACTION_NUMBER FROM XXES_PARTS_AUDIT_DATA WHERE Remarks1 = '"+ Tab + "'");
+            string transactionNo = fun.get_Col_Value("SELECT NVL( MAX(TRANSACTION_NUMBER),0)+1 AS TRANSACTION_NUMBER FROM XXES_PARTS_AUDIT_DATA WHERE Remarks1 = '" + Tab + "'");
             TrnNo = Convert.ToInt32(transactionNo);
             if (Tab == "TRACTOR_TAB_1")
             {
@@ -2858,7 +2858,8 @@ namespace MVCApp.Controllers
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.Prefix3, TM.Prefix3, tmold.Prefix3, "", Tab, TM.gleSearch, TM.Prefix3, "", " Prefix2", TrnNo);
                 }
-                if (TM.Prefix4==null) {
+                if (TM.Prefix4 == null)
+                {
                     TM.Prefix4 = "";
                 }
                 if (Tmold.Prefix4 != TM.Prefix4)
@@ -2987,88 +2988,88 @@ namespace MVCApp.Controllers
                 }
                 if (Tmold.EnableCarButtonChk != TM.EnableCarButtonChk)
                 {
-                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.EnableCarButtonChk), Convert.ToString(TM.EnableCarButtonChk), Convert.ToString(tmold.EnableCarButtonChk), Convert.ToString(tmold.EnableCarButtonChk), Tab, TM.gleSearch, Convert.ToString(TM.EnableCarButtonChk), Convert.ToString(TM.EnableCarButtonChk), " CarButton", TrnNo);
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.EnableCarButtonChk), Convert.ToString(TM.EnableCarButtonChk), Convert.ToString(tmold.EnableCarButtonChk), Convert.ToString(tmold.EnableCarButtonChk), Tab, TM.gleSearch, Convert.ToString(TM.EnableCarButtonChk), Convert.ToString(TM.EnableCarButtonChk), " CareButton", TrnNo);
                 }
                 if (Tmold.EngineChk != TM.EngineChk)
                 {
-                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.EngineChk), Convert.ToString(TM.EngineChk), Convert.ToString(tmold.EngineChk), Convert.ToString(tmold.EngineChk), Tab, TM.gleSearch, Convert.ToString(TM.EngineChk), Convert.ToString(TM.EngineChk), " EngineChk", TrnNo);
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.EngineChk), Convert.ToString(TM.EngineChk), Convert.ToString(tmold.EngineChk), Convert.ToString(tmold.EngineChk), Tab, TM.gleSearch, Convert.ToString(TM.EngineChk), Convert.ToString(TM.EngineChk), " Engine", TrnNo);
                 }
                 if (Tmold.TransmissionChk != TM.TransmissionChk)
                 {
-                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.TransmissionChk), Convert.ToString(TM.TransmissionChk), Convert.ToString(tmold.TransmissionChk), Convert.ToString(tmold.TransmissionChk), Tab, TM.gleSearch, Convert.ToString(TM.TransmissionChk), Convert.ToString(TM.TransmissionChk), " TransmissionChk", TrnNo);
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.TransmissionChk), Convert.ToString(TM.TransmissionChk), Convert.ToString(tmold.TransmissionChk), Convert.ToString(tmold.TransmissionChk), Tab, TM.gleSearch, Convert.ToString(TM.TransmissionChk), Convert.ToString(TM.TransmissionChk), " Transmission", TrnNo);
                 }
                 if (Tmold.RearAxelChk != TM.RearAxelChk)
                 {
-                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RearAxelChk), Convert.ToString(TM.RearAxelChk), Convert.ToString(tmold.RearAxelChk), Convert.ToString(tmold.RearAxelChk), Tab, TM.gleSearch, Convert.ToString(TM.RearAxelChk), Convert.ToString(TM.RearAxelChk), " RearAxelChk", TrnNo);
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RearAxelChk), Convert.ToString(TM.RearAxelChk), Convert.ToString(tmold.RearAxelChk), Convert.ToString(tmold.RearAxelChk), Tab, TM.gleSearch, Convert.ToString(TM.RearAxelChk), Convert.ToString(TM.RearAxelChk), " RearAxel", TrnNo);
                 }
                 if (Tmold.FrontTyreChk != TM.FrontTyreChk)
                 {
-                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.FrontTyreChk), Convert.ToString(TM.FrontTyreChk), Convert.ToString(tmold.FrontTyreChk), Convert.ToString(tmold.FrontTyreChk), Tab, TM.gleSearch, Convert.ToString(TM.FrontTyreChk), Convert.ToString(TM.FrontTyreChk), " FrontTyreChk", TrnNo);
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.FrontTyreChk), Convert.ToString(TM.FrontTyreChk), Convert.ToString(tmold.FrontTyreChk), Convert.ToString(tmold.FrontTyreChk), Tab, TM.gleSearch, Convert.ToString(TM.FrontTyreChk), Convert.ToString(TM.FrontTyreChk), " FrontTyre", TrnNo);
                 }
                 if (Tmold.BatteryChk != TM.BatteryChk)
                 {
-                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.BatteryChk), Convert.ToString(TM.BatteryChk), Convert.ToString(tmold.BatteryChk), Convert.ToString(tmold.BatteryChk), Tab, TM.gleSearch, Convert.ToString(TM.BatteryChk), Convert.ToString(TM.BatteryChk), " BatteryChk", TrnNo);
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.BatteryChk), Convert.ToString(TM.BatteryChk), Convert.ToString(tmold.BatteryChk), Convert.ToString(tmold.BatteryChk), Tab, TM.gleSearch, Convert.ToString(TM.BatteryChk), Convert.ToString(TM.BatteryChk), " Battery", TrnNo);
                 }
                 if (Tmold.GenerateSerialNoChk != TM.GenerateSerialNoChk)
                 {
-                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.GenerateSerialNoChk), Convert.ToString(TM.GenerateSerialNoChk), Convert.ToString(tmold.GenerateSerialNoChk), Convert.ToString(tmold.GenerateSerialNoChk), Tab, TM.gleSearch, Convert.ToString(TM.GenerateSerialNoChk), Convert.ToString(TM.GenerateSerialNoChk), " GenerateSerialNoChk", TrnNo);
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.GenerateSerialNoChk), Convert.ToString(TM.GenerateSerialNoChk), Convert.ToString(tmold.GenerateSerialNoChk), Convert.ToString(tmold.GenerateSerialNoChk), Tab, TM.gleSearch, Convert.ToString(TM.GenerateSerialNoChk), Convert.ToString(TM.GenerateSerialNoChk), " GenerateSerialNo", TrnNo);
                 }
                 if (Tmold.RopsChk != TM.RopsChk)
                 {
-                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RopsChk), Convert.ToString(TM.RopsChk), Convert.ToString(tmold.RopsChk), Convert.ToString(tmold.RopsChk), Tab, TM.gleSearch, Convert.ToString(TM.RopsChk), Convert.ToString(TM.RopsChk), " RopsChk", TrnNo);
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RopsChk), Convert.ToString(TM.RopsChk), Convert.ToString(tmold.RopsChk), Convert.ToString(tmold.RopsChk), Tab, TM.gleSearch, Convert.ToString(TM.RopsChk), Convert.ToString(TM.RopsChk), " Rops", TrnNo);
                 }
                 if (Tmold.HydraulicPumpChk != TM.HydraulicPumpChk)
                 {
-                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.HydraulicPumpChk), Convert.ToString(TM.HydraulicPumpChk), Convert.ToString(tmold.HydraulicPumpChk), Convert.ToString(tmold.HydraulicPumpChk), Tab, TM.gleSearch, Convert.ToString(TM.HydraulicPumpChk), Convert.ToString(TM.HydraulicPumpChk), " HydraulicPumpChk", TrnNo);
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.HydraulicPumpChk), Convert.ToString(TM.HydraulicPumpChk), Convert.ToString(tmold.HydraulicPumpChk), Convert.ToString(tmold.HydraulicPumpChk), Tab, TM.gleSearch, Convert.ToString(TM.HydraulicPumpChk), Convert.ToString(TM.HydraulicPumpChk), " HydraulicPump", TrnNo);
                 }
                 if (Tmold.SteeringAssemblyChk != TM.SteeringAssemblyChk)
                 {
-                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.SteeringAssemblyChk), Convert.ToString(TM.SteeringAssemblyChk), Convert.ToString(tmold.SteeringAssemblyChk), Convert.ToString(tmold.SteeringAssemblyChk), Tab, TM.gleSearch, Convert.ToString(TM.SteeringAssemblyChk), Convert.ToString(TM.SteeringAssemblyChk), " SteeringAssemblyChk", TrnNo);
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.SteeringAssemblyChk), Convert.ToString(TM.SteeringAssemblyChk), Convert.ToString(tmold.SteeringAssemblyChk), Convert.ToString(tmold.SteeringAssemblyChk), Tab, TM.gleSearch, Convert.ToString(TM.SteeringAssemblyChk), Convert.ToString(TM.SteeringAssemblyChk), " SteeringAssembly", TrnNo);
                 }
                 if (Tmold.RadiatorAssemblyChk != TM.RadiatorAssemblyChk)
                 {
-                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RadiatorAssemblyChk), Convert.ToString(TM.RadiatorAssemblyChk), Convert.ToString(tmold.RadiatorAssemblyChk), Convert.ToString(tmold.RadiatorAssemblyChk), Tab, TM.gleSearch, Convert.ToString(TM.RadiatorAssemblyChk), Convert.ToString(TM.RadiatorAssemblyChk), " RadiatorAssemblyChk", TrnNo);
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RadiatorAssemblyChk), Convert.ToString(TM.RadiatorAssemblyChk), Convert.ToString(tmold.RadiatorAssemblyChk), Convert.ToString(tmold.RadiatorAssemblyChk), Tab, TM.gleSearch, Convert.ToString(TM.RadiatorAssemblyChk), Convert.ToString(TM.RadiatorAssemblyChk), " RadiatorAssembly", TrnNo);
                 }
                 if (Tmold.AlternatorChk != TM.AlternatorChk)
                 {
-                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.AlternatorChk), Convert.ToString(TM.AlternatorChk), Convert.ToString(tmold.AlternatorChk), Convert.ToString(tmold.AlternatorChk), Tab, TM.gleSearch, Convert.ToString(TM.AlternatorChk), Convert.ToString(TM.AlternatorChk), " AlternatorChk", TrnNo);
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.AlternatorChk), Convert.ToString(TM.AlternatorChk), Convert.ToString(tmold.AlternatorChk), Convert.ToString(tmold.AlternatorChk), Tab, TM.gleSearch, Convert.ToString(TM.AlternatorChk), Convert.ToString(TM.AlternatorChk), " Alternator", TrnNo);
                 }
                 if (Tmold.Seq_Not_RequireChk != TM.Seq_Not_RequireChk)
                 {
-                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.Seq_Not_RequireChk), Convert.ToString(TM.Seq_Not_RequireChk), Convert.ToString(tmold.Seq_Not_RequireChk), Convert.ToString(tmold.Seq_Not_RequireChk), Tab, TM.gleSearch, Convert.ToString(TM.Seq_Not_RequireChk), Convert.ToString(TM.Seq_Not_RequireChk), " Seq_Not_RequireChk", TrnNo);
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.Seq_Not_RequireChk), Convert.ToString(TM.Seq_Not_RequireChk), Convert.ToString(tmold.Seq_Not_RequireChk), Convert.ToString(tmold.Seq_Not_RequireChk), Tab, TM.gleSearch, Convert.ToString(TM.Seq_Not_RequireChk), Convert.ToString(TM.Seq_Not_RequireChk), " Seq_Not_Require", TrnNo);
                 }
                 if (Tmold.SteeringMotorChk != TM.SteeringMotorChk)
                 {
-                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.SteeringMotorChk), Convert.ToString(TM.SteeringMotorChk), Convert.ToString(tmold.SteeringMotorChk), Convert.ToString(tmold.SteeringMotorChk), Tab, TM.gleSearch, Convert.ToString(TM.SteeringMotorChk), Convert.ToString(TM.SteeringMotorChk), " SteeringMotorChk", TrnNo);
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.SteeringMotorChk), Convert.ToString(TM.SteeringMotorChk), Convert.ToString(tmold.SteeringMotorChk), Convert.ToString(tmold.SteeringMotorChk), Tab, TM.gleSearch, Convert.ToString(TM.SteeringMotorChk), Convert.ToString(TM.SteeringMotorChk), " SteeringMotor", TrnNo);
                 }
                 if (Tmold.ClusterAssemblyChk != TM.ClusterAssemblyChk)
                 {
-                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.ClusterAssemblyChk), Convert.ToString(TM.ClusterAssemblyChk), Convert.ToString(tmold.ClusterAssemblyChk), Convert.ToString(tmold.ClusterAssemblyChk), Tab, TM.gleSearch, Convert.ToString(TM.ClusterAssemblyChk), Convert.ToString(TM.ClusterAssemblyChk), " ClusterAssemblyChk", TrnNo);
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.ClusterAssemblyChk), Convert.ToString(TM.ClusterAssemblyChk), Convert.ToString(tmold.ClusterAssemblyChk), Convert.ToString(tmold.ClusterAssemblyChk), Tab, TM.gleSearch, Convert.ToString(TM.ClusterAssemblyChk), Convert.ToString(TM.ClusterAssemblyChk), " ClusterAssembly", TrnNo);
                 }
                 if (Tmold.StartorMotorChk != TM.StartorMotorChk)
                 {
-                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.StartorMotorChk), Convert.ToString(TM.StartorMotorChk), Convert.ToString(tmold.StartorMotorChk), Convert.ToString(tmold.StartorMotorChk), Tab, TM.gleSearch, Convert.ToString(TM.StartorMotorChk), Convert.ToString(TM.StartorMotorChk), " StartorMotorChk", TrnNo);
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.StartorMotorChk), Convert.ToString(TM.StartorMotorChk), Convert.ToString(tmold.StartorMotorChk), Convert.ToString(tmold.StartorMotorChk), Tab, TM.gleSearch, Convert.ToString(TM.StartorMotorChk), Convert.ToString(TM.StartorMotorChk), " StartorMotor", TrnNo);
                 }
                 if (Tmold.RHFrontTyreChk != TM.RHFrontTyreChk)
                 {
-                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RHFrontTyreChk), Convert.ToString(TM.RHFrontTyreChk), Convert.ToString(tmold.RHFrontTyreChk), Convert.ToString(tmold.RHFrontTyreChk), Tab, TM.gleSearch, Convert.ToString(TM.RHFrontTyreChk), Convert.ToString(TM.RHFrontTyreChk), " RHFrontTyreChk", TrnNo);
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RHFrontTyreChk), Convert.ToString(TM.RHFrontTyreChk), Convert.ToString(tmold.RHFrontTyreChk), Convert.ToString(tmold.RHFrontTyreChk), Tab, TM.gleSearch, Convert.ToString(TM.RHFrontTyreChk), Convert.ToString(TM.RHFrontTyreChk), " RHFrontTyre", TrnNo);
                 }
                 if (Tmold.RHRearTyreChk != TM.RHRearTyreChk)
                 {
-                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RHRearTyreChk), Convert.ToString(TM.RHRearTyreChk), Convert.ToString(tmold.RHRearTyreChk), Convert.ToString(tmold.RHRearTyreChk), Tab, TM.gleSearch, Convert.ToString(TM.RHRearTyreChk), Convert.ToString(TM.RHRearTyreChk), " RHRearTyreChk", TrnNo);
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RHRearTyreChk), Convert.ToString(TM.RHRearTyreChk), Convert.ToString(tmold.RHRearTyreChk), Convert.ToString(tmold.RHRearTyreChk), Tab, TM.gleSearch, Convert.ToString(TM.RHRearTyreChk), Convert.ToString(TM.RHRearTyreChk), " RHRearTyre", TrnNo);
                 }
                 if (Tmold.DomesticExport != TM.DomesticExport)
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.DomesticExport), Convert.ToString(TM.DomesticExport), Convert.ToString(tmold.DomesticExport), Convert.ToString(tmold.DomesticExport), Tab, TM.gleSearch, Convert.ToString(TM.DomesticExport), Convert.ToString(TM.DomesticExport), " DomesticExport", TrnNo);
                 }
-                if (TM.NoOfBoltsFrontAxel == null)
-                {
-                    TM.NoOfBoltsFrontAxel = "";
-                }
-                if (Tmold.NoOfBoltsFrontAxel != TM.NoOfBoltsFrontAxel)
-                {
-                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.NoOfBoltsFrontAxel), Convert.ToString(TM.NoOfBoltsFrontAxel), Convert.ToString(tmold.NoOfBoltsFrontAxel), Convert.ToString(tmold.NoOfBoltsFrontAxel), Tab, TM.gleSearch, Convert.ToString(TM.NoOfBoltsFrontAxel), Convert.ToString(TM.NoOfBoltsFrontAxel), " NoOfBoltsFrontAxel", TrnNo);
-                }
+                //if (TM.NoOfBoltsFrontAxel == null)
+                //{
+                //    TM.NoOfBoltsFrontAxel = "";
+                //}
+                //if (Tmold.NoOfBoltsFrontAxel != TM.NoOfBoltsFrontAxel)
+                //{
+                //    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.NoOfBoltsFrontAxel), Convert.ToString(TM.NoOfBoltsFrontAxel), Convert.ToString(tmold.NoOfBoltsFrontAxel), Convert.ToString(tmold.NoOfBoltsFrontAxel), Tab, TM.gleSearch, Convert.ToString(TM.NoOfBoltsFrontAxel), Convert.ToString(TM.NoOfBoltsFrontAxel), " NoOfBoltsFrontAxel", TrnNo);
+                //}
                 if (TM.NoOfBoltsHydraulic == null)
                 {
                     TM.NoOfBoltsHydraulic = "";
@@ -3292,7 +3293,7 @@ namespace MVCApp.Controllers
                 {
                     TM.ECU_DESC = "";
                 }
-                if (Tmold.ECU !=TM.ECU)
+                if (Tmold.ECU != TM.ECU)
                 {
                     fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.ECU, TM.ECU, tmold.ECU, tmold.ECU_DESC, Tab, TM.gleSearch, TM.ECU, TM.ECU_DESC, "ECU_DESC", TrnNo);
                 }
@@ -3306,11 +3307,11 @@ namespace MVCApp.Controllers
                 }
                 if (Tmold.RearRimChk != TM.RearRimChk)
                 {
-                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RearRimChk), Convert.ToString(TM.RearRimChk), Convert.ToString(tmold.RearRimChk), Convert.ToString(tmold.RearRimChk), Tab, TM.gleSearch, Convert.ToString(TM.RearRimChk), Convert.ToString(TM.RearRimChk), " RearRimChk", TrnNo);
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RearRimChk), Convert.ToString(TM.RearRimChk), Convert.ToString(tmold.RearRimChk), Convert.ToString(tmold.RearRimChk), Tab, TM.gleSearch, Convert.ToString(TM.RearRimChk), Convert.ToString(TM.RearRimChk), " RearRim", TrnNo);
                 }
                 if (Tmold.RearRimChk != TM.RearRimChk)
                 {
-                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RearRimChk), Convert.ToString(TM.RearRimChk), Convert.ToString(tmold.RearRimChk), Convert.ToString(tmold.RearRimChk), Tab, TM.gleSearch, Convert.ToString(TM.RearRimChk), Convert.ToString(TM.RearRimChk), " RearRimChk", TrnNo);
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RearRimChk), Convert.ToString(TM.RearRimChk), Convert.ToString(tmold.RearRimChk), Convert.ToString(tmold.RearRimChk), Tab, TM.gleSearch, Convert.ToString(TM.RearRimChk), Convert.ToString(TM.RearRimChk), " RearRim", TrnNo);
                 }
                 //Rajesh Add Some Fields  
                 if (TM.ECUChk == null)
@@ -3319,7 +3320,7 @@ namespace MVCApp.Controllers
                 }
                 if (Tmold.ECUChk != TM.ECUChk)
                 {
-                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.ECUChk), Convert.ToString(TM.ECUChk), Convert.ToString(tmold.ECUChk), Convert.ToString(tmold.ECUChk), Tab, TM.gleSearch, Convert.ToString(TM.ECUChk), Convert.ToString(TM.ECUChk), " RearRimChk", TrnNo);
+                    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.ECUChk), Convert.ToString(TM.ECUChk), Convert.ToString(tmold.ECUChk), Convert.ToString(tmold.ECUChk), Tab, TM.gleSearch, Convert.ToString(TM.ECUChk), Convert.ToString(TM.ECUChk), " RearRim", TrnNo);
                 }
             }
             return TrnNo;
@@ -3328,247 +3329,247 @@ namespace MVCApp.Controllers
         {
             string transactionNo = fun.get_Col_Value("SELECT NVL( MAX(TRANSACTION_NUMBER),0)+1 AS TRANSACTION_NUMBER FROM XXES_PARTS_AUDIT_DATA WHERE Remarks1 = 'TRACTOR_TAB_1' AND Remarks2 = 'F00000000'");
             TrnNo = Convert.ToInt32(transactionNo);
-            if (TM.ItemCode != null)
+            if (TM.ItemCode != null && TM.ItemCode != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.ItemCode, TM.ItemCode, "", "", "TRACTOR_TAB_1", TM.gleSearch, TM.ItemCode, TM.ItemCode_Desc, "Insert_ITEM", TrnNo);
             }
-            if (TM.Engine != null)
+            if (TM.Engine != null && TM.Engine != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.Engine, TM.Engine, "", "", Tab, TM.gleSearch, TM.Engine, TM.Engine_Desc, " Engine", TrnNo);
             }
-            if (TM.Backend != null)
+            if (TM.Backend != null && TM.Backend != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.Backend, TM.Backend, "", "", Tab, TM.gleSearch, TM.Backend, TM.Backend_Desc, " Backend", TrnNo);
             }
-            if (TM.Transmission != null)
+            if (TM.Transmission != null && TM.Transmission != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.Transmission, TM.Transmission, "", "", Tab, TM.gleSearch, TM.Transmission, TM.Transmission_Desc, " Transmission", TrnNo);
             }
-            if (TM.RearAxel != null)
+            if (TM.RearAxel != null && TM.RearAxel != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.RearAxel, TM.RearAxel, "", "", Tab, TM.gleSearch, TM.RearAxel, TM.RearAxel_Desc, " RearAxel", TrnNo);
             }
-            if (TM.Hydraulic != null)
+            if (TM.Hydraulic != null && TM.Hydraulic != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.Hydraulic, TM.Hydraulic, "", "", Tab, TM.gleSearch, TM.Hydraulic, TM.Hydraulic_Desc, " Hydraulic", TrnNo);
             }
-            if (TM.FrontTyre != null)
+            if (TM.FrontTyre != null&&TM.FrontTyre != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.FrontTyre, TM.FrontTyre, "", "", Tab, TM.gleSearch, TM.FrontTyre, TM.FrontTyre_Desc, " FrontTyre", TrnNo);
             }
-            if (TM.RHFrontTyre != null)
+            if (TM.RHFrontTyre != null && TM.RHFrontTyre != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.RHFrontTyre, TM.RHFrontTyre, "", "", Tab, TM.gleSearch, TM.RHFrontTyre, TM.RHFrontTyre_Desc, " RHFrontTyre", TrnNo);
             }
-            if (TM.RearTyre != null)
+            if (TM.RearTyre != null && TM.RearTyre != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.RearTyre, TM.RearTyre, "", "", Tab, TM.gleSearch, TM.RearTyre, TM.RearTyre_Desc, " RearTyre", TrnNo);
             }
-            if (TM.RHRearTyre != null)
+            if (TM.RHRearTyre != null && TM.RHRearTyre != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.RHRearTyre, TM.RHRearTyre, "", "", Tab, TM.gleSearch, TM.RHRearTyre, TM.RHRearTyre_Desc, " RHRearTyre", TrnNo);
             }
-            if (TM.Battery != null)
+            if (TM.Battery != null && TM.Battery != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.Battery, TM.Battery, "", "", Tab, TM.gleSearch, TM.Battery, TM.Battery_Desc, " Battery", TrnNo);
             }
-            if (TM.Rops != null)
+            if (TM.Rops != null && TM.Rops != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.Rops, TM.Rops, "", "", Tab, TM.gleSearch, TM.Rops, "", " Rops", TrnNo);
             }
-            if (TM.Prefix1 != null)
+            if (TM.Prefix1 != null && TM.Prefix1 != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.Prefix1, TM.Prefix1, "", "", Tab, TM.gleSearch, TM.Prefix1, "", " Prefix1", TrnNo);
             }
-            if (TM.Prefix2 != null)
+            if (TM.Prefix2 != null && TM.Prefix2 != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.Prefix2, TM.Prefix2, "", "", Tab, TM.gleSearch, TM.Prefix2, "", " Prefix2", TrnNo);
             }
-            if (TM.Prefix3 != null)
+            if (TM.Prefix3 != null && TM.Prefix3 != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.Prefix3, TM.Prefix3, "", "", Tab, TM.gleSearch, TM.Prefix3, "", " Prefix2", TrnNo);
             }
-            if (TM.Prefix4 != null)
+            if (TM.Prefix4 != null && TM.Prefix4 != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.Prefix4, TM.Prefix4, "", "", Tab, TM.gleSearch, TM.Prefix4, "", " Prefix4", TrnNo);
             }
-            if (TM.Remarks != null)
+            if (TM.Remarks != null && TM.Remarks != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.Remarks, TM.Remarks, "", "", Tab, TM.gleSearch, TM.Remarks, "", " Remarks", TrnNo);
             }
-            if (TM.ShortDesc != null)
+            if (TM.ShortDesc != null && TM.RHFrontTyre != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.ShortDesc, TM.ShortDesc, "", "", Tab, TM.gleSearch, TM.ShortDesc, "", " ShortDesc", TrnNo);
             }
-            if (TM.HydraulicPump != null)
+            if (TM.HydraulicPump != null && TM.HydraulicPump != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.HydraulicPump, TM.HydraulicPump, "", "", Tab, TM.gleSearch, TM.HydraulicPump, TM.HydraulicPump_Desc, " HydraulicPump", TrnNo);
             }
-            if (TM.SteeringAssembly != null)
+            if (TM.SteeringAssembly != null && TM.SteeringAssembly != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.SteeringAssembly, TM.SteeringAssembly, "", "", Tab, TM.gleSearch, TM.SteeringAssembly, TM.SteeringAssembly_Desc, " SteeringAssembly", TrnNo);
             }
-            if (TM.RadiatorAssembly != null)
+            if (TM.RadiatorAssembly != null&&TM.RadiatorAssembly != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.RadiatorAssembly, TM.RadiatorAssembly, "", "", Tab, TM.gleSearch, TM.RadiatorAssembly, TM.RadiatorAssembly_Desc, " RadiatorAssembly", TrnNo);
             }
-            if (TM.Alternator != null)
+            if (TM.Alternator != null && TM.Alternator != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.Alternator, TM.Alternator, "", "", Tab, TM.gleSearch, TM.Alternator, TM.Alternator_Desc, " Alternator", TrnNo);
             }
-            if (TM.BRAKE_PEDAL != null)
+            if (TM.BRAKE_PEDAL != null && TM.BRAKE_PEDAL != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.BRAKE_PEDAL, TM.BRAKE_PEDAL, "", "", Tab, TM.gleSearch, TM.BRAKE_PEDAL, TM.BrakePedal_Desc, " BRAKE_PEDAL", TrnNo);
             }
-            if (TM.BRAKE_PEDAL != null)
+            if (TM.BRAKE_PEDAL != null && TM.BRAKE_PEDAL != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.CLUTCH_PEDAL, TM.CLUTCH_PEDAL, "", "", Tab, TM.gleSearch, TM.CLUTCH_PEDAL, TM.ClutchPedal_Desc, " CLUTCH_PEDAL", TrnNo);
             }
-            if (TM.SPOOL_VALUE != null)
+            if (TM.SPOOL_VALUE != null && TM.SPOOL_VALUE != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.SPOOL_VALUE, TM.SPOOL_VALUE, "", "", Tab, TM.gleSearch, TM.SPOOL_VALUE, TM.SpoolValue_Desc, " SPOOL_VALUE", TrnNo);
             }
-            if (TM.TANDEM_PUMP != null)
+            if (TM.TANDEM_PUMP != null && TM.TANDEM_PUMP != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.TANDEM_PUMP, TM.SPOOL_VALUE, "", "", Tab, TM.gleSearch, TM.TANDEM_PUMP, TM.TandemPump_Desc, " TANDEM_PUMP", TrnNo);
             }
-            if (TM.FENDER != null)
+            if (TM.FENDER != null && TM.FENDER != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.FENDER, TM.FENDER, "", "", Tab, TM.gleSearch, TM.FENDER, TM.Fender_Desc, " FENDER", TrnNo);
             }
-            if (TM.SteeringMotor != null)
+            if (TM.SteeringMotor != null && TM.SteeringMotor != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.SteeringMotor, TM.SteeringMotor, "", "", Tab, TM.gleSearch, TM.SteeringMotor, TM.SteeringMotor_Desc, " SteeringMotor", TrnNo);
             }
-            if (TM.FENDER_RAILING != null)
+            if (TM.FENDER_RAILING != null && TM.FENDER_RAILING != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.FENDER_RAILING, TM.FENDER_RAILING, "", "", Tab, TM.gleSearch, TM.FENDER_RAILING, TM.FenderRailing_Desc, " FENDER_RAILING", TrnNo);
             }
-            if (TM.HEAD_LAMP != null)
+            if (TM.HEAD_LAMP != null && TM.HEAD_LAMP != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.HEAD_LAMP, TM.HEAD_LAMP, "", "", Tab, TM.gleSearch, TM.HEAD_LAMP, TM.HeadLamp_Desc, " HEAD_LAMP", TrnNo);
             }
-            if (TM.STEERING_WHEEL != null)
+            if (TM.STEERING_WHEEL != null && TM.STEERING_WHEEL != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.STEERING_WHEEL, TM.STEERING_WHEEL, "", "", Tab, TM.gleSearch, TM.STEERING_WHEEL, TM.SteeringWheel_Desc, " STEERING_WHEEL", TrnNo);
             }
-            if (TM.REAR_HOOD_WIRING_HARNESS != null)
+            if (TM.REAR_HOOD_WIRING_HARNESS != null && TM.REAR_HOOD_WIRING_HARNESS != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.REAR_HOOD_WIRING_HARNESS, TM.REAR_HOOD_WIRING_HARNESS, "", "", Tab, TM.gleSearch, TM.REAR_HOOD_WIRING_HARNESS, TM.RearHoolWiringHarness_Desc, " STEERING_WHEEL", TrnNo);
             }
-            if (TM.SEAT != null)
+            if (TM.SEAT != null && TM.SEAT != "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, TM.SEAT, TM.SEAT, "", "", Tab, TM.gleSearch, TM.SEAT, TM.Seat_Desc, " SEAT", TrnNo);
             }
-            if (TM.EnableCarButtonChk != null)
+            if (TM.EnableCarButtonChk != null&& TM.EnableCarButtonChk == true)
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.EnableCarButtonChk), Convert.ToString(TM.EnableCarButtonChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.EnableCarButtonChk), Convert.ToString(TM.EnableCarButtonChk), " CarButton", TrnNo);
             }
-            if (TM.EngineChk != null)
+            if (TM.EngineChk != null && TM.EngineChk == true)
             {
-                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.EngineChk), Convert.ToString(TM.EngineChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.EngineChk), Convert.ToString(TM.EngineChk), " EngineChk", TrnNo);
+                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.EngineChk), Convert.ToString(TM.EngineChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.EngineChk), Convert.ToString(TM.EngineChk), " Engine", TrnNo);
             }
-            if (TM.TransmissionChk != null)
+            if (TM.TransmissionChk != null && TM.TransmissionChk == true)
             {
-                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.TransmissionChk), Convert.ToString(TM.TransmissionChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.TransmissionChk), Convert.ToString(TM.TransmissionChk), " TransmissionChk", TrnNo);
+                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.TransmissionChk), Convert.ToString(TM.TransmissionChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.TransmissionChk), Convert.ToString(TM.TransmissionChk), " Transmission", TrnNo);
             }
-            if (TM.RearAxelChk != null)
+            if (TM.RearAxelChk != null && TM.RearAxelChk == true)
             {
-                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RearAxelChk), Convert.ToString(TM.RearAxelChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.RearAxelChk), Convert.ToString(TM.RearAxelChk), " RearAxelChk", TrnNo);
+                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RearAxelChk), Convert.ToString(TM.RearAxelChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.RearAxelChk), Convert.ToString(TM.RearAxelChk), " RearAxel", TrnNo);
             }
-            if (TM.FrontTyreChk != null)
+            if (TM.FrontTyreChk != null && TM.FrontTyreChk == true)
             {
-                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.FrontTyreChk), Convert.ToString(TM.FrontTyreChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.FrontTyreChk), Convert.ToString(TM.FrontTyreChk), " FrontTyreChk", TrnNo);
+                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.FrontTyreChk), Convert.ToString(TM.FrontTyreChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.FrontTyreChk), Convert.ToString(TM.FrontTyreChk), " FrontTyre", TrnNo);
             }
-            if (TM.BatteryChk != null)
+            if (TM.BatteryChk != null && TM.BatteryChk == true)
             {
-                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.BatteryChk), Convert.ToString(TM.BatteryChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.BatteryChk), Convert.ToString(TM.BatteryChk), " BatteryChk", TrnNo);
+                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.BatteryChk), Convert.ToString(TM.BatteryChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.BatteryChk), Convert.ToString(TM.BatteryChk), " Battery", TrnNo);
             }
-            if (TM.GenerateSerialNoChk != null)
+            if (TM.GenerateSerialNoChk != null && TM.GenerateSerialNoChk == true)
             {
-                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.GenerateSerialNoChk), Convert.ToString(TM.GenerateSerialNoChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.GenerateSerialNoChk), Convert.ToString(TM.GenerateSerialNoChk), " GenerateSerialNoChk", TrnNo);
+                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.GenerateSerialNoChk), Convert.ToString(TM.GenerateSerialNoChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.GenerateSerialNoChk), Convert.ToString(TM.GenerateSerialNoChk), " GenerateSerialNo", TrnNo);
             }
-            if (TM.RopsChk != null)
+            if (TM.RopsChk != null && TM.RopsChk == true)
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RopsChk), Convert.ToString(TM.RopsChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.RopsChk), Convert.ToString(TM.RopsChk), " RopsChk", TrnNo);
             }
-            if (TM.HydraulicPumpChk != null)
+            if (TM.HydraulicPumpChk != null && TM.HydraulicPumpChk == true)
             {
-                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.HydraulicPumpChk), Convert.ToString(TM.HydraulicPumpChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.HydraulicPumpChk), Convert.ToString(TM.HydraulicPumpChk), " HydraulicPumpChk", TrnNo);
+                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.HydraulicPumpChk), Convert.ToString(TM.HydraulicPumpChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.HydraulicPumpChk), Convert.ToString(TM.HydraulicPumpChk), " HydraulicPump", TrnNo);
             }
-            if (TM.SteeringAssemblyChk != null)
+            if (TM.SteeringAssemblyChk != null && TM.SteeringAssemblyChk == true)
             {
-                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.SteeringAssemblyChk), Convert.ToString(TM.SteeringAssemblyChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.SteeringAssemblyChk), Convert.ToString(TM.SteeringAssemblyChk), " SteeringAssemblyChk", TrnNo);
+                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.SteeringAssemblyChk), Convert.ToString(TM.SteeringAssemblyChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.SteeringAssemblyChk), Convert.ToString(TM.SteeringAssemblyChk), " SteeringAssembly", TrnNo);
             }
-            if (TM.RadiatorAssemblyChk != null)
+            if (TM.RadiatorAssemblyChk != null && TM.RadiatorAssemblyChk == true)
             {
-                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RadiatorAssemblyChk), Convert.ToString(TM.RadiatorAssemblyChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.RadiatorAssemblyChk), Convert.ToString(TM.RadiatorAssemblyChk), " RadiatorAssemblyChk", TrnNo);
+                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RadiatorAssemblyChk), Convert.ToString(TM.RadiatorAssemblyChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.RadiatorAssemblyChk), Convert.ToString(TM.RadiatorAssemblyChk), " RadiatorAssembly", TrnNo);
             }
-            if (TM.AlternatorChk != null)
+            if (TM.AlternatorChk != null && TM.AlternatorChk == true)
             {
-                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.AlternatorChk), Convert.ToString(TM.AlternatorChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.AlternatorChk), Convert.ToString(TM.AlternatorChk), " AlternatorChk", TrnNo);
+                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.AlternatorChk), Convert.ToString(TM.AlternatorChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.AlternatorChk), Convert.ToString(TM.AlternatorChk), " Alternator", TrnNo);
             }
-            if (TM.Seq_Not_RequireChk != null)
+            if (TM.Seq_Not_RequireChk != null && TM.Seq_Not_RequireChk == true)
             {
-                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.Seq_Not_RequireChk), Convert.ToString(TM.Seq_Not_RequireChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.Seq_Not_RequireChk), Convert.ToString(TM.Seq_Not_RequireChk), " Seq_Not_RequireChk", TrnNo);
+                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.Seq_Not_RequireChk), Convert.ToString(TM.Seq_Not_RequireChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.Seq_Not_RequireChk), Convert.ToString(TM.Seq_Not_RequireChk), " Seq_Not_Require", TrnNo);
             }
-            if (TM.SteeringMotorChk != null)
+            if (TM.SteeringMotorChk != null && TM.SteeringMotorChk == true)
             {
-                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.SteeringMotorChk), Convert.ToString(TM.SteeringMotorChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.SteeringMotorChk), Convert.ToString(TM.SteeringMotorChk), " SteeringMotorChk", TrnNo);
+                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.SteeringMotorChk), Convert.ToString(TM.SteeringMotorChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.SteeringMotorChk), Convert.ToString(TM.SteeringMotorChk), " SteeringMotor", TrnNo);
             }
-            if (TM.ClusterAssemblyChk != null)
+            if (TM.ClusterAssemblyChk != null && TM.ClusterAssemblyChk == true)
             {
-                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.ClusterAssemblyChk), Convert.ToString(TM.ClusterAssemblyChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.ClusterAssemblyChk), Convert.ToString(TM.ClusterAssemblyChk), " ClusterAssemblyChk", TrnNo);
+                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.ClusterAssemblyChk), Convert.ToString(TM.ClusterAssemblyChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.ClusterAssemblyChk), Convert.ToString(TM.ClusterAssemblyChk), " ClusterAssembly", TrnNo);
             }
-            if (TM.StartorMotorChk != null)
+            if (TM.StartorMotorChk != null && TM.StartorMotorChk == true)
             {
-                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.StartorMotorChk), Convert.ToString(TM.StartorMotorChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.StartorMotorChk), Convert.ToString(TM.StartorMotorChk), " StartorMotorChk", TrnNo);
+                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.StartorMotorChk), Convert.ToString(TM.StartorMotorChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.StartorMotorChk), Convert.ToString(TM.StartorMotorChk), " StartorMotor", TrnNo);
             }
-            if (TM.RHFrontTyreChk != null)
+            if (TM.RHFrontTyreChk != null && TM.RHFrontTyreChk == true)
             {
-                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RHFrontTyreChk), Convert.ToString(TM.RHFrontTyreChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.RHFrontTyreChk), Convert.ToString(TM.RHFrontTyreChk), " RHFrontTyreChk", TrnNo);
+                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RHFrontTyreChk), Convert.ToString(TM.RHFrontTyreChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.RHFrontTyreChk), Convert.ToString(TM.RHFrontTyreChk), " RHFrontTyre", TrnNo);
             }
-            if (TM.RHRearTyreChk != null)
+            if (TM.RHRearTyreChk != null && TM.RHRearTyreChk == true)
             {
-                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RHRearTyreChk), Convert.ToString(TM.RHRearTyreChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.RHRearTyreChk), Convert.ToString(TM.RHRearTyreChk), " RHRearTyreChk", TrnNo);
+                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.RHRearTyreChk), Convert.ToString(TM.RHRearTyreChk), "", "", Tab, TM.gleSearch, Convert.ToString(TM.RHRearTyreChk), Convert.ToString(TM.RHRearTyreChk), " RHRearTyre", TrnNo);
             }
-            if (TM.DomesticExport != null)
+            if (TM.DomesticExport != null && TM.DomesticExport == "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.DomesticExport), Convert.ToString(TM.DomesticExport), "", "", Tab, TM.gleSearch, Convert.ToString(TM.DomesticExport), Convert.ToString(TM.DomesticExport), " DomesticExport", TrnNo);
             }
-            if (TM.NoOfBoltsFrontAxel != null)
-            {
-                fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.NoOfBoltsFrontAxel), Convert.ToString(TM.NoOfBoltsFrontAxel), "", "", Tab, TM.gleSearch, Convert.ToString(TM.NoOfBoltsFrontAxel), Convert.ToString(TM.NoOfBoltsFrontAxel), " NoOfBoltsFrontAxel", TrnNo);
-            }
-            if (TM.NoOfBoltsHydraulic != null)
+            //if (TM.NoOfBoltsFrontAxel != null)
+            //{
+            //    fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.NoOfBoltsFrontAxel), Convert.ToString(TM.NoOfBoltsFrontAxel), "", "", Tab, TM.gleSearch, Convert.ToString(TM.NoOfBoltsFrontAxel), Convert.ToString(TM.NoOfBoltsFrontAxel), " NoOfBoltsFrontAxel", TrnNo);
+            //}
+            if (TM.NoOfBoltsHydraulic != null && TM.NoOfBoltsHydraulic == "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.NoOfBoltsHydraulic), Convert.ToString(TM.NoOfBoltsHydraulic), "", "", Tab, TM.gleSearch, Convert.ToString(TM.NoOfBoltsHydraulic), Convert.ToString(TM.NoOfBoltsHydraulic), " NoOfBoltsHydraulic", TrnNo);
             }
-            if (TM.NoOfBoltsFrontTYre != null)
+            if (TM.NoOfBoltsFrontTYre != null && TM.NoOfBoltsFrontTYre == "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.NoOfBoltsFrontTYre), Convert.ToString(TM.NoOfBoltsFrontTYre), "", "", Tab, TM.gleSearch, Convert.ToString(TM.NoOfBoltsFrontTYre), Convert.ToString(TM.NoOfBoltsFrontTYre), " NoOfBoltsFrontTYre", TrnNo);
             }
-            if (TM.NoOfBoltsRearTYre != null)
+            if (TM.NoOfBoltsRearTYre != null && TM.NoOfBoltsRearTYre == "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.NoOfBoltsRearTYre), Convert.ToString(TM.NoOfBoltsRearTYre), "", "", Tab, TM.gleSearch, Convert.ToString(TM.NoOfBoltsRearTYre), Convert.ToString(TM.NoOfBoltsRearTYre), " NoOfBoltsRearTYre", TrnNo);
             }
-            if (TM.NoOfBoltsEnToruqe1 != null)
+            if (TM.NoOfBoltsEnToruqe1 != null && TM.NoOfBoltsEnToruqe1 == "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.NoOfBoltsEnToruqe1), Convert.ToString(TM.NoOfBoltsEnToruqe1), "", "", Tab, TM.gleSearch, Convert.ToString(TM.NoOfBoltsEnToruqe1), Convert.ToString(TM.NoOfBoltsEnToruqe1), " NoOfBoltsEnToruqe1", TrnNo);
             }
-            if (TM.NoOfBoltsEnToruqe2 != null)
+            if (TM.NoOfBoltsEnToruqe2 != null && TM.NoOfBoltsEnToruqe2 == "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.NoOfBoltsEnToruqe2), Convert.ToString(TM.NoOfBoltsEnToruqe2), "", "", Tab, TM.gleSearch, Convert.ToString(TM.NoOfBoltsEnToruqe2), Convert.ToString(TM.NoOfBoltsEnToruqe2), " NoOfBoltsEnToruqe2", TrnNo);
             }
-            if (TM.NoOfBoltsEnToruqe3 != null)
+            if (TM.NoOfBoltsEnToruqe3 != null && TM.NoOfBoltsEnToruqe3 == "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.NoOfBoltsEnToruqe3), Convert.ToString(TM.NoOfBoltsEnToruqe3), "", "", Tab, TM.gleSearch, Convert.ToString(TM.NoOfBoltsEnToruqe3), Convert.ToString(TM.NoOfBoltsEnToruqe3), " NoOfBoltsEnToruqe3", TrnNo);
             }
-            if (TM.NoOfBoltsTRANSAXELToruqe1 != null)
+            if (TM.NoOfBoltsTRANSAXELToruqe1 != null && TM.NoOfBoltsTRANSAXELToruqe1 == "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.NoOfBoltsTRANSAXELToruqe1), Convert.ToString(TM.NoOfBoltsTRANSAXELToruqe1), "", "", Tab, TM.gleSearch, Convert.ToString(TM.NoOfBoltsTRANSAXELToruqe1), Convert.ToString(TM.NoOfBoltsTRANSAXELToruqe1), " NoOfBoltsTRANSAXELToruqe1", TrnNo);
             }
-            if (TM.NoOfBoltsTRANSAXELToruqe2 != null)
+            if (TM.NoOfBoltsTRANSAXELToruqe2 != null && TM.NoOfBoltsTRANSAXELToruqe2 == "")
             {
                 fun.Insert_Part_Audit_DataNEW(TM.Plant, TM.Family, Convert.ToString(TM.NoOfBoltsTRANSAXELToruqe2), Convert.ToString(TM.NoOfBoltsTRANSAXELToruqe2), "", "", Tab, TM.gleSearch, Convert.ToString(TM.NoOfBoltsTRANSAXELToruqe2), Convert.ToString(TM.NoOfBoltsTRANSAXELToruqe2), " NoOfBoltsTRANSAXELToruqe2", TrnNo);
             }
@@ -3872,7 +3873,7 @@ namespace MVCApp.Controllers
             return Json(msg, JsonRequestBehavior.AllowGet);
 
         }
-        public string sendMail(string Type, string mailbody,string Subject)
+        public string sendMail(string Type, string mailbody, string Subject)
         {
             string Email_To = string.Empty; string Email_CC = string.Empty; string Username = string.Empty;
             Email_To = fun.get_Col_Value("select EMAIL as EMAIL  from XXES_STAGE_EMAILS WHERE STAGE='TRACTOR_BOM'");
@@ -3883,27 +3884,42 @@ namespace MVCApp.Controllers
         public string MailBODY(int Transaction, string FCode, string TransctionType, string Heading)
         {
             DataTable data_table = new DataTable();
-            string query = string.Format(@"SELECT PLANT_CODE,FAMILY_CODE,ITEM_CODE,ENTRYDATE,PART_ITEM_CODE,OLD_PART_DESC,REMARKS1,REMARKS2,PART_NEW_ITEMCODE,NEW_PART_DESC,LOGIN_USER,SYSTEM,PART_DESC,TRANSACTION_NUMBER
+            string query = string.Format(@"SELECT PLANT_CODE,FAMILY_CODE,ITEM_CODE,ENTRYDATE,
+                                            CASE WHEN PART_ITEM_CODE ='TRUE' THEN 'ENABLE'
+                                            WHEN  PART_ITEM_CODE ='FALSE' THEN 'DISABLE'
+                                            ELSE PART_ITEM_CODE
+                                            END AS PART_ITEM_CODE,
+                                            CASE WHEN OLD_PART_DESC ='TRUE' THEN 'ENABLE'
+                                            WHEN  OLD_PART_DESC ='FALSE' THEN 'DISABLE'
+                                            ELSE OLD_PART_DESC
+                                            END AS OLD_PART_DESC,
+                                            CASE WHEN PART_NEW_ITEMCODE ='TRUE' THEN 'ENABLE'
+                                                 WHEN  PART_NEW_ITEMCODE ='FALSE' THEN 'DISABLE'
+                                                 ELSE PART_NEW_ITEMCODE END AS PART_NEW_ITEMCODE,
+                                            CASE WHEN NEW_PART_DESC ='TRUE' THEN 'ENABLE'
+                                                 WHEN  NEW_PART_DESC ='FALSE' THEN 'DISABLE'
+                                                 ELSE NEW_PART_DESC END AS NEW_PART_DESC,
+                                            LOGIN_USER,SYSTEM,PART_DESC,TRANSACTION_NUMBER
                                             FROM XXES_PARTS_AUDIT_DATA
                                             WHERE Remarks1='{0}' AND Remarks2='{1}' AND TRANSACTION_NUMBER={2}", TransctionType.Trim(), FCode.Trim(), Transaction);
             data_table = fun.returnDataTable(query);
 
             string textBody = " <table width='100%' style='border: 4px solid #1067b1;'>";
-            textBody += "<thead><tr><th colspan='6' style='background-color: #c1e3ff;'>" + Heading + " </th></tr> <tr><th style='background-color: #1067b1;color: #fff;width: 16%;'>SYSTEM :- " + data_table.Rows[0]["SYSTEM"] + "</th><th style='background-color: #1067b1;color: #fff;width: 46%;'>ENTRY DATE :- " + data_table.Rows[0]["ENTRYDATE"] + " </th><th style='background-color: #1067b1;color: #fff;width: 46%;'>ENTRY BY :- " + data_table.Rows[0]["LOGIN_USER"] + "</th><tr><th style='background-color: #1067b1;color: #fff;width: 12%;'></th><th style='background-color: #1067b1;color: #fff;width: 18%;'>Previous Name (Code)</th><th style='background-color: #1067b1;color: #fff;width: 18%;'>New Name (Code)</th></tr></thead><tbody>";
+            textBody += "<thead><tr><th colspan='6' style='background-color: #c1e3ff;'>" + Heading + " </th></tr> <tr><th style='background-color: #1067b1;color: #fff;width: 16%;'>SYSTEM :- " + data_table.Rows[0]["SYSTEM"] + "</th><th style='background-color: #1067b1;color: #fff;width: 46%;'>ENTRY DATE :- " + data_table.Rows[0]["ENTRYDATE"] + " </th><th style='background-color: #1067b1;color: #fff;width: 46%;'>ENTRY BY :- " + data_table.Rows[0]["LOGIN_USER"] + "</th><tr><th style='background-color: #1067b1;color: #fff;width: 12%;'>Field Name</th><th style='background-color: #1067b1;color: #fff;width: 18%;'>Previous Name (Code)</th><th style='background-color: #1067b1;color: #fff;width: 18%;'>New Name (Code)</th></tr></thead><tbody>";
             for (int loopCount = 0; loopCount < data_table.Rows.Count; loopCount++)
             {
                 textBody += "<tr><td style='background-color:gray;color:white;font-size:bold;border: 2px solid #1067b1;'>" + data_table.Rows[loopCount]["PART_DESC"] + "</td>";
                 if (data_table.Rows[loopCount]["PART_ITEM_CODE"].ToString() != "")
                 {
-                    textBody += "<td style='background-color: #8080808f;border: 2px solid #1067b1;'>" + data_table.Rows[loopCount]["OLD_PART_DESC"] + "(" + data_table.Rows[loopCount]["PART_ITEM_CODE"] + ")</td>";
+                    textBody += "<td style='border: 2px solid #1067b1;'>" + data_table.Rows[loopCount]["OLD_PART_DESC"] + "(" + data_table.Rows[loopCount]["PART_ITEM_CODE"] + ")</td>";
 
                 }
                 else
                 {
-                    textBody += "<td style='background-color: #8080808f;border: 2px solid #1067b1;'></td>";
+                    textBody += "<td style='border: 2px solid #1067b1;'></td>";
 
                 }
-                textBody += "<td style='color:red;background-color: #8080808f;border: 2px solid #1067b1;'> " + data_table.Rows[loopCount]["NEW_PART_DESC"] + " (" + data_table.Rows[loopCount]["PART_NEW_ITEMCODE"] + ")</td>";
+                textBody += "<td style='color:red;border: 2px solid #1067b1;'> " + data_table.Rows[loopCount]["NEW_PART_DESC"] + " (" + data_table.Rows[loopCount]["PART_NEW_ITEMCODE"] + ")</td>";
                 textBody += "</tr>";
             }
             textBody += " </tbody></table>";
@@ -5054,7 +5070,7 @@ namespace MVCApp.Controllers
             return Json(_Spindle, JsonRequestBehavior.AllowGet);
         }
 
-     
+
         //public JsonResult FillMotor(TractorMster data)
         //{
         //    List<DDLTextValue> _Motor = new List<DDLTextValue>();
@@ -5680,7 +5696,7 @@ namespace MVCApp.Controllers
                 bool t = true;
                 if (fun.UpdateTractorMasterS(obj))
                 {
-                    string subject  = "Update TAb 2 Tractor in MES with following details :- Tractor Code : " + obj.gleSearch + "";
+                    string subject = "Update TAb 2 Tractor in MES with following details :- Tractor Code : " + obj.gleSearch + "";
                     string head = "Update TAb 2 Tractor in MES with following details :- Tractor Code : " + obj.gleSearch + "<br>" + obj.ItemCode_Desc + "";
                     string mailbody = MailBODY(transaction, obj.gleSearch, "TRACTOR_TAB_2", head);
                     string mailsend = sendMail("Update_Change_TAb2", mailbody, subject);

@@ -259,6 +259,7 @@ namespace MVCApp.Models
                 DA.SelectCommand.Parameters.Add("pTO_DATE", OracleDbType.NVarchar2, ParameterDirection.Input).Value = obj.TODATE;
                 DA.SelectCommand.Parameters.Add("pORG_ID", OracleDbType.NVarchar2, ParameterDirection.Input).Value = orgid;
                 DA.SelectCommand.Parameters.Add("pSEARCH", OracleDbType.NVarchar2, ParameterDirection.Input).Value = search;
+                DA.SelectCommand.Parameters.Add("PLenght", OracleDbType.Int32, ParameterDirection.Input).Value = Convert.ToInt32(obj.length);
 
                 DA.SelectCommand.Parameters.Add("RES", OracleDbType.RefCursor, ParameterDirection.Output);
                 DA.Fill(dt);
