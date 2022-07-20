@@ -282,10 +282,10 @@ namespace MVCApp.Controllers.Mrn
               
                 query = string.Format(@"INSERT INTO XXES_Bulk_Storage(PLANT_CODE, FAMILY_CODE, LOCATION_CODE,ITEM_CODE,
                          CAPACITY, SAFTY_STOCK_QUANTITY ,NO_OF_LOC_ALLOCATED,PACKAGING_TYPE,VERTICAL_STACKING_LEVEL,BULK_STORAGE_SNP,USAGE_PER_TRACTOR,REVISION,
-                         TEMP_LOC,UNPACKED, CREATED_BY, CREATED_DATE,MAX_INVENTORY ) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}', '{14}',SYSDATE,'{15}')"
+                         TEMP_LOC,UNPACKED, CREATED_BY, CREATED_DATE,MAX_INVENTORY,BINS ) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}', '{14}',SYSDATE,'{15}','{16}')"
                          , data.Plant.ToUpper().Trim(), data.Family.ToUpper().Trim(), data.Location.ToUpper().Trim(), data.Item,
                          Convert.ToString(data.Capacity), Convert.ToString(data.SftStkQuantity), Convert.ToString(data.NoOfLocAllocated), 
-                         data.PackingType,data.VerticalStkLevel, data.BulkStoreSNP, data.UsagePerTractor, data.Revision, (data.TempLoc ? "Y" : "N"), (data.chkUnpck ? "Y" : "N"), HttpContext.Session["Login_User"].ToString(),data.MaxInventory.Trim());
+                         data.PackingType,data.VerticalStkLevel, data.BulkStoreSNP, data.UsagePerTractor, data.Revision, (data.TempLoc ? "Y" : "N"), (data.chkUnpck ? "Y" : "N"), HttpContext.Session["Login_User"].ToString(),data.MaxInventory.Trim(), Convert.ToString(data.NoofBin));
                 
                 if (fun.EXEC_QUERY(query))
                 {
@@ -483,6 +483,7 @@ namespace MVCApp.Controllers.Mrn
                             UPDATED_DATE=SYSDATE, 
                             UNPACKED='{15}',
                             MAX_INVENTORY= '{16}'
+                            BINS= '{17}'
                             WHERE AUTOID='{14}'", 
                         
                             data.Plant.ToUpper().Trim(),
@@ -501,7 +502,8 @@ namespace MVCApp.Controllers.Mrn
                             HttpContext.Session["Login_User"].ToString().ToUpper().Trim(),
                             data.AutoId,
                             (data.chkUnpck ? "Y" : "N"),
-                            data.MaxInventory.Trim());
+                            data.MaxInventory.Trim(),
+                            data.NoofBin);
 
                 if (fun.EXEC_QUERY(query))
                 {

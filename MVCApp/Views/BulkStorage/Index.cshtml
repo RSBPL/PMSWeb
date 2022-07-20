@@ -88,8 +88,8 @@
                         </div>
 
                         <div class="col-md-3">
-                            <label for="Capacity" class="text-right control-label col-form-label"><strong>CAPACITY</strong></label>
-                            @Html.TextBoxFor(Model => Model.Capacity, null, new { @class = "form-control input-sm", @autocomplete = "off", Type = "number" })
+                            <label for="Capacity" class="text-right control-label col-form-label"><strong>No. Of Bin</strong></label>
+                            @Html.TextBoxFor(Model => Model.NoofBin, null, new { @class = "form-control input-sm", @autocomplete = "off", Type = "number", @onblur = "capacityCal()" })
                             <strong>@Html.ValidationMessageFor(model => model.Capacity, "", new { @class = "text-danger" })</strong>
                         </div>
                         <div class="col-md-3">
@@ -99,7 +99,7 @@
                         </div>
                         <div class="col-md-3">
                             <label for="NoOfLocAllocated" class="text-right control-label col-form-label"><strong>NO. OF LOCATIONS ALLOCATED</strong></label>
-                            @Html.TextBoxFor(Model => Model.NoOfLocAllocated, null, new { @class = "form-control input-sm", @autocomplete = "off", Type = "number" })
+                            @Html.TextBoxFor(Model => Model.NoOfLocAllocated, null, new { @class = "form-control input-sm", @autocomplete = "off", Type = "number", @onblur = "capacityCal()" })
                             <strong>@Html.ValidationMessageFor(model => model.NoOfLocAllocated, "", new { @class = "text-danger" })</strong>
                         </div>
                         <div class="col-md-3">
@@ -114,8 +114,13 @@
                         </div>
                         <div class="col-md-3">
                             <label for="BulkStoreSNP" class="text-right control-label col-form-label"><strong>BULK STORE SNP</strong></label>
-                            @Html.TextBoxFor(Model => Model.BulkStoreSNP, null, new { @class = "form-control input-sm" })
+                            @Html.TextBoxFor(Model => Model.BulkStoreSNP, null, new { @class = "form-control input-sm", @onblur = "capacityCal()" })
                             <strong>@Html.ValidationMessageFor(model => model.BulkStoreSNP, "", new { @class = "text-danger" })</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="Capacity" class="text-right control-label col-form-label"><strong>CAPACITY</strong></label>
+                            @Html.TextBoxFor(Model => Model.Capacity, null, new { @class = "form-control input-sm", @autocomplete = "off", Type = "number" })
+                            <strong>@Html.ValidationMessageFor(model => model.Capacity, "", new { @class = "text-danger" })</strong>
                         </div>
                         <div class="col-md-3">
                             <label for="UsagePerTractor" class="text-right control-label col-form-label"><strong>USAGE PER TRACTOR</strong></label>
@@ -167,7 +172,25 @@
         AutoComplete();
       
     });
-
+        function capacityCal() {
+            var NoofBin = $('#NoofBin').val();
+            var BulkStoreSNP = $('#BulkStoreSNP').val();
+            var NoOfLocAllocated = $('#NoOfLocAllocated').val();
+            if (NoofBin == "") {
+                NoofBin = 1;
+            }
+            if (BulkStoreSNP == "") {
+                BulkStoreSNP = 1;
+            }
+            if (NoOfLocAllocated == "") {
+                NoOfLocAllocated = 1;
+            }
+            var Capacity = NoofBin * BulkStoreSNP * NoOfLocAllocated;
+            if (Capacity == "" && Capacity == null) {
+                Capacity = 0;
+            }
+            $('#Capacity').val(Capacity);
+        };
     function AutoComplete() {
         $.noConflict();
 

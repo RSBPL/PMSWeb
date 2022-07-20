@@ -272,7 +272,7 @@ namespace MVCApp.Controllers
 
 
                         dt = fun.returnDataTable(query);
-                        #region get boxes from XXES_VERIFYSTOREMRN table
+                        #region get boxes from XXES_VERIFYS TOREMRN table
                         if (dt.Rows.Count > 0)
                         {
                             for (int i = 0; i < dt.Rows.Count; i++)
