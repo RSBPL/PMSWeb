@@ -25,6 +25,7 @@ namespace MVCApp.Controllers
         Assemblyfunctions af = null;
         PrintAssemblyBarcodes printAssemblyBarcodes = null;
         Function fun = new Function();
+        List<BARCODEPRINT> mainbarcodeList = new List<BARCODEPRINT>();
         [HttpGet]
 
         public string GetMrnInfo(string Mrn)
@@ -296,7 +297,7 @@ WHERE SMS.LOCATION_CODE='{0}'", Location);
 
             string MRN_NO = cOMMONDATA.DATA.Split(',')[0].Trim();
             DataTable dt = new DataTable();
-            List<BARCODEPRINT> mainbarcodeList = new List<BARCODEPRINT>();
+            //List<BARCODEPRINT> mainbarcodeList = new List<BARCODEPRINT>();
             List<BOXBARCODE> bOXBARCODEs = new List<BOXBARCODE>();
             int NoBox = 0;
             try
@@ -337,7 +338,16 @@ WHERE SMS.LOCATION_CODE='{0}'", Location);
                                 dt.Columns.Add("BOX_NO", typeof(string));
                                 dt.Columns.Add("QR_CODE", typeof(string));
                                 DataRow dr = null;
-                                int PACKING_STD = Convert.ToInt32(dt.Rows[0]["PACKING_STANDARD"]);
+                                int PACKING_STD;
+                                if (cOMMONDATA.REMARKS != null)
+                                {
+                                    PACKING_STD = Convert.ToInt32(cOMMONDATA.REMARKS);
+                                }
+                                else
+                                {
+                                    PACKING_STD = Convert.ToInt32(dt.Rows[0]["PACKING_STANDARD"]);
+                                }
+                               
                                 int QTY_RECD = Convert.ToInt32(dt.Rows[0]["QTY_ORD"]);
                                 int bal_qty = 0;
                                 float a = 0;
@@ -2517,27 +2527,6 @@ AND FAMILY_CODE='{5}')
             return "OK";
         }
 
-        [HttpPost]
-        public string GetNotAvailItems(COMMONDATA cOMMONDATA)
-        {
-            DataTable dataTable = new DataTable();
-            string response = string.Empty;
-            try
-            {
-                query = string.Format(@"select KANBANNO KANBAN,LOCATION_CODE,ITEMCODE,QUANTITY from XXES_KANBANPKLIST k where k.plant_code='{0}' and k.family_code='{1}'
-                            and status='PENDING' and createdby='{2}'", cOMMONDATA.PLANT, cOMMONDATA.FAMILY, cOMMONDATA.CREATEDBY
-                    );
-                dataTable = returnDataTable(query);
-                response = JsonConvert.SerializeObject(dataTable);
-            }
-            catch (Exception ex)
-            {
-
-                dataTable = errorTable(ex.Message);
-                response = JsonConvert.SerializeObject(dataTable);
-            }
-            return response;
-        }
 
         [HttpPost]
         public string GetTempInfo(COMMONDATA cOMMONDATA) // COMMONDATA data
@@ -3375,6 +3364,174 @@ AND FAMILY_CODE='{5}')
 
         }
 
+        [HttpPost]
+        public string ValidateMrn(COMMONDATA cOMMONDATA)
+        {
+            DataTable dtMain = new DataTable();
+            string result = string.Empty;
+            string fcode = string.Empty, fcode_desc = string.Empty, ecudcode = string.Empty, ecudesc = string.Empty; bool REQ_ECU = false;
+            try
+            {
+
+                query = string.Format(@"SELECT COUNT(*) FROM XXES_MRNINFO xm WHERE xm.PLANT_CODE='{0}' AND xm.FAMILY_CODE='{1}' AND xm.MRN_NO='{2}'",
+                    cOMMONDATA.PLANT.Trim(), cOMMONDATA.FAMILY.Trim(), cOMMONDATA.DATA.Trim());
+                if (fun.CheckExits(query))
+                {
+                    result = "OK # VALID MRN";
+                }
+                else
+                {
+                    result = "ERROR # INVALID MRN";
+                }
+            }
+            catch (Exception ex)
+            {
+
+                result = "ERROR # " + ex.Message;
+            }
+            return result;
+        }
+
+        [HttpPost]
+        public string GetPackagingList(COMMONDATA cOMMONDATA)
+        {
+            DataTable dataTable = new DataTable();
+            string response = string.Empty;
+            try
+            {
+                query = string.Format(@"SELECT DISTINCT  XM.ITEMCODE ,XM.QUANTITY,XM.REC_QTY,XRM.PACKING_STANDARD FROM  XXES_MRNINFO xm JOIN XXES_VERIFYSTOREMRN xv
+                        ON XM.ITEMCODE =  XV.ITEMCODE AND xm.MRN_NO=XV.MRN AND XM.PLANT_CODE = XV.PLANT_CODE AND XM.FAMILY_CODE = XV.FAMILY_CODE
+                        JOIN  XXES_RAWMATERIAL_MASTER xrm ON XRM.ITEM_CODE =  XV.ITEMCODE AND XV.PLANT_CODE = XV.PLANT_CODE AND XM.FAMILY_CODE = XV.FAMILY_CODE
+                        WHERE XM.PLANT_CODE='{0}' AND XM.FAMILY_CODE='{1}' AND XM.MRN_NO='{2}' AND XRM.PACKING_STANDARD IS NOT NULL", cOMMONDATA.PLANT, cOMMONDATA.FAMILY, cOMMONDATA.DATA);
+                dataTable = returnDataTable(query);
+                response = JsonConvert.SerializeObject(dataTable);
+            }
+            catch (Exception ex)
+            {
+
+                dataTable = errorTable(ex.Message);
+                response = JsonConvert.SerializeObject(dataTable);
+            }
+            return response;
+        }
+
+        [HttpPost]
+        public string UpdateRecievdQty(UNBOXINGDATA uNBOXINGDATA)
+        {
+            string response = string.Empty;
+            try
+            {
+                if(string.IsNullOrEmpty(uNBOXINGDATA.MRNNO))
+                {
+                    response = "ERROR # PLEASE SCAN MRNNO";
+                    return response;
+                }
+                query = string.Format(@"SELECT COUNT(*) FROM XXES_MRNINFO xm WHERE XM.PLANT_CODE='{0}' AND XM.FAMILY_CODE='{1}' AND XM.ITEMCODE='{2}' AND XM.MRN_NO='{3}'",
+                     uNBOXINGDATA.PLANT.Trim().ToUpper(), uNBOXINGDATA.FAMILY.Trim().ToUpper(), uNBOXINGDATA.ITEMCODE.Trim().ToUpper(), uNBOXINGDATA.MRNNO.Trim().ToUpper());
+                if(!fun.CheckExits(query))
+                {
+                    response = "ERROR # ITEMCODE NOT FOUND";
+                    return response;
+                }
+                query = string.Format(@"UPDATE XXES_MRNINFO SET  REC_QTY ='{0}' WHERE PLANT_CODE='{1}' AND FAMILY_CODE='{2}' AND ITEMCODE='{3}' AND MRN_NO='{4}'",
+                        uNBOXINGDATA.REC_QTY.Trim().ToUpper(), uNBOXINGDATA.PLANT.Trim().ToUpper(), uNBOXINGDATA.FAMILY.Trim().ToUpper(), uNBOXINGDATA.ITEMCODE.Trim().ToUpper(), uNBOXINGDATA.MRNNO.Trim().ToUpper());
+                if(fun.EXEC_QUERY(query))
+                {
+                    response = "OK # UPDATED RECEIVED QUANTITY";
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                fun.LogWrite(ex);
+                return "ERROR:" + ex.Message;
+            }
+            return response;
+        }
+
+        [HttpPost]
+        public string UpdatePackegingStandard(UNBOXINGDATA uNBOXINGDATA)
+        {
+            string boxcount = string.Empty, boxno = string.Empty, NewBarcode = string.Empty;
+            COMMONDATA cOMMONDATA = new COMMONDATA();
+            cOMMONDATA.PLANT = uNBOXINGDATA.PLANT;
+            cOMMONDATA.FAMILY = uNBOXINGDATA.FAMILY;
+            cOMMONDATA.DATA = uNBOXINGDATA.MRNNO;
+            cOMMONDATA.CREATEDBY = uNBOXINGDATA.CREATEDBY;
+            cOMMONDATA.REMARKS = uNBOXINGDATA.PACKING_STANDARD;
+            string response = string.Empty;
+            DataTable dt = new DataTable();
+            try
+            {
+                if (string.IsNullOrEmpty(uNBOXINGDATA.MRNNO))
+                {
+                    response = "ERROR # PLEASE SCAN MRNNO";
+                    return response;
+                }
+                printMrn(cOMMONDATA);
+                bool result = false;
+                string connectionString = ConfigurationManager.ConnectionStrings["CON"].ConnectionString;
+                using (OracleConnection connection = new OracleConnection(connectionString))
+                {
+                    if (connection.State == ConnectionState.Closed)
+                    { connection.Open(); }
+                    OracleCommand command = connection.CreateCommand();
+                    OracleTransaction transaction = connection.BeginTransaction();
+                    command.Connection = connection;
+                    command.Transaction = transaction;
+                    try
+                    {
+                        command.CommandText = string.Format(@"DELETE FROM XXES_VERIFYSTOREMRN  WHERE PLANT_CODE ='{0}' AND FAMILY_CODE='{1}' AND ITEMCODE='{2}' AND MRN='{3}'",
+                            uNBOXINGDATA.PLANT.Trim().ToUpper(), uNBOXINGDATA.FAMILY.Trim().ToUpper(), uNBOXINGDATA.ITEMCODE.Trim().ToUpper(), uNBOXINGDATA.MRNNO.Trim().ToUpper());
+                        ExecQueryOra(query);
+                        command.ExecuteNonQuery();
+                        foreach (var item in mainbarcodeList)
+                        {
+                            command.CommandText = string.Format(@"INSERT INTO XXES_VERIFYSTOREMRN ( PLANT_CODE, FAMILY_CODE, MRN, ITEMCODE, QUANTITY, BOXCOUNT, BOXNO, BARCODE, CREATEDBY, CREATEDDATE)
+                                 VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', SYSDATE)", uNBOXINGDATA.PLANT, uNBOXINGDATA.FAMILY,
+                                uNBOXINGDATA.MRNNO, uNBOXINGDATA.ITEMCODE, uNBOXINGDATA.REC_QTY, item.BOX_NO.Split('/')[1].Trim(), item.BOX_NO.Split('/')[0].Trim(), item.QR_CODE, uNBOXINGDATA.CREATEDBY);
+                            command.ExecuteNonQuery();
+                        }
+                        command.CommandText = string.Format(@"UPDATE XXES_RAWMATERIAL_MASTER  SET PACKING_STANDARD ='{0}',UPDATEDBY='{1}',UPDATEDDATE=SYSDATE WHERE PLANT_CODE = '{2}' AND FAMILY_CODE='{3}' AND ITEM_CODE='{4}'",
+                            uNBOXINGDATA.PACKING_STANDARD, uNBOXINGDATA.CREATEDBY, uNBOXINGDATA.PLANT, uNBOXINGDATA.FAMILY, uNBOXINGDATA.ITEMCODE);
+                        command.ExecuteNonQuery();
+
+                        transaction.Commit();
+                        result = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        LogWrite(ex);
+                        result = false;
+                        try
+                        {
+                            transaction.Rollback();
+                        }
+                        catch (Exception ex2)
+                        {
+
+                        }
+
+                    }
+                    finally
+                    {
+                        if (connection.State == ConnectionState.Open)
+                        { connection.Close(); }
+                        connection.Dispose();
+                    }
+                }
+                if (result)
+                    return "OK : UPDATED DATA SUCCESSFULLY";
+                else
+                    return "SOMETHING WENT WRONG !!";
+            }
+            catch (Exception ex)
+            {
+                LogWrite(ex);
+                return "ERROR :" + ex.Message;
+            }
+            //return response;
+        }
     }
 
 }

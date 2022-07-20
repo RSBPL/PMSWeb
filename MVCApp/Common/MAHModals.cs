@@ -173,5 +173,18 @@ namespace MVCApp.Common
         public string TRANSACTIONTYPE { get; set; }
 
     }
-    
+    public class UNBOXINGDATA
+    {
+
+        public string PLANT { get; set; }
+        public string FAMILY { get; set; }
+        public string ITEMCODE { get; set; }
+        public string MRNNO { get; set; }
+        public string QUANTITY { get; set; }
+        public string REC_QTY { get; set; }
+        public string PACKING_STANDARD { get; set; }
+        public string CREATEDBY { get; set; }
+
+    }
+
 }
