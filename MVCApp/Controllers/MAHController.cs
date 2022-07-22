@@ -2017,6 +2017,7 @@ AND FAMILY_CODE='{5}')
                     case "FAULTY_SUMKT":
                     case "FAULTY_BLK":
                     case "STORE":
+                    case "UN_BOXING":
                         controller = "MAH";
                         break;
                     case "EN":
@@ -3482,20 +3483,35 @@ AND FAMILY_CODE='{5}')
                     try
                     {
                         command.CommandText = string.Format(@"DELETE FROM XXES_VERIFYSTOREMRN  WHERE PLANT_CODE ='{0}' AND FAMILY_CODE='{1}' AND ITEMCODE='{2}' AND MRN='{3}'",
-                            uNBOXINGDATA.PLANT.Trim().ToUpper(), uNBOXINGDATA.FAMILY.Trim().ToUpper(), uNBOXINGDATA.ITEMCODE.Trim().ToUpper(), uNBOXINGDATA.MRNNO.Trim().ToUpper());
+                                              uNBOXINGDATA.PLANT.Trim().ToUpper(), uNBOXINGDATA.FAMILY.Trim().ToUpper(), uNBOXINGDATA.ITEMCODE.Trim().ToUpper(), uNBOXINGDATA.MRNNO.Trim().ToUpper());
                         ExecQueryOra(query);
                         command.ExecuteNonQuery();
                         foreach (var item in mainbarcodeList)
                         {
                             command.CommandText = string.Format(@"INSERT INTO XXES_VERIFYSTOREMRN ( PLANT_CODE, FAMILY_CODE, MRN, ITEMCODE, QUANTITY, BOXCOUNT, BOXNO, BARCODE, CREATEDBY, CREATEDDATE)
-                                 VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', SYSDATE)", uNBOXINGDATA.PLANT, uNBOXINGDATA.FAMILY,
-                                uNBOXINGDATA.MRNNO, uNBOXINGDATA.ITEMCODE, uNBOXINGDATA.REC_QTY, item.BOX_NO.Split('/')[1].Trim(), item.BOX_NO.Split('/')[0].Trim(), item.QR_CODE, uNBOXINGDATA.CREATEDBY);
+                                                  VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', SYSDATE)", uNBOXINGDATA.PLANT, uNBOXINGDATA.FAMILY, uNBOXINGDATA.MRNNO, uNBOXINGDATA.ITEMCODE,
+                                                  uNBOXINGDATA.REC_QTY, item.BOX_NO.Split('/')[1].Trim(), item.BOX_NO.Split('/')[0].Trim(), item.QR_CODE, uNBOXINGDATA.CREATEDBY);
                             command.ExecuteNonQuery();
                         }
                         command.CommandText = string.Format(@"UPDATE XXES_RAWMATERIAL_MASTER  SET PACKING_STANDARD ='{0}',UPDATEDBY='{1}',UPDATEDDATE=SYSDATE WHERE PLANT_CODE = '{2}' AND FAMILY_CODE='{3}' AND ITEM_CODE='{4}'",
-                            uNBOXINGDATA.PACKING_STANDARD, uNBOXINGDATA.CREATEDBY, uNBOXINGDATA.PLANT, uNBOXINGDATA.FAMILY, uNBOXINGDATA.ITEMCODE);
+                                             uNBOXINGDATA.PACKING_STANDARD, uNBOXINGDATA.CREATEDBY, uNBOXINGDATA.PLANT, uNBOXINGDATA.FAMILY, uNBOXINGDATA.ITEMCODE);
                         command.ExecuteNonQuery();
 
+                        command.CommandText = string.Format(@"DELETE FROM XXES_RECEIPTBARCODES WHERE PLANT_CODE = '{0}' AND FAMILY_CODE='{1}' AND ITEMCODE='{2}' AND MRN_NO='{3}'",
+                                               uNBOXINGDATA.PLANT, uNBOXINGDATA.FAMILY, uNBOXINGDATA.ITEMCODE, uNBOXINGDATA.MRNNO);
+                        ExecQueryOra(query);
+                        command.ExecuteNonQuery();
+                        foreach(var item in mainbarcodeList)
+                        {
+                            command.CommandText = string.Format(@"INSERT INTO XXES_RECEIPTBARCODES ( PLANT_CODE, FAMILY_CODE, MRN_NO, ITEMCODE, QR_CODE, CREATEDBY, CREATEDDATE, QTY_RECEIVED, QTY, BOX_NO)
+                                                  VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', SYSDATE, '{6}', '{7}', '{8}')", uNBOXINGDATA.PLANT, uNBOXINGDATA.FAMILY, uNBOXINGDATA.MRNNO,
+                                                  uNBOXINGDATA.ITEMCODE, item.QR_CODE, uNBOXINGDATA.CREATEDBY, uNBOXINGDATA.REC_QTY, uNBOXINGDATA.QUANTITY, item.BOX_NO);
+                            command.ExecuteNonQuery();
+                        }
+                        command.CommandText = string.Format(@"INSERT INTO XXES_ACT_LOG ( ACT_DATE, ACT_MOD, ACT_WORK, U_NAME, SYSTEM_NAME, PRIMARY_FIELD, SQL_QRY, PLANT_CODE, FAMILY_CODE)
+                                               VALUES (SYSDATE, 'UNBOXING_STAGE', '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}')",uNBOXINGDATA.QUANTITY, uNBOXINGDATA.CREATEDBY,uNBOXINGDATA.ITEMCODE, 
+                                               uNBOXINGDATA.MRNNO,uNBOXINGDATA.REC_QTY, uNBOXINGDATA.PLANT,uNBOXINGDATA.FAMILY);
+                        command.ExecuteNonQuery();
                         transaction.Commit();
                         result = true;
                     }
@@ -3521,7 +3537,7 @@ AND FAMILY_CODE='{5}')
                     }
                 }
                 if (result)
-                    return "OK : UPDATED DATA SUCCESSFULLY";
+                    return "OK# UPDATED DATA SUCCESSFULLY";
                 else
                     return "SOMETHING WENT WRONG !!";
             }
@@ -3532,6 +3548,8 @@ AND FAMILY_CODE='{5}')
             }
             //return response;
         }
+
+       
     }
 
 }
