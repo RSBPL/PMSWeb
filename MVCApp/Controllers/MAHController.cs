@@ -3549,7 +3549,127 @@ AND FAMILY_CODE='{5}')
             //return response;
         }
 
-       
+        [HttpPost]
+        public string ReprintNewBarCode(BOXBARCODE bOXBARCODE)
+        {
+            string response = string.Empty, newQR = string.Empty, boxno = string.Empty, boxcount  =string.Empty;
+            DataTable dt = new DataTable();
+            BARCODEPRINT obj = new BARCODEPRINT();
+            List<BARCODEPRINT> barcodeList = new List<BARCODEPRINT>();
+            PrintAssemblyBarcodes barcodes = new PrintAssemblyBarcodes();
+            try
+            {
+                SplitItemBarcode splitItemBarcode = SplitItemQrcode(bOXBARCODE.QRCODE.Trim().ToUpper());
+                if (string.IsNullOrEmpty(bOXBARCODE.RECQTY) || bOXBARCODE.RECQTY == "0")
+                {
+                    response = "ERROR# INVALID QUANTITY";
+                    return response;
+                }
+                float f;
+                if (!float.TryParse(bOXBARCODE.RECQTY, out f))
+                {
+                    response = "ERROR# INVALID QUANTITY";
+                    return response;
+                }
+                if (!bOXBARCODE.BOX.Contains('/'))
+                {
+                    return "ERROR# BOX NO NOT FOUND . E.g. 1/5 ";
+                }
+                else
+                {
+                    boxno = bOXBARCODE.BOX.Split('/')[0].Trim();
+                    boxcount = bOXBARCODE.BOX.Split('/')[1].Trim();
+                }
+                //if (Convert.ToInt32(bOXBARCODE.RECQTY) < Convert.ToDouble(splitItemBarcode.PKGQTY))
+                //{
+                //    splitItemBarcode.PKGQTY = bOXBARCODE.RECQTY;
+                //    newQR = Convert.ToString(splitItemBarcode.PLANT + "$" + splitItemBarcode.PO + "$" + splitItemBarcode.ITEMCODE + "$" + splitItemBarcode.PKGQTY + "$" + splitItemBarcode.BULKLOC + "$" + splitItemBarcode.POLINE + "$" + splitItemBarcode.SUPPLIER + "$" + splitItemBarcode.IF + "$" + splitItemBarcode.DATE + "$" + splitItemBarcode.BOX + "$" + bOXBARCODE.MRN);
+                //    //oldBarcode = bOXBARCODE.QRCODE + "$" + bOXBARCODE.MRN;
+                //    bOXBARCODE.QRCODE = newQR;
+                //}
+                query = string.Format(@"SELECT V.PLANT_CODE AS PLANT, V.FAMILY_CODE, V.ITEMCODE,SUBSTR(M.ITEM_DESCRIPTION,0,'50') AS ITEM_DESCRIPTION,
+                                CASE WHEN I.VENDOR_NAME IS NULL THEN 'ESCORTS LTD' ELSE  SUBSTR(I.VENDOR_NAME,0,'50') END AS VENDOR_NAME,M.QUANTITY,
+                                to_char(SYSDATE, 'dd-Mon-yyyy' ) AS DELIVERY_DATE,to_char( I.TRANSACTION_DATE, 'dd-Mon-yyyy') as  TRANSACTION_DATE, 
+                                V.QUANTITY AS QTY_RECEIVED,(V.BOXNO||'/'||V.BOXCOUNT) AS COUNT,V.BARCODE,B.LOCATION_CODE BULKSTORAGE,
+                                                     b.packaging_type BPACKAGING,b.bulk_storage_snp BULK_SNP,
+                                                    CASE WHEN  (b.unpacked IS NULL OR b.unpacked = 'N') THEN 'N' ELSE 'Y' END UNPACKED
+                                                    FROM XXES_VERIFYSTOREMRN V
+                                                    INNER JOIN XXES_MRNINFO M
+                                                    ON V.MRN = M.MRN_NO AND V.ITEMCODE = M.ITEMCODE AND V.PLANT_CODE = M.PLANT_CODE AND V.FAMILY_CODE = M.FAMILY_CODE 
+                                                    INNER JOIN ITEM_RECEIPT_DETIALS I
+                                                    ON V.MRN = I.MRN_NO AND V.PLANT_CODE = I.PLANT_CODE AND V.FAMILY_CODE = I.FAMILY_CODE 
+                                                    INNER JOIN XXES_UNIT_MASTER U
+                                                    ON V.PLANT_CODE = U.U_CODE
+                                                    JOIN XXES_BULK_STORAGE B            
+                                                    ON M.PLANT_CODE = B.PLANT_CODE AND M.FAMILY_CODE = B.FAMILY_CODE AND M.ITEMCODE = B.ITEM_CODE
+
+                                                     WHERE V.MRN = '{0}' AND V.ITEMCODE = '{1}' AND V.BOXNO = '{2}' AND V.BOXCOUNT = '{3}' 
+                                                    AND V.PLANT_CODE = '{4}' AND V.FAMILY_CODE = '{5}'", bOXBARCODE.MRN,bOXBARCODE.ITEMCODE, boxno,
+                                                    boxcount, bOXBARCODE.PLANT, bOXBARCODE.FAMILY);
+                dt = fun.returnDataTable(query);
+                if (dt.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        obj.PLANT = Convert.ToString(dr["PLANT"]);
+                        obj.FAMILY = Convert.ToString(dr["FAMILY_CODE"]);
+                        //MRN_NO = Convert.ToString(dr["MRN"]),
+                        obj.ITEMCODE = Convert.ToString(dr["ITEMCODE"]);
+                        obj.ITEM_DESC = Convert.ToString(dr["ITEM_DESCRIPTION"]);
+                        obj.SUPP_NAME = Convert.ToString(dr["VENDOR_NAME"]);
+                        obj.QTY_ORD = Convert.ToString(dr["QUANTITY"]);
+                        obj.CURRENT_DATE = Convert.ToString(dr["DELIVERY_DATE"]);
+                        obj.TRANSACTION_DATE = Convert.ToString(dr["TRANSACTION_DATE"]);
+                        obj.QTY_DLV = Convert.ToString(dr["QTY_RECEIVED"]);
+                        obj.BOX_NO = Convert.ToString(dr["COUNT"]);
+                        obj.QR_CODE = Convert.ToString(dr["BARCODE"]);
+                        obj.BULK_LOC = Convert.ToString(dr["BULKSTORAGE"]);
+                        obj.BPACKAGING = Convert.ToString(dr["BPACKAGING"]);
+                        obj.BULK_SNP = Convert.ToString(dr["BULK_SNP"]);
+                        obj.UNPACKED = Convert.ToString(dr["UNPACKED"]);
+                        //PKG_STD = Convert.ToString(dr["PACKING_STANDARD"]),
+                        //PUNAME = Convert.ToString(dr["PUNAME"]) 
+                        barcodeList.Add(obj);
+                    }
+                    if (barcodes.PrintBoxs(barcodeList))
+                    {
+                        response = "OK# BARCODE REPRINTING SUCCESSFULLY";
+                        //return response;
+                    }
+                    else
+                    {
+                        response = "ERROR# PRINTER NOT FOUND";
+                    }
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                LogWrite(ex);
+            }
+            return response;
+        }
+        [HttpPost]
+        public string GetReprintList(BOXBARCODE bOXBARCODE)
+        {
+            DataTable dataTable = new DataTable();
+            string response = string.Empty;
+            try
+            {
+                query = string.Format(@"SELECT XV.ITEMCODE,XV.QUANTITY,XV.BOXNO,XV.BOXQTY  FROM XXES_VERIFYSTOREMRN xv WHERE XV.PLANT_CODE='{0}' 
+                        AND XV.FAMILY_CODE='{1}'  AND XV.MRN='{2}' AND XV.QUANTITY < XV.BOXQTY", bOXBARCODE.PLANT,
+                        bOXBARCODE.FAMILY,bOXBARCODE.MRN);
+                dataTable = returnDataTable(query);
+                response = JsonConvert.SerializeObject(dataTable);
+            }
+            catch (Exception ex)
+            {
+
+                dataTable = errorTable(ex.Message);
+                response = JsonConvert.SerializeObject(dataTable);
+            }
+            return response;
+        }
     }
 
 }
