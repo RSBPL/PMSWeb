@@ -219,6 +219,8 @@ namespace MVCApp.Models
 		public string DIM_STATUS { get; set; }
 		public string MT_STATUS { get; set; }
 		public string FITMENT_STATUS { get; set; }
+		public string INSPECTION_STATUS { get; set; }
+		public string SAMPLE_STATUS { get; set; }
 		public string SQA_STATUS { get; set; }
         public string ITEM_REVISION { get; set; }
 		public string PUNAME { get; set; }
@@ -368,6 +370,8 @@ namespace MVCApp.Models
 							MT_STATUS = Convert.ToString(dr["MT_STATUS"]),
 							FITMENT_STATUS = Convert.ToString(dr["FITMENT_STATUS"]),
 							SQA_STATUS = Convert.ToString(dr["SQA_STATUS"]),
+							INSPECTION_STATUS = Convert.ToString(dr["INSPECTION_STATUS"]),
+							SAMPLE_STATUS = Convert.ToString(dr["SAMPLE_STATUS"]),
 							
 						};
 						mrnList.Add(BC);

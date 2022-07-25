@@ -421,9 +421,9 @@ namespace MVCApp.Controllers.Admin
             {
                 data.NOTIFYMessage = "";
             }
-            query = string.Format(@"delete from XXES_STAGE_EMAILS where STAGE = '{0}'", Convert.ToString(data.STAGE));
+            query = string.Format(@"delete from XXES_STAGE_EMAILS where STAGE = '{0}' And Plant_Code='{1}'", Convert.ToString(data.STAGE), Convert.ToString(data.Plant));
             fun.EXEC_QUERY(query);
-            query = "insert into XXES_STAGE_EMAILS(STAGE,ITEM ,EMAIL,STAGE_DESC,USERNAME,MOBILE,MAILTIMING,TEMPLATEID,MESSAGE) values('" + Convert.ToString(data.STAGE) + "','','" + data.NOTIFYEMAILID.Trim() + "','" + data.STAGE.Trim() + "','" + data.NOTIFYUSERNAME.Trim() + "','" + data.NOTIFYMOBILE.Trim() + "','" + data.NOTIFYMAILTIMING.Trim() + "','" + data.NOTIFYTemplateID.Trim() + "','" + data.NOTIFYMessage.Trim() + "')";
+            query = "insert into XXES_STAGE_EMAILS(STAGE,ITEM ,EMAIL,STAGE_DESC,USERNAME,MOBILE,MAILTIMING,TEMPLATEID,MESSAGE,Plant_Code) values('" + Convert.ToString(data.STAGE) + "','','" + data.NOTIFYEMAILID.Trim() + "','" + data.STAGE.Trim() + "','" + data.NOTIFYUSERNAME.Trim() + "','" + data.NOTIFYMOBILE.Trim() + "','" + data.NOTIFYMAILTIMING.Trim() + "','" + data.NOTIFYTemplateID.Trim() + "','" + data.NOTIFYMessage.Trim() + "','" + data.Plant.Trim() + "')";
             if (fun.EXEC_QUERY(query))
             {
                 fun.Insert_Into_ActivityLog("STAGE_MAIL", "INSERT", Convert.ToString(data.STAGE), query, "", "");
@@ -530,9 +530,11 @@ namespace MVCApp.Controllers.Admin
         }
         public PartialViewResult GridEmails(SftSetting data)
         {
-            query = string.Format(@"select STAGE_DESC as STAGE, EMAIL as EMAIL, STAGE as CODE, ITEM from XXES_STAGE_EMAILS where STAGE = '{0}'", Convert.ToString(data.STAGE));
-            DataTable dt = fun.returnDataTable(query);
-
+            DataTable dt = null;
+            if (data.Plant != null && data.STAGE != null) { 
+            query = string.Format(@"select STAGE_DESC as STAGE, EMAIL as EMAIL, STAGE as CODE, ITEM from XXES_STAGE_EMAILS where STAGE = '{0}' And Plant_Code='{1}'", Convert.ToString(data.STAGE), Convert.ToString(data.Plant));
+             dt = fun.returnDataTable(query);
+            }
             ViewBag.EmailDataSource = dt;
             return PartialView();
         }

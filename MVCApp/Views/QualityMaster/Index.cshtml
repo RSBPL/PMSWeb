@@ -305,7 +305,7 @@
 
 @*Script for First Tab*@
 <script>
-    var qr; var MediaType;
+    var qr; var MediaType;var TYPE;
     $(document).ready(function () {
         $.noConflict();
         DDLPlant();
@@ -601,7 +601,7 @@
         var data = $('#myTable').DataTable().row($(this).closest('tr')).data();
         var Data = [];
         if ($(this).val() == "NOT ACCEPTED") {
-
+            TYPE= $(this).val();
             var obj = {
 
                 AUTOID: data['AUTOID'],
@@ -613,19 +613,28 @@
             Data.push(obj);
         }
         else if ($(this).val() == "HOLD") {
+            TYPE = $(this).val();
+            var obj = {
 
-            $('#tbHold').val(null);
-            $('#HoldTable tr').remove();
-            var added_row = " <thead><tr><th>MRN</th><th>Item Code</th><th>Qty</th><th></th></tr></thead>";
+                AUTOID: data['AUTOID'],
+                MRN_NO: data['MRN_NO'],
+                ITEMCODE: data['ITEMCODE'],
+                QUANTITY: data['QUANTITY']
+            };
 
-                added_row += '<tr>'
-                    + '<td>' + data['MRN_NO'] + '</td>'
-                    + '<td>' + data['ITEMCODE'] + '</td>'
-                    + '<td>' + data['QTY_RECEIVED'] + '</td>'
-                    + '<td style="display:none;">' + data['AUTOID'] + '</td>'
-                    + '</tr>'
-            $('#HoldTable').append(added_row);
-            $("#HoldPopUp").modal("show");
+            Data.push(obj);
+            //$('#tbHold').val(null);
+            //$('#HoldTable tr').remove();
+            //var added_row = " <thead><tr><th>MRN</th><th>Item Code</th><th>Qty</th><th></th></tr></thead>";
+
+            //    added_row += '<tr>'
+            //        + '<td>' + data['MRN_NO'] + '</td>'
+            //        + '<td>' + data['ITEMCODE'] + '</td>'
+            //        + '<td>' + data['QTY_RECEIVED'] + '</td>'
+            //        + '<td style="display:none;">' + data['AUTOID'] + '</td>'
+            //        + '</tr>'
+            //$('#HoldTable').append(added_row);
+            //$("#HoldPopUp").modal("show");
 
         }
 
@@ -709,49 +718,96 @@
                 }
 
                  else {
-                     if (response.Msg.includes("DCU")) {
-                         MediaType = response.Msg;
-                         var added_row = "<thead><tr><th>MRN</th><th>Item Code</th><th>BoxNo</th><th>Last Qty</th><th>Rejected Qty</th></tr></thead>";
-                         for (var i = 0; i < response.data.length; i++) {
-                             var mrn = response.data[i].MRN_NO;
-                             var itemcode = response.data[i].ITEMCODE;
-                             var boxNo = 'Box' + response.data[i].boxNo;
-                             var lastQty = response.data[i].QUANTITY;
-                             var rejectQty = '<input name = "DynamicTb" placeholder="Enter Rejected Qty" value="0" autocomplete="off" type="text" />';
-                             //We then append them to a string in html fashion
-                             added_row += '<tr>'
-                                 + '<td>' + mrn + '</td>'
-                                 + '<td>' + itemcode + '</td>'
-                                 + '<td>' + boxNo + '</td>'
-                                 + '<td>' + lastQty + '</td>'
-                                 + '<td>' + rejectQty + '</td>'
-                                 + '</tr>'
-                         }
+                     if (TYPE == "NOT ACCEPTED") {
+                         if (response.Msg.includes("DCU")) {
+                             MediaType = response.Msg;
+                             var added_row = "<thead><tr><th>MRN</th><th>Item Code</th><th>BoxNo</th><th>Last Qty</th><th>Rejected Qty</th></tr></thead>";
+                             for (var i = 0; i < response.data.length; i++) {
+                                 var mrn = response.data[i].MRN_NO;
+                                 var itemcode = response.data[i].ITEMCODE;
+                                 var boxNo = 'Box' + response.data[i].boxNo;
+                                 var lastQty = response.data[i].QUANTITY;
+                                 var rejectQty = '<input name = "DynamicTb" placeholder="Enter Rejected Qty" value="0" autocomplete="off" type="text" />';
+                                 //We then append them to a string in html fashion
+                                 added_row += '<tr>'
+                                     + '<td>' + mrn + '</td>'
+                                     + '<td>' + itemcode + '</td>'
+                                     + '<td>' + boxNo + '</td>'
+                                     + '<td>' + lastQty + '</td>'
+                                     + '<td>' + rejectQty + '</td>'
+                                     + '</tr>'
+                             }
 
                              $('#DynamicTable').append(added_row);
 
-                         $("#RejectionPopUp").modal("show");
-                     }
-                     else if (response.Msg.includes("WEB")) {
-                         MediaType = response.Msg;
-                         var added_row = " <thead><tr><th>MRN</th><th>Item Code</th><th>Last Qty</th><th>Rejected Qty</th></tr></thead>";
-                         for (var i = 0; i < response.data.length; i++) {
-                             var mrn = response.data[i].MRN_NO;
-                             var itemcode = response.data[i].ITEMCODE;
-                             var lastQty = response.data[i].QTY_RECEIVED;
-                             var rejectQty = '<input name = "DynamicTb" placeholder="Enter Rejected Qty" value="0" autocomplete="off" type="text" />';
-                             //We then append them to a string in html fashion
-                             added_row += '<tr>'
-                                 + '<td>' + mrn + '</td>'
-                                 + '<td>' + itemcode + '</td>'
-                                 + '<td>' + lastQty + '</td>'
-                                 + '<td>' + rejectQty + '</td>'
-                                 + '</tr>'
+                             $("#RejectionPopUp").modal("show");
                          }
+                         else if (response.Msg.includes("WEB")) {
+                             MediaType = response.Msg;
+                             var added_row = " <thead><tr><th>MRN</th><th>Item Code</th><th>Last Qty</th><th>Rejected Qty</th></tr></thead>";
+                             for (var i = 0; i < response.data.length; i++) {
+                                 var mrn = response.data[i].MRN_NO;
+                                 var itemcode = response.data[i].ITEMCODE;
+                                 var lastQty = response.data[i].QTY_RECEIVED;
+                                 var rejectQty = '<input name = "DynamicTb" placeholder="Enter Rejected Qty" value="0" autocomplete="off" type="text" />';
+                                 //We then append them to a string in html fashion
+                                 added_row += '<tr>'
+                                     + '<td>' + mrn + '</td>'
+                                     + '<td>' + itemcode + '</td>'
+                                     + '<td>' + lastQty + '</td>'
+                                     + '<td>' + rejectQty + '</td>'
+                                     + '</tr>'
+                             }
 
                              $('#DynamicTable').append(added_row);
 
-                         $("#RejectionPopUp").modal("show");
+                             $("#RejectionPopUp").modal("show");
+                         }
+                     } else if (TYPE == "HOLD") {
+                         if (response.Msg.includes("DCU")) {
+                             MediaType = response.Msg;
+                             var added_row = "<thead><tr><th>MRN</th><th>Item Code</th><th>BoxNo</th><th>Last Qty</th><th>HOLD Qty</th></tr></thead>";
+                             for (var i = 0; i < response.data.length; i++) {
+                                 var mrn = response.data[i].MRN_NO;
+                                 var itemcode = response.data[i].ITEMCODE;
+                                 var boxNo = 'Box' + response.data[i].boxNo;
+                                 var lastQty = response.data[i].QUANTITY;
+                                 var rejectQty = '<input name = "DynamicTbHold" placeholder="Enter HOLD Qty" value="0" autocomplete="off" type="text" />';
+                                 //We then append them to a string in html fashion
+                                 added_row += '<tr>'
+                                     + '<td>' + mrn + '</td>'
+                                     + '<td>' + itemcode + '</td>'
+                                     + '<td>' + boxNo + '</td>'
+                                     + '<td>' + lastQty + '</td>'
+                                     + '<td>' + rejectQty + '</td>'
+                                     + '</tr>'
+                             }
+
+                             $('#HoldTable').append(added_row);
+
+                             $("#HoldPopUp").modal("show");
+                         }
+                         else if (response.Msg.includes("WEB")) {
+                             MediaType = response.Msg;
+                             var added_row = " <thead><tr><th>MRN</th><th>Item Code</th><th>Last Qty</th><th>Rejected Qty</th></tr></thead>";
+                             for (var i = 0; i < response.data.length; i++) {
+                                 var mrn = response.data[i].MRN_NO;
+                                 var itemcode = response.data[i].ITEMCODE;
+                                 var lastQty = response.data[i].QTY_RECEIVED;
+                                 var rejectQty = '<input name = "DynamicTb" placeholder="Enter Rejected Qty" value="0" autocomplete="off" type="text" />';
+                                 //We then append them to a string in html fashion
+                                 added_row += '<tr>'
+                                     + '<td>' + mrn + '</td>'
+                                     + '<td>' + itemcode + '</td>'
+                                     + '<td>' + lastQty + '</td>'
+                                     + '<td>' + rejectQty + '</td>'
+                                     + '</tr>'
+                             }
+
+                             $('#HoldTable').append(added_row);
+
+                             $("#HoldPopUp").modal("show");
+                         }
                      }
 
                  }

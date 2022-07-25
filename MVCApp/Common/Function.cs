@@ -8959,7 +8959,24 @@ namespace MVCApp.CommonFunction
             }
             return "";
         }
-
+        public string getTractorcode(string job, string plant_code, string family)
+        {
+            try
+            {
+                return get_Col_Value("select FCODE_SRLNO from XXES_JOB_STATUS where jobid='" + job.Trim().ToUpper() + "' and plant_code= '" + plant_code.Trim() + "' and family_code='" + family + "'  ");
+            }
+            catch { return ""; }
+            finally { }
+        }
+        public string getFcodeId(string job, string plant_code, string family)
+        {
+            try
+            {
+                return get_Col_Value("select FCODE_AUTOID from XXES_DAILY_PLAN_JOB where jobid='" + job.Trim().ToUpper() + "' and plant_code= '" + plant_code.Trim() + "' and family_code='" + family + "'  ");
+            }
+            catch { return ""; }
+            finally { }
+        }
     }
 
 

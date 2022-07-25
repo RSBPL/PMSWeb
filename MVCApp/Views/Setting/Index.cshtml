@@ -453,7 +453,7 @@
     $("#Plant").on("change", function () {
         DDLFamilyByPlant();
         BindSMSGrid();
-
+        BindEmailGrid();
     });
     $("#Family").on("change", function () {
         BindExistingRecord();
@@ -913,6 +913,7 @@
     $("#NotifyAdd").on("click", function () {
             var Data = {
                 STAGE: $('#STAGE').val(),
+                Plant: $('#Plant').val(),
                 NOTIFYMOBILE: $('#NOTIFYMOBILE').val(),
                 NOTIFYUSERNAME: $('#NOTIFYUSERNAME').val(),
                 NOTIFYMAILTIMING: $('#NOTIFYMAILTIMING').val(),
@@ -1058,7 +1059,8 @@
     function BindEmailGrid() {
         $("#divLoader").show();
         var Data = {
-            STAGE: $('#STAGE').val()
+            STAGE: $('#STAGE').val(),
+            Plant: $('#Plant').val()
 
                 };
         $.ajax({

@@ -14,9 +14,11 @@ namespace MVCApp.Models
         public String STAGE_Code { get; set; }
         public String IPAddress { get; set; }
         public String JOBID { get; set; }
+        public String RepJOBID { get; set; }
         public String TYPE { get; set; }
         public String ROPS { get; set; }
         
+        public string Date { get; set; }
         public string BatMake { get; set; }
         public string Transmission { get; set; }
         public string Transmission_srlno { get; set; }
@@ -43,6 +45,7 @@ namespace MVCApp.Models
         public string fronttyreleftsidemake1 { get; set; }
         public string fronttyrerightsidemake2 { get; set; }
         public string reartyremake { get; set; }
+        public string fronttyremake { get; set; }
         public string RearRIM2 { get; set; }
         public string RearTyre2_srlno2 { get; set; }
         public string FrontSrnn1 { get; set; }
@@ -124,8 +127,10 @@ namespace MVCApp.Models
         public string Prefix_4 { get; set; }
         public string avgHours { get; set; }
         public string Password { get; set; }
+        public string BypassPassword { get; set; }
         public string ORG_ID { get; set; }
         public bool isREQUIRE_REARTYRE { get; set; }
+        public bool isBypass { get; set; }
         public bool isHydrualicRequire { get; set; }
         public bool isREQ_RHRT { get; set; }
         public bool isREQUIRE_FRONTTYRE { get; set; }
@@ -142,6 +147,7 @@ namespace MVCApp.Models
         public bool isREQ_STEERING_MOTOR { get; set; }
         public bool isREQ_FRONTRIM { get; set; }
         public bool isREQ_REARRIM { get; set; }
+        public bool isReplaceJob { get; set; }
 
 
 

@@ -86,6 +86,13 @@
     #PawordPopUpTab2 .modal-lg {
         max-width: 30% !important;
     }
+    #BypassPopUp .modal-lg {
+        max-width: 30% !important;
+    }
+
+    #BypassPopUpTab2 .modal-lg {
+        max-width: 30% !important;
+    }
 </style>
 <div id="divLoader" style="display:none;">
     <img src="@Url.Content("~/Image/Loader.gif")" alt="Loader" style="margin-top:10%; margin-left:38%" />
@@ -138,10 +145,41 @@
                             @Html.DropDownListFor(model => model.FAMILYCODE, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
                             <strong>@Html.ValidationMessageFor(model => model.FAMILYCODE, "", new { @class = "text-danger" })</strong>
                         </div>
-                        
+
                         <div class="col-md-6">
                             <label for="fname" class="text-right control-label col-form-label"><strong>SCAN JOB</strong></label>
                             @Html.TextBoxFor(Model => Model.JOBID, null, new { @class = "form-control input-sm" })
+                        </div>
+                        <div class="col-md-2">
+                            @Html.CheckBoxFor(model => model.isReplaceJob, false) REPLACE JOB
+                        </div>
+                        @*<div class="col-md-1">
+                                <div style="MARGIN-TOP: 25px;">
+                                    <button class="btn btn-success btn-sm" type="button" id="Show"><i class="ace-icon fa fa-search-plus bigger-110"></i><strong>SHOW</strong></button>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div style="MARGIN-TOP: 25px;">
+                                    <button class="btn btn-success btn-sm" type="button" id="Save"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                                </div>
+                            </div>*@
+                    </div>
+                    <div class="row" id="ReplaceDiv">
+                        <!--<div class="col-md-1" style="MARGIN-TOP: 25px;">-->
+                            @*<button class="btn btn-warning btn-sm" type="button" id="SearchReplaceJob"><i class="ace-icon fa fa-search bigger-110"></i><strong>Search</strong></button>*@
+                        <!--</div>-->
+                        <div class="col-md-2">
+                            <label for="fname" class="control-label col-form-label"><strong>Date</strong></label>
+                            @*@Html.EJS().DatePickerFor(Model => Model.FromDate).Format("dd-MMM-yyyy").Value(ViewBag.DefaultDate).Render()*@
+                            @Html.EJS().DatePickerFor(Model => Model.Date).Change("onchange").Format("dd-MMM-yyyy").Value(ViewBag.value).Render()
+                            <strong>@Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })</strong>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="fname" class="text-right control-label col-form-label"><strong>SCAN Replace JOB</strong></label>
+                            @Html.DropDownListFor(model => model.RepJOBID, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm" })
+                            <strong>@Html.ValidationMessageFor(model => model.RepJOBID, "", new { @class = "text-danger" })</strong>
+
                         </div>
                         @*<div class="col-md-1">
             <div style="MARGIN-TOP: 25px;">
@@ -204,9 +242,9 @@
                                 @Html.TextBoxFor(Model => Model.RearRIM2, null, new { @class = "form-control input-sm" })
                             </div>
                             @*<div class="col-md-4">
-                    <label for="fname" class="text-right control-label col-form-label"><strong>Tyre1</strong></label>
-                    @Html.TextBoxFor(Model => Model.RearTyre1, null, new { @class = "form-control input-sm", @Style = "width: 178px;margin: 0px 0 0 7px; "  })
-                </div>*@
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>Tyre1</strong></label>
+                                    @Html.TextBoxFor(Model => Model.RearTyre1, null, new { @class = "form-control input-sm", @Style = "width: 178px;margin: 0px 0 0 7px; "  })
+                                </div>*@
 
                         </fieldset>
                     </div>
@@ -231,20 +269,20 @@
                                 @Html.TextBoxFor(Model => Model.FrontRIM2, null, new { @class = "form-control input-sm" })
                             </div>
                             @*<div class="col-md-4">
-                    <label for="fname" class="text-right control-label col-form-label"><strong>Tyre1</strong></label>
-                    @Html.TextBoxFor(Model => Model.FrontTyre1_srlno1, null, new { @class = "form-control input-sm", @Style = "width: 178px;margin: 0px 0 0 7px; "  })
-                </div>*@
+                                    <label for="fname" class="text-right control-label col-form-label"><strong>Tyre1</strong></label>
+                                    @Html.TextBoxFor(Model => Model.FrontTyre1_srlno1, null, new { @class = "form-control input-sm", @Style = "width: 178px;margin: 0px 0 0 7px; "  })
+                                </div>*@
                         </fieldset>
                     </div>
                     @*<div class="col-md-2">
-            <label for="fname" class="text-right control-label col-form-label"><strong>Tyre2</strong></label>
-            @Html.TextBoxFor(Model => Model.RearTyre2_srlno2, null, new { @class = "form-control input-sm"  })
-        </div>*@
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Tyre2</strong></label>
+                            @Html.TextBoxFor(Model => Model.RearTyre2_srlno2, null, new { @class = "form-control input-sm"  })
+                        </div>*@
 
                     @*<div class="col-md-2">
-            <label for="fname" class="text-right control-label col-form-label"><strong>Tyre2</strong></label>
-            @Html.TextBoxFor(Model => Model.FrontTyre2_srlno2, null, new { @class = "form-control input-sm"  })
-        </div>*@
+                            <label for="fname" class="text-right control-label col-form-label"><strong>Tyre2</strong></label>
+                            @Html.TextBoxFor(Model => Model.FrontTyre2_srlno2, null, new { @class = "form-control input-sm"  })
+                        </div>*@
                     <div class="col-md-3">
                         <label for="fname" class="text-right control-label col-form-label"><strong>Battery</strong></label>
                         @Html.TextBoxFor(Model => Model.Battery_srlno, null, new { @class = "form-control input-sm" })
@@ -324,11 +362,10 @@
                     <div class="col-md-2">
                         <label for="fname" class="text-right control-label col-form-label"><strong>IPAddress</strong></label>
                         @Html.DropDownListFor(model => model.IPAddress, Enumerable.Empty<SelectListItem>(), "----Select----", new { @class = "form-control  input-sm", @Style = "width: 120px !important;" })
-                        <strong>@Html.ValidationMessageFor(model => model.STAGE_Code, "", new { @class = "text-danger" })</strong>
+                        <strong>@Html.ValidationMessageFor(model => model.IPAddress, "", new { @class = "text-danger" })</strong>
 
                     </div>
                     <div class="col-md-4"></div>
-                    <div class="col-md-1"></div>
                     <div class="col-md-1"></div>
                     <div class="col-md-1"></div>
                     <div class="col-md-1"></div>
@@ -352,8 +389,13 @@
                             <button class="btn btn-success btn-sm" type="button" id="Update"><strong>Update</strong></button>
                         </div>
                     </div>
+                    <div class="col-md-1" style="margin: 25px 4px 0 0;" id="ShowHideBypass">
+                        <div>
+                            <button class="btn btn-success btn-sm" type="button" id="Bypasspop" data-toggle="modal" data-target="#BypassPopUp"><strong>Bypass</strong></button>
+                        </div>
+                    </div>
                 </div>
-</fieldset>
+            </fieldset>
         </div>
     </div>
 </div>
@@ -384,12 +426,46 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="BypassPopUp" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Enter Bypass Password</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="ORDERBY" class="col-form-label">Password</label>
+                            @Html.TextBoxFor(Model => Model.BypassPassword, null, new { @class = "form-check-input", type = "password" })
+
+                            @*@Html.TextBoxFor(Model => Model.Password, null, new { @class = "form-control", @autocomplete = "off" })*@
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="BypassPawordSubmit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
 <input type="hidden" id="TractorStagePrint" />
 <input type="hidden" id="TractorAutoid" />
 <script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
 @*<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>*@
 <script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
 <link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.js")"></script>
+<link href="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.css")" rel="stylesheet" />
+
+<script src="@Url.Content("~/assets/js/jquery-2.1.4.min.js")"></script>
+<script src="@Url.Content("~/Scripts/ej2/ej2.min.js")"></script>
+<link href="@Url.Content("~/Content/select2/dist/css/select2.min.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/select2/dist/js/select2.min.js")"></script>
 <script src="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.js")"></script>
 <link href="@Url.Content("~/Scripts/AutoFill/jquery-ui.min.css")" rel="stylesheet" />
 
@@ -406,13 +482,114 @@
         $("#T05EngineBackend").hide();
         $("#ShowHideUpdate").hide();
         $("#RealUpdate").hide();
+        $("#ReplaceDiv").hide();
     });
-
+    function onchange(args) {
+        //var datepickerOBJ = document.getElementById('Date').ej2_instances[0];
+        ///*Apply selected format to the component*/
+        //datepickerOBJ.format = args.isInteracted;
+        if (args.isInteracted == true) {
+            DDLReplaceJob();
+        }
+    }
+    function DDLReplaceJob() {
+        //$("#divLoader").show();
+        var Data = {
+        PLANTCODE: $('#PLANTCODE').val(),
+            FAMILYCODE: $('#FAMILYCODE').val(),
+            Date: $('#Date').val()
+             };
+        $.ajax({
+            url: '@Url.Action("FillReplaceJob", "RollDown")',
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify({ data: Data }),
+            success: function (result) {
+                $("#RepJOBID").html(null);
+                $.each(result, function (i) {
+                    var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
+                    $("#RepJOBID").append(optionhtml);
+                });
+        },
+            error: function (errormessage) {
+            //alert(errormessage.responseText);
+            }
+        });
+    };
+    var bypass = false;
     $("#PawordSubmit").on("click", function () {
         /* localStorage.setItem("IsTabChange", true);*/
         ChkPassword();
     });
 
+    $("#SearchReplaceJob").on("click", function () {
+        DDLReplaceJob();
+        /*BindGrid();*/
+    });
+    $("#BypassPawordSubmit").on("click", function () {
+        /* localStorage.setItem("IsTabChange", true);*/
+        ChkBypassPassword();
+    });
+    $("#isReplaceJob").on("change", function () {
+        DivReplaceJob();
+    });
+    function DivReplaceJob() {
+        var chkRepjob = null;
+        if ($('#isReplaceJob').is(":checked")) {
+            chkRepjob = true;
+            $("#ReplaceDiv").show();
+        }
+        else {
+            chkRepjob = false;
+            $("#ReplaceDiv").hide();
+        }
+    }
+    function ChkBypassPassword() {
+        $("#divLoader").show();
+        var data = {
+            PLANTCODE: $('#PLANTCODE').val(),
+            FAMILYCODE: $('#FAMILYCODE').val(),
+            BypassPassword: $('#BypassPassword').val()
+        };
+        $.ajax({
+            url: '@Url.Action("BypassPasswordPopup", "RollDown")',
+            data: JSON.stringify(data),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                //$("#PawordPopUp").hide();
+                //$(".modal-backdrop").hide();
+                //$(".modal-backdrop").addClass("important");
+                $("[data-dismiss=modal]").trigger({ type: "click" });
+                $("#divLoader").hide();
+                if (data.Msg == "Valid Password") {
+                    var chk = confirm("Are you sure you want to Bypass this?");
+                    if (chk == true) {
+                        $("#ShowHideBypass").hide();
+                        bypass = true;
+                        $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        setTimeout(function () {
+                            $.each($('.alert'), function () {
+                                closeAlert(this);
+                            });
+                        }, 5000);
+                    }
+                } else {
+                    $('#alert').append('<div class="alert ' + data.ID + '"role = "alert"><strong>' + data.Msg + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    setTimeout(function () {
+                        $.each($('.alert'), function () {
+                            closeAlert(this);
+                        });
+                    }, 5000);
+                }
+            },
+            error: function (errormessage) {
+
+            }
+        });
+
+    };
 
     function ChkPassword() {
         $("#divLoader").show();
@@ -469,9 +646,18 @@
             jobid = myArray[0];
         }
         var itemCode = $('#ItemCode').val();
-
+        var chkRepjob = false;
+        if ($('#isReplaceJob').is(":checked")) {
+            let text = "Are You Sure To Replace JOBID !!";
+            if (confirm(text) == true) {
+                chkRepjob = true;
+            } else {
+                chkRepjob = false;
+            }
+        }
         var Data = {
             JOBID: jobid,
+            RepJOBID: $('#RepJOBID').val(),
             PLANTCODE: $('#PLANTCODE').val(),
             FAMILYCODE: $('#FAMILYCODE').val(),
             Engine_srlno:$("#Engine_srlno").val(),
@@ -485,6 +671,7 @@
             FrontSrnn1_srlno1:$("#FrontSrnn1_srlno1").val(),
             FrontSrnn2_srlno2:$("#FrontSrnn2_srlno2").val(),
             Battery_srlno:$("#Battery_srlno").val(),
+            BatMake:$("#BatMake").val(),
             HydrualicPump_srlno:$("#HydrualicPump_srlno").val(),
             SteeringMotor_srlno:$("#SteeringMotor_srlno").val(),
             SteeringAssem_srlno:$("#SteeringAssem_srlno").val(),
@@ -504,6 +691,7 @@
             Srno:$("#Srno").val(),
             IMEI:$("#IMEI").val(),
             isSrNoRequire:false,
+            isReplaceJob: chkRepjob,
             MOBILE:$("#MOBILE").val()
 
         };
@@ -617,7 +805,9 @@
                                 closeAlert(this);
                             });
                         }, 5000);
-
+                        if ($('#isReplaceJob').is(":checked")) {
+                            DivReplaceJob();
+                        }
                     }
                     else {
                         $('#alert').append('<div class="alert alert-danger role = "alert"><strong>' + data + '</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -666,7 +856,7 @@
                     var optionhtml = '<option value="' + result[i].Value + '">' + result[i].Text + '</option>';
                     $("#IPAddress").append(optionhtml);
                 });
-
+                    //DDLReplaceJob();
         },
             error: function (errormessage) {
             //alert(errormessage.responseText);
@@ -744,6 +934,7 @@
                     $("#FAMILYCODE").append(optionhtml);
                 });
                 BindStage();
+                DDLReplaceJob();
         },
             error: function (errormessage) {
             //alert(errormessage.responseText);
@@ -824,109 +1015,172 @@
 
                         if (data.Result.Transmission_srlno != "" && data.Result.Transmission_srlno != null) {
                             $("#Transmission_srlno").val(data.Result.Transmission_srlno);
+                        } else {
+                            $("#Transmission_srlno").val("");
                         }
                         if (data.Result.RearAxel_srlno != "" && data.Result.RearAxel_srlno != null) {
                             $("#RearAxel_srlno").val(data.Result.RearAxel_srlno);
+                        } else {
+                            $("#RearAxel_srlno").val("");
                         }
                         if (data.Result.Engine_srlno != "" && data.Result.Engine_srlno != null) {
                             $("#Engine_srlno").val(data.Result.Engine_srlno);
+                        } else {
+                            $("#Engine_srlno").val("");
                         }
                         if (data.Result.Backend_srlno != "" && data.Result.Backend_srlno != null) {
                             $("#Backend_srlno").val(data.Result.Backend_srlno);
+                        } else {
+                            $("#Backend_srlno").val("");
                         }
                         if (data.Result.Hydraulic_srlno != "" && data.Result.Hydraulic_srlno != null) {
                             $("#Hydraulic_srlno").val(data.Result.Hydraulic_srlno);
+                        } else {
+                            $("#Hydraulic_srlno").val("");
                         }
                         if (data.Result.RearTyre1_srlno1 != "" && data.Result.RearTyre1_srlno1 != null) {
                             $("#RearTyre1_srlno1").val(data.Result.RearTyre1_srlno1);
+                        } else {
+                            $("#RearTyre1_srlno1").val("");
                         }
                         if (data.Result.RearTyre2_srlno2 != "" && data.Result.RearTyre2_srlno2 != null) {
                             $("#RearTyre2_srlno2").val(data.Result.RearTyre2_srlno2);
+                        } else {
+                            $("#RearTyre2_srlno2").val("");
                         }
                         if (data.Result.FrontTyre1_srlno1 != "" && data.Result.FrontTyre1_srlno1 != null) {
                             $("#FrontTyre1_srlno1").val(data.Result.FrontTyre1_srlno1);
+                        } else {
+                            $("#FrontTyre1_srlno1").val("");
                         }
                         if (data.Result.FrontTyre2_srlno2 != "" && data.Result.FrontTyre2_srlno2 != null) {
                             $("#FrontTyre2_srlno2").val(data.Result.FrontTyre2_srlno2);
+                        } else {
+                            $("#FrontTyre2_srlno2").val("");
                         }
                         if (data.Result.Battery_srlno != "" && data.Result.Battery_srlno != null) {
                             $("#Battery_srlno").val(data.Result.Battery_srlno);
+                        } else {
+                            $("#Battery_srlno").val("");
                         }
                         if (data.Result.HydrualicPump_srlno != "" && data.Result.HydrualicPump_srlno != null) {
                             $("#HydrualicPump_srlno").val(data.Result.HydrualicPump_srlno);
+                        } else {
+                            $("#HydrualicPump_srlno").val("");
                         }
                         if (data.Result.SteeringMotor_srlno != "" && data.Result.SteeringMotor_srlno != null) {
                             $("#SteeringMotor_srlno").val(data.Result.SteeringMotor_srlno);
+                        } else {
+                            $("#SteeringMotor_srlno").val("");
                         }
                         if (data.Result.SteeringAssem_srlno != "" && data.Result.SteeringAssem_srlno != null) {
                             $("#SteeringAssem_srlno").val(data.Result.SteeringAssem_srlno);
+                        } else {
+                            $("#SteeringAssem_srlno").val("");
                         }
                         if (data.Result.SteeringCylinder_srlno != "" && data.Result.SteeringCylinder_srlno != null) {
                             $("#SteeringCylinder_srlno").val(data.Result.SteeringCylinder_srlno);
+                        } else {
+                            $("#SteeringCylinder_srlno").val("");
                         }
                         if (data.Result.Radiator_srlno != "" && data.Result.Radiator_srlno != null) {
                             $("#Radiator_srlno").val(data.Result.Radiator_srlno);
+                        } else {
+                            $("#Radiator_srlno").val("");
                         }
                         if (data.Result.Cluster_srlno != "" && data.Result.Cluster_srlno != null) {
                             $("#Cluster_srlno").val(data.Result.Cluster_srlno);
+                        } else {
+                            $("#Cluster_srlno").val("");
                         }
                         if (data.Result.Alternator_srlno != "" && data.Result.Alternator_srlno != null) {
                             $("#Alternator_srlno").val(data.Result.Alternator_srlno);
+                        } else {
+                            $("#Alternator_srlno").val("");
                         }
                         if (data.Result.Motor_srlno != "" && data.Result.Motor_srlno != null) {
                             $("#Motor_srlno").val(data.Result.Motor_srlno);
+                        } else {
+                            $("#Motor_srlno").val("");
                         }
                         if (data.Result.RearRIM1_srlno != "" && data.Result.RearRIM1_srlno != null) {
                             $("#RearRIM1_srlno").val(data.Result.RearRIM1_srlno);
+                        } else {
+                            $("#RearRIM1_srlno").val("");
                         }
                         if (data.Result.RearRIM2_srlno != "" && data.Result.RearRIM2_srlno != null) {
                             $("#RearRIM2_srlno").val(data.Result.RearRIM2_srlno);
+                        } else {
+                            $("#RearRIM2_srlno").val("");
                         }
                         if (data.Result.FrontRIM1_srlno != "" && data.Result.FrontRIM1_srlno != null) {
                             $("#FrontRIM1_srlno").val(data.Result.FrontRIM1_srlno);
+                        } else {
+                            $("#FrontRIM1_srlno").val("");
                         }
                         if (data.Result.FrontRIM2_srlno != "" && data.Result.FrontRIM2_srlno != null) {
                             $("#FrontRIM2_srlno").val(data.Result.FrontRIM2_srlno);
+                        } else {
+                            $("#FrontRIM2_srlno").val("");
                         }
                         if (data.Result.RearTyre1_srlno != "" && data.Result.RearTyre1_srlno != null) {
                             $("#RearTyre1_srlno").val(data.Result.RearTyre1_srlno);
+                        } else {
+                            $("#RearTyre1_srlno").val("");
                         }
                         if (data.Result.RearTyre2_srlno2 != "" && data.Result.RearTyre2_srlno2 != null) {
                             $("#RearTyre2_srlno2").val(data.Result.RearTyre2_srlno2);
+                        } else {
+                            $("#RearTyre2_srlno2").val("");
                         }
                         if (data.Result.FrontTyre1_srlno != "" && data.Result.FrontTyre1_srlno != null) {
                             $("#FrontTyre1_srlno").val(data.Result.FrontTyre1_srlno);
+                        } else {
+                            $("#FrontTyre1_srlno").val("");
                         }
                         if (data.Result.FrontTyre2_srlno2 != "" && data.Result.FrontTyre2_srlno2 != null) {
                             $("#FrontTyre2_srlno2").val(data.Result.FrontTyre2_srlno2);
+                        } else {
+                            $("#FrontTyre2_srlno2").val("");
                         }
                         if (data.Result.Srno != "" && data.Result.Srno != null) {
                             $("#Srno").val(data.Result.Srno);
+                        } else {
+                            $("#Srno").val("");
                         }
                         if (data.Result.IMEI != "" && data.Result.IMEI != null) {
                             $("#IMEI").val(data.Result.IMEI);
+                        } else {
+                            $("#IMEI").val("");
                         }
                         if (data.Result.MOBILE != "" && data.Result.MOBILE != null) {
                             $("#MOBILE").val(data.Result.MOBILE);
-                        }
-                        if (data.Result.IMEI != "" && data.Result.IMEI != null) {
-                            $("#IMEI").val(data.Result.IMEI);
+                        } else {
+                            $("#MOBILE").val("");
                         }
                         if (data.Result.TractorStagePrint != "" && data.Result.TractorStagePrint != null) {
                             $("#TractorStagePrint").val(data.Result.TractorStagePrint);
-                        }
+                        } 
                         if (data.Result.TractorAutoid != "" && data.Result.TractorAutoid != null) {
                             $("#TractorAutoid").val(data.Result.TractorAutoid);
+                        } else {
+                            $("#TractorAutoid").val("");
                         }
                         if (data.Result.ROPSrno != "" && data.Result.ROPSrno != null) {
                             $("#ROPSrno").val(data.Result.ROPSrno);
+                        } else {
+                            $("#ROPSrno").val("");
                         }
                         if (data.Result.OilQty != "" && data.Result.OilQty != null) {
                             $("#OilQty").val(data.Result.OilQty);
+                        } else {
+                            $("#OilQty").val("");
                         }
                         $('.form-control').attr('readonly', true);
                         $('#JOBID').attr('readonly', false);
                         $("#ShowHideUpdate").show();
+                        $("#ShowHideBypass").show();
+                        bypass = false;
                     }
 
                 },
@@ -1000,6 +1254,7 @@
                 PLANTCODE: $('#PLANTCODE').val(),
                 FAMILYCODE: $('#FAMILYCODE').val(),
                 STAGE_Code: stagecode,
+                isBypass: bypass,
                 Quantity: $('#Quantity').val(),
                 IPAddress: $("#IPAddress").val(),
                 Battery_srlno: $("#Battery_srlno").val(),
@@ -1076,8 +1331,11 @@
 
         $(alert).hide();
     };
-    $("#PLANTCODE,#FAMILYCODE,#STAGE_Code,#BatMake,#IPAddress").select2({
+    $("#PLANTCODE,#FAMILYCODE,#STAGE_Code,#BatMake,#IPAddress,#RepJOBID").select2({
         allowClear: true,
         width: '180px',
+    });
+    $("#RepJOBID").select2({
+        allowClear: true,
     });
 </script>

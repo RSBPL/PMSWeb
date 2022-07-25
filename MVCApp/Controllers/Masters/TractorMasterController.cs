@@ -2212,7 +2212,7 @@ namespace MVCApp.Controllers
                         string subject = "New Tractor added in MES with following details :- Tractor Code : " + obj.gleSearch + "";
                         string head = "New Tractor added in MES with following details :- Tractor Code : " + obj.gleSearch + "<br>" + obj.ItemCode_Desc + "";
                         string mailbody = MailBODY(transactionNo, obj.gleSearch, "TRACTOR_TAB_1", head);
-                        string mailsend = sendMail("Insert_Tractor", mailbody, subject);
+                        string mailsend = sendMail("Insert_Tractor", mailbody, subject,obj.Plant);
                         query = "select count(*) from ITEM_MASTER where trim(PLANT_CODE)='" + Convert.ToString(obj.Plant) + "' and trim(FAMILY_CODE)='" + Convert.ToString(obj.Family) + "' and trim(ITEM_CODE)='" + Convert.ToString(obj.ItemCode).Trim() + "'";
 
                         //fun.Insert_Into_ActivityLog("TRACTOR MASTER", "Insert_Update", Convert.ToString(obj.Plant) + " # " + Convert.ToString(obj.Family) + " # " + Convert.ToString(obj.ItemCode), query, Convert.ToString(obj.Plant).Trim().ToUpper(), Convert.ToString(obj.Family).Trim().ToUpper());
@@ -3858,7 +3858,7 @@ namespace MVCApp.Controllers
                          head = "Alert ! Update in the tractor mapping page . F-code : " + obj.gleSearch + "<br> Model name :" + obj.ItemCode_Desc + "";
                     }
                     string mailbody = MailBODY(transaction, obj.gleSearch, "TRACTOR_TAB_1", head);
-                    string mailsend = sendMail("Update_Change", mailbody, Subject);
+                    string mailsend = sendMail("Update_Change", mailbody, Subject,obj.Plant);
                     query = "select count(*) from ITEM_MASTER where trim(PLANT_CODE)='" + Convert.ToString(obj.Plant) + "' and trim(FAMILY_CODE)='" + Convert.ToString(obj.Family) + "' and trim(ITEM_CODE)='" + Convert.ToString(obj.ItemCode).Trim() + "'";
                     if (!fun.CheckExits(query))
                     {
@@ -3886,11 +3886,11 @@ namespace MVCApp.Controllers
             return Json(msg, JsonRequestBehavior.AllowGet);
 
         }
-        public string sendMail(string Type, string mailbody, string Subject)
+        public string sendMail(string Type, string mailbody, string Subject,string plant)
         {
             string Email_To = string.Empty; string Email_CC = string.Empty; string Username = string.Empty;
-            Email_To = fun.get_Col_Value("select EMAIL as EMAIL  from XXES_STAGE_EMAILS WHERE STAGE='TRACTOR_BOM'");
-            Username = fun.get_Col_Value("select USERNAME from XXES_STAGE_EMAILS WHERE STAGE='TRACTOR_BOM'");
+            Email_To = fun.get_Col_Value("select EMAIL as EMAIL  from XXES_STAGE_EMAILS WHERE STAGE='TRACTOR_BOM' And Plant_Code='"+ plant + "'");
+            Username = fun.get_Col_Value("select USERNAME from XXES_STAGE_EMAILS WHERE STAGE='TRACTOR_BOM' And Plant_Code='" + plant + "'");
             string sendMail = fun.SendMails(Type, mailbody, Subject, Email_To, Email_CC, Username);
             return sendMail;
         }
@@ -5414,7 +5414,7 @@ namespace MVCApp.Controllers
                         head = "Alert ! Addition in the tractor mapping page . F-code : " + obj.gleSearch + "<br> Model name :" + obj.ItemCode_Desc + "";
                     }
                     string mailbody = MailBODY(transactionNo, obj.gleSearch, "TRACTOR_TAB_1", head);
-                    string mailsend = sendMail("Insert_Tractor", mailbody, subject);
+                    string mailsend = sendMail("Insert_Tractor", mailbody, subject, obj.Plant);
                     query = "select count(*) from ITEM_MASTER where trim(PLANT_CODE)='" + Convert.ToString(obj.T4_Plant) + "' and trim(FAMILY_CODE)='" + Convert.ToString(obj.T4_Family) + "'and trim(ITEM_CODE)='" + Convert.ToString(obj.T4_ItemCode).Trim() + "' ";
 
                     //fun.Insert_Into_ActivityLog("TRACTOR MASTER", "Insert_Update", Convert.ToString(obj.Plant) + " # " + Convert.ToString(obj.Family) + " # " + Convert.ToString(obj.ItemCode), query, Convert.ToString(obj.Plant).Trim().ToUpper(), Convert.ToString(obj.Family).Trim().ToUpper());
@@ -5721,7 +5721,7 @@ namespace MVCApp.Controllers
                     string subject = "Update TAb 2 Tractor in MES with following details :- Tractor Code : " + obj.gleSearch + "";
                     string head = "Update TAb 2 Tractor in MES with following details :- Tractor Code : " + obj.gleSearch + "<br>" + obj.ItemCode_Desc + "";
                     string mailbody = MailBODY(transaction, obj.gleSearch, "TRACTOR_TAB_2", head);
-                    string mailsend = sendMail("Update_Change_TAb2", mailbody, subject);
+                    string mailsend = sendMail("Update_Change_TAb2", mailbody, subject, obj.Plant);
                     query = "select count(*) from ITEM_MASTER where trim(PLANT_CODE)='" + Convert.ToString(obj.T4_Plant) + "' and trim(FAMILY_CODE)='" + Convert.ToString(obj.T4_Family) + "'and trim(ITEM_CODE)='" + Convert.ToString(obj.T4_ItemCode).Trim() + "' ";
 
                     //fun.Insert_Into_ActivityLog("TRACTOR MASTER", "Insert_Update", Convert.ToString(obj.Plant) + " # " + Convert.ToString(obj.Family) + " # " + Convert.ToString(obj.ItemCode), query, Convert.ToString(obj.Plant).Trim().ToUpper(), Convert.ToString(obj.Family).Trim().ToUpper());

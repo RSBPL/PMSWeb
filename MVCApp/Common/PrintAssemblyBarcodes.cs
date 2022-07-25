@@ -1772,10 +1772,20 @@ namespace MVCApp.Common
                         Filename = "EN.txt";
 
                 }
+                else if (stage == "EN" && plant=="T05")
+                {
+                    if (tractortype == "EXPORT")
+                        Filename = "BD17.txt";
+                    else
+                        Filename = "BD.txt";
+
+                }
                 else if (stage == "COM" && plant == "T02")
                     Filename = "KUBOTAJOB.txt";
+                else if (stage == "COM" && plant == "T05")
+                    Filename = "PTJOB.txt";
                 else if (stage == "COM" && plant != "T02")
-                    Filename = "JOB.txt";
+                    Filename = "FTJOB.txt";
 
                 string path = HttpContext.Current.Server.MapPath("~//Printer//" + Filename.Trim());
                 if (!File.Exists(path))
@@ -1805,13 +1815,25 @@ namespace MVCApp.Common
             }
             finally { }
         }
-        public string PrintAssemblyStagesSticker(RollDown tractor, int copies)
+        public string PrintAssemblyStagesSticker(RollDown tractor,RollDown down, int copies)
         {
             string result = string.Empty;
             string fileData = string.Empty, line = string.Empty, IPADDR = string.Empty, IPPORT = string.Empty; bool Status;
             string prnfilename = string.Empty, barcode = string.Empty, AppPath = string.Empty;
             try
             {
+                if (string.IsNullOrEmpty(tractor.IMEI))
+                {
+                    tractor.IMEI = down.IMEI;
+                }
+                if (string.IsNullOrEmpty(tractor.MOBILE))
+                {
+                    tractor.MOBILE = down.MOBILE;
+                }
+                if (string.IsNullOrEmpty(tractor.simserialno))
+                {
+                    tractor.simserialno = down.Srno;
+                }
                 if (string.IsNullOrEmpty(tractor.IPAddress))
                 {
                     return result = "STAGE PRINTER IP ADDRESS AND PORT NOT FOUND";

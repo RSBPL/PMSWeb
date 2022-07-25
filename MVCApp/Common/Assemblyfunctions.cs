@@ -799,6 +799,21 @@ namespace MVCApp.Common
             }
             return foundjobid;
         }
+        public string DuplicateJobCheck(string data, string field,string jobid,string replacejob)
+        {
+            string foundjobid = string.Empty;
+            try
+            {
+                query = string.Format("select jobid from xxes_job_status where {0}='{1}' and jobid<>'{2}' and jobid<>'{3}'", field, data, jobid.Trim(), replacejob.Trim());
+                foundjobid = funtion.get_Col_Value(query);
+            }
+            catch (Exception ex)
+            {
+                funtion.LogWrite(ex);
+                throw;
+            }
+            return foundjobid;
+        }
         public string getPartDcode(string srno, string stagecode)
         {
             string dcode = string.Empty;
@@ -845,7 +860,7 @@ namespace MVCApp.Common
                 ,M.REQUIRE_FRONTTYRE,M.REQUIRE_BATTERY,M.REQ_HYD_PUMP,M.REQ_RADIATOR,M.REQ_RHFT
                 ,M.REQ_CLUSSTER,M.REQ_ALTERNATOR,M.REQ_STEERING_ASSEMBLY,M.REQ_STERING_CYLINDER,
                 M.REQ_ROPS,M.GEN_SRNO,M.ROPS_ITEM_CODE,M.REQ_STARTER_MOTOR,M.STARTER_MOTOR,M.REQ_STEERING_MOTOR,M.REQ_FRONTRIM,M.REQ_REARRIM                 
-                ,m.ITEM_DESCRIPTION DESCRIPTION,HYDRALUIC_SRLNO HYDRAULIC_LIFT,REARTYRE_MAKE TYRE_MAKE, 
+                ,m.ITEM_DESCRIPTION DESCRIPTION,HYDRALUIC_SRLNO HYDRAULIC_LIFT,REARTYRE_MAKE TYRE_MAKE,FRONTTYRE_MAKE,  
                 j.REARAXEL REAR_AXLE,REARAXEL_SRLNO,j.BACKEND,j.BACKEND_SRLNO,TRANSMISSION_SRLNO,m.ENGINE,BATTERY_MAKE,BATTERY_SRLNO,
                 fcode_id,
                 REQ_CAREBTN CAREBUTTONREQ,to_char( FINAL_LABEL_DATE, 'dd-Mon-yyyy HH24:MI:SS' )  FINAL_LABEL_DATE,
@@ -900,6 +915,7 @@ namespace MVCApp.Common
                     down.Motor_srlno = Convert.ToString(dt.Rows[0]["STARTER_MOTOR_SRLNO"]);
 
                     down.reartyremake = Convert.ToString(dt.Rows[0]["TYRE_MAKE"]);
+                    down.fronttyremake = Convert.ToString(dt.Rows[0]["FRONTTYRE_MAKE"]);
                     down.RearAxel = Convert.ToString(dt.Rows[0]["REAR_AXLE"]);
                     down.RearAxel_srlno = Convert.ToString(dt.Rows[0]["REARAXEL_SRLNO"]);
                     down.Transmission = Convert.ToString(dt.Rows[0]["TRANSMISSION"]);

@@ -789,9 +789,11 @@
     <Content Include="Printer\EN.TXT" />
     <Content Include="Printer\EN17.TXT" />
     <Content Include="Printer\FBD.TXT" />
+    <Content Include="Printer\FTJOB.TXT" />
     <Content Include="Printer\hyd.txt" />
     <Content Include="Printer\JOB.TXT" />
     <Content Include="Printer\PDI.TXT" />
+    <Content Include="Printer\PTJOB.TXT" />
     <Content Include="Scripts\AutoFill\images\ui-anim_basic_16x16.gif" />
     <Content Include="Scripts\AutoFill\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
     <Content Include="Scripts\AutoFill\images\ui-bg_diagonals-thick_20_666666_40x40.png" />

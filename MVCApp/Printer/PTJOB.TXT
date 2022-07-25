@@ -1,0 +1,81 @@
+<xpml><page quantity='0' pitch='76.2 mm'></xpml>'Seagull:2.1:DP
+INPUT OFF
+VERBOFF
+INPUT ON
+SYSVAR(48) = 0
+ERROR 15,"FONT NOT FOUND"
+ERROR 18,"DISK FULL"
+ERROR 26,"PARAMETER TOO LARGE"
+ERROR 27,"PARAMETER TOO SMALL"
+ERROR 37,"CUTTER DEVICE NOT FOUND"
+ERROR 1003,"FIELD OUT OF LABEL"
+SYSVAR(35)=0
+OPEN "tmp:setup.sys" FOR OUTPUT AS #1
+PRINT#1,"Printing,Media,Print Area,Media Margin (X),0"
+PRINT#1,"Printing,Media,Print Method,Ribbon (TTR)"
+PRINT#1,"Printing,Print Quality,Media Sensitivity,Very High"
+PRINT#1,"Printing,Media,LTS Sensitivity Level,0"
+PRINT#1,"Printing,Media,Media Type,Media With Gaps"
+PRINT#1,"Printing,Media,Start Adjust,-108"
+PRINT#1,"Printing,Media,Stop Adjust,0"
+PRINT#1,"Printing,Media,Print Area,Media Width,386"
+PRINT#1,"Printing,Media,Print Area,Media Length,610"
+PRINT#1,"Printing,Print Quality,Darkness,90"
+PRINT#1,"Printing,Print Quality,Contrast,+10%"
+PRINT#1,"Printing,Print Quality,Print Speed,100"
+PRINT#1,"Printing,Media,Media Calibration Mode,Fast"
+PRINT#1,"Printing,Media,Length (Slow Mode),0"
+PRINT#1,"Printing,Media,Clip Default,On"
+CLOSE #1
+SETUP "tmp:setup.sys"
+KILL "tmp:setup.sys"
+LTS& OFF
+CUT OFF
+<xpml></page></xpml><xpml><page quantity='1' pitch='76.2 mm'></xpml>CLL
+OPTIMIZE "BATCH" ON
+PP15,468:PL368,5
+PP15,354:PL368,5
+PP15,252:PL368,5
+PP54,451:AN7
+BARSET "CODE128B",2,1,2,51
+PB "FCODE_VAL"
+PP115,398:NASC 8
+FT "CG Times Bold",9,0,99
+PT "FCODE_VAL"
+PP28,396:FT "CG Times Bold",9,0,99
+PT "ITEM:-"
+PP41,342:BARSET "CODE128B",2,1,2,51
+PB "SERIES_NO"
+PP111,289:FT "CG Times Bold",8,0,99
+PT "SERIES_NO"
+PP15,100:AN1
+PL368,5
+PP28,91:AN7
+FT "CG Times Bold",7,0,99
+PT "ITEM_NAME1"
+PP22,213:FT "CG Times Bold",6,0,83
+PT "ENGINE:"
+PP13,23:AN1
+PX563,373,5
+PP91,218:AN7
+FT "CG Times Bold",8,0,84
+PT "ENGINE_VAL"
+PP31,163:FT "CG Times Bold",6,0,83
+PT "BAC :"
+PP87,168:FT "CG Times Bold",8,0,84
+PT "BACKEND_VAL"
+PP243,235:BARSET "QRCODE",1,1,4,2,1
+PB "FCODE_VAL,SERIES_NO,ENGINE_VAL,BACKEND_VAL,MONTH,."
+PP28,65:FT "CG Times Bold",7,0,99
+PT "ITEM_NAME2"
+PP41,587:FT "CG Times Bold",16,0,99
+PT "ROLL DOWN"
+PP15,531:AN1
+PL368,5
+PP41,524:AN7
+FT "CG Times Bold",12,0,99
+PT "PRINT_DATE"
+LAYOUT RUN ""
+PF
+PRINT KEY OFF
+<xpml></page></xpml><xpml><end/></xpml>
