@@ -151,22 +151,32 @@
                             @Html.TextBoxFor(Model => Model.JOBID, null, new { @class = "form-control input-sm" })
                         </div>
                         <div class="col-md-2">
-                            @Html.CheckBoxFor(model => model.isReplaceJob, false) REPLACE JOB
+                            <input type="radio" name="radio" value="ReplaceDiv" />
+                            <strong>
+                                REPLACE JOB
+                            </strong>
+                        </div>
+                        <div class="col-md-2" style="margin: 10px 0 0 0;">
+                            <input type="radio" name="radio" value="ChangeJobDiv" />
+                            <strong>
+                                CHANGE JOB
+                            </strong>
+                            @*@Html.CheckBoxFor(model => model.isReplaceJob, false) REPLACE JOB*@
                         </div>
                         @*<div class="col-md-1">
-                                <div style="MARGIN-TOP: 25px;">
-                                    <button class="btn btn-success btn-sm" type="button" id="Show"><i class="ace-icon fa fa-search-plus bigger-110"></i><strong>SHOW</strong></button>
-                                </div>
-                            </div>
-                            <div class="col-md-1">
-                                <div style="MARGIN-TOP: 25px;">
-                                    <button class="btn btn-success btn-sm" type="button" id="Save"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
-                                </div>
-                            </div>*@
+                <div style="MARGIN-TOP: 25px;">
+                    <button class="btn btn-success btn-sm" type="button" id="Show"><i class="ace-icon fa fa-search-plus bigger-110"></i><strong>SHOW</strong></button>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div style="MARGIN-TOP: 25px;">
+                    <button class="btn btn-success btn-sm" type="button" id="Save"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                </div>
+            </div>*@
                     </div>
                     <div class="row" id="ReplaceDiv">
                         <!--<div class="col-md-1" style="MARGIN-TOP: 25px;">-->
-                            @*<button class="btn btn-warning btn-sm" type="button" id="SearchReplaceJob"><i class="ace-icon fa fa-search bigger-110"></i><strong>Search</strong></button>*@
+                        @*<button class="btn btn-warning btn-sm" type="button" id="SearchReplaceJob"><i class="ace-icon fa fa-search bigger-110"></i><strong>Search</strong></button>*@
                         <!--</div>-->
                         <div class="col-md-2">
                             <label for="fname" class="control-label col-form-label"><strong>Date</strong></label>
@@ -181,16 +191,26 @@
                             <strong>@Html.ValidationMessageFor(model => model.RepJOBID, "", new { @class = "text-danger" })</strong>
 
                         </div>
+                    </div>
+                    <div class="row" id="ChangeJobDiv">
+                        <!--<div class="col-md-1" style="MARGIN-TOP: 25px;">-->
+                        @*<button class="btn btn-warning btn-sm" type="button" id="SearchReplaceJob"><i class="ace-icon fa fa-search bigger-110"></i><strong>Search</strong></button>*@
+                        <!--</div>-->
+                        <div class="col-md-2">
+                            <label for="fname" class="control-label col-form-label"><strong>JOB Number</strong></label>
+                            @*@Html.EJS().DatePickerFor(Model => Model.FromDate).Format("dd-MMM-yyyy").Value(ViewBag.DefaultDate).Render()*@
+                            @Html.TextBoxFor(Model => Model.CHANGEJOB_NO, null, new { @class = "form-check-input" })
+                        </div>
                         @*<div class="col-md-1">
-            <div style="MARGIN-TOP: 25px;">
-                <button class="btn btn-success btn-sm" type="button" id="Show"><i class="ace-icon fa fa-search-plus bigger-110"></i><strong>SHOW</strong></button>
+                <div style="MARGIN-TOP: 25px;">
+                    <button class="btn btn-success btn-sm" type="button" id="Show"><i class="ace-icon fa fa-search-plus bigger-110"></i><strong>SHOW</strong></button>
+                </div>
             </div>
-        </div>
-        <div class="col-md-1">
-            <div style="MARGIN-TOP: 25px;">
-                <button class="btn btn-success btn-sm" type="button" id="Save"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
-            </div>
-        </div>*@
+            <div class="col-md-1">
+                <div style="MARGIN-TOP: 25px;">
+                    <button class="btn btn-success btn-sm" type="button" id="Save"><i class="ace-icon fa fa-plus-square bigger-110"></i><strong>Save</strong></button>
+                </div>
+            </div>*@
                     </div>
                 </fieldset>
             </div>
@@ -492,6 +512,20 @@
             DDLReplaceJob();
         }
     }
+    $(document).ready(function () {
+        $("#ReplaceDiv").hide();
+        $("#ChangeJobDiv").hide();
+        $("input[name$='radio']").click(function () {
+            var test = $(this).val();
+            if (test == "ReplaceDiv") {
+                $("#" + test).show();
+                $("#ChangeJobDiv").hide();
+            } else if (test =="ChangeJobDiv"){
+                $("#" + test).show();
+                $("#ReplaceDiv").hide();
+            }
+        });
+    });
     function DDLReplaceJob() {
         //$("#divLoader").show();
         var Data = {
@@ -529,9 +563,6 @@
     $("#BypassPawordSubmit").on("click", function () {
         /* localStorage.setItem("IsTabChange", true);*/
         ChkBypassPassword();
-    });
-    $("#isReplaceJob").on("change", function () {
-        DivReplaceJob();
     });
     function DivReplaceJob() {
         var chkRepjob = null;
@@ -640,14 +671,14 @@
         $("#divLoader").show();
         var itemCode = $('#JOBID').val();
         const myArray = itemCode.split("#");
-        var tractorSrlno = myArray[0];
+        var tractorSrlno = myArray[2];
         var jobid = myArray[3];
         if (myArray.length < 2) {
             jobid = myArray[0];
         }
         var itemCode = $('#ItemCode').val();
         var chkRepjob = false;
-        if ($('#isReplaceJob').is(":checked")) {
+        if ($('input[name="radio"]:checked').val() =="ReplaceDiv") {
             let text = "Are You Sure To Replace JOBID !!";
             if (confirm(text) == true) {
                 chkRepjob = true;
@@ -658,6 +689,7 @@
         var Data = {
             JOBID: jobid,
             RepJOBID: $('#RepJOBID').val(),
+            CHANGEJOB_NO: $('#CHANGEJOB_NO').val(),
             PLANTCODE: $('#PLANTCODE').val(),
             FAMILYCODE: $('#FAMILYCODE').val(),
             Engine_srlno:$("#Engine_srlno").val(),
@@ -695,6 +727,28 @@
             MOBILE:$("#MOBILE").val()
 
         };
+        if ($('input[name="radio"]:checked').val() == "ChangeJobDiv") {
+            if (Data.CHANGEJOB_NO == "" || Data.CHANGEJOB_NO == null) {
+                $('#alert').append('<div class="alert alert-danger role = "alert"><strong>Please Enter Job to continue..</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                //setTimeout(function () { $(".alert").alert('close'); }, 5000);
+                setTimeout(function () {
+                    $.each($('.alert'), function () {
+                        closeAlert(this);
+                    });
+                }, 5000);
+                $("#CHANGEJOB_NO").focus();
+                $("#divLoader").hide();
+                return;
+            }
+            let text = "Are you sure to change the job number of tractor " + Data.TractorSrlno + " Job no " + Data.JOBID + " To CHANGE JOB " + Data.CHANGEJOB_NO + "";
+            if (confirm(text) == true) {
+                Data.CHANGEJOB_NO = $('#CHANGEJOB_NO').val();
+                Data.TractorSrlno = tractorSrlno;
+            } else {
+                $("#divLoader").hide();
+                return;
+            }
+        }
         $.ajax({
             url: '@Url.Action("Update", "RollDown")',
             data: JSON.stringify({ obj: Data }),
@@ -1160,7 +1214,7 @@
                         }
                         if (data.Result.TractorStagePrint != "" && data.Result.TractorStagePrint != null) {
                             $("#TractorStagePrint").val(data.Result.TractorStagePrint);
-                        } 
+                        }
                         if (data.Result.TractorAutoid != "" && data.Result.TractorAutoid != null) {
                             $("#TractorAutoid").val(data.Result.TractorAutoid);
                         } else {

@@ -17,6 +17,7 @@ namespace MVCApp.Models
         public String RepJOBID { get; set; }
         public String TYPE { get; set; }
         public String ROPS { get; set; }
+        public String CHANGEJOB_NO { get; set; }
         
         public string Date { get; set; }
         public string BatMake { get; set; }

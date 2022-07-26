@@ -1764,20 +1764,20 @@ namespace MVCApp.Common
                         Filename = "BD.txt";
 
                 }
+                else if (stage == "EN" && plant == "T05")
+                {
+                    if (tractortype == "EXPORT")
+                        Filename = "BD17.txt";
+                    else
+                        Filename = "BD.txt";
+
+                }
                 else if (stage == "EN")
                 {
                     if (tractortype == "EXPORT")
                         Filename = "EN17.txt";
                     else
                         Filename = "EN.txt";
-
-                }
-                else if (stage == "EN" && plant=="T05")
-                {
-                    if (tractortype == "EXPORT")
-                        Filename = "BD17.txt";
-                    else
-                        Filename = "BD.txt";
 
                 }
                 else if (stage == "COM" && plant == "T02")
@@ -1883,7 +1883,7 @@ namespace MVCApp.Common
                 string itemname1 = string.Empty, itemname2 = string.Empty;
                 if (!string.IsNullOrEmpty(tractor.TractorDesc))
                     getNameSubAssembly(tractor.TractorDesc.Trim().ToUpper(), ref itemname1, ref itemname2);
-                fileData = ReadStageFile(tractor.STAGE_Code, tractor.PLANTCODE, tractor.FAMILYCODE);
+                fileData = ReadStageFile(tractor.STAGE_Code, tractor.PLANTCODE, tractor.FAMILYCODE,tractor.TractorType);
                 barcode = fileData;
                 bool dataresult = false;
                 for (int i = 0; i < copies; i++)

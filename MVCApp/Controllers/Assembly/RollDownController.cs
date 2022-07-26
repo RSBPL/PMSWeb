@@ -1192,7 +1192,15 @@ namespace MVCApp.Controllers
                 Assemblyfunctions assemblyfunctions = new Assemblyfunctions();
                 rollDown = assemblyfunctions.GetTractorDetails(obj.JOBID.Trim(), obj.PLANTCODE, obj.FAMILYCODE,
                        "JOBID");
-                string status = ValidateJobforEmpty(rollDown, obj, "update");
+                string status = "";
+                if (string.IsNullOrEmpty(obj.CHANGEJOB_NO))
+                {
+                     status = ValidateJobforEmpty(rollDown, obj, "update");
+                }
+                else
+                {
+                     status = Channge_Job(rollDown, obj);
+                }
                 if (status != "OK")
                 {
                     return Json(status, JsonRequestBehavior.AllowGet);
@@ -1210,6 +1218,105 @@ namespace MVCApp.Controllers
             finally { }
             return Json(msg, JsonRequestBehavior.AllowGet);
 
+        }
+        public string Channge_Job(RollDown tractormaster, RollDown obj)
+        {
+            try
+            {
+                string msg = string.Empty;
+                string orgid = fun.getOrgId(Convert.ToString(obj.PLANTCODE).Trim().ToUpper(), Convert.ToString(obj.FAMILYCODE).Trim().ToUpper());
+                query = "select count(*) from RELESEDJOBORDER where WIP_ENTITY_NAME='" + obj.CHANGEJOB_NO.Trim() + "' and segment1='" + tractormaster.TractorCode.Trim() + "' and ORGANIZATION_ID='" + orgid.Trim() + "'";
+                if (!fun.CheckExits(query))
+                {
+                    msg  = "New Job :" + obj.CHANGEJOB_NO.Trim() + " does not belong to tractor " + tractormaster.TractorSrlno.Trim();
+                    return msg;
+                }
+                query = "select count(*) from xxes_job_status where jobid='" + obj.CHANGEJOB_NO.Trim() + "'";
+                if (fun.CheckExits(query))
+                {
+                    msg = "New Job :" + obj.CHANGEJOB_NO.Trim() + " already buckleup.";
+                    return msg;
+                }
+                query = "select count(*) from print_serial_number where job_id='" + obj.CHANGEJOB_NO.Trim() + "'";
+                if (fun.CheckExits(query))
+                {
+                    msg = "New Job :" + obj.CHANGEJOB_NO + " already used in oracle (print_serial_number).";
+                    return msg;
+                }
+                query = "select count(*) from job_serial_movement where job_id='" + obj.CHANGEJOB_NO.Trim() + "'";
+                if (fun.CheckExits(query))
+                {
+                    msg = "New Job :" + obj.CHANGEJOB_NO.Trim() + " already used in oracle (job_serial_movement).";
+                    return msg;
+                }
+                query = "select count(*) from xxes_daily_plan_job where jobid='" + obj.CHANGEJOB_NO.Trim() + "' and family_code='" + Convert.ToString(obj.FAMILYCODE).Trim() + "' and plant_code='" + Convert.ToString(obj.PLANTCODE.Trim()) + "'";
+                if (fun.CheckExits(query))
+                {
+                    msg = "New Job :" + obj.CHANGEJOB_NO.Trim() + " already found in PMS";
+                    return msg;
+                }
+                query = "select count(*) from xxes_scan_time where jobid='" + obj.CHANGEJOB_NO.Trim() + "'";
+                if (fun.CheckExits(query))
+                {
+                    msg = "New Job :" + obj.CHANGEJOB_NO.Trim() + " already scanned";
+                    return msg;
+                }
+                query = "update xxes_job_status set jobid='" + obj.CHANGEJOB_NO.Trim() + "' where  jobid='" + Convert.ToString(obj.JOBID).Trim() + "'";
+                if (fun.EXEC_QUERY(query))
+                {
+                    fun.Insert_Into_ActivityLog("XXES_JOB_STATUS", "UPDATE NEW JOB " + obj.CHANGEJOB_NO.Trim() + " ON OLD JOB " + Convert.ToString(obj.JOBID).Trim(), obj.CHANGEJOB_NO.Trim(), query, Convert.ToString(obj.PLANTCODE).Trim().ToUpper(), Convert.ToString(obj.FAMILYCODE).Trim().ToUpper());
+                    //fun.LogWrite(query.ToString());
+                }
+                query = "update xxes_scan_time set jobid='" + obj.CHANGEJOB_NO.Trim() + "' where  jobid='" + Convert.ToString(obj.JOBID).Trim() + "'";
+                if (fun.EXEC_QUERY(query))
+                {
+                    fun.Insert_Into_ActivityLog("XXES_SCAN_TIME", "UPDATE NEW JOB " + obj.CHANGEJOB_NO.Trim() + " ON OLD JOB " + Convert.ToString(obj.JOBID).Trim(), obj.CHANGEJOB_NO.Trim(), query, Convert.ToString(obj.PLANTCODE).Trim().ToUpper(), Convert.ToString(obj.FAMILYCODE).Trim().ToUpper());
+                    //fun.LogWrite("-- " + fun.ServerDate + "--------" + fun.Login_User);
+                    //fun.LogWrite(query);
+                }
+                query = "update xxes_daily_plan_job set jobid='" + obj.CHANGEJOB_NO.Trim() + "' where  jobid='" + Convert.ToString(obj.JOBID).Trim() + "' and family_code='" + Convert.ToString(obj.FAMILYCODE).Trim() + "' and plant_code='" + Convert.ToString(obj.PLANTCODE) + "'";
+                if (fun.EXEC_QUERY(query))
+                {
+                    fun.Insert_Into_ActivityLog("XXES_DAILY_PLAN_JOB", "UPDATE NEW JOB " + obj.CHANGEJOB_NO.Trim()  + " ON OLD JOB " + Convert.ToString(obj.JOBID).Trim(), obj.CHANGEJOB_NO.Trim(), query, Convert.ToString(obj.PLANTCODE).Trim().ToUpper(), Convert.ToString(obj.FAMILYCODE).Trim().ToUpper());
+                    //pbf.LogWrite("-- " + PubFun.ServerDate + "--------" + PubFun.Login_User);
+                    //fun.LogWrite(query);
+                }
+                query = "update print_serial_number set job_id='" + obj.CHANGEJOB_NO.Trim() + "' where  job_id='" + Convert.ToString(obj.JOBID).Trim() + "' and plant_code='" + Convert.ToString(obj.PLANTCODE).Trim().ToUpper() + "'";
+                if (fun.EXEC_QUERY(query))
+                {
+                    fun.Insert_Into_ActivityLog("PRINT_SERIAL_NUMBER", "UPDATE NEW JOB " + obj.CHANGEJOB_NO.Trim() + " ON OLD JOB " + Convert.ToString(obj.JOBID).Trim(), obj.CHANGEJOB_NO.Trim(), query, Convert.ToString(obj.PLANTCODE).Trim().ToUpper(), Convert.ToString(obj.FAMILYCODE).Trim().ToUpper());
+                    //pbf.LogWrite("-- " + PubFun.ServerDate + "--------" + PubFun.Login_User);
+                    //fun.LogWrite(query);
+                }
+                query = "update job_serial_movement set job_id='" + obj.CHANGEJOB_NO.Trim() + "' where  job_id='" + Convert.ToString(obj.JOBID).Trim() + "'";
+                if (fun.EXEC_QUERY(query))
+                {
+                    fun.Insert_Into_ActivityLog("JOB_SERIAL_MOVEMENT", "UPDATE NEW JOB " + obj.CHANGEJOB_NO.Trim() + " ON OLD JOB " + Convert.ToString(obj.JOBID).Trim(), obj.CHANGEJOB_NO.Trim(), query, Convert.ToString(obj.PLANTCODE).Trim().ToUpper(), Convert.ToString(obj.FAMILYCODE).Trim().ToUpper());
+                    //pbf.LogWrite("-- " + PubFun.ServerDate + "--------" + PubFun.Login_User);
+                    //fun.LogWrite(query);
+                }
+                string fcodeid = fun.get_Col_Value("select fcode_id from xxes_job_status where  jobid='" + obj.JOBID.Trim() + "'");
+                query = "update xxes_controllers_data set jobid='" + obj.CHANGEJOB_NO.Trim() + "',fcode_id='" + fcodeid + "' where  jobid='" + Convert.ToString(obj.JOBID).Trim() + "' and family_code='" + Convert.ToString(obj.FAMILYCODE).Trim() + "' and plant_code='" + Convert.ToString(obj.PLANTCODE) + "'";
+                if (fun.EXEC_QUERY(query))
+                {
+                    fun.Insert_Into_ActivityLog("xxes_controllers_data", "UPDATE NEW JOB " + obj.CHANGEJOB_NO + " ON OLD JOB " + Convert.ToString(obj.JOBID).Trim(), obj.CHANGEJOB_NO, query, Convert.ToString(obj.PLANTCODE).Trim().ToUpper(), Convert.ToString(obj.FAMILYCODE).Trim().ToUpper());
+                    //pbf.LogWrite("-- " + PubFun.ServerDate + "--------" + PubFun.Login_User);
+                    //fun.LogWrite(query);
+                }
+                if (!string.IsNullOrEmpty(obj.CHANGEJOB_NO.Trim()))
+                {
+                    if (obj.JOBID != obj.CHANGEJOB_NO.Trim())
+                    {
+                        fun.Insert_Part_Audit_Data(Convert.ToString(obj.PLANTCODE).Trim().ToUpper(), Convert.ToString(obj.FAMILYCODE).Trim().ToUpper(), tractormaster.TractorSrlno, tractormaster.TractorSrlno.ToUpper().Trim(), "", "", "Change_In_Job", "", Convert.ToString(obj.JOBID).ToUpper().Trim(), Convert.ToString(obj.CHANGEJOB_NO).ToUpper().Trim(), "", "");
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return "OK";
         }
         public string ValidateJobforEmpty(RollDown tractormaster, RollDown updateTractor, string CHktype)
         {
@@ -2253,6 +2360,10 @@ namespace MVCApp.Controllers
                     if (string.IsNullOrEmpty(updateTractor.FIP))
                     {
                         updateTractor.FIP = "";
+                    }
+                    if (string.IsNullOrEmpty(updateTractor.Backend_srlno))
+                    {
+                        updateTractor.Backend_srlno = "";
                     }
                     if (tractormaster.isSrNoRequire && string.IsNullOrEmpty(updateTractor.TractorSrlno))
                     {
